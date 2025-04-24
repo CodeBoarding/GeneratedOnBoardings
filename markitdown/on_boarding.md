@@ -36,4 +36,3 @@ The Configuration Management component handles the loading and management of app
 ### Base Abstractions and Utilities
 
 This component defines fundamental classes and utilities used throughout the application. It includes the DocumentConverter base class, the DocumentConverterResult structure for representing conversion results, StreamInfo for managing input stream metadata, custom exception classes for error handling, and utilities for HTML to Markdown conversion.
-```
