@@ -1,38 +1,27 @@
-# MarkItDown Project Onboarding Document
+Okay, I will generate an onboarding document for the `markitdown` project based on the provided information.
 
-## Project Description
+**Project Description**
 
-MarkItDown is a versatile document conversion tool that transforms various file formats into Markdown. It supports a wide range of input types, including HTML, DOCX, PDF, and more, providing a flexible solution for converting documents to a universally readable and editable Markdown format. The application can be used via the command line, making it suitable for both individual use and integration into automated workflows.
+MarkItDown is a versatile document conversion tool that transforms various file formats into Markdown. It intelligently selects the appropriate converter based on the input document type, leveraging a modular architecture to support a wide range of formats, including HTML, DOCX, PDF, and more. The tool provides a command-line interface for easy use and can be extended with plugins to support additional formats.
 
-## Project Flow Diagram
+**Flow Diagram**
 
 ```mermaid
 graph LR
-    A[Command-Line Interface] -- parses --> B(Configuration Management)
-    B -- loads --> C(Core Conversion Orchestration)
-    C -- uses --> D(Document Conversion Implementations)
-    C -- uses --> E(Base Abstractions and Utilities)
-    D -- returns --> C
-    C -- outputs --> F(File System)
+    CLI[Command Line Interface] --> MarkItDown(MarkItDown Orchestrator)
+    MarkItDown -- determines type --> StreamInfo(Stream Information Handler)
+    MarkItDown -- selects --> DocumentConverter(Document Converter Interface)
+    DocumentConverter -- converts --> Markdown(Markdown Output)
 ```
-## Component Descriptions
 
-### Core Conversion Orchestration
+**Component Descriptions**
 
-This component serves as the central processing unit, orchestrating the entire document conversion workflow. It receives input from the CLI, utilizes configuration settings, selects the appropriate converter from the Document Conversion Implementations component based on the input file type, and manages the output process. It uses the base abstractions and utilities for stream handling and error management.
+*   **MarkItDown Orchestrator:** This central class manages the entire document conversion process. It receives the input document, determines its type using the Stream Information Handler, selects the appropriate Document Converter based on the file type, and orchestrates the conversion process. It also handles the registration of different converters and their priorities.
 
-### Document Conversion Implementations
+*   **Document Converter Interface:** This abstract interface defines the contract for all document converters within the system. It ensures that each converter implements a standard `convert` method, allowing the MarkItDown Orchestrator to seamlessly switch between different converters based on the input document type. Concrete implementations handle the specifics of converting various formats like HTML, DOCX, and PDF to Markdown.
 
-This component houses a collection of specialized converters, each responsible for transforming a specific file format (e.g., HTML, DOCX, PDF) into Markdown. Each converter implements the DocumentConverter interface and leverages format-specific libraries to extract content and convert it to Markdown.
+*   **HTML Converter Base:** This component provides a base class for converters that handle HTML-like documents. It offers common functionality for parsing and sanitizing HTML content, reducing code duplication among converters for formats like DOCX, EPUB, PPTX, and XLSX, which often contain embedded HTML.
 
-### Command-Line Interface
+*   **Stream Information Handler:** This component encapsulates information about the input stream, such as the filename, MIME type, and charset. This information is crucial for the MarkItDown Orchestrator to correctly identify the document type and select the appropriate converter.
 
-The Command-Line Interface (CLI) provides the entry point for users to interact with MarkItDown. It parses command-line arguments, such as input and output file paths, and passes this information to the Core Conversion Orchestration component to initiate the conversion process.
-
-### Configuration Management
-
-The Configuration Management component handles the loading and management of application settings. It allows users to customize the conversion process through configuration files or command-line options, such as specifying output formats or enabling/disabling certain features.
-
-### Base Abstractions and Utilities
-
-This component defines fundamental classes and utilities used throughout the application. It includes the DocumentConverter base class, the DocumentConverterResult structure for representing conversion results, StreamInfo for managing input stream metadata, custom exception classes for error handling, and utilities for HTML to Markdown conversion.
+*   **Command Line Interface:** This component provides a user-friendly interface for interacting with the MarkItDown tool. It handles parsing command-line arguments, invoking the MarkItDown Orchestrator with the specified input file, and displaying the resulting Markdown output.
