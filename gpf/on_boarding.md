@@ -1,4 +1,3 @@
-```markdown
 # GPF Project Onboarding Document
 
 ## Project Description
@@ -59,4 +58,3 @@ This component is responsible for managing user accounts, authentication, and au
 ### Genomic Resources Management
 
 The Genomic Resources Management component provides access to essential genomic resources such as reference genomes, gene models, and genomic scores. It handles resource retrieval, caching, and versioning, ensuring efficient access to the genomic data required for annotation and analysis. This component is critical for maintaining data quality and consistency across the platform.
-```
