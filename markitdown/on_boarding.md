@@ -2,26 +2,32 @@ Okay, I will generate an onboarding document for the `markitdown` project based 
 
 **Project Description**
 
-MarkItDown is a versatile document conversion tool that transforms various file formats into Markdown. It intelligently selects the appropriate converter based on the input document type, leveraging a modular architecture to support a wide range of formats, including HTML, DOCX, PDF, and more. The tool provides a command-line interface for easy use and can be extended with plugins to support additional formats.
+MarkItDown is a versatile document conversion tool that transforms various file formats, such as HTML, PDF, DOCX, and others, into Markdown. It provides a command-line interface for users to easily convert documents, supports configuration and extensions for customization, and offers a consistent abstraction for different document converters.
 
-**Flow Diagram**
+**Flow Diagram (Mermaid)**
 
 ```mermaid
 graph LR
-    CLI[Command Line Interface] --> MarkItDown(MarkItDown Orchestrator)
-    MarkItDown -- determines type --> StreamInfo(Stream Information Handler)
-    MarkItDown -- selects --> DocumentConverter(Document Converter Interface)
-    DocumentConverter -- converts --> Markdown(Markdown Output)
+    A[Command-Line Interface] -- invokes --> B(Document Conversion Orchestration)
+    B -- identifies --> C{Document Converters}
+    B -- manages --> D(Stream Information Handling)
+    C -- uses --> E(Base Conversion Abstraction)
+    A -- loads --> F(Configuration and Extension Management)
+    B -- handles errors --> G(Exception Handling)
 ```
 
 **Component Descriptions**
 
-*   **MarkItDown Orchestrator:** This central class manages the entire document conversion process. It receives the input document, determines its type using the Stream Information Handler, selects the appropriate Document Converter based on the file type, and orchestrates the conversion process. It also handles the registration of different converters and their priorities.
+*   **Command-Line Interface:** This component serves as the entry point for users, allowing them to interact with the MarkItDown tool through command-line arguments. It parses user input, triggers the document conversion process, and displays the results or any error messages.
 
-*   **Document Converter Interface:** This abstract interface defines the contract for all document converters within the system. It ensures that each converter implements a standard `convert` method, allowing the MarkItDown Orchestrator to seamlessly switch between different converters based on the input document type. Concrete implementations handle the specifics of converting various formats like HTML, DOCX, and PDF to Markdown.
+*   **Document Conversion Orchestration:** This component is the central coordinator of the conversion process. It receives the input document and determines the appropriate converter to use based on the file type. It also manages stream information, such as filename and MIME type, and orchestrates the overall conversion workflow.
 
-*   **HTML Converter Base:** This component provides a base class for converters that handle HTML-like documents. It offers common functionality for parsing and sanitizing HTML content, reducing code duplication among converters for formats like DOCX, EPUB, PPTX, and XLSX, which often contain embedded HTML.
+*   **Document Converters:** This component comprises a collection of individual converters, each responsible for converting a specific document format (e.g., HTML, PDF, DOCX) into Markdown. Each converter implements the `Base Conversion Abstraction` interface to ensure a consistent conversion process.
 
-*   **Stream Information Handler:** This component encapsulates information about the input stream, such as the filename, MIME type, and charset. This information is crucial for the MarkItDown Orchestrator to correctly identify the document type and select the appropriate converter.
+*   **Stream Information Handling:** This component manages information about the input stream, such as the filename, MIME type, and charset. This information is crucial for the document converters to correctly process the input and produce accurate Markdown output.
 
-*   **Command Line Interface:** This component provides a user-friendly interface for interacting with the MarkItDown tool. It handles parsing command-line arguments, invoking the MarkItDown Orchestrator with the specified input file, and displaying the resulting Markdown output.
+*   **Base Conversion Abstraction:** This component defines the abstract base class (`DocumentConverter`) and result (`DocumentConverterResult`) for all document converters. It provides a consistent interface for conversion, ensuring that all converters adhere to a standard structure and behavior.
+
+*   **Configuration and Extension Management:** This component handles the loading and management of configuration settings, allowing users to customize the conversion process. It also manages extensions, which can be loaded and applied to further modify the conversion behavior.
+
+*   **Exception Handling:** This component defines custom exceptions for different error scenarios that may occur during the conversion process. These exceptions provide detailed information about the cause of the error, facilitating debugging and troubleshooting.
