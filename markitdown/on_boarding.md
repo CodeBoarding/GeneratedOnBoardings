@@ -14,7 +14,7 @@ graph LR
     C -- uses --> E(Base Abstractions and Utilities)
     D -- returns --> C
     C -- outputs --> F(File System)
-
+```
 ## Component Descriptions
 
 ### Core Conversion Orchestration
