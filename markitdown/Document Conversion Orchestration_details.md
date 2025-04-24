@@ -1,84 +1,95 @@
-## Component Overview: Document Conversion Orchestration
+Based on the code analysis, here's a breakdown of the `Document Conversion Orchestration` component:
 
-This component orchestrates the conversion of various document formats into Markdown. It handles the selection of appropriate converters based on file type and content, manages input streams, and provides a unified interface for conversion.
+**Description:**
+
+The `Document Conversion Orchestration` component is responsible for converting documents of various formats (local files, URLs, streams, etc.) into Markdown. It handles the overall conversion process, including:
+
+-   Determining the input type (local file, URL, stream, etc.).
+-   Inferring file metadata (MIME type, extension, encoding) using `StreamInfo` and `magika`.
+-   Selecting the appropriate `DocumentConverter` based on file metadata.
+-   Executing the conversion using the selected converter.
+-   Handling fallback mechanisms and error reporting.
 
 **Main Classes and Their Purposes:**
 
-*   **`MarkItDown`**: The central class responsible for managing the conversion process. It registers converters, determines the appropriate converter for a given input, and orchestrates the conversion. It handles different input types like local files, URLs, and streams.
-*   **`StreamInfo`**: A data class that encapsulates metadata about the input stream, such as MIME type, file extension, character set, filename, and URL. It's used to help select the appropriate converter and pass relevant information to it.
-*   **`DocumentConverter`**: An abstract base class for all document converters. Subclasses implement the `accepts` method to determine if they can handle a given input and the `convert` method to perform the actual conversion.
-*   **`DocumentConverterResult`**: A data class that holds the result of a document conversion, including the Markdown content and an optional title.
-*   **`ConverterRegistration`**: A data class that associates a `DocumentConverter` with a priority, used to determine the order in which converters are tried.
+1.  **`MarkItDown`**: This is the main class that orchestrates the document conversion process. It holds a list of registered `DocumentConverter` instances and provides the `convert` method to initiate the conversion. It also handles stream information guessing using `magika`.
+2.  **`DocumentConverter`**: An abstract base class for all document converters. Subclasses implement the `accepts` method to determine if they can handle a specific file type and the `convert` method to perform the actual conversion.
+3.  **`DocumentConverterResult`**: A simple data class that holds the result of a document conversion, including the converted Markdown text and an optional title.
+4.  **`StreamInfo`**: A data class that stores metadata about a file stream, such as MIME type, extension, character set, filename, local path, and URL. This information is used to select the appropriate converter and to provide context for the conversion process.
+5.  **`ConverterRegistration`**: A data class that associates a `DocumentConverter` with a priority. This is used to determine the order in which converters are tried during the conversion process.
 
-### Main Flow (Sequence Diagram)
-
-The following diagram illustrates the main flow of the document conversion process, focusing on the core interactions between the key classes:
+**Main Flow (Sequence Diagram):**
 
 ```mermaid
 sequenceDiagram
-    participant User
+    participant Client
     participant MarkItDown
     participant StreamInfo
-    participant Converter
+    participant Magika
+    participant ConverterRegistration
+    participant DocumentConverter
     participant DocumentConverterResult
 
-    User->>MarkItDown: convert(source)
-    MarkItDown->>StreamInfo: _get_stream_info_guesses(file_stream, base_guess)
-    MarkItDown->>Converter: accepts(file_stream, stream_info)
-    alt Converter Accepts
-        Converter->>Converter: convert(file_stream, stream_info)
-        Converter->>DocumentConverterResult: Return markdown
-        MarkItDown->>DocumentConverterResult: Return result
-        User->>DocumentConverterResult: Converted markdown
-    else Converter Rejects
-        Converter-->>MarkItDown: False
+    Client->>MarkItDown: convert(source)
+    MarkItDown->>StreamInfo: Create StreamInfo (base_guess)
+    MarkItDown->>Magika: _get_stream_info_guesses(file_stream, base_guess)
+    Magika-->>MarkItDown: List[StreamInfo] (guesses)
+    loop For each stream_info in guesses
+        loop For each converter_registration in sorted_registrations
+            MarkItDown->>ConverterRegistration: Get converter
+            MarkItDown->>DocumentConverter: accepts(file_stream, stream_info)
+            DocumentConverter-->>MarkItDown: True/False
+            alt accepts == True
+                MarkItDown->>DocumentConverter: convert(file_stream, stream_info)
+                DocumentConverter-->>DocumentConverterResult: Result (markdown, title)
+                DocumentConverterResult-->>MarkItDown: DocumentConverterResult
+                MarkItDown-->>Client: DocumentConverterResult
+                break
+            end
+        end
+    end
+    alt No converter found
+        MarkItDown-->>Client: Exception (UnsupportedFormatException)
     end
 ```
 
-### Component Structure (Class Diagram)
-
-This diagram shows the main classes in the component and their relationships:
+**Main Structure (Class Diagram):**
 
 ```mermaid
 classDiagram
     class MarkItDown {
-        - _converters: List<ConverterRegistration>
-        + convert(source) DocumentConverterResult
-        + register_converter(converter: DocumentConverter, priority: float)
-        - _get_stream_info_guesses(file_stream: BinaryIO, base_guess: StreamInfo) List<StreamInfo>
-        - _convert(file_stream: BinaryIO, stream_info_guesses: List<StreamInfo>) DocumentConverterResult
-    }
-    class StreamInfo {
-        - mimetype: Optional<str>
-        - extension: Optional<str>
-        - charset: Optional<str>
-        - filename: Optional<str>
-        - local_path: Optional<str>
-        - url: Optional<str>
-        + copy_and_update(...) StreamInfo
+        -List~ConverterRegistration~ converters
+        +convert(source) DocumentConverterResult
+        +register_converter(converter, priority)
+        -_get_stream_info_guesses(file_stream, base_guess) List~StreamInfo~
+        -_convert(file_stream, stream_info_guesses) DocumentConverterResult
     }
     class DocumentConverter {
         <<abstract>>
-        + accepts(file_stream: BinaryIO, stream_info: StreamInfo) bool
-        + convert(file_stream: BinaryIO, stream_info: StreamInfo) DocumentConverterResult
+        +accepts(file_stream, stream_info) bool
+        +convert(file_stream, stream_info) DocumentConverterResult
     }
     class DocumentConverterResult {
-        + markdown: str
-        + title: Optional<str>
+        +markdown str
+        +title str
+    }
+    class StreamInfo {
+        +mimetype str
+        +extension str
+        +charset str
+        +filename str
+        +local_path str
+        +url str
+        +copy_and_update() StreamInfo
     }
     class ConverterRegistration {
-        - converter: DocumentConverter
-        - priority: float
-    }
-    class FileConversionException {
-    }
-    class UnsupportedFormatException {
+        +converter DocumentConverter
+        +priority float
     }
 
-    MarkItDown "1" -- "*" ConverterRegistration : manages
-    ConverterRegistration "1" -- "1" DocumentConverter : uses
-    MarkItDown "1" -- "*" StreamInfo : creates
+    MarkItDown "1" -- "*" ConverterRegistration : has
+    ConverterRegistration "1" -- "1" DocumentConverter : refers to
     DocumentConverter "1" -- "1" DocumentConverterResult : returns
-    MarkItDown --|> FileConversionException : throws
-    MarkItDown --|> UnsupportedFormatException : throws
+    DocumentConverter "1" -- "1" StreamInfo : uses
+    MarkItDown "1" -- "*" StreamInfo : uses
 ```

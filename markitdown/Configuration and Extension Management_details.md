@@ -1,68 +1,75 @@
-## Component Overview: Document Conversion
+Based on the information gathered, here's an overview of the `markitdown` component:
 
-The `markitdown` library provides a tool for converting various document formats (e.g., PDF, DOCX, HTML) into Markdown. It offers a command-line interface and a Python API for performing these conversions.
+**Description:**
+
+The `markitdown` component is designed to convert various document formats and web resources into Markdown. It provides a flexible and extensible framework for document conversion, supporting local files, remote URLs, and data streams. The core of the component is the `MarkItDown` class, which orchestrates the conversion process by selecting appropriate converters based on file type and content. The component relies on `DocumentConverter` subclasses to handle the actual conversion of specific file formats. It also uses `StreamInfo` to store metadata about the input stream, which helps in selecting the right converter.
 
 **Main Classes and Their Purposes:**
 
-*   **`MarkItDown`**: This class orchestrates the document conversion process. It handles different input types (local files, URLs, streams) and selects the appropriate converter based on file type or provided hints.
-*   **`DocumentConverter`**: This is an abstract base class for all specific document converters (e.g., `PDFConverter`, `HTMLConverter`). Subclasses must implement the `accepts()` method to determine if they can handle a given document and the `convert()` method to perform the actual conversion.
-*   **`StreamInfo`**: A data class that stores metadata about the input stream, such as MIME type, file extension, charset, filename, local path, and URL. This information is used to select the appropriate converter and provide context for the conversion process.
-*   **`__main__.main`**: This function serves as the entry point for the command-line interface. It parses command-line arguments, initializes the `MarkItDown` class, performs the conversion, and handles the output.
+*   **`MarkItDown`**: The main class responsible for managing the conversion process. It handles converter registration, stream information detection, and orchestrates the conversion by delegating to appropriate `DocumentConverter` instances.
+*   **`DocumentConverter`**: An abstract base class for all document converters. It defines the `accepts` and `convert` methods that subclasses must implement. The `accepts` method determines if a converter can handle a given input, while the `convert` method performs the actual conversion to Markdown.
+*   **`StreamInfo`**: A data class that stores metadata about the input stream, such as MIME type, file extension, character set, filename, and URL. This information is used to select the appropriate converter and to provide context for the conversion process.
+*   **`HtmlConverter`**: A concrete `DocumentConverter` subclass that converts HTML documents to Markdown. It uses `BeautifulSoup` for parsing HTML and `_CustomMarkdownify` (not detailed here) for Markdown conversion.
 
 **Main Flow (Sequence Diagram):**
 
 ```mermaid
 sequenceDiagram
-    participant CLI as Command Line Interface
+    participant User
     participant MarkItDown
     participant StreamInfo
-    participant Converter as DocumentConverter
-    participant ConverterResult
+    participant Converter
+    participant DocumentConverterResult
 
-    CLI->>MarkItDown: convert(source, stream_info)
-    MarkItDown->>StreamInfo: Infer stream_info from source (if not provided)
-    MarkItDown->>Converter: Find suitable converter (based on stream_info)
-    Converter->>ConverterResult: convert(file_stream, stream_info)
-    MarkItDown->>CLI: Output Markdown content from ConverterResult
+    User->>MarkItDown: convert(source)
+    MarkItDown->>StreamInfo: _get_stream_info_guesses(source)
+    MarkItDown->>Converter: accepts(file_stream, stream_info)
+    alt Converter Accepts
+        Converter->>Converter: convert(file_stream, stream_info)
+        Converter-->>DocumentConverterResult: Result
+        MarkItDown-->>User: DocumentConverterResult
+    else Converter Rejects
+        Converter-->>MarkItDown: False
+    end
 ```
 
-**Component Structure (Class Diagram):**
+**Main Structure (Class Diagram):**
 
 ```mermaid
 classDiagram
     class MarkItDown {
-        -enable_plugins: bool
-        -docintel_endpoint: str
-        +convert(source, stream_info, **kwargs): DocumentConverterResult
-        +convert_local(path, stream_info, **kwargs): DocumentConverterResult
-        +convert_uri(uri, stream_info, **kwargs): DocumentConverterResult
-        +convert_stream(stream, stream_info, **kwargs): DocumentConverterResult
+        - _converters: List[ConverterRegistration]
+        + convert(source) DocumentConverterResult
+        + register_converter(converter: DocumentConverter, priority: float)
+        - _get_stream_info_guesses(file_stream: BinaryIO, base_guess: StreamInfo) List[StreamInfo]
+        - _convert(file_stream: BinaryIO, stream_info_guesses: List[StreamInfo]) DocumentConverterResult
     }
     class DocumentConverter {
         <<abstract>>
-        +accepts(file_stream, stream_info, **kwargs): bool
-        +convert(file_stream, stream_info, **kwargs): DocumentConverterResult
+        + accepts(file_stream: BinaryIO, stream_info: StreamInfo) bool
+        + convert(file_stream: BinaryIO, stream_info: StreamInfo) DocumentConverterResult
     }
     class StreamInfo {
-        -mimetype: str
-        -extension: str
-        -charset: str
-        -filename: str
-        -local_path: str
-        -url: str
-        +copy_and_update(*args, **kwargs): StreamInfo
+        + mimetype: Optional[str]
+        + extension: Optional[str]
+        + charset: Optional[str]
+        + filename: Optional[str]
+        + local_path: Optional[str]
+        + url: Optional[str]
+        + copy_and_update() StreamInfo
+    }
+    class HtmlConverter {
+        + accepts(file_stream: BinaryIO, stream_info: StreamInfo) bool
+        + convert(file_stream: BinaryIO, stream_info: StreamInfo) DocumentConverterResult
     }
     class DocumentConverterResult {
-        -title: str
-        -markdown: str
-    }
-    class __main__ {
-        +main()
-        -_handle_output(args, result)
-        -_exit_with_error(message)
+        + markdown: str
+        + title: Optional[str]
     }
 
-    MarkItDown -- StreamInfo: Uses
-    MarkItDown -- DocumentConverter: Uses
-    DocumentConverter -- DocumentConverterResult: Returns
+    MarkItDown "1" -- "*" DocumentConverter : uses
+    MarkItDown "1" -- "*" StreamInfo : uses
+    HtmlConverter --|> DocumentConverter : extends
+    HtmlConverter "1" -- "1" StreamInfo : uses
+    DocumentConverter "*" -- "1" DocumentConverterResult : returns
 ```
