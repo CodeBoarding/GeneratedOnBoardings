@@ -1,6 +1,3 @@
-Okay, I will generate a markdown document that describes the `markitdown` project and its components, including a Mermaid flow diagram.
-
-```markdown
 ## MarkItDown Project Description
 
 MarkItDown is a versatile document conversion tool that transforms various file formats, such as DOCX, PDF, HTML, and more, into Markdown. It provides a command-line interface for easy use and supports configuration options to customize the conversion process. The project is designed to be extensible, allowing for the addition of new file type converters.
@@ -40,4 +37,3 @@ This component handles parsing command-line arguments and initiating the convers
 ### Stream Information Management
 
 This component encapsulates information about the input stream, including filename, MIME type, and charset. It facilitates consistent handling of input data, ensuring that the application can correctly interpret and process files regardless of their origin or format.
-```
