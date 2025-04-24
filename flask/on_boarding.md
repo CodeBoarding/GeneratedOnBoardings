@@ -17,7 +17,7 @@ graph LR
         C(Request Handling)
         D(Configuration and CLI)
         E(Templating and Rendering)
-        F(Extensibility (Blueprints and Extensions))
+        F["Extensibility (Blueprints and Extensions)"]
     end
 
     A--Sends Request-->B
