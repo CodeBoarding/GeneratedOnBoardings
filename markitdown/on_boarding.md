@@ -1,39 +1,31 @@
-## MarkItDown Project Description
+Okay, I will generate an onboarding document for the `markitdown` project based on the provided information.
 
-MarkItDown is a versatile document conversion tool that transforms various file formats, such as DOCX, PDF, HTML, and more, into Markdown. It provides a command-line interface for easy use and supports configuration options to customize the conversion process. The project is designed to be extensible, allowing for the addition of new file type converters.
+**Project Description**
 
-## Project Flow Diagram
+MarkItDown is a versatile tool designed to convert various document formats, such as DOCX, PDF, HTML, and more, into Markdown. It provides a command-line interface for easy use and supports configuration options to customize the conversion process. The project aims to simplify the process of transforming documents into a lightweight and readable Markdown format, suitable for various applications like documentation, note-taking, and content creation.
+
+**Flow Diagram**
 
 ```mermaid
 graph LR
-    A[Command Line Interface] --> B(Markdown Conversion Orchestration)
-    B -- uses --> C(Configuration Management);
-    B -- reads file --> D(File System Interaction);
-    B -- selects converter --> E(File Type Conversion Implementations);
-    E -- converts document --> F(Document Conversion Abstraction);
-    F -- returns markdown --> B;
-    B -- writes file --> D;
-    D -- provides stream info --> G(Stream Information Management);
+    A[Command Line Interface] --> B(Core Conversion Orchestration)
+    B -- loads config --> C(Configuration Management)
+    B -- reads file --> D(Stream Management)
+    D -- sends document --> E(Document Conversion)
+    E -- converts to Markdown --> F(HTML to Markdown Conversion)
+    E -- handles errors --> G(Error Handling)
+    F -- returns Markdown --> B
+    B -- writes file --> H(File System)
 ```
 
-## Component Descriptions
+**Component Descriptions**
 
-### Markdown Conversion Orchestration
+*   **Core Conversion Orchestration:** This component serves as the central processing unit, managing the entire conversion workflow. It receives input from the command-line interface, loads configurations, orchestrates file reading and writing, and calls the appropriate document converters. It also handles the overall flow of data and error management.
 
-This component orchestrates the entire markdown conversion process. It reads input files, loads configuration settings, selects the appropriate file type converter, and writes the converted Markdown output to a file. It acts as the central control point, managing the flow of data and delegating tasks to other components.
+*   **Document Conversion:** This component is responsible for converting various document formats into Markdown. It includes a base `DocumentConverter` class and specialized converters for different file types like DOCX, PDF, and HTML. Each converter implements the logic to extract content from its respective format and transform it into Markdown.
 
-### Document Conversion Abstraction
+*   **Stream Management:** This component handles the input and output streams, including reading files and managing stream metadata such as filename, MIME type, and charset. It provides a consistent interface for accessing file content and ensures that the conversion process has the necessary information about the input stream.
 
-This component defines the abstract base for all document converters and the structure of the conversion result. It provides a consistent interface for different file types, ensuring that all converters adhere to a common standard. This abstraction simplifies the process of adding new converters and promotes code reusability.
+*   **HTML to Markdown Conversion:** This component provides utilities for converting HTML content to Markdown format. It includes custom Markdownify functionality to handle specific HTML elements and ensure accurate conversion of HTML structures into Markdown.
 
-### File Type Conversion Implementations
-
-This component provides concrete implementations for converting various file types (e.g., DOCX, PDF, HTML) to Markdown. Each converter is tailored to the specific file format, handling the unique challenges and complexities of that format. This component is responsible for the actual conversion logic, transforming the content of the input file into Markdown.
-
-### Command-Line Interface
-
-This component handles parsing command-line arguments and initiating the conversion process based on user input. It provides a user-friendly interface for interacting with the application, allowing users to specify input files, output files, and configuration options.
-
-### Stream Information Management
-
-This component encapsulates information about the input stream, including filename, MIME type, and charset. It facilitates consistent handling of input data, ensuring that the application can correctly interpret and process files regardless of their origin or format.
+*   **Error Handling:** This component defines custom exceptions for managing errors during file conversion. It provides a structured way to handle issues such as unsupported formats, missing dependencies, and failed conversion attempts, ensuring robust error reporting and preventing unexpected program termination.
