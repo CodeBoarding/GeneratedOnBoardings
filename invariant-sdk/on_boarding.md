@@ -1,4 +1,3 @@
-```text
 # Invariant SDK Onboarding Document
 
 ## Project Description
