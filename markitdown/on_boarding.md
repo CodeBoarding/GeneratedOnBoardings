@@ -1,4 +1,3 @@
-```text
 # MarkItDown Project Onboarding Document
 
 ## Project Description
