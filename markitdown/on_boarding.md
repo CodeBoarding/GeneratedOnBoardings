@@ -8,7 +8,7 @@ MarkItDown is a versatile tool designed to convert various file formats and onli
 
 ```mermaid
 graph LR
-    A[User Input (File, URL, Stream)] --> B(MarkItDown);
+    A["User Input (File, URL, Stream)"] --> B(MarkItDown);
     B--identifies type-->C(StreamInfo);
     C--selects-->D{Converter};
     D--converts to Markdown-->E(DocumentConverterResult);
