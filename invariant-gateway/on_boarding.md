@@ -17,11 +17,11 @@ graph LR
     C[Guardrail Enforcement]
     D[Instrumented Streaming Response]
     E[Configuration Management]
-    F[Main Control Program (MCP)]
+    F["Main Control Program (MCP)"]
     end
 
     subgraph LLM Provider
-    G[LLM Provider (OpenAI, Gemini, Anthropic)]
+    G["LLM Provider (OpenAI, Gemini, Anthropic)"]
     end
 
     subgraph Explorer
@@ -40,6 +40,7 @@ graph LR
     F--Orchestrates-->B
     F--Manages-->C
     F--Handles-->D
+
 ```
 
 **Component Descriptions**
