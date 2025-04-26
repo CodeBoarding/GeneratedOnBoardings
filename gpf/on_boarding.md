@@ -14,7 +14,7 @@ graph LR
     B[Configuration and Metadata Management]
     C[Genomic Resources and Annotation]
     D[Data Storage and Query Engine]
-    E[Web Application (WDAE)]
+    E["Web Application (WDAE)"]
 
     A--converts & loads-->D
     B--configures-->C
