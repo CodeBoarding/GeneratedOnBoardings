@@ -16,7 +16,7 @@ graph LR
         RH[Request Handling]
         UR[URL Routing and Dispatch]
         MW[Middleware]
-        ORM[Object-Relational Mapper (ORM)]
+        ORM["Object-Relational Mapper (ORM)"]
         TE[Template Engine]
         AA[Authentication and Authorization]
         AI[Admin Interface]
