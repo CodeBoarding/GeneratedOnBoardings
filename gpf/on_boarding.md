@@ -1,65 +1,52 @@
+```markdown
 # GPF Project Onboarding Document
 
 ## Project Description
 
-The Genomic Platform (GPF) project is a comprehensive suite of tools and a web application (WDAE) designed for analyzing and managing genomic data. It provides functionalities for variant annotation, storage, querying, and reporting, with a focus on supporting research in genetics and genomics. GPF enables researchers to explore variant data in the context of families, genes, and genomic regions, facilitating the discovery of disease-causing mutations and the understanding of genetic mechanisms.
+The Genomic Prediction Framework (GPF) is a comprehensive platform designed for managing, analyzing, and exploring large-scale genomic and phenotypic data. It provides tools for variant annotation, enrichment analysis, and data integration, enabling researchers to identify genetic factors associated with complex traits and diseases. GPF integrates with the Web-based Data Analysis Environment (WDAE) to provide a user-friendly interface for data exploration and analysis.
 
-## Project Flow Diagram
+## Data Flow Diagram
 
 ```mermaid
 graph LR
     subgraph Data Ingestion and Management
-        A[Raw Genomic Data] --> B(GPFInstance)
-        B --> C(Genomic Resources Management)
-        B --> D(Families Data Management)
-        B --> E(Annotation Pipeline)
-        B --> F(Variants Data Access)
-        F --> G(Genotype Storage)
+    A[VCF/DAE/PED Files]
+    B(GPF Instance & Data Management)
+    C(Genomic Resources & Variant Data Management)
+    D(Phenotype Data Management & Exploration)
     end
 
-    subgraph Web Application and API
-        H(User) --> I(WDAEConfig)
-        I --authenticates--> J(User Management and Authentication)
-        I --configures--> K(API Endpoints)
-        K --queries--> F
-        K --accesses--> C
-		K --accesses--> D
-        K --manages--> L(Query Management)
+    subgraph Analysis and User Interaction
+    E(Analysis & Task Management)
+    F(User, Group, and Data Access Management (WDAE))
     end
 
-    subgraph Data Analysis and Reporting
-        L --uses--> F
-        L --saves/loads--> M(Query State)
+    subgraph Data Storage
+    G[Parquet Storage]
     end
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style H fill:#f9f,stroke:#333,stroke-width:2px
+    A--Loads Data-->B
+    B--Manages-->C
+    B--Manages-->D
+    C--Provides Data-->E
+    D--Provides Data-->E
+    E--Executes Tasks-->G
+    F--Controls Access-->B
+    F--Manages Users-->B
+    G--Stores Data-->C
+    G--Stores Data-->D
 ```
+
 ## Component Descriptions
 
-*   **Raw Genomic Data:** Represents the initial input data, such as VCF files or other variant call formats, that needs to be processed and analyzed by the GPF system.
+*   **GPF Instance & Data Management:** This component initializes and manages the GPF instance, serving as the central hub for accessing genomic resources, variant data, and phenotype data. It handles configuration parsing, data loading, and integration with the WDAE framework, also managing user access to datasets.
 
-*   **GPFInstance:** The central component that orchestrates the entire GPF system. It initializes and configures all other components, providing a unified access point to genomic resources, variant data, and analysis tools. It manages the lifecycle of the application and ensures that all components are properly configured and interconnected.
+*   **Genomic Resources & Variant Data Management:** This component manages genomic resources (reference genomes, gene models, etc.) and handles variant data. It builds repositories for genomic resources and provides interfaces for loading, storing, querying, and annotating variant data from various sources, providing data for analysis components.
 
-*   **Genomic Resources Management:** This component is responsible for managing and providing access to essential genomic resources, such as reference genomes, gene models, and annotation databases. It handles the retrieval, storage, and organization of these resources, ensuring that they are readily available for variant annotation and analysis.
+*   **Phenotype Data Management & Exploration:** This component is responsible for loading, storing, querying, and exploring phenotype data. It includes building phenotype browsers and managing person set collections, integrating with the GPF Instance to access dataset configurations and providing data for statistical analysis and visualization.
 
-*   **Families Data Management:** This component manages pedigree information, representing family relationships and individual characteristics. It provides functionalities for accessing and analyzing family structures, which is crucial for understanding the inheritance patterns of genetic variants.
+*   **Analysis & Task Management:** This component provides tools for performing enrichment analysis and manages the execution of complex data processing tasks through task graphs. It includes building background models, running enrichment tests, and defining/executing task graphs for import and annotation processes, depending on the GPF Instance and Genomic Resources for data and context.
 
-*   **Annotation Pipeline:** This component handles the annotation of genetic variants, enriching them with relevant information such as gene effects, functional predictions, and population frequencies. It uses genomic resources and external databases to add context to the variants, facilitating their interpretation and prioritization.
+*   **User, Group, and Data Access Management (WDAE):** This component handles user authentication, authorization, group management, and data access control within the WDAE framework. It provides secure access to data and resources through APIs and command-line tools, interacting with the GPF Instance to manage dataset permissions and relying on the Data Export/Import component for data migration.
 
-*   **Variants Data Access:** This component provides a unified interface for accessing variant data stored in different formats and storage systems. It abstracts the underlying storage mechanisms, allowing users to query and retrieve variant information without needing to know the specific details of the data storage.
-
-*   **Genotype Storage:** This component manages the storage and retrieval of genotype data, providing efficient access to variant information. It supports various storage systems, such as Impala, Parquet, and in-memory databases, allowing the GPF system to scale and adapt to different data sizes and performance requirements.
-
-*   **User:** Represents a researcher or analyst who interacts with the WDAE web application to explore and analyze genomic data.
-
-*   **WDAEConfig:** This component configures the WDAE web application, loading extensions and preparing the application for use. It sets up the necessary parameters and settings for the web interface to interact with the GPF system.
-
-*   **User Management and Authentication:** This component handles user creation, authentication, authorization, and profile management for the WDAE web interface. It ensures that only authorized users can access sensitive genomic data and analysis tools.
-
-*   **API Endpoints:** This component provides a set of RESTful APIs for accessing various functionalities of the GPF system, including variant querying, genomic resource retrieval, and analysis tools. These APIs allow external applications and services to interact with the GPF system programmatically.
-
-*   **Query Management:** This component handles user queries, interacting with the data access layer to retrieve variant information. It also provides functionalities for saving, loading, and deleting query states, allowing users to persist and retrieve their search configurations.
-
-*   **Query State:** This component represents the saved state of a user query, including the search parameters, filters, and other settings. It allows users to easily resume their analysis from where they left off, without needing to re-enter their query configurations.
-```
+*   **Parquet Storage:** This component provides efficient storage for genomic and phenotypic data in Parquet format, enabling fast querying and analysis. It is used by the Variant Data Management and Phenotype Data Management components to store and retrieve data.
