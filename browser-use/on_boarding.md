@@ -2,47 +2,28 @@ Okay, I will generate an onboarding document for the `browser-use` project based
 
 **1. Project Description**
 
-The `browser-use` project implements an autonomous web browser agent. It allows an agent, driven by a Large Language Model (LLM), to interact with web pages, navigate websites, extract information, and perform actions such as clicking buttons and filling forms. The agent can be used for tasks like web scraping, automated testing, or simulating user behavior.
+The `browser-use` project enables an agent to interact with web pages programmatically. It provides the necessary components to navigate websites, understand page structure, execute actions, and maintain a conversation history, allowing for automated browsing tasks.
 
-**2. Flow Diagram (Mermaid)**
+**2. Data Flow Diagram**
 
 ```mermaid
 graph LR
-    A[Agent] -- orchestrates --> B(BrowserContext)
-    A -- uses --> C(Controller)
-    A -- manages --> D(MessageManager)
-    B -- uses --> E(DomService)
-    C -- uses --> F(ActionRegistry)
-    B -- manages --> G(Browser)
-    H(Utilities) -- handles signals, configures logging --> A
-    subgraph Core Components
-    A
-    B
-    C
-    D
-    E
-    F
-    G
-    end
-    subgraph Utilities
-    H
-    end
+    A[Agent Orchestrator] -- plans task --> B(Action Execution Engine)
+    B -- executes action on --> C(Browser Interaction Context)
+    C -- provides page state to --> A
+    C -- sends document to --> D(Webpage Understanding Service)
+    D -- extracts webpage information --> A
+    A -- manages conversation with --> E(Conversation Manager)
 ```
 
 **3. Component Descriptions**
 
-*   **Agent:** The Agent is the central orchestrator of the browsing task. It plans the steps needed to achieve a goal, interacts with the LLM to determine the next action, and uses the Controller to execute those actions. It also manages its state and memory using the MessageManager.
+*   **Agent Orchestrator:** This component is the brain of the system. It plans and executes browsing tasks by leveraging the other components. It decides which actions to take based on the current page state and the conversation history.
 
-*   **BrowserContext:** The BrowserContext manages the browser session. It handles navigation to URLs, provides access to the current state of the DOM, and allows the Agent to interact with web elements on the page. It relies on the Browser component to manage the underlying browser instance.
+*   **Action Execution Engine:** This component acts as the intermediary between the Agent Orchestrator and the Browser Interaction Context. It receives action requests from the Agent Orchestrator and executes them on the browser.
 
-*   **Controller:** The Controller is responsible for executing actions on the browser, such as clicking elements or inputting text. It receives instructions from the Agent and uses the ActionRegistry to find and execute the appropriate action.
+*   **Browser Interaction Context:** This component manages the browser session and provides an interface for interacting with web pages. It handles navigation, JavaScript execution, and state retrieval.
 
-*   **MessageManager:** The MessageManager handles the conversation history between the Agent and the LLM. It stores and retrieves messages, allowing the Agent to maintain context and track its progress.
+*   **Webpage Understanding Service:** This component extracts and processes the DOM of a web page to identify clickable elements and understand the page structure. It provides the Agent Orchestrator with information about the available actions on the page.
 
-*   **DomService:** The DomService extracts, processes, and represents the Document Object Model (DOM) of a web page. It builds a tree structure of the DOM, identifies clickable elements, and provides methods for interacting with the DOM.
-
-*   **ActionRegistry:** The ActionRegistry manages the available actions that the Agent can perform. It provides a central location for registering and retrieving actions, allowing the Controller to execute them.
-
-*   **Browser:** The Browser component manages the underlying browser instance (e.g., Playwright). It provides a low-level interface for interacting with the browser, such as navigating to URLs and interacting with web elements.
-
-*   **Utilities:** The Utilities component provides functionalities such as signal handling for graceful pausing or exiting the agent, and logging configuration. It ensures the application behaves correctly in different scenarios and provides useful debugging information.
+*   **Conversation Manager:** This component handles the conversation history between the agent and the user, adding messages, filtering sensitive data, and managing token counts. It provides the Agent Orchestrator with the context needed to make informed decisions.
