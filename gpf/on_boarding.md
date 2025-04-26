@@ -1,51 +1,72 @@
-# GPF Project Onboarding Document
+Okay, I will generate an onboarding document for the `gpf` project based on the provided information.
 
-## Project Description
+**1. Project Description**
 
-The Genomic Prediction Framework (GPF) is a comprehensive platform designed for managing, analyzing, and exploring large-scale genomic and phenotypic data. It provides tools for variant annotation, enrichment analysis, and data integration, enabling researchers to identify genetic factors associated with complex traits and diseases. GPF integrates with the Web-based Data Analysis Environment (WDAE) to provide a user-friendly interface for data exploration and analysis.
+The Genotype and Phenotype Foundation (GPF) is a comprehensive platform designed for managing, analyzing, and querying large-scale genomic data. It provides tools for importing data from various sources, storing it efficiently, annotating variants, and enabling complex queries through a web-based interface and API. GPF facilitates collaborative research by managing user access and permissions, and it supports a wide range of genomic studies, including those focused on rare genetic disorders and population genetics.
 
-## Data Flow Diagram
+**2. Data Flow Diagram (Mermaid Format)**
 
 ```mermaid
 graph LR
     subgraph Data Ingestion and Management
-    A[VCF/DAE/PED Files]
-    B(GPF Instance & Data Management)
-    C(Genomic Resources & Variant Data Management)
-    D(Phenotype Data Management & Exploration)
+    A[Data Sources (VCF, Denovo, CNV)]
+    B[Import Tools]
+    C[Storage (Impala, DuckDB, GCS)]
     end
 
-    subgraph Analysis and User Interaction
-    E(Analysis & Task Management)
-    F("User, Group, and Data Access Management (WDAE)")
+    subgraph Genomic Resources and Annotation
+    D[Genomic Resource Repositories]
+    E[Annotation Pipeline]
     end
 
-    subgraph Data Storage
-    G[Parquet Storage]
+    subgraph Query and API
+    F[Web API]
+    G[Query Builder]
+    H[Query Runner]
+    I[User Interface]
     end
 
-    A--Loads Data-->B
-    B--Manages-->C
-    B--Manages-->D
-    C--Provides Data-->E
-    D--Provides Data-->E
-    E--Executes Tasks-->G
-    F--Controls Access-->B
-    F--Manages Users-->B
-    G--Stores Data-->C
-    G--Stores Data-->D
+    subgraph User Management and Security
+    J[User Authentication]
+    K[Authorization and Permissions]
+    end
+
+    A--Imports data-->B
+    B--Stores data-->C
+    C--Provides data-->G
+    D--Provides resources-->E
+    E--Annotates variants-->C
+    G--Builds queries-->H
+    H--Executes queries-->C
+    C--Returns results-->G
+    G--Formats results-->I
+    F--Handles requests-->G
+    I--Uses-->F
+    F--Authenticates-->J
+    J--Authorizes-->K
+    K--Controls access-->F
 ```
 
-## Component Descriptions
+**3. Component Descriptions**
 
-*   **GPF Instance & Data Management:** This component initializes and manages the GPF instance, serving as the central hub for accessing genomic resources, variant data, and phenotype data. It handles configuration parsing, data loading, and integration with the WDAE framework, also managing user access to datasets.
+*   **Data Sources (VCF, Denovo, CNV):** This component represents the various input data formats that GPF can ingest, including VCF files for variant calls, denovo files for de novo mutations, and CNV files for copy number variations.
 
-*   **Genomic Resources & Variant Data Management:** This component manages genomic resources (reference genomes, gene models, etc.) and handles variant data. It builds repositories for genomic resources and provides interfaces for loading, storing, querying, and annotating variant data from various sources, providing data for analysis components.
+*   **Import Tools:** This component is responsible for importing data from various sources and formats into the GPF environment. It handles data transformation, validation, and loading into the storage backend.
 
-*   **Phenotype Data Management & Exploration:** This component is responsible for loading, storing, querying, and exploring phenotype data. It includes building phenotype browsers and managing person set collections, integrating with the GPF Instance to access dataset configurations and providing data for statistical analysis and visualization.
+*   **Storage (Impala, DuckDB, GCS):** This component represents the storage backends used by GPF to store genomic data. It supports various storage solutions like Impala, DuckDB, and Google Cloud Storage, providing efficient data access and scalability.
 
-*   **Analysis & Task Management:** This component provides tools for performing enrichment analysis and manages the execution of complex data processing tasks through task graphs. It includes building background models, running enrichment tests, and defining/executing task graphs for import and annotation processes, depending on the GPF Instance and Genomic Resources for data and context.
+*   **Genomic Resource Repositories:** This component manages genomic resources such as reference genomes, gene models, and annotation scores. It provides a centralized repository for accessing and managing these resources.
 
-*   **User, Group, and Data Access Management (WDAE):** This component handles user authentication, authorization, group management, and data access control within the WDAE framework. It provides secure access to data and resources through APIs and command-line tools, interacting with the GPF Instance to manage dataset permissions and relying on the Data Export/Import component for data migration.
+*   **Annotation Pipeline:** This component performs variant annotation using genomic resources and annotation tools. It enriches variants with functional and biological information, aiding in the interpretation of genetic variations.
 
-*   **Parquet Storage:** This component provides efficient storage for genomic and phenotypic data in Parquet format, enabling fast querying and analysis. It is used by the Variant Data Management and Phenotype Data Management components to store and retrieve data.
+*   **Web API:** This component exposes API endpoints for accessing and interacting with GPF data. It provides interfaces for querying variants, accessing datasets, managing users, and performing other operations.
+
+*   **Query Builder:** This component constructs SQL queries based on user requests and data models. It translates high-level query specifications into efficient SQL queries for the storage backend.
+
+*   **Query Runner:** This component executes SQL queries against the storage backend and retrieves the results. It optimizes query execution and handles data retrieval.
+
+*   **User Interface:** This component provides a web-based interface for users to interact with GPF. It allows users to browse datasets, query variants, visualize results, and manage their accounts.
+
+*   **User Authentication:** This component handles user authentication, verifying user credentials and establishing secure sessions.
+
+*   **Authorization and Permissions:** This component manages user authorization and permissions, controlling access to datasets and functionalities based on user roles and privileges.
