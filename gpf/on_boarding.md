@@ -1,4 +1,3 @@
-```markdown
 # GPF Project Onboarding Document
 
 ## Project Description
