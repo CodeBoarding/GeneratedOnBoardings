@@ -34,7 +34,7 @@ graph LR
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style H fill:#f9f,stroke:#333,stroke-width:2px
-
+```
 ## Component Descriptions
 
 *   **Raw Genomic Data:** Represents the initial input data, such as VCF files or other variant call formats, that needs to be processed and analyzed by the GPF system.
