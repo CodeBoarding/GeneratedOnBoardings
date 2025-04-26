@@ -1,59 +1,45 @@
-# GPF Project Onboarding Document
+Okay, I will generate an onboarding document that describes the GPF project and its components, including a data flow diagram in Mermaid format.
 
-## Project Description
+**1. Project Description**
 
-The GPF (Genomic Prediction Framework) project is a comprehensive platform designed for managing, analyzing, and exploring genomic data. It provides tools for data ingestion, storage, querying, and reporting, with a focus on variant analysis and phenotype association studies. GPF aims to facilitate research in genetics and genomics by offering a user-friendly interface and a powerful backend for handling large-scale datasets.
+GPF (Genomic Population Finder) is a comprehensive platform designed for the analysis and exploration of genomic data. It provides tools for storing, querying, and analyzing genetic variants, with a focus on population-level studies. GPF supports various data formats, storage backends, and analysis methods, offering a flexible and scalable solution for researchers and clinicians working with genomic information. The platform includes a web-based user interface and API for easy access and integration with other systems.
 
-## Data Flow Diagram
+**2. Data Flow Diagram (Mermaid Format)**
 
 ```mermaid
 graph LR
-    subgraph Data Ingestion and Storage
-    A[Data Ingestion and Storage]
-    end
-
-    subgraph GPF Instance & Genomic Resources Management
-    B[GPF Instance & Genomic Resources Management]
-    end
-
-    subgraph Query Engine and Variant Management
-    C[Query Engine and Variant Management]
-    end
-
-    subgraph Web API and User Interface
-    D[Web API and User Interface]
-    end
-
-    subgraph Analysis and Reporting Tools
-    E[Analysis and Reporting Tools]
-    end
-
-    A--stores-->B
+    A[Web API and User Interface] --> B(GPF Instance and Configuration)
+    B --> C{Genotype Storage Management}
+    C --> D[Data Ingestion and Loading]
+    C --> E[Query and Variant Management]
+    E --> F[Genomic Resources and Annotation]
+    F --> C
+    A --> E
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style D fill:#ccf,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
+    A--requests data-->B
     B--manages-->C
-    C--provides data-->D
-    D--calls-->E
-    E--uses-->C
+    C--loads data from-->D
+    C--queries-->E
+    E--uses-->F
+    F--provides resources to-->C
+    A--queries-->E
 ```
 
-## Component Descriptions
+**3. Component Descriptions**
 
-### Data Ingestion and Storage
+*   **Web API and User Interface:** This component provides the entry point for users to interact with GPF. It handles user authentication, authorization, and presents data and analysis results through a web-based interface. It *requests data* from the `GPF Instance and Configuration` component and *queries* the `Query and Variant Management` component to display relevant information to the user.
 
-This component is responsible for loading genomic data from various sources (VCF, denovo, CNV, etc.) and storing it in an efficient and scalable manner. It converts the data into Parquet format and utilizes storage backends like Impala and Google Cloud Storage. This component *stores* data that is then used by the GPF Instance & Genomic Resources Management component.
+*   **GPF Instance and Configuration:** This component manages the overall GPF instance, including loading configurations, managing datasets, and providing access to various GPF resources. It acts as a central hub for accessing and managing genomic data and related functionalities. It *manages* the `Genotype Storage Management` component, providing it with the necessary configurations and dataset information.
 
-### GPF Instance & Genomic Resources Management
+*   **Genotype Storage Management:** This component handles the registration, configuration, and access to different genotype storage backends. It provides an abstraction layer for querying variant data from various storage systems. It *loads data from* the `Data Ingestion and Loading` component and *queries* the `Query and Variant Management` component to retrieve variant data. It *uses* `Genomic Resources and Annotation` to annotate the data.
 
-This component manages the GPF instance, including loading datasets and handling genomic resources such as reference genomes and gene models. It provides access to data IDs and genomic annotations. This component *manages* the data for the Query Engine and Variant Management component.
+*   **Data Ingestion and Loading:** This component is responsible for loading and transforming data from various formats into a unified representation suitable for analysis. It handles pedigree loading, variant annotation during import, and project configuration. It *provides data to* the `Genotype Storage Management` component, which stores the loaded and transformed data.
 
-### Query Engine and Variant Management
+*   **Query and Variant Management:** This component provides the functionality to construct and execute queries against the stored variant data. It includes query builders, query runners, and result processing, supporting different query languages and storage backends. It *uses* the `Genomic Resources and Annotation` component to enhance query results with annotation information. The `Web API and User Interface` component *queries* this component to retrieve data for display.
 
-This component handles variant querying, transformation, and response formatting. It provides query builders and SQL dialect implementations for different storage backends. The Query Engine *provides data* to the Web API and User Interface component and *uses* data from the Analysis and Reporting Tools component.
-
-### Web API and User Interface
-
-This component provides the web interface and API endpoints for accessing and interacting with the GPF data. It includes views, serializers, and permission management for datasets, users, and groups. The Web API *calls* the Analysis and Reporting Tools component to perform specific analyses.
-
-### Analysis and Reporting Tools
-
-This component provides tools for enrichment analysis, phenotype browsing, gene profile management, and common report generation. It includes functionalities for defining enrichment models, running tests, managing background models, and generating reports for studies. This component *uses* the Query Engine and Variant Management component to retrieve data for analysis.
-```
+*   **Genomic Resources and Annotation:** This component manages genomic resources like reference genomes, gene models, and annotation scores, and provides annotation capabilities for genetic variants. It builds annotation pipelines and annotates variants with effects and scores. It *provides resources to* the `Genotype Storage Management` component and is *used by* the `Query and Variant Management` component to enhance query results.
