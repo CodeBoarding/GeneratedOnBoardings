@@ -1,37 +1,60 @@
-## GPF Project Onboarding Document
+```text
+# GPF Project Onboarding Document
 
-### Project Description
+## Project Description
 
-The GPF (Genomic Population Framework) project is a comprehensive platform designed for managing, analyzing, and exploring large-scale genomic data. It provides tools for data import, storage, annotation, and querying, with a focus on facilitating research in population genetics and genomics. The platform includes a web-based interface (WDAE) for interactive data exploration and analysis.
+The GPF (Genomic Prediction Framework) project is a comprehensive platform designed for managing, analyzing, and exploring genomic data. It provides tools for data ingestion, storage, querying, and reporting, with a focus on variant analysis and phenotype association studies. GPF aims to facilitate research in genetics and genomics by offering a user-friendly interface and a powerful backend for handling large-scale datasets.
 
-### Data Flow Diagram
+## Data Flow Diagram
 
 ```mermaid
 graph LR
-    subgraph Data Ingestion
-        A[Data Import and Conversion Tools]
+    subgraph Data Ingestion and Storage
+    A[Data Ingestion and Storage]
     end
-    B[Configuration and Metadata Management]
-    C[Genomic Resources and Annotation]
-    D[Data Storage and Query Engine]
-    E["Web Application (WDAE)"]
 
-    A--converts & loads-->D
-    B--configures-->C
-    B--configures-->D
-    C--annotates-->D
-    D--queries-->E
-    E--presents-->User
+    subgraph GPF Instance & Genomic Resources Management
+    B[GPF Instance & Genomic Resources Management]
+    end
+
+    subgraph Query Engine and Variant Management
+    C[Query Engine and Variant Management]
+    end
+
+    subgraph Web API and User Interface
+    D[Web API and User Interface]
+    end
+
+    subgraph Analysis and Reporting Tools
+    E[Analysis and Reporting Tools]
+    end
+
+    A--stores-->B
+    B--manages-->C
+    C--provides data-->D
+    D--calls-->E
+    E--uses-->C
 ```
 
-### Component Descriptions
+## Component Descriptions
 
-*   **Data Import and Conversion Tools:** This component provides command-line tools for importing and converting data from various formats (e.g., VCF, DAE) into formats suitable for GPF's data storage. It converts raw data and loads it into the Data Storage and Query Engine.
+### Data Ingestion and Storage
 
-*   **Configuration and Metadata Management:** This component handles the loading, parsing, validation, and management of configuration settings and metadata for studies, datasets, and genomic resources. It configures both the Genomic Resources and Annotation component and the Data Storage and Query Engine, providing essential parameters for their operation.
+This component is responsible for loading genomic data from various sources (VCF, denovo, CNV, etc.) and storing it in an efficient and scalable manner. It converts the data into Parquet format and utilizes storage backends like Impala and Google Cloud Storage. This component *stores* data that is then used by the GPF Instance & Genomic Resources Management component.
 
-*   **Genomic Resources and Annotation:** This component manages genomic resources (reference genomes, gene models, annotation scores) and annotates genetic variants with functional effects and genomic scores. It uses configurations from the Configuration and Metadata Management component to properly annotate data before passing the annotated data to the Data Storage and Query Engine.
+### GPF Instance & Genomic Resources Management
 
-*   **Data Storage and Query Engine:** This component provides an abstraction layer for storing and querying genotype and phenotype data, supporting various backends (Impala, DuckDB, GCP). It receives converted data from the Data Import and Conversion Tools and annotated data from the Genomic Resources and Annotation component. It then provides query capabilities to the Web Application (WDAE).
+This component manages the GPF instance, including loading datasets and handling genomic resources such as reference genomes and gene models. It provides access to data IDs and genomic annotations. This component *manages* the data for the Query Engine and Variant Management component.
 
-*   **Web Application (WDAE):** This component implements the web-based data exploration interface, providing API endpoints for accessing and analyzing data, managing user authentication and authorization, and handling data serialization/deserialization for web presentation. It queries the Data Storage and Query Engine to retrieve data for presentation to the user.
+### Query Engine and Variant Management
+
+This component handles variant querying, transformation, and response formatting. It provides query builders and SQL dialect implementations for different storage backends. The Query Engine *provides data* to the Web API and User Interface component and *uses* data from the Analysis and Reporting Tools component.
+
+### Web API and User Interface
+
+This component provides the web interface and API endpoints for accessing and interacting with the GPF data. It includes views, serializers, and permission management for datasets, users, and groups. The Web API *calls* the Analysis and Reporting Tools component to perform specific analyses.
+
+### Analysis and Reporting Tools
+
+This component provides tools for enrichment analysis, phenotype browsing, gene profile management, and common report generation. It includes functionalities for defining enrichment models, running tests, managing background models, and generating reports for studies. This component *uses* the Query Engine and Variant Management component to retrieve data for analysis.
+```
