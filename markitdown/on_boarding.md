@@ -8,11 +8,11 @@ MarkItDown is a versatile tool designed to convert various file formats into Mar
 
 ```mermaid
 graph LR
-    A[User Input (File, URL, Stream)] -- Provides input --> B(Core Conversion Manager)
+    A["User Input (File, URL, Stream)"] -- Provides input --> B(Core Conversion Manager)
     B -- Detects file type, selects converter --> C(Stream Information Manager)
     C -- Provides stream metadata --> B
     B -- Uses --> D{Converter Interface & Registry}
-    D -- Selects appropriate --> E(File Type Handlers (Built-in Converters))
+    D -- Selects appropriate --> E("File Type Handlers (Built-in Converters)")
     E -- Converts content --> F(HTML to Markdown Conversion)
     F -- Transforms HTML --> E
     E -- Returns Markdown --> B
