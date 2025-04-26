@@ -1,4 +1,3 @@
-```text
 # GPF Project Onboarding Document
 
 ## Project Description
