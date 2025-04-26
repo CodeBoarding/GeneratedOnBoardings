@@ -1,4 +1,3 @@
-```markdown
 # GPF Project Onboarding Document
 
 ## Project Description
@@ -35,7 +34,6 @@ graph LR
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style H fill:#f9f,stroke:#333,stroke-width:2px
-```
 
 ## Component Descriptions
 
