@@ -1,72 +1,38 @@
-Okay, I will generate an onboarding document for the `gpf` project based on the provided information.
+```text
+## GPF Project Onboarding Document
 
-**1. Project Description**
+### Project Description
 
-The Genotype and Phenotype Foundation (GPF) is a comprehensive platform designed for managing, analyzing, and querying large-scale genomic data. It provides tools for importing data from various sources, storing it efficiently, annotating variants, and enabling complex queries through a web-based interface and API. GPF facilitates collaborative research by managing user access and permissions, and it supports a wide range of genomic studies, including those focused on rare genetic disorders and population genetics.
+The GPF (Genomic Population Framework) project is a comprehensive platform designed for managing, analyzing, and exploring large-scale genomic data. It provides tools for data import, storage, annotation, and querying, with a focus on facilitating research in population genetics and genomics. The platform includes a web-based interface (WDAE) for interactive data exploration and analysis.
 
-**2. Data Flow Diagram (Mermaid Format)**
+### Data Flow Diagram
 
 ```mermaid
 graph LR
-    subgraph Data Ingestion and Management
-    A["Data Sources (VCF, Denovo, CNV)"]
-    B[Import Tools]
-    C["Storage (Impala, DuckDB, GCS)"]
+    subgraph Data Ingestion
+        A[Data Import and Conversion Tools]
     end
+    B[Configuration and Metadata Management]
+    C[Genomic Resources and Annotation]
+    D[Data Storage and Query Engine]
+    E[Web Application (WDAE)]
 
-    subgraph Genomic Resources and Annotation
-    D[Genomic Resource Repositories]
-    E[Annotation Pipeline]
-    end
-
-    subgraph Query and API
-    F[Web API]
-    G[Query Builder]
-    H[Query Runner]
-    I[User Interface]
-    end
-
-    subgraph User Management and Security
-    J[User Authentication]
-    K[Authorization and Permissions]
-    end
-
-    A--Imports data-->B
-    B--Stores data-->C
-    C--Provides data-->G
-    D--Provides resources-->E
-    E--Annotates variants-->C
-    G--Builds queries-->H
-    H--Executes queries-->C
-    C--Returns results-->G
-    G--Formats results-->I
-    F--Handles requests-->G
-    I--Uses-->F
-    F--Authenticates-->J
-    J--Authorizes-->K
-    K--Controls access-->F
+    A--converts & loads-->D
+    B--configures-->C
+    B--configures-->D
+    C--annotates-->D
+    D--queries-->E
+    E--presents-->User
 ```
 
-**3. Component Descriptions**
+### Component Descriptions
 
-*   **Data Sources (VCF, Denovo, CNV):** This component represents the various input data formats that GPF can ingest, including VCF files for variant calls, denovo files for de novo mutations, and CNV files for copy number variations.
+*   **Data Import and Conversion Tools:** This component provides command-line tools for importing and converting data from various formats (e.g., VCF, DAE) into formats suitable for GPF's data storage. It converts raw data and loads it into the Data Storage and Query Engine.
 
-*   **Import Tools:** This component is responsible for importing data from various sources and formats into the GPF environment. It handles data transformation, validation, and loading into the storage backend.
+*   **Configuration and Metadata Management:** This component handles the loading, parsing, validation, and management of configuration settings and metadata for studies, datasets, and genomic resources. It configures both the Genomic Resources and Annotation component and the Data Storage and Query Engine, providing essential parameters for their operation.
 
-*   **Storage (Impala, DuckDB, GCS):** This component represents the storage backends used by GPF to store genomic data. It supports various storage solutions like Impala, DuckDB, and Google Cloud Storage, providing efficient data access and scalability.
+*   **Genomic Resources and Annotation:** This component manages genomic resources (reference genomes, gene models, annotation scores) and annotates genetic variants with functional effects and genomic scores. It uses configurations from the Configuration and Metadata Management component to properly annotate data before passing the annotated data to the Data Storage and Query Engine.
 
-*   **Genomic Resource Repositories:** This component manages genomic resources such as reference genomes, gene models, and annotation scores. It provides a centralized repository for accessing and managing these resources.
+*   **Data Storage and Query Engine:** This component provides an abstraction layer for storing and querying genotype and phenotype data, supporting various backends (Impala, DuckDB, GCP). It receives converted data from the Data Import and Conversion Tools and annotated data from the Genomic Resources and Annotation component. It then provides query capabilities to the Web Application (WDAE).
 
-*   **Annotation Pipeline:** This component performs variant annotation using genomic resources and annotation tools. It enriches variants with functional and biological information, aiding in the interpretation of genetic variations.
-
-*   **Web API:** This component exposes API endpoints for accessing and interacting with GPF data. It provides interfaces for querying variants, accessing datasets, managing users, and performing other operations.
-
-*   **Query Builder:** This component constructs SQL queries based on user requests and data models. It translates high-level query specifications into efficient SQL queries for the storage backend.
-
-*   **Query Runner:** This component executes SQL queries against the storage backend and retrieves the results. It optimizes query execution and handles data retrieval.
-
-*   **User Interface:** This component provides a web-based interface for users to interact with GPF. It allows users to browse datasets, query variants, visualize results, and manage their accounts.
-
-*   **User Authentication:** This component handles user authentication, verifying user credentials and establishing secure sessions.
-
-*   **Authorization and Permissions:** This component manages user authorization and permissions, controlling access to datasets and functionalities based on user roles and privileges.
+*   **Web Application (WDAE):** This component implements the web-based data exploration interface, providing API endpoints for accessing and analyzing data, managing user authentication and authorization, and handling data serialization/deserialization for web presentation. It queries the Data Storage and Query Engine to retrieve data for presentation to the user.
