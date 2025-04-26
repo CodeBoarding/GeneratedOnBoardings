@@ -9,9 +9,9 @@ The Genotype and Phenotype Foundation (GPF) is a comprehensive platform designed
 ```mermaid
 graph LR
     subgraph Data Ingestion and Management
-    A[Data Sources (VCF, Denovo, CNV)]
+    A["Data Sources (VCF, Denovo, CNV)"]
     B[Import Tools]
-    C[Storage (Impala, DuckDB, GCS)]
+    C["Storage (Impala, DuckDB, GCS)"]
     end
 
     subgraph Genomic Resources and Annotation
