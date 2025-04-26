@@ -1,60 +1,64 @@
-# GPF Project Onboarding Document
+Okay, I will generate an onboarding document for the `gpf` project based on the provided information.
 
-## Project Description
+**1. Project Description**
 
-The GPF (Genomic Prediction Framework) project is a comprehensive platform designed for the analysis and management of genomic data. It provides tools for variant annotation, phenotype analysis, gene set enrichment, and user management, all accessible through a well-defined API layer. GPF aims to facilitate research in genetics and genomics by providing a robust and scalable environment for data exploration and analysis.
+The `gpf` project is a comprehensive platform for managing, analyzing, and exploring genomic data. It provides tools for variant annotation, storage, querying, and visualization, enabling researchers to gain insights from large-scale genomic datasets. The platform supports various data storage backends, genomic resources, and web-based APIs for seamless integration and accessibility. It also incorporates user management and access control features to ensure data security and privacy.
 
-## Project Flow Diagram
+**2. Flow Diagram (Mermaid Format)**
 
 ```mermaid
 graph LR
-    subgraph Data Management and Access
-        A[Data Management and Access]
+    subgraph Data Ingestion and Management
+        A[Genomic Resources]
+        B[FamiliesData]
+        C[FamiliesLoader]
+        D[GPFInstance]
+        E[Genotype Storage]
+        F[Import Storage]
     end
 
-    subgraph API Layer
-        B[API Layer]
+    subgraph Annotation and Analysis
+        G[Annotation Pipeline]
+        H[DenovoGeneSetsDb]
+        I[Enrichment API]
     end
 
-    subgraph Annotation Pipeline
-        C[Annotation Pipeline]
+    subgraph Web Interface and User Management
+        J[Web API]
+        K[User Management and Access Control]
+        L[Query State Management]
     end
 
-    subgraph User Management and Authentication
-        D[User Management and Authentication]
-    end
-
-    subgraph Genomic Resources Management
-        E[Genomic Resources Management]
-    end
-
-    B -- retrieves data from --> A
-    B -- triggers --> C
-    B -- authenticates --> D
-    C -- uses --> E
-    A -- provides data to --> C
-    D -- manages --> A
-    E -- provides resources to --> A
+    A--provides-->G
+    B--loads-->C
+    C--creates-->B
+    D--manages-->A
+    D--manages-->B
+    D--manages-->E
+    D--manages-->G
+    E--stores-->F
+    F--imports-->E
+    G--annotates-->E
+    E--queries-->J
+    H--queries-->I
+    I--uses-->J
+    J--uses-->K
+    J--uses-->L
+    K--authenticates-->J
+    L--manages-->J
 ```
 
-## Component Descriptions
+**3. Component Descriptions**
 
-### Data Management and Access
-
-This component is the foundation of the GPF project, responsible for storing, retrieving, and transforming various data types. It handles genomic variants, phenotype data, gene sets, and user-related information, providing a unified interface for accessing data from different sources. This ensures data consistency and integrity across the entire platform.
-
-### API Layer
-
-The API Layer serves as the entry point for external clients to interact with the GPF system. It defines API endpoints for accessing various functionalities, including data retrieval, analysis, and management. This component handles incoming HTTP requests, processes them, and returns structured responses, providing a clear and consistent interface for developers and researchers.
-
-### Annotation Pipeline
-
-The Annotation Pipeline orchestrates the annotation of genomic variants using various data sources. It manages different annotator types, including those for genomic scores, gene sets, and functional effects. This component ensures the consistent and accurate annotation of variants, which is crucial for downstream analysis and interpretation.
-
-### User Management and Authentication
-
-This component is responsible for managing user accounts, authentication, and authorization. It handles user creation, modification, and deletion, as well as password resets and authentication logging. By managing user permissions, this component ensures secure access to the system and protects sensitive data.
-
-### Genomic Resources Management
-
-The Genomic Resources Management component provides access to essential genomic resources such as reference genomes, gene models, and genomic scores. It handles resource retrieval, caching, and versioning, ensuring efficient access to the genomic data required for annotation and analysis. This component is critical for maintaining data quality and consistency across the platform.
+*   **Genomic Resources:** This component manages access to essential genomic data, including reference genomes, gene models, and annotation files. It provides the necessary data for variant interpretation and annotation.
+*   **FamiliesData:** This component represents families and individuals, including their relationships and attributes. It stores pedigree information used in variant analysis and filtering.
+*   **FamiliesLoader:** This component loads family data from various file formats into a `FamiliesData` object. It handles the parsing and validation of pedigree information.
+*   **GPFInstance:** This is the central component that manages the overall context of the application. It provides access to genomic resources, datasets, and application configuration.
+*   **Genotype Storage:** This component abstracts access to variant data stored in different backends, such as Google BigQuery, Impala, and Parquet. It provides a unified query interface for retrieving variant information.
+*   **Import Storage:** This component handles the import of data into different storage systems. It manages the process of loading and transforming data into the appropriate format for each storage backend.
+*   **Annotation Pipeline:** This component orchestrates the process of annotating genetic variants with functional and contextual information. It uses various annotators to add information about gene effects, conservation scores, and other relevant data.
+*   **DenovoGeneSetsDb:** This component provides access to denovo gene sets for enrichment analysis. It stores and manages information about genes that are frequently mutated in specific disease cohorts.
+*   **Enrichment API:** This component provides API endpoints for performing enrichment analysis. It allows users to identify gene sets that are significantly enriched in a set of variants.
+*   **Web API:** This component provides RESTful endpoints for accessing data and functionality, including variant queries, phenotype data, and user management. It serves as the interface between the backend and the user interface.
+*   **User Management and Access Control:** This component handles user authentication, authorization, and management of dataset permissions. It ensures that only authorized users can access sensitive data.
+*   **Query State Management:** This component handles saving, loading, and deleting query states, allowing users to persist and retrieve their search configurations. It improves user experience by allowing users to resume their work later.
