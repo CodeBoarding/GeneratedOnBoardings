@@ -17,7 +17,7 @@ graph LR
 
     subgraph Analysis and User Interaction
     E(Analysis & Task Management)
-    F(User, Group, and Data Access Management (WDAE))
+    F("User, Group, and Data Access Management (WDAE)")
     end
 
     subgraph Data Storage
