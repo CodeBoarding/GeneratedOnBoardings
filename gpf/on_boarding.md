@@ -1,60 +1,67 @@
-Okay, I will generate an onboarding document for the `gpf` project based on the provided information.
+```markdown
+# GPF Project Onboarding Document
 
-**Project Description**
+## Project Description
 
-The Genomic Platform (GPF) project provides a comprehensive framework for managing, analyzing, and visualizing genomic data. It offers a web-based interface (WDAE) for exploring variant data, genomic resources, and phenotype information, facilitating research in genetics and genomics. GPF supports various data storage solutions, including Impala and Google Cloud Platform, and provides APIs for accessing its functionalities programmatically. It incorporates tools for variant annotation, denovo gene set analysis, and user management, making it a versatile platform for genomic studies.
+The Genomic Platform (GPF) project is a comprehensive suite of tools and a web application (WDAE) designed for analyzing and managing genomic data. It provides functionalities for variant annotation, storage, querying, and reporting, with a focus on supporting research in genetics and genomics. GPF enables researchers to explore variant data in the context of families, genes, and genomic regions, facilitating the discovery of disease-causing mutations and the understanding of genetic mechanisms.
 
-**Flow Diagram**
+## Project Flow Diagram
 
 ```mermaid
 graph LR
-    User[User] --> WDAE[WDAE]
-    WDAE -- configures --> GPFInstance[GPFInstance]
-    GPFInstance -- manages --> VariantsDB[VariantsDB]
-    GPFInstance -- accesses --> GenomicResourceRepository[GenomicResourceRepository]
-    GPFInstance -- uses --> FamiliesData[FamiliesData]
-    GPFInstance -- uses --> Annotation[Annotation]
-    GPFInstance -- uses --> DenovoGeneSetsDB[DenovoGeneSetsDB]
-    GPFInstance -- uses --> QueryService[QueryService]
-    QueryService -- queries --> Storage[Storage]
-    Storage -- stores --> Impala[Impala]
-    Storage -- stores --> GCP[GCP]
-    WDAE -- authenticates --> UserManagement[UserManagement]
-    WDAE -- provides --> API[API]
-    API -- accesses --> VariantsDB
-    API -- accesses --> GenomicResourceRepository
-    API -- accesses --> FamiliesData
-    API -- accesses --> Annotation
-    API -- accesses --> DenovoGeneSetsDB
-    API -- accesses --> Storage
+    subgraph Data Ingestion and Management
+        A[Raw Genomic Data] --> B(GPFInstance)
+        B --> C(Genomic Resources Management)
+        B --> D(Families Data Management)
+        B --> E(Annotation Pipeline)
+        B --> F(Variants Data Access)
+        F --> G(Genotype Storage)
+    end
+
+    subgraph Web Application and API
+        H(User) --> I(WDAEConfig)
+        I --authenticates--> J(User Management and Authentication)
+        I --configures--> K(API Endpoints)
+        K --queries--> F
+        K --accesses--> C
+		K --accesses--> D
+        K --manages--> L(Query Management)
+    end
+
+    subgraph Data Analysis and Reporting
+        L --uses--> F
+        L --saves/loads--> M(Query State)
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
-**Component Descriptions**
+## Component Descriptions
 
-*   **User:** Represents the end-user interacting with the system, typically through the WDAE web interface or API.
+*   **Raw Genomic Data:** Represents the initial input data, such as VCF files or other variant call formats, that needs to be processed and analyzed by the GPF system.
 
-*   **WDAE:** The web-based data exploration and analysis environment, providing a user interface for accessing and visualizing genomic data. It configures the GPF instance and provides access to various APIs.
+*   **GPFInstance:** The central component that orchestrates the entire GPF system. It initializes and configures all other components, providing a unified access point to genomic resources, variant data, and analysis tools. It manages the lifecycle of the application and ensures that all components are properly configured and interconnected.
 
-*   **GPFInstance:** The central component that manages the configuration and access to various genomic resources, datasets, and functionalities within the GPF framework. It acts as a container for all other components.
+*   **Genomic Resources Management:** This component is responsible for managing and providing access to essential genomic resources, such as reference genomes, gene models, and annotation databases. It handles the retrieval, storage, and organization of these resources, ensuring that they are readily available for variant annotation and analysis.
 
-*   **VariantsDB:** Provides access to variant data, including summary and family variants, enabling querying and retrieval of variant information. It serves as an abstraction layer for accessing variant data from different storage backends.
+*   **Families Data Management:** This component manages pedigree information, representing family relationships and individual characteristics. It provides functionalities for accessing and analyzing family structures, which is crucial for understanding the inheritance patterns of genetic variants.
 
-*   **GenomicResourceRepository:** Manages genomic resources such as reference genomes, gene models, and annotation files, handling and organizing these resources for genomic analysis.
+*   **Annotation Pipeline:** This component handles the annotation of genetic variants, enriching them with relevant information such as gene effects, functional predictions, and population frequencies. It uses genomic resources and external databases to add context to the variants, facilitating their interpretation and prioritization.
 
-*   **FamiliesData:** Represents pedigree information for families, essential for understanding relationships between individuals in a study and performing family-based analyses.
+*   **Variants Data Access:** This component provides a unified interface for accessing variant data stored in different formats and storage systems. It abstracts the underlying storage mechanisms, allowing users to query and retrieve variant information without needing to know the specific details of the data storage.
 
-*   **Annotation:** Handles the annotation of variants, adding relevant information such as gene effects and population frequencies through annotation pipelines. It enriches variant data with functional and biological context.
+*   **Genotype Storage:** This component manages the storage and retrieval of genotype data, providing efficient access to variant information. It supports various storage systems, such as Impala, Parquet, and in-memory databases, allowing the GPF system to scale and adapt to different data sizes and performance requirements.
 
-*   **DenovoGeneSetsDB:** Provides access to denovo gene sets, allowing for the analysis of genes that are newly mutated in individuals and potentially associated with specific phenotypes.
+*   **User:** Represents a researcher or analyst who interacts with the WDAE web application to explore and analyze genomic data.
 
-*   **QueryService:** Handles user queries and interacts with the data access layer to retrieve and process variant data. It translates user requests into database queries and returns results in a structured format.
+*   **WDAEConfig:** This component configures the WDAE web application, loading extensions and preparing the application for use. It sets up the necessary parameters and settings for the web interface to interact with the GPF system.
 
-*   **Storage:** Abstracts genotype storage implementations, handling data upload, import, and loading from various sources like Impala and Google Cloud Platform. It provides a unified interface for accessing genotype data regardless of the underlying storage technology.
+*   **User Management and Authentication:** This component handles user creation, authentication, authorization, and profile management for the WDAE web interface. It ensures that only authorized users can access sensitive genomic data and analysis tools.
 
-*   **Impala:** A distributed SQL query engine used for storing and querying large-scale genomic data. It provides fast and efficient access to variant data.
+*   **API Endpoints:** This component provides a set of RESTful APIs for accessing various functionalities of the GPF system, including variant querying, genomic resource retrieval, and analysis tools. These APIs allow external applications and services to interact with the GPF system programmatically.
 
-*   **GCP:** Google Cloud Platform, used for storing and processing genomic data in the cloud. It offers scalable and cost-effective storage and compute resources.
+*   **Query Management:** This component handles user queries, interacting with the data access layer to retrieve variant information. It also provides functionalities for saving, loading, and deleting query states, allowing users to persist and retrieve their search configurations.
 
-*   **UserManagement:** Handles user creation, authentication, authorization, and profile management within the WDAE application. It ensures secure access to the system and manages user permissions.
-
-*   **API:** Provides API endpoints for accessing various functionalities, including datasets, gene profiles, genomic scores, and phenotype data. It allows programmatic access to GPF's features and data.
+*   **Query State:** This component represents the saved state of a user query, including the search parameters, filters, and other settings. It allows users to easily resume their analysis from where they left off, without needing to re-enter their query configurations.
+```
