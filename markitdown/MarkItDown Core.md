@@ -1,5 +1,4 @@
-```markdown
-## MarkItDown Core Overview
+# MarkItDown Core Overview
 
 This document provides an overview of the MarkItDown core component, its structure, and its role in converting various document types to Markdown.
 
@@ -34,8 +33,6 @@ graph LR
     style D fill:#f9f,stroke:#333,stroke-width:2px
     style E fill:#f9f,stroke:#333,stroke-width:2px
     style M fill:#ccf,stroke:#333,stroke-width:2px
-
-
 ```
 
 ### Component Descriptions
