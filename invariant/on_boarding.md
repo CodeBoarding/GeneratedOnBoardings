@@ -1,4 +1,3 @@
-```markdown
 ## Invariant Project Overview
 
 Invariant is a policy-as-code engine that allows users to define and enforce policies on various types of data, including code, text, and other structured data. It provides a flexible and extensible framework for analyzing data against defined policies, identifying violations, and triggering appropriate actions. The engine supports both local and remote policy analysis, a standard library of functions and utilities, and a web-based explorer for visualizing analysis results.
@@ -52,4 +51,3 @@ click H href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/inv
 **Monitor:** This component monitors the system and checks for violations based on defined policies. It receives violation reports from the Runtime Environment and reports them to the Invariant Explorer. It relates to the Runtime Environment by receiving violation reports and to the Invariant Explorer by sending the reports for visualization.
 
 **Invariant Explorer:** This component launches a web-based explorer for visualizing and interacting with the analysis results. It receives violation reports from the Monitor and presents them in a user-friendly interface. It relates to the Monitor by receiving violation reports for visualization.
-```
