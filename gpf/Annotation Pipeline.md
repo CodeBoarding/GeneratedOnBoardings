@@ -1,4 +1,3 @@
-```markdown
 ## Annotation Pipeline Overview
 
 The Annotation Pipeline orchestrates the process of annotating variants with functional and genomic information. It uses a series of annotators, each responsible for adding specific annotations to the variant data. The pipeline is built from a configuration file that specifies the annotators to use and their order of execution.
