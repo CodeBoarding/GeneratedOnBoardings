@@ -15,14 +15,14 @@ graph LR
     H -- Manages --> D
     F -- Returns --> G
 
-    click A href "./Request%20Handling.md"
-    click B href "./URL%20Routing.md"
-    click C href "./View%20Processing.md"
-    click D href "./Data%20Models%20(ORM).md"
-    click E href "./Template%20Rendering.md"
-    click F href "./HTTP%20Response.md"
-    click G href "./Middleware%20Processing.md"
-    click H href "./Admin%20Interface.md"
+    click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Request%20Handling.md"
+    click B href https://github.com/CodeBoarding/GeneratedOnBoardings/django/URL%20Routing.md"
+    click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/View%20Processing.md"
+    click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Data%20Models%20(ORM).md"
+    click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Template%20Rendering.md"
+    click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/HTTP%20Response.md"
+    click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Middleware%20Processing.md"
+    click H href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Admin%20Interface.md"
 
 ```
 
