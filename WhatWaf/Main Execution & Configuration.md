@@ -21,9 +21,9 @@ classDiagram
         fatal()
     }
 
-    Main --"parses"--> WhatWafParser : Uses
-    Main --"configures"--> Settings : Uses
-    Settings --"formats"--> Formatter : Uses
+    Main --> WhatWafParser : Uses
+    Main --> Settings : Uses
+    Settings --> Formatter : Uses
 
 ```
 
