@@ -1,4 +1,3 @@
-```markdown
 ## Web Application Overview
 
 The Web Application component provides the user interface for interacting with the data and functionalities exposed by the GPF instance. It handles user requests, retrieves data, and presents it in a user-friendly manner. The application exposes API endpoints for accessing datasets and GPF instance information.
