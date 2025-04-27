@@ -1,29 +1,27 @@
-## WhatWaf: High-Level Data Flow Diagram
+## WhatWaf: High-Level Data Flow Overview
 
-WhatWaf is a security tool designed to detect web application firewalls (WAFs). It operates by sending various HTTP requests and analyzing the responses to identify the presence and type of WAF protecting a given website.
+WhatWaf is a security tool designed to detect web application firewalls (WAFs). It operates by sending various HTTP requests and analyzing the responses to identify patterns and signatures indicative of specific WAFs. The tool automates the process of fingerprinting WAFs, providing valuable information for security assessments and penetration testing.
 
 ```mermaid
 graph LR
-    A[Main Controller] -- Initializes & Orchestrates --> B(Script Loader)
-    B -- Loads --> C[Detection Engine]
-    A -- Configures --> D[Settings and Database Manager]
-    C -- Uses --> D
-    C -- Sends Requests & Receives Responses --> E((Target Website))
-    C -- Detects & Reports --> F[Reporting and Formatting]
-    D -- Stores & Retrieves --> G((Database))
-    F -- Formats & Presents --> H((User))
+    A[Main Trigger & Setup] -- configures --> B(Settings & Utilities)
+    A -- initiates --> C(Detection Engine)
+    B -- provides --> C
+    C -- uses --> D{Tampering Modules}
+    C -- sends requests, receives responses --> E[Reporting & Database]
+    D -- modifies --> C
 
 
 ```
 
-## Component Descriptions
+### Component Descriptions:
 
-**Main Controller:** This component is responsible for initializing the program, parsing command-line arguments, and orchestrating the overall WAF detection process. It loads scripts via the `Script Loader` and configures the `Settings and Database Manager` with user-provided options. It then triggers the `Detection Engine` to start the detection process, and finally, the `Reporting and Formatting` component presents the results to the user.
+**A: Main Trigger & Setup:** This component serves as the entry point of the application. It parses command-line arguments, configures the environment, and initiates the core detection process. It sets up the necessary configurations and prepares the system for WAF detection. It configures the Settings & Utilities component and initiates the Detection Engine.
 
-**Script Loader:** The Script Loader is responsible for loading detection scripts that define the specific requests and analysis logic for identifying different WAFs. It provides these scripts to the `Detection Engine`.
+**B: Settings & Utilities:** This component provides utility functions for managing settings, generating random strings, handling requests, and interacting with the database. It also includes functions for checking versions and updating the application. It provides configurations and utilities to the Detection Engine.
 
-**Detection Engine:** This is the core component that sends HTTP requests to the target website and analyzes the responses to detect the presence of a WAF. It uses the scripts loaded by the `Script Loader` and the settings managed by the `Settings and Database Manager`. It reports any detected firewalls to the `Reporting and Formatting` component.
+**C: Detection Engine:** This is the core component responsible for loading detection scripts, sending requests, analyzing responses, and managing the detection queue. It orchestrates the process of identifying firewalls. It uses the Tampering Modules to modify requests and sends requests to the target, receiving responses for analysis. It then sends the results to the Reporting & Database component.
 
-**Settings and Database Manager:** This component manages various settings and configurations, such as user agents, proxies, timeouts, and database interactions. It provides these settings to the `Detection Engine` and stores/retrieves data from the database.
+**D: Tampering Modules:** These modules modify requests to bypass WAFs. They provide various techniques to evade detection. The Detection Engine uses these modules to alter requests before sending them to the target.
 
-**Reporting and Formatting:** This component formats the output of the tool, including informational messages, warnings, errors, and successful detections. It receives detection results from the `Detection Engine` and presents them to the user in a readable format.
+**E: Reporting & Database:** This component handles the creation and reporting of firewall detection issues, including generating identifiers and managing sensitive information. It also manages database operations such as inserting payloads and URLs, and fetching data. It receives the results from the Detection Engine and stores/reports the findings.
