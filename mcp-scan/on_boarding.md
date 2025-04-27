@@ -1,29 +1,33 @@
-Okay, I will generate an onboarding document for the `mcp-scan` project based on the provided information.
+## MCP-Scan Data Flow Overview
 
-**Project Description**
+**Project Description:**
+The `mcp-scan` project is a security tool designed to scan and verify configurations of MCP (Meta Configuration Platform) servers. It identifies potential security vulnerabilities by inspecting server configurations, checking against a local whitelist, and communicating with a verification API. The tool supports command-line operation, allowing users to scan configurations, manage whitelists, and suppress standard output.
 
-The `mcp-scan` project is a tool designed to scan and verify configurations of MCP (Meta Configuration Protocol) servers. It automates the process of checking server status, scanning configuration files for potential issues, and managing whitelists. The tool supports various configuration file types (e.g., Claude, VSCode) and server definitions (e.g., SSE, Stdio), providing a comprehensive solution for ensuring the integrity and security of MCP environments.
-
-**Flow Diagram**
+**Data Flow Diagram:**
 
 ```mermaid
 graph LR
-    A[CLI Handler] -- parses --> B(Configuration Manager)
-    B -- loads --> C(MCPScanner Orchestrator)
-    C -- uses --> D(MCP Client Interface)
-    D -- interacts with --> E(MCP Servers)
-    C -- manages --> F(Data Storage Manager)
-    F -- stores/retrieves --> G(Scan Results/Whitelist)
+    A["CLI Handler"] -- Parses Arguments & Invokes --> B("MCP Scanner Core")
+    B -- Retrieves Config --> C("MCP Configuration Client")
+    B -- Checks Entities --> D("Whitelist Manager")
+    B -- Sends Config --> E("Verification Handler")
+    E -- Verifies Server --> B
+
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-scan//CLI%20Handler.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-scan//MCP%20Scanner%20Core.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-scan//MCP%20Configuration%20Client.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-scan//Whitelist%20Manager.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-scan//Verification%20Handler.md"
 ```
 
-**Component Descriptions**
+**Component Descriptions:**
 
-*   **CLI Handler:** This component serves as the entry point for the application. It parses command-line arguments provided by the user and initiates the scanning process accordingly. It essentially translates user input into actionable commands for the rest of the system.
+*   **CLI Handler:** This component serves as the entry point for the application. It parses command-line arguments provided by the user and orchestrates the overall scanning process by invoking the `MCP Scanner Core`. It also handles user requests related to whitelist management.
 
-*   **Configuration Manager:** The Configuration Manager is responsible for loading, parsing, and validating configuration files. It transforms raw configuration data into structured data models, making it easier for other components to work with the configuration information. It supports different configuration types and server definitions.
+*   **MCP Scanner Core:** This is the central component responsible for driving the scanning and inspection of MCP configurations. It retrieves server configurations using the `MCP Configuration Client`, checks entities against the `Whitelist Manager`, and sends configurations to the `Verification Handler` for validation. The core then aggregates the results and presents them to the user.
 
-*   **MCPScanner Orchestrator:** This is the central component that orchestrates the entire scanning process. It coordinates the activities of other components, including checking server status, scanning configurations, and managing the scan lifecycle. It determines the overall flow of the scan based on the configuration and user input.
+*   **MCP Configuration Client:** This component handles the retrieval of server configurations from files and interacts with MCP servers to retrieve tool, prompt, and resource definitions. It provides the `MCP Scanner Core` with the necessary configuration data for scanning.
 
-*   **MCP Client Interface:** This component provides an interface for interacting with MCP servers. It encapsulates the logic for checking server status, scanning configurations, and handling communication with the servers. It abstracts away the details of the MCP server interaction, providing a clean and consistent API for other components to use.
+*   **Whitelist Manager:** This component manages the local whitelist of approved entities. The `MCP Scanner Core` consults the `Whitelist Manager` to determine if scanned entities are whitelisted, reducing false positives. It also provides functionality for the `CLI Handler` to add, reset, check, and persist whitelist entries.
 
-*   **Data Storage Manager:** The Data Storage Manager handles the storage and retrieval of scan results, whitelist data, and other persistent data. It provides functionalities for checking, updating, and resetting the whitelist. This component ensures that scan results and whitelist information are persisted between runs of the application.
+*   **Verification Handler:** This component communicates with the verification API to validate MCP server configurations and identify potential security vulnerabilities. It receives configurations from the `MCP Scanner Core` and sends verification requests to the API, relaying the results back to the core for further processing and reporting.
