@@ -1,29 +1,40 @@
-## GPF Project Overview
+```markdown
+## GPF Data Flow Overview
 
-The GPF (Genomic Prediction Framework) project is a comprehensive platform designed for managing, analyzing, and querying large-scale genomic data. It provides tools for importing, storing, annotating, and querying genetic variants and phenotype data, with a focus on supporting research in areas such as rare disease genetics and personalized medicine. The platform includes a web application (WDAE) that offers user-friendly interfaces for data exploration and analysis.
-
-## Data Flow Diagram
+GPF (Genomic Prediction Framework) is a system designed for managing, analyzing, and storing genomic data. It provides tools for loading variant data, annotating variants with functional information, and storing the data in scalable storage solutions. The system also includes a web application for accessing and exploring the data.
 
 ```mermaid
 graph LR
-    A[GPF Instance] -- configures & manages --> B(Genomic Resources)
-    A -- provides access to --> C(Variant Management)
-    A -- provides access to --> D(Phenotype Management)
-    B -- provides genomic data to --> C
-    C -- integrates & analyzes --> D
-    C -- provides variant data to --> E("Web API (WDAE)")
-    D -- provides phenotype data to --> E
-    E -- uses --> A
+    A["GPF Instance"] -- Manages --> B("Genomic Resources")
+    A -- Uses --> C("Pedigree Loader")
+    A -- Configures --> D("Variant Loader")
+    D -- Uses --> E("Annotation Pipeline")
+    E -- Stores --> F("Storage")
+    F -- Provides Data --> G("Web Application")
+    G -- Accesses --> A
+
+click A href "GPF Instance.md"
+click B href "Genomic Resources.md"
+click C href "Pedigree Loader.md"
+click D href "Variant Loader.md"
+click E href "Annotation Pipeline.md"
+click F href "Storage.md"
+click G href "Web Application.md"
 ```
 
-## Component Descriptions
+### Component Descriptions
 
-**GPF Instance:** This component is the central manager of the entire GPF system. It loads configurations, manages access to genomic resources, variant data, and phenotype data. It configures and manages the Genomic Resources component and provides access to Variant and Phenotype Management components. The Web API uses the GPF Instance to access the underlying data and functionalities.
+**GPF Instance:** This is the central component that manages the configuration and data resources for the project. It initializes and provides access to other components like Genomic Resources, Pedigree Loader, and Variant Loader. The Web Application accesses the GPF Instance to retrieve data and configuration information.
 
-**Genomic Resources:** This component handles the storage, retrieval, and management of genomic resources such as reference genomes, gene models, and annotation databases. It provides genomic data to the Variant Management component for annotation and analysis. The GPF Instance configures and manages this component.
+**Genomic Resources:** This component manages access to genomic resources like reference genomes and gene models. The GPF Instance uses it to load and manage these resources. The Variant Loader and Annotation Pipeline may use genomic resources for variant processing.
 
-**Variant Management:** This component encompasses the import, storage, annotation, and querying of genetic variants. It integrates data from various sources, annotates variants using genomic resources, and provides efficient querying capabilities. It integrates and analyzes data with the Phenotype Management component and provides variant data to the Web API for visualization and analysis.
+**Pedigree Loader:** This component loads and manages pedigree data, representing family relationships and individual attributes. The GPF Instance uses it to load pedigree information. The Variant Loader uses pedigree information to match samples to families.
 
-**Phenotype Management:** This component deals with loading, storing, and querying phenotype data associated with individuals and families. It allows for integrating phenotype data with genotype data for comprehensive analysis. It integrates with the Variant Management component for combined genotype-phenotype analysis and provides phenotype data to the Web API.
+**Variant Loader:** This component loads variant data from VCF files. It uses the Pedigree Loader to match samples to families and prepares variant data for annotation. The Annotation Pipeline receives the loaded variant data for annotation.
 
-**Web API (WDAE):** This component provides a set of RESTful APIs for accessing and managing data and functionalities within the WDAE web application. It enables user management, dataset access, and various analysis tools. It uses the GPF Instance to access data and functionalities, and it receives variant and phenotype data from the Variant and Phenotype Management components, respectively.
+**Annotation Pipeline:** This component annotates variants with functional and genomic information. It receives variant data from the Variant Loader and enriches it with annotations. The annotated data is then sent to the Storage component.
+
+**Storage:** This component stores variant and pedigree data in a persistent storage solution. It receives annotated data from the Annotation Pipeline and makes it available to the Web Application.
+
+**Web Application:** This component provides a user interface for accessing and analyzing the data. It accesses the GPF Instance for configuration and data, and retrieves data from the Storage component for display and analysis.
+```
