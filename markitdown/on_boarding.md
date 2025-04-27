@@ -1,25 +1,39 @@
-Okay, I'm ready to generate the high-level data flow overview for the `markitdown` project.
+Okay, I'm ready to generate the high-level data flow diagram for the `markitdown` project.
 
 **1. Project Description:**
 
-MarkItDown is a versatile document conversion tool that transforms various file formats (e.g., HTML, DOCX, PDF) into Markdown. It provides a command-line interface for users to easily convert documents, leveraging a core conversion engine and specialized converters for each supported format. The tool also handles stream information to correctly process different input types.
+MarkItDown is a versatile tool designed to convert various document formats and web sources into Markdown. It supports local files, remote URLs, and data streams, offering a unified interface for conversion. The tool is extensible through a converter registration system, allowing users to add support for new file types.
 
 **2. Data Flow Diagram (Mermaid Format):**
 
 ```mermaid
 graph LR
-    A[Command-Line Interface] -- invokes --> B(Core Conversion Engine)
-    B -- identifies --> C(Stream Information Handler)
-    C -- infers --> B
-    B -- selects --> D{Document Converters}
-    D -- converts --> E(Markdown Output)
-    E -- returns --> A
+    A[Command-Line Interface] -- Receives Input --> B(MarkItDown Core)
+    B -- Determines Input Type --> C{Input Handling}
+    C -- Handles Stream --> B
+    C -- Handles Local File --> B
+    C -- Handles Remote URL --> B
+    B -- Creates StreamInfo --> D(Stream Information Handling)
+    B -- Manages Converters --> E(Converter Management)
+    E -- Registers Converter --> B
+    B -- Selects Converter --> F(Converter Implementations)
+    F -- Converts Document --> B
+    B -- Returns Markdown --> A
+    A -- Outputs Markdown --> G[Output]
 ```
 
 **3. Component Descriptions:**
 
-*   **Command-Line Interface:** This component serves as the entry point for users. It receives user commands, parses arguments, and triggers the conversion process within the Core Conversion Engine. It also receives the final Markdown output from the Core Conversion Engine and presents it to the user.
-*   **Core Conversion Engine:** The central orchestrator of the conversion process. It receives the conversion request from the Command-Line Interface, utilizes the Stream Information Handler to determine the input type, selects the appropriate Document Converter, and manages the overall conversion workflow. It sends document to Document Converters and identifies the stream information with Stream Information Handler.
-*   **Stream Information Handler:** This component analyzes the input stream to determine its type (e.g., file extension, MIME type). The inferred information is then used by the Core Conversion Engine to select the correct Document Converter. It infers the stream information and sends it back to Core Conversion Engine.
-*   **Document Converters:** This collection of components contains individual converters, each responsible for converting a specific document format into Markdown. The Core Conversion Engine selects the appropriate converter based on the input type identified by the Stream Information Handler. It receives document from Core Conversion Engine and converts it to Markdown Output.
-*   **Markdown Output:** The final output of the conversion process, which is a Markdown representation of the input document. It returns the output to Command-Line Interface.
+*   **Command-Line Interface:** This is the entry point of the application. It receives user input (file paths, URLs, etc.) and passes it to the `MarkItDown Core` for processing. It also receives the converted Markdown from the `MarkItDown Core` and outputs it to the user.
+
+*   **MarkItDown Core:** This component orchestrates the entire conversion process. It receives input from the `Command-Line Interface`, determines the input type using `Input Handling`, creates `StreamInfo` to store metadata, selects the appropriate converter from `Converter Management`, and then uses `Converter Implementations` to convert the document to Markdown. Finally, it returns the converted Markdown to the `Command-Line Interface`.
+
+*   **Input Handling:** This component handles different types of input such as local files, remote URLs, and data streams. It provides a unified interface for the conversion process to the `MarkItDown Core`.
+
+*   **Stream Information Handling:** This component encapsulates metadata about the input stream, such as MIME type, file extension, and encoding. The `MarkItDown Core` uses this information to select the appropriate converter.
+
+*   **Converter Management:** This component manages the registration and prioritization of converters. The `MarkItDown Core` uses this component to select the appropriate converter for a given input type.
+
+*   **Converter Implementations:** This component provides specific conversion logic for different file types (e.g., HTML, DOCX, PDF) to Markdown. The `MarkItDown Core` uses this component to perform the actual conversion of the document.
+
+*   **Output:** This is the final destination of the converted Markdown, usually the terminal or a file. The `Command-Line Interface` sends the converted Markdown to this component.
