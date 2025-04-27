@@ -6,7 +6,7 @@ Django is a high-level Python web framework that encourages rapid development an
 graph LR
     A[Request Handling] -- Receives --> B(URL Routing)
     B -- Determines --> C{View Processing}
-    C -- Interacts with --> D[Data Models (ORM)]
+    C -- Interacts with --> D["Data Models (ORM)"]
     C -- Uses --> E(Template Rendering)
     E -- Generates --> F[HTTP Response]
     A -- Passes through --> G(Middleware Processing)
