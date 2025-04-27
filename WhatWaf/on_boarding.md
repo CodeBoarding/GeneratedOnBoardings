@@ -1,27 +1,33 @@
 ## WhatWaf: High-Level Data Flow Overview
 
-WhatWaf is a security tool designed to detect web application firewalls (WAFs). It operates by sending various HTTP requests and analyzing the responses to identify patterns and signatures indicative of specific WAFs. The tool automates the process of fingerprinting WAFs, providing valuable information for security assessments and penetration testing.
+WhatWaf is a security tool designed to detect and identify Web Application Firewalls (WAFs). It sends various HTTP requests, analyzes the responses, and uses a database of known WAF signatures to determine if a WAF is present and, if so, which one.
 
 ```mermaid
 graph LR
-    A[Main Trigger & Setup] -- configures --> B(Settings & Utilities)
-    A -- initiates --> C(Detection Engine)
-    B -- provides --> C
-    C -- uses --> D{Tampering Modules}
-    C -- sends requests, receives responses --> E[Reporting & Database]
-    D -- modifies --> C
+    A[Main Controller & Argument Parser] -- initializes & calls --> B(Detection Engine)
+    B -- uses --> C{Settings & Database Management}
+    B -- uses & modifies --> E[Request Tampering Modules]
+    B -- analyzes responses & reports --> D[Firewall Identification & Reporting]
+    C -- stores & retrieves --> B
+    E -- modifies requests for --> B
+    D -- reports findings --> A
 
 
 ```
 
-### Component Descriptions:
+## Component Descriptions
 
-**A: Main Trigger & Setup:** This component serves as the entry point of the application. It parses command-line arguments, configures the environment, and initiates the core detection process. It sets up the necessary configurations and prepares the system for WAF detection. It configures the Settings & Utilities component and initiates the Detection Engine.
+**1. Main Controller & Argument Parser:**
+This component is responsible for initializing the WhatWaf tool, parsing command-line arguments provided by the user, and orchestrating the overall workflow. It calls the Detection Engine to start the WAF detection process and receives the final report from the Firewall Identification & Reporting component.
 
-**B: Settings & Utilities:** This component provides utility functions for managing settings, generating random strings, handling requests, and interacting with the database. It also includes functions for checking versions and updating the application. It provides configurations and utilities to the Detection Engine.
+**2. Detection Engine:**
+This is the core component that performs the actual WAF detection. It uses settings and configurations from the Settings & Database Management component to craft HTTP requests. It also utilizes Request Tampering Modules to modify requests and test for vulnerabilities. The Detection Engine sends requests, analyzes responses, and passes the results to the Firewall Identification & Reporting component.
 
-**C: Detection Engine:** This is the core component responsible for loading detection scripts, sending requests, analyzing responses, and managing the detection queue. It orchestrates the process of identifying firewalls. It uses the Tampering Modules to modify requests and sends requests to the target, receiving responses for analysis. It then sends the results to the Reporting & Database component.
+**3. Settings & Database Management:**
+This component manages all settings, configurations, and database interactions. It initializes the database, stores and retrieves data related to payloads, URLs, and scan results. The Detection Engine uses this component to retrieve settings and store scan results.
 
-**D: Tampering Modules:** These modules modify requests to bypass WAFs. They provide various techniques to evade detection. The Detection Engine uses these modules to alter requests before sending them to the target.
+**4. Firewall Identification & Reporting:**
+This component identifies firewalls based on the responses received by the Detection Engine. It analyzes the responses and creates issues based on the findings. It then reports these findings back to the Main Controller & Argument Parser for final output.
 
-**E: Reporting & Database:** This component handles the creation and reporting of firewall detection issues, including generating identifiers and managing sensitive information. It also manages database operations such as inserting payloads and URLs, and fetching data. It receives the results from the Detection Engine and stores/reports the findings.
+**5. Request Tampering Modules:**
+This component contains modules for tampering with requests to bypass firewalls. These modules are used by the Detection Engine to modify requests and test for vulnerabilities. The Detection Engine uses these modules to craft different types of requests to identify WAFs effectively.
