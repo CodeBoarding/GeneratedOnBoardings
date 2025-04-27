@@ -23,12 +23,10 @@ classDiagram
         +initialize()
     }
 
-    DatabaseInteraction -- "calls" --> DatabaseInitialization : initializes
-    DatabaseInteraction -- "uses" --> PayloadManagement : manages
-    DatabaseInteraction -- "uses" --> URLManagement : manages
-    DatabaseInteraction -- "uses" --> DataRetrieval : retrieves
-
-
+    DatabaseInteraction --> DatabaseInitialization : initializes
+    DatabaseInteraction --> PayloadManagement : manages
+    DatabaseInteraction --> URLManagement : manages
+    DatabaseInteraction --> DataRetrieval : retrieves
 ```
 
 ### Component Descriptions
