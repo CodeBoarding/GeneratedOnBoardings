@@ -15,7 +15,7 @@ graph LR
     H -- Manages --> D
     F -- Returns --> G
 
-    click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Request%20Handling.md"
+    click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main/django/Request%20Handling.md"
     click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/URL%20Routing.md"
     click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/View%20Processing.md"
     click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Data%20Models%20(ORM).md"
