@@ -4,16 +4,26 @@ Django is a high-level Python web framework that encourages rapid development an
 
 ```mermaid
 graph LR
-    A[Request Handling] -- Receives --> B(URL Routing)
+    A([Request Handling]) -- Receives --> B([URL Routing])
     B -- Determines --> C{View Processing}
-    C -- Interacts with --> D["Data Models (ORM)"]
-    C -- Uses --> E(Template Rendering)
-    E -- Generates --> F[HTTP Response]
-    A -- Passes through --> G(Middleware Processing)
+    C -- Interacts with --> D(["Data Models (ORM)"])
+    C -- Uses --> E([Template Rendering])
+    E -- Generates --> F([HTTP Response])
+    A -- Passes through --> G([Middleware Processing])
     G -- Modifies/Processes --> A
-    C -- Can use --> H[Admin Interface]
+    C -- Can use --> H([Admin Interface])
     H -- Manages --> D
     F -- Returns --> G
+
+    click A href "./Request%20Handling.md"
+    click B href "./URL%20Routing.md"
+    click C href "./View%20Processing.md"
+    click D href "./Data%20Models%20(ORM).md"
+    click E href "./Template%20Rendering.md"
+    click F href "./HTTP%20Response.md"
+    click G href "./Middleware%20Processing.md"
+    click H href "./Admin%20Interface.md"
+
 ```
 
 ### Component Descriptions:
