@@ -14,8 +14,8 @@ graph LR
     end
 
     style GR fill:#f9f,stroke:#333,stroke-width:2px
-
-
+```
+```mermaid
 classDiagram
     class GenomicResource {
         +resource_id : str
