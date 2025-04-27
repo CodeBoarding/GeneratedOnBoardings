@@ -36,4 +36,3 @@ click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf
 **Storage:** This component stores variant and pedigree data in a persistent storage solution. It receives annotated data from the Annotation Pipeline and makes it available to the Web Application.
 
 **Web Application:** This component provides a user interface for accessing and analyzing the data. It accesses the GPF Instance for configuration and data, and retrieves data from the Storage component for display and analysis.
-```
