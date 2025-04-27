@@ -19,7 +19,7 @@ graph LR
     end
 
     subgraph User Interface
-    G(Web Interface (WDAE)) -- interacts with --> B
+    G("Web Interface (WDAE)") -- interacts with --> B
     end
 ```
 
