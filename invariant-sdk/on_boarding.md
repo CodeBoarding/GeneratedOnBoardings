@@ -1,53 +1,42 @@
-# Invariant SDK Onboarding Document
+## Invariant SDK Data Flow Overview
 
-## Project Description
-
-The `invariant-sdk` is a Python library designed to facilitate seamless interaction with the Invariant API. It provides both synchronous and asynchronous clients for performing various operations such as pushing traces, managing dataset metadata, and handling annotations. The SDK abstracts away the complexities of API communication, offering a user-friendly interface with built-in error handling and data structure definitions.
-
-## Project Flow Diagram
+The Invariant SDK provides a convenient way to interact with the Invariant API, enabling developers to push traces, manage dataset metadata, and append messages. It offers both synchronous and asynchronous clients, handles request preparation and error handling, and defines data types and exception classes for seamless integration.
 
 ```mermaid
 graph LR
-    subgraph Configuration and Utilities
-    A[Get API URL and Key]
-    end
-
-    subgraph Client Abstraction
-    B[Client / AsyncClient]
-    end
-
-    subgraph Request Data Structures
-    C[Request Objects]
-    end
-
-    subgraph Annotation Data Structures
-    D[Annotation Objects]
-    end
-
-    subgraph API
-    E[Invariant API]
-    end
-
-    subgraph Exception Handling
-    F[Exception Classes]
-    end
-
-    A -- provides --> B
-    B -- creates --> C
-    B -- creates --> D
-    B -- sends request --> E
-    E -- returns response --> B
-    B -- raises --> F
+    A["Client Interface"] -- "uses" --> B("Base Client")
+    A -- "uses" --> C["Request Models"]
+    D["Response Models"] -- "returns" --> A
+    B -- "creates" --> C
+    B -- "handles" --> F["Exception Handling"]
+    B -- "uses" --> E["Utility Functions"]
+    C -- "defines" --> B
+    E -- "provides" --> B
+    F -- "handles errors" --> A
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style D fill:#ccf,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
+    click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant-sdk//Client%20Interface.md"
+    click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant-sdk//Base%20Client.md"
+    click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant-sdk//Request%20Models.md"
+    click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant-sdk//Response%20Models.md"
+    click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant-sdk//Utility%20Functions.md"
+    click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant-sdk//Exception%20Handling.md"
 ```
 
-## Component Descriptions
+### Component Descriptions
 
-*   **Configuration and Utilities:** This component is responsible for retrieving the API URL and API Key from environment variables, ensuring that the SDK can connect to the Invariant API. It uses utility functions to fetch these configuration values, which are essential for initializing the client.
+**Client Interface:** This component defines the entry point for interacting with the Invariant API. It provides both synchronous and asynchronous implementations (`Client` and `AsyncClient`) for various operations like pushing traces, managing dataset metadata, and appending messages. It uses the `Base Client` for handling the underlying API requests and interacts with `Request Models` and `Response Models` for data serialization and deserialization. It also handles exceptions raised by the `Base Client`.
 
-*   **Client Abstraction:** This component provides the core interface for interacting with the Invariant API. It includes both synchronous (`Client`) and asynchronous (`AsyncClient`) implementations, extending a base client with request preparation and error handling capabilities. The client handles the creation of requests, sending them to the API, and processing the responses.
+**Base Client:** This component handles the core logic for making API requests. It prepares requests based on the provided `Request Models`, manages authentication, handles HTTP errors, and utilizes `Utility Functions` to retrieve API URL and key. It creates `Request Models` and sends them to the API, handling any `Exception Handling` that may occur. The `Base Client` is used by the `Client Interface` to perform the actual API calls.
 
-*   **Request Data Structures:** This component defines the structure of the requests sent to the Invariant API. It includes data classes for various request types, such as `PushTracesRequest` and `UpdateDatasetMetadataRequest`, ensuring that the data is consistent and validated before being sent to the API.
+**Request Models:** This component defines the structure and validation rules for requests sent to the Invariant API. It includes models like `PushTracesRequest`, `UpdateDatasetMetadataRequest`, and `AppendMessagesRequest`. These models are used by the `Base Client` to serialize data before sending it to the API. The `Base Client` creates instances of these models based on the input provided by the `Client Interface`.
 
-*   **Annotation Data Structures:** This component defines the structure of annotations used within the Invariant API. It includes data classes like `AnnotationCreate`, which facilitates standardized annotation handling and ensures that annotations are properly formatted when interacting with the API.
+**Response Models:** This component defines the structure of responses received from the Invariant API. It includes models like `PushTracesResponse`. The `Base Client` uses these models to deserialize the API responses and returns them to the `Client Interface`.
 
-*   **Exception Handling:** This component provides custom exception classes for handling API errors. These exceptions, such as `InvariantAPIError` and `InvariantAuthError`, offer specific error context and improved error management, allowing developers to handle API errors more effectively.
+**Utility Functions:** This component provides utility functions for retrieving API URL and key from environment variables or provided arguments. These functions are used by the `Base Client` to configure the API requests. The `Base Client` uses these utilities to get the necessary configuration for interacting with the API.
+
+**Exception Handling:** This component defines custom exception classes for handling API errors, authentication failures, and resource not found errors. These exceptions are raised by the `Base Client` when an error occurs during an API request. The `Client Interface` handles these exceptions and provides appropriate feedback to the user.
