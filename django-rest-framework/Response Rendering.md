@@ -15,7 +15,7 @@ graph LR
     end
 
     subgraph Rendering
-        Renderer[Renderer (JSONRenderer, TemplateHTMLRenderer, etc.)]
+        Renderer["Renderer (JSONRenderer, TemplateHTMLRenderer, etc.)"]
         Response[Response]
     end
 
