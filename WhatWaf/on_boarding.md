@@ -1,39 +1,28 @@
 ## WhatWaf: High-Level Data Flow Diagram
 
-WhatWaf is a security tool designed to detect and identify Web Application Firewalls (WAFs) protecting a given website. It operates by sending a series of crafted HTTP requests with various payloads designed to trigger WAF rules. By analyzing the responses, WhatWaf can fingerprint the WAF in use and potentially identify bypass methods.
+WhatWaf is a security tool designed to detect Web Application Firewalls (WAFs) by sending various HTTP requests and analyzing the responses. It uses a combination of techniques, including fingerprinting, payload injection, and request tampering, to identify the presence and type of WAF protecting a target web application.
 
 ```mermaid
 graph LR
-    A[Input Management] -- parses --> B(Request Engine)
-    B -- sends requests --> C(Payload Manipulation)
-    C -- encodes/tampers --> B
-    B -- sends requests with payloads --> D(WAF Detection Engine)
-    D -- analyzes responses --> E(Result Reporting)
-    E -- stores data --> F(Data Persistence)
-    D -- reports issues --> G(Error Management)
-    H(Utilities) -- provides --> All
-    I(Output Formatting) -- formats --> All
-
-
-
+    A[Main Execution & Argument Parsing] -- Parses arguments & Target URL --> B(Settings & Request Management)
+    B -- Configures Requests --> C(Request Tampering)
+    C -- Tampered Request --> D(WAF Detection & Plugin Management)
+    D -- Sends Request & Analyzes Response --> E(Database Interaction)
+    E -- Fetches Data --> D
+    D -- Identifies WAF --> F(Output & Reporting)
+    F -- Generates Report --> A
 ```
 
 ### Component Descriptions:
 
-**A. Input Management:** This component handles user input, parsing command-line arguments, Burp request files, and Googler files to extract target URLs and other settings. It parses the input and passes the relevant information to the Request Engine.
+1.  **Main Execution & Argument Parsing:** This component serves as the entry point of the application. It parses command-line arguments provided by the user, such as the target URL, and initializes the overall WAF detection process. It then passes the parsed information to the `Settings & Request Management` component to configure the requests.
 
-**B. Request Engine:** This component configures and executes HTTP requests based on the payloads provided by the Payload Manipulation component. It manages headers, proxies, Tor connections, request throttling, and timeouts. It sends the crafted requests to the target and receives responses, which are then passed to the WAF Detection Engine.
+2.  **Settings & Request Management:** This component is responsible for managing the application's configuration settings. It configures request headers, manages proxy settings, and tests the connection to the target URL. It receives the target URL from the `Main Execution & Argument Parsing` component and prepares the requests for the `Request Tampering` component.
 
-**C. Payload Manipulation:** This component manages and encodes payloads, applying tamper scripts to bypass WAFs, and exports payloads to various formats. It provides the payloads to the Request Engine and receives tamper scripts from the WAF Detection Engine.
+3.  **Request Tampering:** This component modifies the outgoing HTTP requests to bypass WAFs. It applies various encoding and tampering techniques to the requests before they are sent to the `WAF Detection & Plugin Management` component. It receives the configured requests from the `Settings & Request Management` component and sends the tampered requests to the `WAF Detection & Plugin Management` component.
 
-**D. WAF Detection Engine:** This component contains the core logic for detecting WAFs. It sends payloads via the Request Engine, analyzes the responses, and identifies potential bypasses using detection and tamper scripts. It receives requests from the Request Engine and interacts with the Result Reporting component to report findings. It also interacts with the Error Management component to report any errors encountered during the detection process.
+4.  **WAF Detection & Plugin Management:** This component contains the core WAF detection logic. It loads and manages detection scripts (plugins) and sends HTTP requests to the target, analyzing the responses to identify potential WAFs. It interacts with the `Database Interaction` component to fetch cached data and stores the results in the `Output & Reporting` component. It receives tampered requests from the `Request Tampering` component and sends requests to the target, then sends the identified WAF to the `Output & Reporting` component.
 
-**E. Result Reporting:** This component handles the results of the WAF detection process, displaying cached data, producing reports, and writing output to files in various formats. It receives data from the WAF Detection Engine and interacts with the Data Persistence component to store results.
+5.  **Database Interaction:** This component manages the interaction with the database. It initializes the database, fetches cached data (payloads and URLs), and inserts new data into the database. It provides data to the `WAF Detection & Plugin Management` component and receives data from it.
 
-**F. Data Persistence:** This component interacts with the database to store and retrieve URLs, payloads, and detection results, providing caching functionality. It supports the Result Reporting component by providing cached data and stores the results reported by the Result Reporting component.
-
-**G. Error Management:** This component handles errors and exceptions, reports issues to a remote service, and saves temporary issue files. It supports all components by providing centralized error handling and reporting. The WAF Detection Engine reports issues to this component.
-
-**H. Utilities:** This component provides utility functions for generating random strings, shuffling lists, and checking the current version of WhatWaf. It supports various components by providing common functionalities.
-
-**I. Output Formatting:** This component provides functions for formatting output messages with different levels of severity (info, warn, error, etc.). It supports all components by providing consistent output formatting.
+6.  **Output & Reporting:** This component formats and displays the results of the WAF detection process. It generates issue reports for identified firewalls and handles different log levels (info, warn, error, etc.). It receives the identified WAF from the `WAF Detection & Plugin Management` component and generates a report that is displayed to the user, and then returns to the `Main Execution & Argument Parsing` component.
