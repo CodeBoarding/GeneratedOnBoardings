@@ -8,13 +8,11 @@ GPF (Genomic Population Finder) is a platform designed for storing, querying, an
 graph LR
     A[Data Storage and Querying] -- stores/retrieves --> B(GPF Instance Core)
     B -- uses --> C[Genomic Resources]
-    B -- uses --> D[Pedigree Management]
     B -- triggers --> E[Variant Annotation Pipeline]
     E -- annotates --> A
     B -- serves data to --> F[Web API]
     F -- queries --> A
     F -- uses --> C
-    F -- uses --> D
 ```
 
 ## Component Descriptions
