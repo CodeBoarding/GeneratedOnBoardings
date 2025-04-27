@@ -1,4 +1,3 @@
-```markdown
 ## GPF Data Flow Overview
 
 GPF (Genomic Prediction Framework) is a system designed for managing, analyzing, and storing genomic data. It provides tools for loading variant data, annotating variants with functional information, and storing the data in scalable storage solutions. The system also includes a web application for accessing and exploring the data.
