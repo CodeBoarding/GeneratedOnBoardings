@@ -1,4 +1,3 @@
-```markdown
 ```mermaid
 graph LR
     A["VCF Files (Raw VCF files containing variant information)"] -- reads --> B("VcfLoader (Loads variants from VCF files)") -- uses --> C("FamiliesLoader (Loads pedigree information)") -- creates --> D("Variant Data (Represents the loaded and prepared variant data)") 
