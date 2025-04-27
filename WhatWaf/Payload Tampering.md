@@ -1,6 +1,6 @@
 ```mermaid
 componentDiagram
-  ContentProcessingModule -- "uses" --> TamperScripts : applies
+  ContentProcessingModule --> TamperScripts : applies
   TamperScripts --> RandomDecoys : implements
   TamperScripts --> RandomComments : implements
   TamperScripts --> RandomUnicode : implements
