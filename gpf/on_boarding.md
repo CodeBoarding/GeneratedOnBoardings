@@ -1,34 +1,41 @@
-Okay, I'm ready to generate the high-level data flow diagram for the `gpf` project.
+# GPF Project Overview
 
-**1. Project Description:**
+GPF (Genomic Prediction Framework) is a comprehensive platform designed for the analysis and management of genomic data. It provides tools for storing, querying, annotating, and analyzing genetic variants, with a focus on family-based studies and rare disease research. GPF integrates various genomic resources and supports multiple data storage backends, offering a flexible and scalable solution for genomic data analysis.
 
-GPF (Genomic Prediction Framework) is a comprehensive framework designed for managing, analyzing, and annotating genomic data. It provides tools and infrastructure for variant storage, retrieval, annotation, and analysis, with a focus on supporting research in genetics and genomics. GPF integrates various genomic resources, pedigree information, and annotation pipelines to facilitate the discovery of disease-causing variants and the study of genetic inheritance patterns.
-
-**2. Data Flow Diagram (Mermaid Format):**
+## Data Flow Diagram
 
 ```mermaid
 graph LR
-    subgraph Core Data Flow
-    A[Configuration Management] -- provides --> B(GPF Instance)
-    B -- uses --> C(Genomic Resources)
-    B -- uses --> D(Pedigree Management)
-    E(Variants Loader) -- loads --> B
-    E -- uses --> D
-    B -- uses --> F(Annotation Pipeline)
-    F -- uses --> C
-    end
+    A[GPF Instance Core] -- Initializes & Configures --> B(Data Storage and Querying)
+    A -- Provides Access to --> C(Genomic Resources)
+    A -- Provides Access to --> D(Variant Annotation Pipeline)
+    A -- Provides Access to --> E(Pedigree Management)
+    B -- Uses --> C
+    D -- Uses --> C
+    F(Web API) -- Queries --> B
+    F -- Uses --> E
+    F -- Uses --> D
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style D fill:#ccf,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
 
-    subgraph User Interface
-    G("Web Interface (WDAE)") -- interacts with --> B
-    end
+
+
 ```
 
-**3. Component Descriptions:**
+## Component Descriptions
 
-*   **Configuration Management:** This component is responsible for parsing, validating, and managing the configuration files that define the GPF environment. It provides the GPF Instance with the necessary settings and resource locations.
-*   **GPF Instance:** The central component of the GPF framework, it manages access to configured resources, datasets, and functionalities. It utilizes Genomic Resources and Pedigree Management to provide a unified interface for interacting with genomic data. It also triggers the Annotation Pipeline to enrich variant data. The Web Interface interacts with the GPF Instance to provide users with access to data and analysis tools.
-*   **Genomic Resources:** This component manages genomic resources such as reference genomes, gene models, and annotation databases. It provides essential data to the GPF Instance and the Annotation Pipeline for variant interpretation and annotation.
-*   **Variants Loader:** This component loads variant data from various file formats into a unified representation within the GPF Instance. It uses Pedigree Management to associate variants with family structures.
-*   **Pedigree Management:** This component loads, manipulates, and represents pedigree data, defining family relationships and individual characteristics. It is used by the Variants Loader to associate variants with specific families, and its data is accessed by the GPF Instance.
-*   **Annotation Pipeline:** This component annotates genomic variants with functional and biological information, enriching the data with context for interpretation and prioritization. It uses Genomic Resources to access annotation databases and tools.
-*   **Web Interface (WDAE):** This component provides a web-based interface for users to interact with GPF data, perform queries, and visualize results. It relies on the GPF Instance to access data and functionalities.
+**GPF Instance Core:** This component serves as the central point of access to all other components within the GPF framework. It initializes and configures the data storage, genomic resources, annotation pipelines, and pedigree management components, providing a unified interface for interacting with the system. It relates to all other components by initializing and providing access to them.
+
+**Data Storage and Querying:** This component is responsible for storing and querying variant data. It supports multiple storage backends (e.g., Impala, GCP, DuckDB) and provides an abstract interface for querying variants. It uses Genomic Resources to interpret the data and is queried by the Web API to provide data to the user.
+
+**Genomic Resources:** This component manages and provides access to genomic resources such as reference genomes, gene models, and annotation scores. It allows other components, such as the Variant Annotation Pipeline and Data Storage, to retrieve and utilize these resources for annotation and analysis. It is used by both the Data Storage and Querying component and the Variant Annotation Pipeline.
+
+**Variant Annotation Pipeline:** This component annotates genetic variants with functional effects and other relevant information. It uses configurable annotation pipelines to integrate data from various sources, including Genomic Resources. It is used by the Web API to provide annotated data to the user.
+
+**Pedigree Management:** This component loads, represents, and manipulates pedigree data, providing family relationships and individual characteristics. It is used for family-based analysis and variant filtering. It is used by the Web API for family-based queries and analysis.
+
+**Web API:** This component provides API endpoints for accessing and querying data, generating reports, and managing users. It serves as the interface between the backend and the frontend, enabling data exploration and analysis. It queries the Data Storage component, uses Pedigree Management for family information, and uses the Variant Annotation Pipeline for annotated data.
