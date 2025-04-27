@@ -1,45 +1,75 @@
-## Django High-Level Data Flow Overview
+## Django: High-Level Data Flow Overview
 
-Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It takes care of much of the hassle of web development, so you can focus on writing your app without needing to reinvent the wheel. It is free and open source.
+Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It takes care of much of the hassle of web development, so you can focus on writing your app without needing to reinvent the wheel. It's free and open source.
 
 ```mermaid
 graph LR
-    A([Request Handling]) -- Receives --> B([URL Routing])
-    B -- Determines --> C{View Processing}
-    C -- Interacts with --> D(["Data Models (ORM)"])
-    C -- Uses --> E([Template Rendering])
-    E -- Generates --> F([HTTP Response])
-    A -- Passes through --> G([Middleware Processing])
-    G -- Modifies/Processes --> A
-    C -- Can use --> H([Admin Interface])
-    H -- Manages --> D
-    F -- Returns --> G
+    subgraph Request Handling
+        A["Incoming HTTP Request"]
+    end
+    subgraph URL Routing
+        B["URL Router"]
+    end
+    subgraph Views
+        C["View Function"]
+    end
+    subgraph Models & ORM
+        D["Models & ORM"]
+    end
+    subgraph Template Engine
+        E["Template Engine"]
+    end
+    subgraph Authentication & Authorization
+        F["Authentication & Authorization"]
+    end
+    subgraph Admin Interface
+        G["Admin Interface"]
+    end
+    subgraph Database Migrations
+        H["Database Migrations"]
+    end
+    subgraph HTTP Response
+        I["HTTP Response"]
+    end
 
-    click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main/django/Request%20Handling.md"
-    click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/URL%20Routing.md"
-    click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/View%20Processing.md"
-    click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Data%20Models%20(ORM).md"
-    click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Template%20Rendering.md"
-    click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/HTTP%20Response.md"
-    click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Middleware%20Processing.md"
-    click H href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Admin%20Interface.md"
+    A -- Routes to --> B
+    B -- Dispatches to --> C
+    C -- Interacts with --> D
+    C -- Renders using --> E
+    C -- Checks --> F
+    D -- Manages data in --> Database
+    F -- Verifies user --> Database
+    C -- Returns data to --> E
+    E -- Generates --> I
+    G -- Uses --> D
+    H -- Modifies --> Database
+
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Request%20Handling.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//URL%20Routing.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Views.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Models%20&%20ORM.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Template%20Engine.md"
+click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Authentication%20&%20Authorization.md"
+click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Admin%20Interface.md"
+click H href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Database%20Migrations.md"
+
 
 ```
 
 ### Component Descriptions:
 
-**Request Handling:** This component is the entry point for all incoming HTTP requests. It receives the request and passes it to the URL Routing component to determine the appropriate view to execute. It also receives the final HTTP response from the Middleware Processing component and sends it back to the client.
+**Request Handling:** This component receives incoming HTTP requests and passes them to the URL Router. It is the entry point for all web requests.
 
-**URL Routing:** This component maps incoming URLs to specific views or handlers within the application. It receives the request from the Request Handling component and uses the URL patterns defined in the application's `urls.py` files to determine which view should handle the request. It then passes the request to the View Processing component.
+**URL Routing:** The URL Router maps incoming URLs to specific view functions. It receives the request from the Request Handling component and dispatches it to the appropriate View function.
 
-**View Processing:** This component executes the logic associated with a specific URL. It receives the request from the URL Routing component and interacts with the Data Models (ORM) component to retrieve or update data. It then uses the Template Rendering component to generate the HTML content for the response. It can also use the Admin Interface to manage data.
+**Views:** View functions process requests, interact with models to retrieve or modify data, and render templates to generate responses. It receives the request from the URL Router and interacts with the Models & ORM and Template Engine components.
 
-**Template Rendering:** This component combines templates with data to generate dynamic HTML content for the user interface. It receives the data from the View Processing component and uses the Django template engine to render the template with the data. It then passes the generated HTML content back to the View Processing component.
+**Models & ORM:** This component provides an interface for interacting with the database, defining data structures, and performing queries. It interacts with the Views component to provide data for rendering and the Database Migrations component to manage schema changes.
 
-**Data Models (ORM):** This component provides an object-relational mapper (ORM) to interact with the database using Python objects. It allows the View Processing component to retrieve and update data without writing raw SQL queries. The Admin Interface also uses this component to manage data.
+**Template Engine:** The Template Engine renders dynamic content using templates and data from views. It receives data from the Views component and generates the final HTTP response.
 
-**Middleware Processing:** This component provides a hook to intercept and process requests and responses globally. It sits between the Request Handling component and the rest of the application, allowing you to modify the request before it reaches the view or the response before it is sent to the client. It enables functionalities like authentication, session management, and CSRF protection. It receives the request from the Request Handling component and passes it back to the Request Handling component after processing.
+**Authentication & Authorization:** This component manages user authentication, authorization, and permissions. It is used by the Views component to check user permissions before processing a request.
 
-**Admin Interface:** This component offers a built-in interface for managing the application's data models. It allows administrators to easily create, read, update, and delete data without writing any code. It interacts with the Data Models (ORM) component to manage data and is used by the View Processing component.
+**Admin Interface:** The Admin Interface provides a built-in interface for managing the application's data. It uses the Models & ORM component to interact with the database.
 
-**HTTP Response:** This component is responsible for creating and sending HTTP responses back to the client. It receives the rendered HTML from the Template Rendering component and sets the appropriate headers and status code for the response. It then passes the response to the Middleware Processing component.
+**Database Migrations:** This component manages changes to the database schema. It interacts directly with the database and is used to update the database schema as the application evolves.
