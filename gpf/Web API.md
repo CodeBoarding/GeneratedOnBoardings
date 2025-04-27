@@ -1,102 +1,99 @@
+## Web API Component Overview
+
+The Web API component serves as the entry point for accessing and querying data, generating reports, and managing users within the WDAE system. It exposes a set of RESTful API endpoints that facilitate communication between the frontend and the backend. The API leverages Django REST Framework for building the views and serializers.
+
 ```mermaid
-graph LR
+flowchart LR
+    subgraph User
+        U[User Interface]
+    end
     subgraph Web API
-        A[Datasets API Views] -- "uses" --> B(Dataset Permissions)
-        A -- "calls" --> C(WGPFInstance)
-        A -- "uses" --> H(Datasets API Models)
-        D[Enrichment API Views] -- "calls" --> C
-        E[Gene Sets API Views] -- "calls" --> C
-        F[Genomic Scores API Views] -- "calls" --> C
-        G[Documentation API] -- "generates" --> I(API Documentation)
-        C -- "uses" --> J(GPFInstance)
+        DA([Datasets API Views])
+        EA([Enrichment API Views])
+        GS([Gene Sets API Views])
+        GSA([Genomic Scores API Views])
+    end
+    subgraph Backend
+        W([WGPFInstance])
+        GP([GPFInstance])
+        DP([Dataset Permissions])
+        EnT([Enrichment Tool])
+        GnS([Gene Sets DB])
+        GSc([Genomic Scores Registry])
     end
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#f9f,stroke:#333,stroke-width:2px
-    style G fill:#f9f,stroke:#333,stroke-width:2px
-    style H fill:#ccf,stroke:#333,stroke-width:2px
-    style I fill:#ccf,stroke:#333,stroke-width:2px
-    style J fill:#ccf,stroke:#333,stroke-width:2px
+    U -- "requests" --> DA
+    U -- "requests" --> EA
+    U -- "requests" --> GS
+    U -- "requests" --> GSA
+
+    DA -- "uses" --> W
+    DA -- "checks" --> DP
+    EA -- "uses" --> W
+    EA -- "calls" --> EnT
+    GS -- "uses" --> W
+    GS -- "queries" --> GnS
+    GSA -- "uses" --> W
+    GSA -- "queries" --> GSc
+
+    W -- "accesses" --> GP
+
+
 
 
 ```
 
 ### Component Descriptions:
 
-- **Datasets API Views**
-  - *Description*: Handles requests for datasets, including listing, retrieving configurations, and managing permissions. It interacts with `Dataset Permissions` to enforce access control and `WGPFInstance` to fetch dataset information.
-  - *Relevant source files*:
-    - `wdae.datasets_api.views.DatasetView`
-    - `wdae.datasets_api.views.DatasetPedigreeView`
-    - `wdae.datasets_api.views.DatasetConfigView`
-    - `wdae.datasets_api.views.DatasetDescriptionView`
-    - `wdae.datasets_api.views.DatasetPermissionsView`
-    - `wdae.datasets_api.views.DatasetPermissionsSingleView`
-    - `wdae.datasets_api.views.DatasetHierarchyView`
-    - `wdae.datasets_api.views.VisibleDatasetsView`
+*   **User Interface (UI):** The frontend application that interacts with the Web API to display data, generate reports, and manage users.
+    *   Interaction: Sends requests to the Datasets API, Enrichment API, Gene Sets API, and Genomic Scores API.
 
-- **Dataset Permissions**
-  - *Description*: Manages dataset permissions and access control, ensuring that users only access authorized datasets. It is used by `Datasets API Views` to validate user access.
-  - *Relevant source files*:
-    - `repos.gpf.wdae.wdae.datasets_api.permissions.IsDatasetAllowed`
-    - `repos.gpf.wdae.wdae.datasets_api.permissions.user_has_permission`
-    - `repos.gpf.wdae.wdae.datasets_api.permissions.get_allowed_genotype_studies`
-    - `repos.gpf.wdae.wdae.datasets_api.permissions.get_dataset_info`
+*   **Datasets API Views (DA):** Handles requests related to datasets, including listing datasets, retrieving dataset configurations, pedigree data, descriptions, and permissions.
+    *   Purpose: Provides endpoints for accessing dataset information and managing dataset permissions.
+    *   Interaction: Uses `WGPFInstance` to retrieve dataset information and interacts with `Dataset Permissions` to check user access rights.
+    *   Relevant source files: `wdae.datasets_api.views.DatasetView`, `wdae.datasets_api.views.DatasetConfigView`, `wdae.datasets_api.views.DatasetHierarchyView`
 
-- **WGPFInstance**
-  - *Description*: Represents a WDAE GPF instance, providing access to datasets and configurations. It is called by various API views to retrieve data and interacts with `GPFInstance` for core GPF functionality.
-  - *Relevant source files*:
-    - `repos.gpf.wdae.wdae.gpf_instance.gpf_instance.WGPFInstance`
-    - `dae.gpf_instance.gpf_instance.GPFInstance`
-    - `studies.study_wrapper.StudyWrapper`
-    - `repos.gpf.wdae.wdae.gpf_instance.gpf_instance.WGPFInstance.make_wdae_wrapper`
-    - `repos.gpf.wdae.wdae.gpf_instance.gpf_instance.WGPFInstance.get_wdae_wrapper`
-    - `repos.gpf.wdae.wdae.gpf_instance.gpf_instance.WGPFInstance.get_available_data_ids`
-    - `repos.gpf.wdae.wdae.gpf_instance.gpf_instance.WGPFInstance.get_visible_datasets`
-    - `repos.gpf.wdae.wdae.gpf_instance.gpf_instance.WGPFInstance.prepare_gp_configuration`
+*   **Enrichment API Views (EA):** Handles requests for enrichment analysis, allowing users to perform enrichment tests and retrieve enrichment models.
+    *   Purpose: Provides endpoints for performing enrichment analysis.
+    *   Interaction: Uses `WGPFInstance` to access genotype data and calls the `Enrichment Tool` to perform the analysis.
+    *   Relevant source files: `wdae.enrichment_api.views.EnrichmentTestView`
 
-- **Enrichment API Views**
-  - *Description*: Handles enrichment analysis requests, calling `WGPFInstance` to access data and perform enrichment calculations.
-  - *Relevant source files*:
-    - `repos.gpf.wdae.wdae.enrichment_api.views.EnrichmentModelsView`
-    - `repos.gpf.wdae.wdae.enrichment_api.views.EnrichmentTestView`
-    - `dae.enrichment_tool.enrichment_helper.EnrichmentHelper`
-    - `dae.gpf_instance.gpf_instance.GPFInstance.get_enrichment_builder`
+*   **Gene Sets API Views (GS):** Handles requests for gene sets, enabling users to retrieve and download gene sets.
+    *   Purpose: Provides endpoints for accessing and downloading gene sets.
+    *   Interaction: Uses `WGPFInstance` to access gene set databases and queries the `Gene Sets DB` to retrieve gene sets.
+    *   Relevant source files: `wdae.gene_sets.views.GeneSetsView`
 
-- **Gene Sets API Views**
-  - *Description*: Handles gene sets requests, calling `WGPFInstance` to retrieve gene set information.
-  - *Relevant source files*:
-    - `repos.gpf.wdae.wdae.gene_sets.views.GeneSetsView`
-    - `repos.gpf.wdae.wdae.gene_sets.views.GeneSetDownloadView`
-    - `dae.gene_sets.denovo_gene_sets_db.DenovoGeneSetsDb`
-    - `dae.gene_sets.gene_sets_db.GeneSetsDb`
+*   **Genomic Scores API Views (GSA):** Handles requests for genomic scores, providing access to genomic scores and their descriptions.
+    *   Purpose: Provides endpoints for accessing genomic scores.
+    *   Interaction: Uses `WGPFInstance` to access the `Genomic Scores Registry` and queries it to retrieve genomic scores and their descriptions.
+    *   Relevant source files: `wdae.genomic_scores_api.views.GenomicScoresView`
 
-- **Genomic Scores API Views**
-  - *Description*: Handles genomic scores requests, calling `WGPFInstance` to access genomic scores data.
-  - *Relevant source files*:
-    - `repos.gpf.wdae.wdae.genomic_scores_api.views.GenomicScoresView`
-    - `repos.gpf.wdae.wdae.genomic_scores_api.views.GenomicScoreDescsView`
-    - `dae.genomic_scores.scores.GenomicScoresRegistry`
+*   **WGPFInstance (W):** Represents a WDAE GPF instance, handling datasets and configurations.
+    *   Purpose: Provides access to datasets and configurations.
+    *   Interaction: Accessed by the Datasets API, Enrichment API, Gene Sets API, and Genomic Scores API to retrieve data and configurations. It accesses `GPFInstance` to get core GPF functionalities.
+    *   Relevant source files: `wdae.gpf_instance.gpf_instance.WGPFInstance`
 
-- **Documentation API**
-  - *Description*: Generates API documentation, providing information about available endpoints and data structures.
-  - *Relevant source files*:
-    - `repos.gpf.wdae.wdae.docs.api_docs_generator`
+*   **GPFInstance (GP):** Represents a GPF instance, providing access to genotype and phenotype data.
+    *   Purpose: Provides access to genotype and phenotype data.
+    *   Interaction: Accessed by `WGPFInstance` to retrieve genotype and phenotype data.
+    *   Relevant source files: `dae.gpf_instance.gpf_instance.GPFInstance`
 
-- **Datasets API Models**
-  - *Description*: Models for representing datasets and their hierarchy.
-  - *Relevant source files*:
-    - `datasets_api.models.Dataset`
-    - `datasets_api.models.DatasetHierarchy`
+*   **Dataset Permissions (DP):** Handles dataset permissions and access control.
+    *   Purpose: Determines which datasets a user can access.
+    *   Interaction: Used by the Datasets API to check user access rights.
+    *   Relevant source files: `wdae.datasets_api.permissions`
 
-- **GPFInstance**
-  - *Description*: Represents a GPF instance, providing access to genotype and phenotype data. It is used by `WGPFInstance` for core GPF functionality.
-  - *Relevant source files*:
-    - `dae.gpf_instance.gpf_instance.GPFInstance`
-    - `dae.gpf_instance.gpf_instance.GPFInstance.get_genotype_data`
-    - `dae.gpf_instance.gpf_instance.GPFInstance.get_phenotype_data`
-    - `dae.gpf_instance.gpf_instance.GPFInstance.get_gp_configuration`
+*   **Enrichment Tool (EnT):** Performs enrichment analysis.
+    *   Purpose: Conducts enrichment tests based on user requests.
+    *   Interaction: Called by the Enrichment API to perform enrichment analysis.
+    *   Relevant source files: `dae.enrichment_tool.enrichment_helper.EnrichmentHelper`
+
+*   **Gene Sets DB (GnS):** Stores and manages gene sets.
+    *   Purpose: Provides access to gene sets.
+    *   Interaction: Queried by the Gene Sets API to retrieve gene sets.
+    *   Relevant source files: `dae.gene_sets.gene_sets_db.GeneSetsDb`
+
+*   **Genomic Scores Registry (GSc):** Stores and manages genomic scores.
+    *   Purpose: Provides access to genomic scores and their descriptions.
+    *   Interaction: Queried by the Genomic Scores API to retrieve genomic scores and their descriptions.
+    *   Relevant source files: `dae.genomic_scores.scores.GenomicScoresRegistry`
