@@ -15,7 +15,7 @@ graph LR
         D
         E
     end
-    G(Monitor) -- loads policies into --> B
+    G(Monitor) --"loads policies into"--> B
     G -- analyzes input using --> Policy Engine
     Policy Engine -- reports --> F
     H(LocalPolicy) -- represents --> B
