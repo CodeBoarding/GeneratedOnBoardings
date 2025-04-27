@@ -11,7 +11,7 @@ graph LR
     A -- provides access to --> D(Phenotype Management)
     B -- provides genomic data to --> C
     C -- integrates & analyzes --> D
-    C -- provides variant data to --> E(Web API (WDAE))
+    C -- provides variant data to --> E("Web API (WDAE)")
     D -- provides phenotype data to --> E
     E -- uses --> A
 ```
