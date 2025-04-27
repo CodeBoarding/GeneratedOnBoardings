@@ -7,7 +7,7 @@ graph LR
     Authentication --"authenticates"--> User(User)
     APIView --"calls"--> Permissions(Permissions)
     Permissions --"checks"--> User
-    Permissions --"checks"--> Object[Object (Optional)]
+    Permissions --"checks"--> Object["Object (Optional)"]
     User --"owns"--> Object
     AuthToken(AuthToken) --"provides"--> Authentication
 
