@@ -1,4 +1,3 @@
-```markdown
 ```mermaid
 graph LR
     GPFInstance["GPFInstance\n(dae.gpf_instance.gpf_instance.GPFInstance)"]
