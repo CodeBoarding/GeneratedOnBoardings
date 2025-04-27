@@ -1,4 +1,3 @@
-```markdown
 ## Genomic Resources Component Overview
 
 This component manages access to genomic resources like reference genomes and gene models. It builds repositories and provides access to individual resources.
