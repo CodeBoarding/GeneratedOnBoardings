@@ -1,48 +1,65 @@
-## Response Rendering Overview
+## Response Rendering Flow
 
-This component is responsible for rendering the API response into a specific format, such as JSON or HTML. It receives data from the serializers and formats it for the client. It also handles content negotiation to determine the appropriate renderer based on the client's request.
+This diagram illustrates the flow of how the API response is rendered in Django REST framework, focusing on content negotiation and the rendering process.
 
 ```mermaid
-graph LR
-    APIView --> ContentNegotiation
-    ContentNegotiation --> RendererSelection
-    RendererSelection -- selects --> Renderer
-    Renderer -- renders --> Response
-    Response -- sends to --> Client
+sequenceDiagram
+    participant Client
+    participant APIView
+    participant ContentNegotiation
+    participant Renderer
+    participant JSONRenderer
+    participant TemplateHTMLRenderer
 
-    subgraph Content Negotiation
-        RendererSelection[Renderer Selection]
+    Client->>APIView: Sends Request (Accept Header)
+    APIView->>ContentNegotiation: perform_content_negotiation(request, renderers)
+    ContentNegotiation->>ContentNegotiation: select_renderer(request, renderers)
+    ContentNegotiation-->>APIView: Returns Renderer (e.g., JSONRenderer)
+    APIView->>APIView: finalize_response(request, response)
+    APIView->>Renderer: renderer.render(data, accepted_media_type, renderer_context)
+    alt Renderer is JSONRenderer
+        Renderer->>JSONRenderer: render(data, media_type, context)
+        JSONRenderer-->>APIView: Returns JSON
+    else Renderer is TemplateHTMLRenderer
+        Renderer->>TemplateHTMLRenderer: render(data, media_type, context)
+        TemplateHTMLRenderer-->>APIView: Returns HTML
     end
-
-    subgraph Rendering
-        Renderer["Renderer (JSONRenderer, TemplateHTMLRenderer, etc.)"]
-        Response[Response]
-    end
-
-    style ContentNegotiation fill:#f9f,stroke:#333,stroke-width:2px
-    style RendererSelection fill:#ccf,stroke:#333,stroke-width:2px
-    style Renderer fill:#ccf,stroke:#333,stroke-width:2px
-    style Response fill:#ccf,stroke:#333,stroke-width:2px
-
-
+    APIView-->>Client: Sends Response (Rendered Data)
 ```
 
-### Component Descriptions:
+## Components
 
-*   **APIView**: The base class for all API views. It receives the request, processes it, and prepares the data for rendering. It uses ContentNegotiation to select the appropriate renderer.
-    *   Relevant source files: `rest_framework.views.APIView`
+-   **Client**
+    -   *Description*: The client making the API request, specifying the desired content type via the `Accept` header.
+    -   *Functionality*: Initiates the request and receives the rendered response.
+    -   *Source Files*: N/A (External entity)
 
-*   **ContentNegotiation**: Determines the appropriate renderer to use based on the client's request (e.g., Accept header). It selects a renderer from the available renderers.
-    *   Relevant source files: `rest_framework.negotiation.ContentNegotiation`, `rest_framework.negotiation.DefaultContentNegotiation`
+-   **APIView**
+    -   *Description*: The base class for all API views. It orchestrates the content negotiation and rendering process.
+    -   *Functionality*: Receives the request, performs content negotiation, and finalizes the response by rendering the data using the selected renderer.
+    -   *Interactions*: Interacts with `ContentNegotiation` to select a renderer and with the `Renderer` to render the data.
+    -   *Source Files*: `rest_framework.views.APIView`
 
-*   **Renderer Selection**: This is part of the content negotiation process. Based on the client's `Accept` header and the available renderers, the appropriate renderer is selected.
-    *   Relevant source files: `rest_framework.negotiation.DefaultContentNegotiation`
+-   **ContentNegotiation**
+    -   *Description*: Selects the appropriate renderer based on the client's `Accept` header and the available renderers.
+    -   *Functionality*: Examines the request and available renderers to determine the best renderer to use.
+    -   *Interactions*: Called by `APIView` to select a renderer.
+    -   *Source Files*: `rest_framework.negotiation.ContentNegotiation`, `rest_framework.negotiation.DefaultContentNegotiation`
 
-*   **Renderer**: An abstract class that defines the interface for rendering data into a specific format. Concrete renderers (e.g., JSONRenderer, TemplateHTMLRenderer) implement this interface.
-    *   Relevant source files: `rest_framework.renderers.Renderer`
+-   **Renderer**
+    -   *Description*: An abstract base class for renderers. Defines the `render` method that subclasses must implement.
+    -   *Functionality*: Converts data into a specific media type.
+    -   *Interactions*: Subclasses like `JSONRenderer` and `TemplateHTMLRenderer` implement the `render` method.
+    -   *Source Files*: `rest_framework.renderers.BaseRenderer`
 
-*   **Response**: A class that encapsulates the rendered data and the HTTP headers. It is returned by the API view and sent to the client.
-    *   Relevant source files: `rest_framework.response.Response`
+-   **JSONRenderer**
+    -   *Description*: A concrete renderer that converts data into JSON format.
+    -   *Functionality*: Implements the `render` method to serialize data into JSON.
+    -   *Interactions*: Used by `APIView` when JSON is the selected media type.
+    -   *Source Files*: `rest_framework.renderers.JSONRenderer`
 
-*   **Client**: The user or application that consumes the API.
-
+-   **TemplateHTMLRenderer**
+    -   *Description*: A concrete renderer that renders data using HTML templates.
+    -   *Functionality*: Implements the `render` method to render data into HTML using a template.
+    -   *Interactions*: Used by `APIView` when HTML is the selected media type.
+    -   *Source Files*: `rest_framework.renderers.TemplateHTMLRenderer`
