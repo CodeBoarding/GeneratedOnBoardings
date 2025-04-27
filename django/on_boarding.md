@@ -1,58 +1,51 @@
-Okay, I will generate an onboarding document for the Django project based on the provided component analysis.
+Okay, I'm ready to generate the high-level data flow diagram for the Django project.
 
 **1. Project Description:**
 
-Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It provides a robust set of tools and conventions for building web applications, emphasizing reusability, "pluggability", less code, and rapid development. Django follows the Model-Template-View (MTV) architectural pattern and handles many of the complexities of web development, allowing developers to focus on building application features.
+Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It provides a robust set of tools and conventions for building web applications, emphasizing reusability and "pluggability" of components, rapid development, and the principle of don't repeat yourself (DRY). Django handles much of the hassle of web development, so you can focus on writing your app without needing to reinvent the wheel.
 
-**2. Data Flow Diagram (Mermaid):**
+**2. Data Flow Diagram (Mermaid Format):**
 
 ```mermaid
 graph LR
-    subgraph "User"
-        U[User]
+    subgraph User
+        A[User]
+    end
+    subgraph Django Application
+        B(URL Routing)
+        C(View Logic (Views))
+        D(Data Models (Models))
+        E(Template Rendering)
+        F(Form Handling)
+        G(Middleware Processing)
+    end
+    subgraph Database
+        H[Database]
     end
 
-    subgraph "Django Application"
-        RH[Request Handling]
-        UR[URL Routing and Dispatch]
-        MW[Middleware]
-        ORM["Object-Relational Mapper (ORM)"]
-        TE[Template Engine]
-        AA[Authentication and Authorization]
-        AI[Admin Interface]
-    end
-
-    U -- sends request --> RH
-    RH -- passes through --> MW
-    MW -- uses --> AA
-    RH -- uses --> UR
-    UR -- dispatches to --> TE
-    UR -- dispatches to --> ORM
-    ORM -- interacts with --> Database
-    TE -- renders --> RH
-    RH -- returns response --> MW
-    MW -- modifies --> RH
-    RH -- sends response --> U
-    AI -- uses --> ORM
-    AI -- uses --> AA
-
-    subgraph "External"
-        Database[Database]
-    end
+    A--Requests-->B
+    B--Routes to-->C
+    C--Uses-->D
+    C--Renders-->E
+    C--Handles-->F
+    C--Returns Response-->A
+    D--Interacts with-->H
+    F--Validates/Processes-->C
+    G--Processes Request/Response-->C
+    G--Processes Request/Response-->B
+    E--Generates HTML-->A
 ```
 
 **3. Component Descriptions:**
 
-*   **Request Handling:** This component is the entry point for all incoming HTTP requests. It receives requests from the user, passes them through the middleware pipeline, and ultimately sends the generated HTTP response back to the user. It uses URL Routing and Dispatch to determine the appropriate view to handle the request.
+*   **URL Routing:** This component receives incoming requests from the user and maps them to the appropriate view logic based on the defined URL patterns. It `routes to` the View Logic component. Middleware Processing also `processes request/response` to this component.
 
-*   **Middleware:** Middleware sits between the Request Handling and other components, processing requests and responses globally. It can perform tasks such as authentication, session management, request modification, and response processing. It interacts with Authentication and Authorization to verify user credentials and permissions.
+*   **View Logic (Views):** This component handles the core application logic. It receives requests from the URL Routing component, interacts with the Data Models to retrieve or update data, handles form submissions via the Form Handling component, and renders templates using the Template Rendering component. Finally, it `returns response` to the User. Middleware Processing also `processes request/response` to this component.
 
-*   **URL Routing and Dispatch:** This component maps incoming URLs to specific view functions or class-based views. It uses the URL configuration to determine the appropriate handler for each request and dispatches the request accordingly. It dispatches requests to either the Template Engine (for rendering views) or the ORM (for data-related operations).
+*   **Data Models (Models):** This component defines the structure and relationships of the application's data. It `interacts with` the Database to store and retrieve data, and it `uses` by the View Logic component to perform database operations.
 
-*   **Template Engine:** The Template Engine is responsible for loading, compiling, and rendering templates using context data. It generates dynamic HTML content that is included in the HTTP response. It receives data from the URL Routing and Dispatch component and renders the final HTML to be sent back via Request Handling.
+*   **Template Rendering:** This component takes data from the View Logic component and combines it with HTML templates to generate the final user interface. It `generates HTML` that is sent back to the user.
 
-*   **Object-Relational Mapper (ORM):** The ORM provides an abstraction layer for interacting with the database. It allows developers to work with data models as Python objects, simplifying database operations. It interacts with the Database to retrieve and store data, and it is used by both the URL Routing and Dispatch component and the Admin Interface.
+*   **Form Handling:** This component processes user input through forms, including validation and data cleaning. It `validates/processes` data and sends it to the View Logic component for further processing.
 
-*   **Authentication and Authorization:** This component manages user authentication, authorization, and session management. It controls access to resources based on user roles and permissions. It is used by the Middleware to authenticate users and authorize access to specific views or data.
-
-*   **Admin Interface:** The Admin Interface provides a built-in, customizable interface for managing the application's data models. It allows administrators to perform CRUD operations on the data. It uses the ORM to interact with the database and the Authentication and Authorization component to manage user access to the admin interface.
+*   **Middleware Processing:** This component processes requests and responses globally, performing tasks such as authentication, session management, and security checks. It `processes request/response` to both URL Routing and View Logic components, acting as a pipeline for request and response modification.
