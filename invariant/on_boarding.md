@@ -1,32 +1,55 @@
-Okay, I will generate an onboarding document for the `invariant` project based on the provided information.
+```markdown
+## Invariant Project Overview
 
-**1. Project Description**
+Invariant is a policy-as-code engine that allows users to define and enforce policies on various types of data, including code, text, and other structured data. It provides a flexible and extensible framework for analyzing data against defined policies, identifying violations, and triggering appropriate actions. The engine supports both local and remote policy analysis, a standard library of functions and utilities, and a web-based explorer for visualizing analysis results.
 
-The `invariant` project is a system designed for analyzing and enforcing policies on runtime data, particularly in the context of AI agents and applications. It allows users to define policies using a custom language, which are then applied to execution traces to detect violations and potential risks such as prompt injections, PII leaks, and code vulnerabilities. The system provides tools for managing traces, exploring policy violations, and launching an interactive explorer for in-depth analysis.
-
-**2. Flow Diagram (Mermaid Format)**
+## Data Flow Diagram
 
 ```mermaid
 graph LR
-    A[Trace Management and Exploration] -- loads --> B(Runtime Data Processing and Evaluation)
-    B -- applies --> C(Policy Analysis and Enforcement)
-    C -- uses --> D(Language Infrastructure)
-    B -- uses --> E(Runtime Utilities and Detection)
-    E -- detects --> B
-    C -- reports --> A
-    A -- launches --> F(Invariant Explorer)
+    A["Main Interface"] -- Receives Input --> B("Policy Engine")
+    B -- Loads Policy --> C["Language Processing"]
+    C -- Generates AST --> B
+    B -- Analyzes Data --> D["Runtime Environment"]
+    E["Input Processing"] -- Prepares Input --> D
+    D -- Evaluates Rules --> F["Standard Library & Utilities"]
+    F -- Provides Functions --> D
+    D -- Detects Violations --> G("Monitor")
+    G -- Reports Violations --> H["Invariant Explorer"]
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style D fill:#ccf,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
+    style G fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant//Main%20Interface.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant//Policy%20Engine.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant//Language%20Processing.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant//Runtime%20Environment.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant//Input%20Processing.md"
+click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant//Standard%20Library%20&%20Utilities.md"
+click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant//Monitor.md"
+click H href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/invariant//Invariant%20Explorer.md"
 ```
 
-**3. Component Descriptions**
+## Component Descriptions
 
-*   **Trace Management and Exploration:** This component is responsible for loading, formatting, and filtering execution traces from various sources. It also provides the functionality to launch the Invariant Explorer, a tool for visualizing and interacting with the traces and policy violations.
+**Main Interface:** This component serves as the entry point for the Invariant engine. It receives user input, such as policy files or data to be analyzed, and passes it to the Policy Engine. It also handles launching the Invariant Explorer and managing extras. It relates to the Policy Engine by sending the initial data and commands.
 
-*   **Runtime Data Processing and Evaluation:** This component takes the loaded traces and processes the runtime data, representing it in a structured format suitable for policy evaluation. It interprets expressions, manages variable assignments, and executes functions to prepare the data for analysis.
+**Policy Engine:** The core component responsible for loading, parsing, and analyzing policies against input data. It orchestrates the Language Processing, Runtime Environment, and Input Processing components. It receives policies from the Main Interface, uses Language Processing to parse them, and then analyzes data within the Runtime Environment. It sends detected violations to the Monitor.
 
-*   **Policy Analysis and Enforcement:** This component is the core of the system, responsible for parsing, analyzing, and enforcing policies against the processed runtime data. It loads policies from different sources, analyzes them for potential violations, and applies them to the data to identify any breaches.
+**Language Processing:** This component handles the parsing of the policy language into an abstract syntax tree (AST). It receives policy code from the Policy Engine and generates an AST, which is then used by the Policy Engine for analysis. It relates to the Policy Engine by providing the parsed representation of the policies.
 
-*   **Language Infrastructure:** This component provides the necessary infrastructure for parsing the policy language and transforming the Abstract Syntax Tree (AST). It includes lexical analysis, parsing, typing, and optimization to ensure efficient policy evaluation.
+**Runtime Environment:** This component provides the environment for evaluating policy rules against input data. It includes the interpreter, rule management, and function caching. It receives the AST from the Policy Engine and input data from Input Processing. It uses the Standard Library & Utilities for function calls during evaluation. It sends detected violations to the Monitor.
 
-*   **Runtime Utilities and Detection:** This component offers a suite of utilities used during runtime, including detectors for PII, prompt injections, moderation issues, and code analysis. These utilities enhance the system's ability to identify and mitigate potential risks within the runtime data.
+**Input Processing:** This component processes the input data for analysis, including parsing and locating ranges. It prepares the input data for the Runtime Environment. It relates to the Runtime Environment by providing the data to be analyzed.
 
-*   **Invariant Explorer:** This component provides a user interface for visualizing and interacting with the traces and policy violations.
+**Standard Library & Utilities:** This component provides standard functions, utilities, and data detectors for the policy language. It is used by the Runtime Environment during policy evaluation. It relates to the Runtime Environment by providing functions and utilities needed for the evaluation process.
+
+**Monitor:** This component monitors the system and checks for violations based on defined policies. It receives violation reports from the Runtime Environment and reports them to the Invariant Explorer. It relates to the Runtime Environment by receiving violation reports and to the Invariant Explorer by sending the reports for visualization.
+
+**Invariant Explorer:** This component launches a web-based explorer for visualizing and interacting with the analysis results. It receives violation reports from the Monitor and presents them in a user-friendly interface. It relates to the Monitor by receiving violation reports for visualization.
+```
