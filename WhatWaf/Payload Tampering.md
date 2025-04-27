@@ -1,9 +1,9 @@
 ```mermaid
 componentDiagram
   ContentProcessingModule -- "uses" --> TamperScripts : applies
-  TamperScripts -- "implements" --> RandomDecoys : implements
-  TamperScripts -- "implements" --> RandomComments : implements
-  TamperScripts -- "implements" --> RandomUnicode : implements
+  TamperScripts --> RandomDecoys : implements
+  TamperScripts --> RandomComments : implements
+  TamperScripts --> RandomUnicode : implements
 
   class ContentProcessingModule{
     get_working_tampers
