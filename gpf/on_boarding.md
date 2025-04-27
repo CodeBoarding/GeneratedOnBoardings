@@ -1,24 +1,25 @@
+```markdown
 ## GPF Data Flow Overview
 
 GPF (Genomic Prediction Framework) is a system designed for managing, analyzing, and storing genomic data. It provides tools for loading variant data, annotating variants with functional information, and storing the data in scalable storage solutions. The system also includes a web application for accessing and exploring the data.
 
 ```mermaid
 graph LR
-    A["GPF Instance"] -- Manages --> B("Genomic Resources")
-    A -- Uses --> C("Pedigree Loader")
-    A -- Configures --> D("Variant Loader")
-    D -- Uses --> E("Annotation Pipeline")
-    E -- Stores --> F("Storage")
-    F -- Provides Data --> G("Web Application")
+    A["GPF Instance"] -- Manages --> B["Genomic Resources"]
+    A -- Uses --> C["Pedigree Loader"]
+    A -- Configures --> D["Variant Loader"]
+    D -- Uses --> E["Annotation Pipeline"]
+    E -- Stores --> F["Storage"]
+    F -- Provides Data --> G["Web Application"]
     G -- Accesses --> A
 
-click A href "GPF Instance.md"
-click B href "Genomic Resources.md"
-click C href "Pedigree Loader.md"
-click D href "Variant Loader.md"
-click E href "Annotation Pipeline.md"
-click F href "Storage.md"
-click G href "Web Application.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/GPF Instance.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Genomic Resources.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Pedigree Loader.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Variant Loader.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation Pipeline.md"
+click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Storage.md"
+click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Web Application.md"
 ```
 
 ### Component Descriptions

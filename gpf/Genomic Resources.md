@@ -7,18 +7,18 @@ Here's a data flow diagram illustrating the interaction between the main compone
 
 ```mermaid
 graph LR
-    A["Repository Factory"] -- builds --> B("Genomic Resource Repository")
-    B -- contains --> C("Genomic Resource")
-    C -- uses --> D{"Reference Genome"}
-    C -- uses --> E{"Gene Models"}
+    A["Repository Factory"] -- builds --> B["Genomic Resource Repository"]
+    B -- contains --> C["Genomic Resource"]
+    C -- uses --> D["Reference Genome"]
+    C -- uses --> E["Gene Models"]
     D -- provides sequence --> F["Variant Annotation"]
     E -- provides annotations --> F
 
-click A href "Genomic%20Resources.md"
-click B href "Genomic%20Resources.md"
-click C href "Genomic%20Resources.md"
-click D href "Genomic%20Resources.md"
-click E href "Genomic%20Resources.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Genomic%20Resources.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Genomic%20Resources.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Genomic%20Resources.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Genomic%20Resources.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Genomic%20Resources.md"
 ```
 
 ### Component Descriptions:

@@ -25,16 +25,16 @@ graph LR
     style ImpalaStorage fill:#f9f,stroke:#333,stroke-width:2px
     style GCPStorage fill:#ccf,stroke:#333,stroke-width:2px
 
-    click ImpalaGenotypeStorage href "Storage.md"
-    click ImpalaHelpers href "Storage.md"
-    click ImpalaVariants href "Storage.md"
-    click ImpalaQueryRunner href "Storage.md"
-    click HdfsHelpers href "Storage.md"
-    click GcpGenotypeStorage href "Storage.md"
-    click GcpImportStorage href "Storage.md"
-    click BigQueryVariants href "Storage.md"
-    click BigQueryQueryRunner href "Storage.md"
-    click User href "Storage.md"
+    click ImpalaGenotypeStorage href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
+    click ImpalaHelpers href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
+    click ImpalaVariants href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
+    click ImpalaQueryRunner href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
+    click HdfsHelpers href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
+    click GcpGenotypeStorage href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
+    click GcpImportStorage href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
+    click BigQueryVariants href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
+    click BigQueryQueryRunner href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
+    click User href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage.md"
 
 ```
 

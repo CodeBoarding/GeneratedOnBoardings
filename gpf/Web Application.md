@@ -7,17 +7,17 @@ Here's a data flow diagram illustrating the interactions between the key compone
 
 ```mermaid
 graph LR
-    User["User"] -- Requests Data --> WebApp("Web Application") 
-    WebApp -- Uses --> DatasetViews("Dataset Views")
-    WebApp -- Uses --> GPFInstanceViews("GPF Instance Views")
-    DatasetViews -- Gets Data From --> WGPFInstance("WGPFInstance")
+    User["User"] -- Requests Data --> WebApp["Web Application"] 
+    WebApp -- Uses --> DatasetViews["Dataset Views"]
+    WebApp -- Uses --> GPFInstanceViews["GPF Instance Views"]
+    DatasetViews -- Gets Data From --> WGPFInstance["WGPFInstance"]
     GPFInstanceViews -- Gets Data From --> WGPFInstance
-    WGPFInstance -- Accesses --> GPFInstance("GPFInstance")
+    WGPFInstance -- Accesses --> GPFInstance["GPFInstance"]
     GPFInstance -- Loads Data --> DataStorage(("Data Storage"))
-    WebApp -- Manages --> UserManagement("User Management")
+    WebApp -- Manages --> UserManagement["User Management"]
     UserManagement -- Authenticates --> User
-    WebApp -- Checks Permissions --> DatasetPermissions("Dataset Permissions")
-    DatasetPermissions -- Uses --> Dataset("Dataset")
+    WebApp -- Checks Permissions --> DatasetPermissions["Dataset Permissions"]
+    DatasetPermissions -- Uses --> Dataset["Dataset"]
 
 click WebApp href "Web Application.md"
 click DatasetViews href "Web Application.md"

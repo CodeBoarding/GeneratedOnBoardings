@@ -15,12 +15,12 @@ graph LR
     F -- contains --> G("Person")
 
 
-click A href "GPF Instance.md"
-click B href "Pedigree Loader.md"
-click C href "Pedigree Loader.md"
-click D href "Pedigree Loader.md"
-click E href "Pedigree Loader.md"
-click F href "Pedigree Loader.md"
-click G href "Pedigree Loader.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//GPF Instance.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Pedigree Loader.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Pedigree Loader.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Pedigree Loader.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Pedigree Loader.md"
+click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Pedigree Loader.md"
+click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Pedigree Loader.md"
 
 ```

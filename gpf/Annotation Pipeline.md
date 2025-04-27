@@ -7,8 +7,8 @@ The Annotation Pipeline orchestrates the process of annotating variants with fun
 
 ```mermaid
 graph LR
-    A[Annotatable] -->|sends| B("Annotation Pipeline")
-    B -->|uses| C{Annotator}
+    A["Annotatable"] -->|sends| B("Annotation Pipeline")
+    B -->|uses| C{"Annotator"}
     C -->|calls| D["Effect Annotator Adapter"]
     C -->|calls| E["Liftover Annotator"]
     C -->|calls| F["Score Annotator"]
@@ -17,15 +17,15 @@ graph LR
     F -->|uses| I("Scores Database")
     B -->|enriches| A
 
-click A href "Annotation%20Pipeline.md"
-click B href "Annotation%20Pipeline.md"
-click C href "Annotation%20Pipeline.md"
-click D href "Annotation%20Pipeline.md"
-click E href "Annotation%20Pipeline.md"
-click F href "Annotation%20Pipeline.md"
-click G href "Annotation%20Pipeline.md"
-click H href "Annotation%20Pipeline.md"
-click I href "Annotation%20Pipeline.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation%20Pipeline.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation%20Pipeline.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation%20Pipeline.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation%20Pipeline.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation%20Pipeline.md"
+click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation%20Pipeline.md"
+click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation%20Pipeline.md"
+click H href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation%20Pipeline.md"
+click I href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation%20Pipeline.md"
 
 
 ```
