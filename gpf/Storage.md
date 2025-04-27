@@ -1,4 +1,3 @@
-```markdown
 ## Storage Component Overview
 
 The `Storage` component is responsible for storing variant and pedigree data in a persistent storage solution. It supports different storage backends like Impala and Google Cloud Platform (GCP). The choice of backend depends on the specific deployment environment and data volume requirements.
