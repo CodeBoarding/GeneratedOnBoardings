@@ -4,39 +4,26 @@ This component handles the storage, indexing, and querying of variant data using
 
 ```mermaid
 flowchart LR
-    subgraph DataLoaders [Data Loaders]
-    VcfLoader[VcfLoader
-    (Loads variants from VCF files)]
-    DenovoLoader[DenovoLoader
-    (Loads denovo variants from DAE files)]
-    FamiliesLoader[FamiliesLoader
-    (Loads family data for pedigree information)]
+    subgraph DataLoaders ["Data Loaders"]
+    VcfLoader["VcfLoader (Loads variants from VCF files)"]
+    DenovoLoader["DenovoLoader (Loads denovo variants from DAE files)"]
+    FamiliesLoader["FamiliesLoader (Loads family data for pedigree information)"]
     end
 
-    subgraph StorageBackends [Storage Backends]
-    ImpalaVariants[ImpalaVariants
-    (Accesses variants in Impala)]
-    BigQueryVariants[BigQueryVariants
-    (Accesses variants in BigQuery)]
-    DuckDb2Variants[DuckDb2Variants
-    (Accesses variants in DuckDB)]
-    RawMemoryVariants[RawMemoryVariants
-    (Accesses variants in memory)]
-    Schema2ImportStorage[Schema2ImportStorage
-    (Storage for schema2-based data import)]
+    subgraph StorageBackends ["Storage Backends"]
+    ImpalaVariants["ImpalaVariants (Accesses variants in Impala)"]
+    BigQueryVariants["BigQueryVariants (Accesses variants in BigQuery)"]
+    DuckDb2Variants["DuckDb2Variants (Accesses variants in DuckDB)"]
+    RawMemoryVariants["RawMemoryVariants (Accesses variants in memory)"]
+    Schema2ImportStorage["Schema2ImportStorage (Storage for schema2-based data import)"]
     end
 
     subgraph Querying
-    QueryVariants[QueryVariants
-    (Abstract base class for querying variants)]
-    QueryBuilder[QueryBuilder
-    (Builds SQL queries for variant retrieval)]
-    ImpalaQueryRunner[ImpalaQueryRunner
-    (Executes SQL queries against Impala)]
-    BigQueryQueryRunner[BigQueryQueryRunner
-    (Executes SQL queries against BigQuery)]
-    QueryVariantsBase[QueryVariantsBase
-    (Base class for Schema2 query interface)]
+    QueryVariants["QueryVariants (Abstract base class for querying variants)"]
+    QueryBuilder["QueryBuilder (Builds SQL queries for variant retrieval)"]
+    ImpalaQueryRunner["ImpalaQueryRunner (Executes SQL queries against Impala)"]
+    BigQueryQueryRunner["BigQueryQueryRunner (Executes SQL queries against BigQuery)"]
+    QueryVariantsBase["QueryVariantsBase (Base class for Schema2 query interface)"]
     end
 
     VcfLoader --> Schema2ImportStorage
