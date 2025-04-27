@@ -1,37 +1,71 @@
 ```mermaid
 graph LR
-    Settings --> Formatter
-    Settings --> FirewallFound
-    Content --> Formatter
-    DetectionQueue --> Formatter
-    FirewallFound --> Formatter
-    FirewallFound --> Settings
-    Formatter --> User[User]
+    A[Main Execution] -- "triggers" --> B(Web Application Fingerprinting and Detection)
+    B -- "detects" --> C{Firewall Found?}
+    C -- "yes" --> D[Output Formatting]
+    C -- "no" --> E[Settings Configuration]
+    D -- "formats" --> F[Firewall Issue Reporting]
+    D -- "formats" --> G[Output to User/File]
+    F -- "creates issue" --> H[GitHub Issues]
+    B -- "detects unknown" --> I[Settings Configuration]
+    I -- "creates fingerprint" --> J[Output Formatting]
+    J -- "formats" --> K[Firewall Issue Reporting]
+    K -- "creates issue" --> H
 
-    subgraph Components
-        Settings("Settings")
-        Formatter("Formatter")
-        FirewallFound("FirewallFound")
-        Content("Content")
-        DetectionQueue("DetectionQueue")
-    end
 
-    style User fill:#f9f,stroke:#333,stroke-width:2px
+classDef component fill:#f9f,stroke:#333,stroke-width:2px,color:#333
+class A,B,D,F,G,I,J,K component
 
-    classDef component fill:#fbf,stroke:#333,stroke-width:2px
-    class Settings, Formatter, FirewallFound, Content, DetectionQueue component
+classDef decision fill:#ccf,stroke:#333,stroke-width:2px,color:#333
+class C decision
+
+classDef external fill:#fff,stroke:#333,stroke-width:2px,color:#333
+class H external
+
+classDef config fill:#ffc,stroke:#333,stroke-width:2px,color:#333
+class E,I config
 
 
 ```
 
 ### Component Descriptions:
 
-*   **Settings**: Handles configuration and global settings for the WhatWaf application. It provides settings to the Formatter and FirewallFound components. Relevant source files: `repos.WhatWaf.lib.settings`
+- **Main Execution**
+  - *Description*: Orchestrates the entire scanning process.
+  - *Interaction*: Triggers the Web Application Fingerprinting and Detection component.
+  - *Source Files*: `repos.WhatWaf.trigger.main`
 
-*   **Formatter**: Provides a consistent way to output information to the user, with different levels of verbosity and formatting. It receives data from Settings, Content, DetectionQueue, and FirewallFound, and outputs to the User. Relevant source files: `repos.WhatWaf.lib.formatter`
+- **Web Application Fingerprinting and Detection**
+  - *Description*: Sends malicious requests and analyzes responses to detect and fingerprint web application firewalls.
+  - *Interaction*: Detects firewalls and interacts with the Output Formatting component if a firewall is found, or Settings Configuration if an unknown firewall is found.
+  - *Source Files*: `repos.WhatWaf.lib.content`
 
-*   **FirewallFound**: Deals with the logic for when a firewall is detected, including the option to create an issue to request a detection script. It uses the Formatter to display messages and interacts with Settings to potentially create issues. Relevant source files: `repos.WhatWaf.lib.firewall_found`
+- **Firewall Found?**
+  - *Description*: Decision node to determine if a firewall was detected.
+  - *Interaction*: Routes the process to Output Formatting if a firewall is found, or Settings Configuration if no firewall is found.
+  - *Source Files*: N/A (Decision Node)
 
-*   **Content**: Contains the main logic for content processing and detection. It uses the Formatter to output detection information. Relevant source files: `repos.WhatWaf.content`
+- **Output Formatting**
+  - *Description*: Formats the results of the WAF detection process for display or file output.
+  - *Interaction*: Receives detection results from Web Application Fingerprinting and Detection and formats them for the user, Firewall Issue Reporting, or file output.
+  - *Source Files*: `repos.WhatWaf.lib.formatter`
 
-*   **DetectionQueue**: Handles the queueing and processing of detection requests. It uses the Formatter to output information about the detection process. Relevant source files: `repos.WhatWaf.content.DetectionQueue
+- **Firewall Issue Reporting**
+  - *Description*: Creates and submits issues to GitHub related to detected firewalls, especially unknown ones.
+  - *Interaction*: Receives formatted output from Output Formatting and creates issues on GitHub.
+  - *Source Files*: `repos.WhatWaf.lib.firewall_found`
+
+- **Output to User/File**
+  - *Description*: Outputs the formatted results to the user's console or a specified file.
+  - *Interaction*: Receives formatted output from Output Formatting and displays it to the user or writes it to a file.
+  - *Source Files*: `repos.WhatWaf.lib.settings` (writing to file)
+
+- **GitHub Issues**
+  - *Description*: External component representing the GitHub issue tracker.
+  - *Interaction*: Receives issue creation requests from Firewall Issue Reporting.
+  - *Source Files*: N/A (External Component)
+
+- **Settings Configuration**
+  - *Description*: Configures settings and creates fingerprints for unknown firewalls.
+  - *Interaction*: Called when an unknown firewall is detected, creates a fingerprint, and then passes control to Output Formatting.
+  - *Source Files*: `repos.WhatWaf.lib.settings`
