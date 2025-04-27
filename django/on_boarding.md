@@ -13,8 +13,8 @@ graph LR
     end
     subgraph Django Application
         B(URL Routing)
-        C(View Logic (Views))
-        D(Data Models (Models))
+        C("View Logic (Views)")
+        D("Data Models (Models)")
         E(Template Rendering)
         F(Form Handling)
         G(Middleware Processing)
