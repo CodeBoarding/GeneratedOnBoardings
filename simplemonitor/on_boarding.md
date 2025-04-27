@@ -1,4 +1,3 @@
-```markdown
 ## SimpleMonitor Data Flow Overview
 
 SimpleMonitor is a versatile monitoring tool designed to periodically execute tests and checks on various systems and services. It provides alerting and logging capabilities to notify users of any issues or failures detected during the monitoring process.
