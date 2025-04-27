@@ -16,7 +16,7 @@ graph LR
     F -- Returns --> G
 
     click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Request%20Handling.md"
-    click B href https://github.com/CodeBoarding/GeneratedOnBoardings/django/URL%20Routing.md"
+    click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/URL%20Routing.md"
     click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/View%20Processing.md"
     click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Data%20Models%20(ORM).md"
     click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/django/Template%20Rendering.md"
