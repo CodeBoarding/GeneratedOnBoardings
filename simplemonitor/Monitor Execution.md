@@ -6,14 +6,14 @@ Here's a data flow diagram illustrating the process:
 
 ```mermaid
 graph LR
-    SimpleMonitor --> Monitor: uses
-    Monitor -- runs --> run_test: calls
-    run_test -- success --> record_success: calls
-    run_test -- failure --> record_fail: calls
-    record_success -- updates --> Monitor: updates
-    record_fail -- updates --> Monitor: updates
-    Monitor -- checks --> dependencies: checks
-    dependencies -- determines --> run_test: determines
+    SimpleMonitor --uses--> Monitor
+    Monitor -- runs --> run_test
+    run_test -- success --> record_success
+    run_test -- failure --> record_fail
+    record_success -- updates --> Monitor
+    record_fail -- updates --> Monitor
+    Monitor -- checks --> dependencies
+    dependencies -- determines --> run_test
 ```
 
 ### Component Descriptions:
