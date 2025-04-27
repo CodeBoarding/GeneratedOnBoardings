@@ -16,14 +16,10 @@ graph LR
         E
     end
     G(Monitor) --"loads policies into"--> B
-    G -- analyzes input using --> Policy Engine
+    G -- analyzes input using --> H(Policy Engine)
     Policy Engine -- reports --> F
     H(LocalPolicy) -- represents --> B
     I(RemotePolicy) -- represents --> B
-
-
-
-
 ```
 
 **Component: Input Processing**
