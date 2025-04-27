@@ -1,4 +1,3 @@
-```markdown
 ## MarkItDown: High-Level Data Flow Diagram
 
 MarkItDown is a versatile document conversion tool that transforms various file formats and data sources into Markdown. It supports local files, remote URIs, and streams, automatically detecting the input type and applying the appropriate conversion logic.
@@ -35,4 +34,3 @@ click F href "Conversion Result.md"
 **E. HTML to Markdown Conversion:** Provides utilities to convert HTML content to Markdown format. It's used by several converters to handle HTML-based content. It relates to the `Document Converters` by providing HTML to Markdown conversion services, and to the `Conversion Result` by contributing to the final Markdown output.
 
 **F. Conversion Result:** Represents the final output of the conversion process, containing the converted Markdown content. It's returned by the `MarkItDown Core` and displayed to the user via the CLI. It relates to the `MarkItDown Core` by being the final result of the conversion, and to the `Command Line Interface` by providing the output to be displayed.
-```
