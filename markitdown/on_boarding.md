@@ -1,29 +1,26 @@
-```markdown
-## MarkItDown: High-Level Data Flow Diagram
+## MarkItDown: High-Level Data Flow Overview
 
-MarkItDown is a versatile document conversion tool that transforms various file formats and data sources into Markdown. It supports local files, remote URLs, and data streams, offering a flexible solution for content conversion.
+MarkItDown is a versatile tool designed to convert various file formats and data sources into Markdown. It supports a wide range of input types, from plain text and HTML to more complex formats like DOCX, XLSX, PPTX, and even data sources like RSS feeds and Wikipedia articles. The core functionality revolves around identifying the input type, selecting the appropriate converter, and generating Markdown output.
 
 ```mermaid
 graph LR
-    A[Command Line Interface (CLI)] -- calls --> B(MarkItDown Core)
-    B -- handles --> C{Stream Information Handler}
-    C -- determines --> D[Document Converters]
-    D -- converts --> E(Markdown Output)
-    B -- returns --> E
-    E -- displays --> A
-
-
+    A["[Command-Line Interface (Parses input & arguments)](Command-Line Interface.md)"] -- Parses input & arguments --> B["[Stream Information Handling (Determines file type & encoding)](Stream Information Handling.md)"]
+    B -- Determines file type & encoding --> C{"[Core Conversion Engine](Core Conversion Engine.md)"}
+    C -- Registers converters --> D["[Converters](Converters.md)"]
+    C -- Selects converter based on file type --> D
+    D -- Uses --> E("[Converter Utilities](Converter Utilities.md)")
+    D -- Converts data to Markdown --> F(Markdown Output)
+    F -- Writes to --> G[Output (stdout or file)]
 ```
 
-### Component Descriptions
+### Component Descriptions:
 
-**1. Command Line Interface (CLI):** This is the entry point for users interacting with MarkItDown. It receives user input (e.g., file paths, URLs), passes it to the `MarkItDown Core`, and displays the final Markdown output. It relates to the `MarkItDown Core` by calling its conversion methods and receiving the converted output for display. click <a href="https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Command Line Interface.md">A</a>
+*   **Command-Line Interface:** This component serves as the entry point for the application. It parses command-line arguments, such as the input file or URL, and passes this information to the Stream Information Handling component. It also receives the final Markdown output from the Core Conversion Engine and writes it to either standard output or a specified file.
 
-**2. MarkItDown Core:** The central orchestrator of the conversion process. It manages the registration of available `Document Converters`, handles input streams via the `Stream Information Handler`, selects the appropriate converter, and returns the final `Markdown Output`. It relates to the `Stream Information Handler` by using it to determine the input type, to the `Document Converters` by selecting and calling the appropriate converter, and to the `Markdown Output` by receiving the converted markdown. click <a href="https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//MarkItDown Core.md">B</a>
+*   **Stream Information Handling:** This component analyzes the input stream to determine the file type, encoding, and other relevant information. It uses both user-provided hints (from the command line) and content-based detection to make an informed guess. The determined information is then passed to the Core Conversion Engine to select the appropriate converter.
 
-**3. Stream Information Handler:** This component analyzes the input stream (file, URL, or data stream) to determine its type (mimetype, extension, charset). This information is crucial for the `MarkItDown Core` to select the correct `Document Converter`. It relates to the `MarkItDown Core` by providing information about the input stream, and to the `Document Converters` by helping the `MarkItDown Core` to select the appropriate converter. click <a href="https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Stream Information Handler.md">C</a>
+*   **Core Conversion Engine:** This is the central component of the application. It manages the overall conversion process, including registering available converters, selecting the appropriate converter based on the input file type (determined by Stream Information Handling), and orchestrating the conversion process. It receives the stream information from the Stream Information Handling component and uses the selected converter to generate Markdown output.
 
-**4. Document Converters:** A collection of specialized converters, each responsible for converting a specific document type (e.g., HTML, DOCX, PDF) into Markdown. The `MarkItDown Core` selects a converter based on the stream information. It relates to the `MarkItDown Core` by performing the actual conversion when called, and to the `Markdown Output` by generating the converted markdown. click <a href="https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Document Converters.md">D</a>
+*   **Converters:** This component represents a collection of individual converters, each responsible for converting a specific file type or data source into Markdown format. The Core Conversion Engine selects the appropriate converter based on the input file type. Converters may utilize Converter Utilities to preprocess data.
 
-**5. Markdown Output:** Represents the final Markdown content generated by the conversion process. It encapsulates the converted Markdown text and any associated metadata. It relates to the `Document Converters` by receiving the converted markdown, and to the `Command Line Interface` by providing the final output for display. click <a href="https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Markdown Output.md">E</a>
-```
+*   **Converter Utilities:** This component provides utility functions and classes to support the converters. These utilities might include preprocessing steps for specific file formats (e.g., DOCX) or handling specific data types within files. Converters use these utilities to facilitate the conversion process.
