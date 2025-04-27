@@ -1,50 +1,56 @@
-```markdown
+## Stream Information Handler Overview
+
+The `Stream Information Handler` is responsible for managing and inferring information about the input stream. This information includes MIME type, extension, and charset, which are crucial for selecting the appropriate converter and processing the stream correctly. The central component is the `StreamInfo` data class, which stores all the relevant stream metadata.
+
 ```mermaid
-graph LR
-    A["MarkItDown"] -- converts --> B("StreamInfo") 
-    B -- identifies --> C("Magika") 
-    B -- provides info to --> D{"Converter Selection"} 
-    D -- uses --> E("Converters") 
-    E -- converts --> F("Markdown Output")
+classDiagram
+    class StreamInfo {
+        -mimetype: Optional<str>
+        -extension: Optional<str>
+        -charset: Optional<str>
+        -filename: Optional<str>
+        -local_path: Optional<str>
+        -url: Optional<str>
+        +copy_and_update()
+    }
 
-click A href "MarkItDown Core.md"
-click B href "Stream Information Handler.md"
-click C href "HTML to Markdown Conversion.md"
-click D href "MarkItDown Core.md"
-click E href "Document Converters.md"
-click F href "Conversion Result.md"
+    class MarkItDown {
+        +convert_stream()
+        +convert_local()
+        +convert_uri()
+        +convert_response()
+        - _get_stream_info_guesses()
+    }
+
+    MarkItDown -- Uses --> StreamInfo : creates, updates
+
+
+    class Converter {
+        <<Interface>>
+        +convert(stream: StreamInfo)
+    }
+
+    StreamInfo -- Used by --> Converter : provides info
+
 
 ```
 
-## Components Description:
+### Component Description
 
-**Component:** `MarkItDown`
-   - *Description*: The main class responsible for converting various input types to Markdown. It creates a `StreamInfo` object to store information about the input stream.
-   - *Interaction*: Converts input to a stream and creates a `StreamInfo` object, passing it to subsequent components.
-   - *Relevant Files*: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`
+**StreamInfo**
+*   **Purpose**: A data class that holds information about the input stream, such as mimetype, extension, charset, filename, local path, and URL.
+*   **Functionality**: Stores stream metadata. Provides a `copy_and_update` method to create a new `StreamInfo` instance with updated values.
+*   **Interaction**: `MarkItDown` creates and updates `StreamInfo` instances. Converters use `StreamInfo` to determine how to process the input stream.
+*   **Source Files**: `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`
 
-**Component:** `StreamInfo`
-   - *Description*: A class that stores information about the input stream, such as MIME type, charset, filename, and URL. It uses `magika` to identify stream content and enhance stream information guesses.
-   - *Interaction*: Receives the input stream and uses `Magika` to identify its type. Provides stream information to the `Converter Selection` component.
-   - *Relevant Files*: `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`
+**MarkItDown**
+*   **Purpose**: Orchestrates the conversion process.
+*   **Functionality**: Creates and updates the `StreamInfo` object using `_get_stream_info_guesses` based on the input stream. Passes the `StreamInfo` object to the selected converter.
+*   **Interaction**: Creates and updates `StreamInfo`. Uses the `StreamInfo` object to select the appropriate converter.
+*   **Source Files**: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`
 
-**Component:** `Magika`
-   - *Description*: An external tool used to identify the MIME type and other information about the input stream.
-   - *Interaction*: Called by `StreamInfo` to identify the stream's content.
-   - *Relevant Files*: N/A (External dependency)
-
-**Component:** `Converter Selection`
-   - *Description*: Determines the appropriate converter based on the stream information.
-   - *Interaction*: Receives stream information from `StreamInfo` and selects the appropriate converter from the `Converters` component.
-   - *Relevant Files*: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown._convert` (implicitly within the `_convert` method)
-
-**Component:** `Converters`
-   - *Description*: A package containing different converters for specific file types (e.g., PPTX, EPUB, HTML, ZIP).
-   - *Interaction*: Receives the input stream and stream information from the `Converter Selection` component and converts the stream to Markdown.
-   - *Relevant Files*: `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._epub_converter.EpubConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._zip_converter.ZipConverter`
-
-**Component:** `Markdown Output`
-   - *Description*: The final Markdown output generated by the converters.
-   - *Interaction*: The final result of the conversion process.
-   - *Relevant Files*: N/A (Output)
-```
+**Converter**
+*   **Purpose**: Converts a specific file type to markdown.
+*   **Functionality**: Takes a stream and `StreamInfo` as input and returns the markdown output.
+*   **Interaction**: Uses the `StreamInfo` object to determine the input type and how to process it.
+*   **Source Files**: `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._epub_converter.EpubConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._zip_converter.ZipConverter`

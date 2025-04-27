@@ -1,68 +1,33 @@
-```markdown
 ## MarkItDown Core Overview
 
-The `MarkItDown` core component orchestrates the conversion of various document types to Markdown. It manages converter registration, stream information handling, and the overall conversion process by selecting and applying appropriate converters.
-
-Here's a data flow diagram illustrating the process:
+The `MarkItDown` class is the central component responsible for orchestrating the conversion of various document types into Markdown format. It manages a collection of converters, handles input streams from different sources (local files, URLs, streams, responses), and applies the appropriate conversion logic based on file type detection and user-defined configurations.
 
 ```mermaid
 graph LR
-    subgraph Input Sources
-        A["URI"] --> B(MarkItDown)
-        C["Local File"] --> B
-        D["Stream"] --> B
-        E["Response"] --> B
-    end
+    A[Client] -- sends document --> B(MarkItDown) 
+    B -- uses --> C(StreamInfo) 
+    B -- uses --> D(URI Utilities)
+    B -- uses --> E(Plugin Loader)
+    B -- calls --> F(Converters)
+    F -- throws --> G(Exceptions)
+    B -- returns markdown --> A
 
-    B -- identifies stream info --> F(StreamInfo)
-    B -- selects converter --> G{Converter Registry}
-    G -- provides converter --> H[Converter]
-    H -- converts document --> I(Markdown Output)
-    B --> I
 
-    subgraph Output
-        I --> J[Output]
-    end
-
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#f9f,stroke:#333,stroke-width:2px
-    style J fill:#ccf,stroke:#333,stroke-width:2px
-
-click A href "MarkItDown%20Core.md"
-click B href "MarkItDown%20Core.md"
-click C href "MarkItDown%20Core.md"
-click D href "MarkItDown%20Core.md"
-click E href "MarkItDown%20Core.md"
-click F href "Stream%20Information%20Handler.md"
-click G href "MarkItDown%20Core.md"
-click H href "Document%20Converters.md"
-click I href "Conversion%20Result.md"
-click J href "MarkItDown%20Core.md"
 
 ```
 
-### Component Descriptions:
+## Components
 
-*   **URI:** Represents a Uniform Resource Identifier, which serves as an input source for the `MarkItDown` component. It *sends document* to `MarkItDown`.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown._markitdown`
-*   **Local File:** Represents a file on the local file system, serving as an input source for the `MarkItDown` component. It *sends document* to `MarkItDown`.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown._markitdown`
-*   **Stream:** Represents an input stream, serving as an input source for the `MarkItDown` component. It *sends document* to `MarkItDown`.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown._markitdown`
-*   **Response:** Represents a response object (e.g., from a web request), serving as an input source for the `MarkItDown` component. It *sends document* to `MarkItDown`.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown._markitdown`
-*   **MarkItDown:** The central component that orchestrates the conversion of various document types to Markdown. It manages converter registration, stream information handling, and the overall conversion process by selecting and applying appropriate converters. It *identifies stream info* and *selects converter*.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown._markitdown`
-*   **StreamInfo:** A data class that holds information about the input stream, such as filename, mimetype, and encoding. It is used to provide context to the converters. `MarkItDown` *uses* `StreamInfo`.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown._stream_info`
-*   **Converter Registry:** A registry of available converters. `MarkItDown` *uses* this registry to find the appropriate converter for the input document.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown._markitdown`
-*   **Converter:** An abstract class for converters. Each converter is responsible for converting a specific file format to markdown. It *converts document* to `Markdown Output`.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown.converters`
-*   **Markdown Output:** The resulting markdown content after the conversion process. It is the *output* of the `Converter` and the `MarkItDown` component.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown._markitdown`
-*   **Output:** Represents the final output destination for the converted Markdown content. It *receives* the `Markdown Output`.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown.__main__`
-```
+- **Client**: Initiates the conversion process by providing a document (file path, URL, stream, or response) to the `MarkItDown` component.
+
+- **MarkItDown**: Orchestrates the conversion process. It receives the document, determines the appropriate converter based on the input type and content, applies the conversion, and returns the resulting Markdown. It uses `StreamInfo` to determine the file type, `URI Utilities` to handle URI conversions, `Plugin Loader` to load external plugins, and `Converters` to perform the actual conversion. **Relevant source files:** `markitdown._markitdown.MarkItDown`
+
+- **StreamInfo**: Holds information about the input stream, such as mimetype, filename, and encoding. It helps `MarkItDown` in determining the appropriate converter to use. **Relevant source files:** `markitdown._stream_info.StreamInfo`
+
+- **URI Utilities**: Provides utility functions for handling URIs, including converting file URIs to file paths and parsing data URIs. `MarkItDown` uses these utilities to process input sources specified as URIs. **Relevant source files:** `markitdown._uri_utils`
+
+- **Plugin Loader**: Discovers and loads external plugins that extend the functionality of `MarkItDown`. Plugins can provide additional converters or modify the conversion process. `MarkItDown` uses this component during initialization to load available plugins. **Relevant source files:** `markitdown._markitdown._load_plugins`
+
+- **Converters**: A collection of classes, each responsible for converting a specific file format to Markdown. `MarkItDown` calls the appropriate converter based on the file type. If a conversion fails, it throws an exception. **Relevant source files:** `markitdown.converters`
+
+- **Exceptions**: Defines custom exception classes for handling errors during the conversion process. `Converters` throws these exceptions when a conversion fails. **Relevant source files:** `markitdown._exceptions`

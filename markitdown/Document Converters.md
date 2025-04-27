@@ -1,63 +1,45 @@
-```markdown
 ## Document Converters Overview
 
-The Document Converters subsystem is responsible for converting various file types and data sources into Markdown format. It consists of a collection of specialized converters, each designed to handle a specific type of input. The `MarkItDown` class orchestrates the conversion process by identifying the appropriate converter based on the input stream's metadata (provided by `StreamInfo`) and then invoking the converter to generate Markdown.
+This document provides an overview of the Document Converters component within the MarkItDown project. This component is responsible for converting various document formats (HTML, DOCX, PDF, etc.) into Markdown.
 
-Here's a high-level data flow diagram illustrating the interaction between the main components:
+### Data Flow Diagram
 
 ```mermaid
 graph LR
-    A["MarkItDown"] -- identifies converter --> B("StreamInfo")
-    A -- uses --> C{"Converter Registry"}
-    C -- returns converter --> D["Specific Converter"]
-    D -- converts --> E("DocumentConverterResult")
-    E -- returns markdown --> A
-
-click A href "MarkItDown Core.md"
-click B href "Stream Information Handler.md"
-click C href "Document Converters.md"
-click D href "Document Converters.md"
-click E href "Conversion Result.md"
+    A[MarkItDown] -- selects converter --> B{StreamInfo}
+    B -- determines type --> C{Converter Factory}
+    C -- creates --> D(Specific Converter)
+    D -- converts document --> E(DocumentConverterResult)
+    E -- returns --> A
+    A -- uses --> E
 
 
 
 ```
 
-### Component Descriptions:
+### Component Descriptions
 
-*   **MarkItDown:** The central class that receives the input stream, uses `StreamInfo` to identify the file type, selects the appropriate converter from the `Converter Registry`, and orchestrates the conversion process. It receives the converted Markdown from the specific converter and returns it as the final result.
-    *   Relevant source files:
-        *   `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`
+*   **MarkItDown:** The main class that orchestrates the conversion process. It receives a document, determines its type, selects the appropriate converter, and returns the converted Markdown.
+    *   **Purpose:** Coordinates the document conversion workflow.
+    *   **Interaction:** Receives documents, uses `StreamInfo` to determine the document type, calls the `Converter Factory` to get the appropriate converter, and receives the `DocumentConverterResult`.
+    *   **Relevant Source Files:** `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`
 
-*   **StreamInfo:** Encapsulates metadata about the input stream, such as mimetype, extension, and charset. This information is used to determine the appropriate converter to use. It provides the necessary context for the `MarkItDown` class to make informed decisions about the conversion process.
-    *   Relevant source files:
-        *   `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`
+*   **StreamInfo:** Determines the document type based on its content and extension. This information is used to select the appropriate converter.
+    *   **Purpose:** Identifies the document type.
+    *   **Interaction:** Receives the document stream from `MarkItDown` and provides type information to the `Converter Factory`.
+    *   **Relevant Source Files:** `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`
 
-*   **Converter Registry:** A conceptual component representing the collection of available converters. The `MarkItDown` class consults this registry to find the appropriate converter for a given file type. It is not a single class, but rather the collection of all specific converter classes.
-    *   Relevant source files:
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._pdf_converter.PdfConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._xlsx_converter.XlsxConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._youtube_converter.YouTubeConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._wikipedia_converter.WikipediaConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._epub_converter.EpubConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter.PlainTextConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._zip_converter.ZipConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._image_converter.ImageConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._outlook_msg_converter.OutlookMsgConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._audio_converter.AudioConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._ipynb_converter.IpynbConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._csv_converter.CsvConverter`
-        *   `repos.markitdown.packages.markitdown.src.markitdown.converters._bing_serp_converter.BingSerpConverter`
+*   **Converter Factory:** A factory that creates the appropriate converter based on the document type. It encapsulates the logic for selecting and instantiating the correct converter.
+    *   **Purpose:** Creates specific converters based on document type.
+    *   **Interaction:** Receives document type information from `StreamInfo` and returns the appropriate `Specific Converter` to `MarkItDown`.
+    *   **Relevant Source Files:** (Implicit, likely within `MarkItDown` or a dedicated module)
 
-*   **Specific Converter:** A concrete converter class responsible for converting a specific file type to Markdown. It receives the input stream from the `MarkItDown` class, performs the conversion, and returns the converted Markdown as a `DocumentConverterResult`.
-    *   Relevant source files: (See list above under Converter Registry)
+*   **Specific Converter:** A concrete converter for a specific document type (e.g., HTMLConverter, DocxConverter, PdfConverter). It implements the conversion logic for that type.
+    *   **Purpose:** Converts a specific document type to Markdown.
+    *   **Interaction:** Receives the document from `MarkItDown`, converts it to Markdown, and returns the `DocumentConverterResult`.
+    *   **Relevant Source Files:** `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pdf_converter.PdfConverter`, etc.
 
-*   **DocumentConverterResult:** Encapsulates the result of the conversion, including the converted Markdown text. It is returned by the specific converter to the `MarkItDown` class.
-    *   Relevant source files:
-        *   `repos.markitdown.packages.markitdown.src.markitdown._base_converter.DocumentConverterResult`
-```
+*   **DocumentConverterResult:** Represents the result of the document conversion, containing the Markdown content and any relevant metadata.
+    *   **Purpose:** Holds the converted Markdown content.
+    *   **Interaction:** Returned by the `Specific Converter` to `MarkItDown`.
+    *   **Relevant Source Files:** `repos.markitdown.packages.markitdown.src.markitdown._base_converter.DocumentConverterResult`
