@@ -22,7 +22,7 @@ classDiagram
         - _get_stream_info_guesses()
     }
 
-    MarkItDown -- Uses --> StreamInfo : creates, updates
+    MarkItDown --> StreamInfo : creates, updates
 
 
     class Converter {
@@ -30,7 +30,7 @@ classDiagram
         +convert(stream: StreamInfo)
     }
 
-    StreamInfo -- Used by --> Converter : provides info
+    StreamInfo --> Converter : provides info
 
 
 ```
