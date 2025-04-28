@@ -1,35 +1,54 @@
-## Pedigree Management Component Overview
+## Pedigree Management Overview
 
-This document provides a high-level overview of the Pedigree Management component, which is responsible for loading, representing, and manipulating pedigree data. The component uses the classes `FamiliesLoader`, `FamiliesData`, `Family`, and `Person` to represent pedigree information.
-
-### Data Flow Diagram
+This overview describes the flow of data and interactions between key components involved in pedigree management within the `dae.pedigrees` subsystem. The core functionality revolves around loading, representing, and manipulating pedigree data to facilitate family structure analysis.
 
 ```mermaid
 graph LR
-    A[FamiliesLoader] -- Loads data from --> B(FamiliesData)
+    A[FamiliesLoader] -- Loads --> B(FamiliesData)
     B -- Creates --> C(Family)
     C -- Contains --> D(Person)
-    B -- Provides access to --> C
-    C -- Provides access to --> D
+    C -- Uses --> E(Layout)
+    B -- Uses --> F(FamilyTagsBuilder)
+
+
 
 
 ```
 
-### Component Descriptions
+## Component Descriptions
 
-*   **FamiliesLoader**
-    *   **Description**: Loads families data from a file or other data source. It parses the input data and creates `Family` and `Person` objects.
-    *   **Interaction**: Reads pedigree data from a file and uses it to construct a `FamiliesData` object.
-    *   **Source Files**: `dae/pedigrees/loader.py`
-*   **FamiliesData**
-    *   **Description**: Represents a collection of `Family` objects. It provides methods to access and query families within the collection.
-    *   **Interaction**: Receives data from `FamiliesLoader` and organizes it into `Family` objects. Provides access to individual families and persons.
-    *   **Source Files**: `dae/pedigrees/families_data.py`
-*   **Family**
-    *   **Description**: Represents a single family, containing a collection of `Person` objects and their relationships. It provides methods to query family relationships (e.g., parent-child).
-    *   **Interaction**: Created by `FamiliesData` and contains `Person` objects. Provides methods to determine relationships between family members.
-    *   **Source Files**: `dae/pedigrees/family.py`
-*   **Person**
-    *   **Description**: Represents an individual within a family. It stores attributes of the person, such as role, sex, and status, and provides access to these attributes.
-    *   **Interaction**: Created by `FamiliesLoader` and contained within a `Family` object. Stores individual attributes and provides access to them.
-    *   **Source Files**: `dae/pedigrees/family.py`, `dae/variants/attributes.py`
+**1. FamiliesLoader**
+
+*   **Description:** Responsible for loading family data from various file formats (e.g., pedigree files, simple families files). It parses the data and structures it into a `FamiliesData` object.
+*   **Interaction:** Loads data from files and creates a `FamiliesData` object.
+*   **Relevant source files:** `dae/pedigrees/loader.py`
+
+**2. FamiliesData**
+
+*   **Description:** Represents a collection of families. It provides functionalities to access and query family structures. It is constructed from pedigree dataframes or a list of family persons.
+*   **Interaction:** Receives data from `FamiliesLoader` and creates `Family` objects. Uses `FamilyTagsBuilder` to tag families.
+*   **Relevant source files:** `dae/pedigrees/families_data.py`
+
+**3. Family**
+
+*   **Description:** Represents a single family, including its members and their relationships. It provides methods to connect family members, determine parent-child relationships, and check for the presence of both parents.
+*   **Interaction:** Created by `FamiliesData`. Contains `Person` objects and uses `Layout` to manage visual representation.
+*   **Relevant source files:** `dae/pedigrees/family.py`
+
+**4. Person**
+
+*   **Description:** Represents an individual within a family, storing information about their attributes and relationships.
+*   **Interaction:** Contained within a `Family` object.
+*   **Relevant source files:** `dae/pedigrees/family.py`
+
+**5. Layout**
+
+*   **Description:** Represents the layout of a family pedigree, providing functionalities to arrange family members in a visual representation. It can be generated from a family and applied to a family.
+*   **Interaction:** Used by `Family` to manage the visual layout of family members.
+*   **Relevant source files:** `dae/pedigrees/layout.py`
+
+**6. FamilyTagsBuilder**
+
+*   **Description:** Builds tags for families based on specific criteria or characteristics. It provides methods to tag families based on their properties.
+*   **Interaction:** Used by `FamiliesData` to tag families based on their properties.
+*   **Relevant source files:** `dae/pedigrees/family_tag_builder.py`

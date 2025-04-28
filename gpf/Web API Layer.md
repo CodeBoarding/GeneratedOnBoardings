@@ -1,70 +1,86 @@
 ## Web API Layer Overview
 
-The Web API layer serves as the entry point for external requests, providing RESTful endpoints to access data and functionalities within the system. It handles requests related to datasets, gene views, reports, and user management, orchestrating interactions between various backend components.
+The Web API Layer provides RESTful API endpoints for accessing data and functionalities within the Genotype and Phenotype in Families (GPF) project. It acts as the interface between the backend and the frontend, handling requests for datasets, gene views, and reports. This layer is crucial for exposing the data and functionalities of GPF to external applications and users.
+
+### Data Flow Diagram
 
 ```mermaid
-graph LR
-    Client([Client]) -- "sends request" --> API([Web API Layer])
-    API -- "accesses" --> DatasetView([Dataset View])
-    API -- "uses" --> UserManagement([User Management])
-    API -- "accesses" --> GPFInstance([GPF Instance Access])
-    GPFInstance -- "provides" --> StudyWrapper([Study Wrapper])
-    API -- "extends" --> QueryBase([Query Base View])
-
+flowchart LR
+    subgraph Web API Layer
+        DatasetAPI(Dataset API Views) --"uses"--> DatasetPermissions(Dataset Permissions Management)
+        DatasetPermissions --"uses"--> WGPFInstance(WGPFInstance Abstraction)
+        DatasetAPI --"uses"--> DatasetHierarchy(Dataset Hierarchy Model)
+        UserManagement(User Management) --"uses"--> DatasetPermissions
+        GPFInstanceManagement(GPF Instance Management) --"reloads"--> WGPFInstance
+    end
+    Frontend --"sends requests"--> DatasetAPI
+    Frontend --"authenticates"--> UserManagement
+    WGPFInstance --"accesses"--> GPFInstance(GPFInstance Core)
 
 
 ```
 
-## Components
+### Component Descriptions
 
-**1. Web API Layer (API)**
+#### 1. Dataset API Views
 
-*   **Description:** The central component that exposes RESTful API endpoints. It receives requests from clients, routes them to the appropriate backend components, and returns responses.
-*   **Functionality:** Handles request routing, authentication, authorization, and data serialization/deserialization.
-*   **Interactions:**
-    *   Receives requests from the Client.
-    *   Accesses Dataset View, User Management, and GPF Instance Access components.
-    *   Extends Query Base View for common query handling functionalities.
-*   **Relevant Source Files:** `wdae`, `wdae.datasets_api`, `wdae.gene_view`, `wdae.genotype_browser`, `wdae.pheno_tool_api`, `wdae.gene_profiles_api`, `wdae.enrichment_api`, `wdae.genomes_api`, `wdae.family_api`, `wdae.measures_api`, `wdae.genomic_scores_api`, `wdae.users_api`
+*   **Purpose:** Defines the API endpoints for accessing dataset information, including summaries, single dataset details, pedigree data, configurations, and descriptions.
+*   **Functionality:** Handles incoming HTTP requests related to datasets, retrieves data from the underlying layers, and formats the data into appropriate responses.
+*   **Interaction:**
+    *   Receives requests from the Frontend.
+    *   Uses Dataset Permissions Management to check user permissions.
+    *   Uses Dataset Hierarchy Model to manage hierarchical relationships between datasets.
+    *   Relies on WGPFInstance Abstraction to access the actual data.
+*   **Relevant Source Files:** `wdae.datasets_api.views.DatasetView`
 
-**2. Dataset View (DatasetView)**
+#### 2. Dataset Permissions Management
 
-*   **Description:** Handles requests for dataset information, including summaries and configurations.
-*   **Functionality:** Retrieves dataset details from the GPF instance, augments them with access rights and group information.
-*   **Interactions:**
-    *   Accessed by the Web API Layer.
-    *   Uses GPF Instance Access to retrieve dataset information.
-*   **Relevant Source Files:** `wdae.datasets_api.views.DatasetView`, `wdae.datasets_api.views.DatasetPedigreeView`, `wdae.datasets_api.views.DatasetConfigView`, `wdae.datasets_api.views.DatasetDescriptionView`, `wdae.datasets_api.views.DatasetPermissionsView`, `wdae.datasets_api.views.DatasetPermissionsSingleView`, `wdae.datasets_api.views.DatasetHierarchyView`, `wdae.datasets_api.views.VisibleDatasetsView`
+*   **Purpose:** Handles dataset-level permissions, including checking user permissions, retrieving allowed datasets, and managing dataset groups.
+*   **Functionality:** Determines whether a user has access to a specific dataset based on their roles and group memberships.
+*   **Interaction:**
+    *   Used by Dataset API Views to authorize requests.
+    *   Uses User Management to retrieve user information and group memberships.
+    *   Uses WGPFInstance Abstraction to access dataset metadata.
+*   **Relevant Source Files:** `wdae.datasets_api.permissions`
 
-**3. User Management (UserManagement)**
+#### 3. WGPFInstance Abstraction
 
-*   **Description:** Manages user accounts, authentication, and permissions.
-*   **Functionality:** Provides functionalities for creating, updating, and authenticating users, as well as managing their group memberships and permissions.
-*   **Interactions:**
-    *   Accessed by the Web API Layer for authentication and authorization.
-*   **Relevant Source Files:** `wdae.users_api.models.WdaeUser`, `wdae.users_api.models.WdaeUserManager`, `wdae.users_api.models.BaseVerificationCode`, `wdae.users_api.models.SetPasswordCode`, `wdae.users_api.models.ResetPasswordCode`, `wdae.users_api.models.AuthenticationLog`
+*   **Purpose:** Abstraction layer to access GPFInstance, providing a unified interface for accessing genotype and phenotype data, managing study wrappers, and handling permissions within the WDAE context.
+*   **Functionality:** Provides a consistent way to interact with the GPFInstance, hiding the complexities of data access and management.
+*   **Interaction:**
+    *   Used by Dataset API Views and Dataset Permissions Management to access data.
+    *   Accesses GPFInstance Core to retrieve genotype and phenotype data.
+*   **Relevant Source Files:** `wdae.gpf_instance.gpf_instance`
 
-**4. GPF Instance Access (GPFInstance)**
+#### 4. GPFInstance Core
 
-*   **Description:** Provides access to the GPF instance, which manages datasets, configurations, and other resources.
-*   **Functionality:** Offers methods for retrieving dataset wrappers, configurations, and available data IDs.
-*   **Interactions:**
-    *   Accessed by the Web API Layer and Dataset View.
-    *   Provides Study Wrapper.
-*   **Relevant Source Files:** `dae.gpf_instance.gpf_instance.GPFInstance`, `dae.gpf_instance.gpf_instance.WGPFInstance`, `dae.gpf_instance.gpf_instance.get_wgpf_instance`
+*   **Purpose:** Core component for accessing and managing genotype and phenotype data. It handles loading data, retrieving datasets, and building configurations.
+*   **Functionality:** Provides the fundamental data access and management capabilities for the GPF project.
+*   **Interaction:**
+    *   Accessed by WGPFInstance Abstraction to retrieve data.
+*   **Relevant Source Files:** `dae.gpf_instance.gpf_instance`
 
-**5. Study Wrapper (StudyWrapper)**
+#### 5. Dataset Hierarchy Model
 
-*   **Description:** Wraps study data (both genotype and phenotype) for easier access and management.
-*   **Functionality:** Provides a unified interface for accessing study metadata, configurations, and data.
-*   **Interactions:**
-    *   Provided by GPF Instance Access.
-*   **Relevant Source Files:** `studies.study_wrapper.StudyWrapper`, `studies.study_wrapper.WDAEStudy`
+*   **Purpose:** Manages the hierarchical relationships between datasets, including parent-child relationships and dataset properties.
+*   **Functionality:** Stores and retrieves information about the dataset hierarchy, enabling the API to navigate and present datasets in a structured manner.
+*   **Interaction:**
+    *   Used by Dataset API Views to retrieve dataset hierarchy information.
+*   **Relevant Source Files:** `wdae.datasets_api.models.DatasetHierarchy`
 
-**6. Query Base View (QueryBase)**
+#### 6. User Management
 
-*   **Description:** Base view for handling queries, providing common functionalities such as permission checks and request handling.
-*   **Functionality:** Implements common query processing logic.
-*   **Interactions:**
-    *   Extended by the Web API Layer.
-*   **Relevant Source Files:** `query_base.query_base.QueryBaseView`
+*   **Purpose:** Handles user authentication, permissions, and password management.
+*   **Functionality:** Provides the ability to create, manage, and authenticate users, as well as manage their permissions.
+*   **Interaction:**
+    *   Used by Dataset Permissions Management to retrieve user information.
+    *   Interacts with the Frontend for user authentication and management.
+*   **Relevant Source Files:** `wdae.users_api.models`
+
+#### 7. GPF Instance Management
+
+*   **Purpose:** Provides functions for accessing and managing GPF instances, including reloading datasets and updating permissions.
+*   **Functionality:** Allows administrators to manage the GPF instance, such as reloading datasets and updating permissions.
+*   **Interaction:**
+    *   Reloads WGPFInstance when datasets are updated.
+*   **Relevant Source Files:** `wdae.gpf_instance.gpf_instance`
