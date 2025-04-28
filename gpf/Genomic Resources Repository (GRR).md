@@ -49,9 +49,9 @@ flowchart LR
     classDef grrStyle fill:#f9f,stroke:#333,stroke-width:2px;
     classDef rgStyle fill:#ccf,stroke:#333,stroke-width:2px;
     classDef gmStyle fill:#ccf,stroke:#333,stroke-width:2px;
-    
-    class Factory,GroupRepo,Resource
-
+    class Factory,GroupRepo,ResourceRepo grrStyle;
+    class RefGenomeBuilder,ReferenceGenome,SequenceFile,IndexFile rgStyle;
+    class GeneModelBuilder,GeneModels,GeneModelData gmStyle;
 ```
 
 ### Component Descriptions:
