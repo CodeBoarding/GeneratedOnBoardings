@@ -6,14 +6,14 @@ This diagram illustrates the flow of data and interactions between key component
 graph LR
     A[Apps Registry] -- Loads --> B(AppConfig)
     B -- Imports --> C{Model Class}
-    C -- Defines --> D[Database Operations (Postgres)]
-    C -- Defines --> E[Database Operations (GIS)]
+    C -- Defines --> D["Database Operations (Postgres)"]
+    C -- Defines --> E["Database Operations (GIS)"]
     C -- Uses --> F[Exclusion Constraint]
     C -- Manages --> G[Session Management]
     C -- Configures --> H[Admin Model Options]
     H -- Uses --> I[Admin Utils - Nested Objects]
     H -- Uses --> J[Content Type Management]
-    C -- Aggregates --> K[Array Aggregation (Postgres and GIS)]
+    C -- Aggregates --> K["Array Aggregation (Postgres and GIS)"]
     C -- Defines --> L[GIS Fields]
     C -- Casts --> M[GIS Cast Function]
 
