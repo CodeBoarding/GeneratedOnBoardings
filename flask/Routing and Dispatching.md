@@ -14,7 +14,7 @@ graph LR
 
 
 classDef component fill:#f9f,stroke:#333,stroke-width:2px
-class Client, FlaskApp, Router, ViewHandler, ViewFunction component
+class Client, FlaskApp, Router, ViewHandler, ViewFunction component;
 ```
 
 ### Component Descriptions:
