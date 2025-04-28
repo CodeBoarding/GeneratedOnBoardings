@@ -1,25 +1,28 @@
 ```mermaid
 graph LR
+    %% Nodes inside WSGI subgraph
     subgraph WSGI
         WSGIHandler -- Receives --> WSGIRequest
         WSGIRequest -- Creates --> HttpRequest
     end
-    
+
+    %% Other connections
     HttpRequest -- Parses Data --> QueryDict
     HttpRequest -- Parses Data --> MultiPartParser
     HttpRequest -- Uses --> SessionManagement
     HttpRequest -- Uses --> CSRFProtection
+    HttpRequest -- Creates --> HttpResponse
 
-    subgraph Session Management
+    %% Nodes inside Session Management subgraph
+    subgraph SessionManagementGroup["Session Management"]
         SessionManagement -- Stores --> FileSessionStore
     end
 
-    HttpRequest -- Creates --> HttpResponse
-
-    style WSGI fill:#f9f,stroke:#333,stroke-width:2px
-    style "Session Management" fill:#ccf,stroke:#333,stroke-width:2px
-
-
+    %% Styling nodes individually (cannot style subgraph name)
+    style WSGIHandler fill:#f9f,stroke:#333,stroke-width:2px;
+    style WSGIRequest fill:#f9f,stroke:#333,stroke-width:2px;
+    style SessionManagement fill:#ccf,stroke:#333,stroke-width:2px;
+    style FileSessionStore fill:#ccf,stroke:#333,stroke-width:2px;
 
 ```
 
