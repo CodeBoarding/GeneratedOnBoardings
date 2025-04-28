@@ -6,32 +6,22 @@ Django is a high-level Python web framework that encourages rapid development an
 graph LR
     subgraph Request-Response Cycle
         A([Client Request]) --> B([Request Handling])
-        B --> C([URL Routing])
-        C --> D([Middleware])
-        D --> E([Views])
-        E --> F([Template Engine])
-        E --> G([Database Models])
-        G --> H([Database Abstraction Layer])
-        H --> I([Database])
-        E --> J([HTTP Responses])
-        J --> D
-        D --> K([Client Response])
+        B-- Creates Request Object--> C([URL Routing])
+        C-- Determines View --> D([Middleware])
+        D-- Processes Request --> E([Views])
+        E-- Renders Template --> F([Template Engine])
+        E-- Interacts wit --> G([Database Models])
+        G-- Uses --> H([Database Abstraction Layer])
+        H-- Communicates with --> I([Database])
+        E-- Creates Response --> J([HTTP Responses])
+        J-- Constructs Response --> D
+        D-- Processes Response --> K([Client Response])
+        F-- Creates HTML --> J
     end
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style K fill:#f9f,stroke:#333,stroke-width:2px
 
-    B-- Creates Request Object --> C
-    C-- Determines View --> D
-    D-- Processes Request --> E
-    E-- Interacts with --> G
-    G-- Uses --> H
-    H-- Communicates with --> I
-    E-- Renders Template --> F
-    F-- Creates HTML --> J
-    E-- Creates Response --> J
-    J-- Constructs Response --> D
-    D-- Processes Response --> K
 
 click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Request%20Handling.md"
 click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Request%20Handling.md"
