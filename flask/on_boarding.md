@@ -1,47 +1,39 @@
 ## Flask Data Flow Overview
 
-Flask is a micro web framework written in Python. It is designed to be lightweight and modular, allowing developers to build web applications with flexibility and control. Flask provides tools and libraries for handling HTTP requests, routing URLs, rendering templates, managing sessions, and more.
+Flask is a micro web framework written in Python. It is designed to be lightweight and flexible, providing the essentials for building web applications while allowing developers to choose the tools and libraries they want to use. Flask includes a built-in development server and debugger, support for secure cookies, and uses Jinja2 as its templating engine. It is often used for developing small to medium-sized web applications, APIs, and prototypes.
 
 ```mermaid
 graph LR
-    A[Client] -- HTTP Request --> B(Flask Application)
-    B -- Creates --> C(Request Context)
-    C -- Accesses --> D(Request Data)
-    B -- Routes Request --> E(Routing and Dispatching)
-    E -- Dispatches to --> F(View Function)
-    F -- Renders Template --> G(Template Engine)
-    G -- Generates --> H(HTML Response)
-    F -- Creates --> I(Response Object)
-    I -- Manages --> J(Response Handling)
-    J -- Sends --> A
-    C -- Manages --> K(Session Data)
-    K -- Stored in --> A
+    A[Client] -- HTTP Request --> B(Request-Response Handling)
+    B -- Routes Request --> C(Routing and Dispatching)
+    C -- Calls View Function --> D(Application Core)
+    D -- Manages Application --> E(Template Rendering)
+    E -- Renders Template --> B
+    B -- Creates Response --> A
+    D -- Uses --> F(Blueprints and Modularization)
+    F -- Provides Modules --> D
+    D -- Uses --> G(Extensions and Utilities)
+    G -- Provides Utilities --> D
 
-click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Flask Application.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Request Context.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Routing and Dispatching.md"
-click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Template Engine.md"
-click J href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Response Handling.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Request-Response Handling.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Request-Response Handling.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Routing and Dispatching.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Application Core.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Template Rendering.md"
+click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Blueprints and Modularization.md"
+click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flask//Extensions and Utilities.md"
 ```
 
-### Component Descriptions
+### Component Descriptions:
 
-**Flask Application:** This is the core of the Flask framework. It receives HTTP requests from clients, creates a request context, routes the request to the appropriate view function, and manages the overall application lifecycle. It relates to the `Request Context` by creating it for each request, and to `Routing and Dispatching` by delegating the URL routing.
+**Request-Response Handling:** This component receives HTTP requests from the client, encapsulates the request data, and manages the request context. It also creates HTTP responses to be sent back to the client, setting headers and content. It relates to the `Client` by receiving the initial request and sending the final response. It routes the request to `Routing and Dispatching` component.
 
-**Request Context:** This component manages the context of a request, including the request and session objects. It provides access to request data and manages session data. It relates to the `Flask Application` by being created by it, to `Request Data` by providing access to it, and to `Session Data` by managing it.
+**Routing and Dispatching:** This component maps incoming requests to the appropriate view functions based on URL rules. It maintains a registry of routes and dispatches requests to the corresponding handlers, managing URL parameters and view arguments. It receives the request from `Request-Response Handling` and calls the `Application Core` to manage the application.
 
-**Request Data:** This component encapsulates the data sent by the client in the HTTP request, such as form data, query parameters, and headers. It is accessed by the `Request Context` to provide the view function with the necessary information to process the request.
+**Application Core:** This component manages the Flask application instance, configuration, and overall lifecycle. It initializes and configures the application, handles context management, and provides access to application-level resources. It is called by `Routing and Dispatching` and uses `Template Rendering`, `Blueprints and Modularization`, and `Extensions and Utilities` to manage the application. It calls `Template Rendering` to render the template.
 
-**Routing and Dispatching:** This component handles URL routing, mapping URLs to view functions, and dispatching requests to the appropriate handlers. It receives the request from the `Flask Application` and dispatches it to the appropriate `View Function`.
+**Template Rendering:** This component renders templates using Jinja2 to generate dynamic HTML content. It integrates with the Jinja2 templating engine, provides template loading and rendering functions, and manages template context. It is used by `Application Core` to render the template and sends the rendered template back to `Request-Response Handling`.
 
-**View Function:** This is the function that handles the request and generates a response. It can render a template using the `Template Engine` or create a `Response Object` directly.
+**Blueprints and Modularization:** This component provides a way to organize Flask applications into reusable components. It allows defining sets of routes, templates, and static files that can be registered with the application, promoting modularity and code reuse. It provides modules to the `Application Core`.
 
-**Template Engine:** This component renders templates using Jinja2, generating HTML responses. It is used by the `View Function` to generate dynamic content.
-
-**HTML Response:** This is the HTML response generated by the `Template Engine`. It is sent back to the client by the `Response Handling` component.
-
-**Response Object:** This component encapsulates the HTTP response, including the body, headers, and status code. It is created by the `View Function` and managed by the `Response Handling` component.
-
-**Response Handling:** This component manages the creation, processing, and finalization of HTTP responses. It receives the `Response Object` from the `View Function` and sends it back to the client.
-
-**Session Data:** This component manages user session data, typically stored in a cookie. It is managed by the `Request Context` and stored in the client's browser.
+**Extensions and Utilities:** This component offers a collection of helper functions and utilities that extend Flask's functionality. It includes tools for working with sessions, command-line interfaces, testing, and other common tasks. It provides utilities to the `Application Core`.
