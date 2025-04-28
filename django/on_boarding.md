@@ -57,22 +57,3 @@ click Auth href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/
 **Data Models:** This component defines the structure and behavior of the data stored in the database. It provides an abstraction layer over the database, allowing the application to interact with the data without needing to write raw SQL queries. The View Processing component interacts with this component to retrieve and update data. The Authentication and Authorization component uses the Data Models component to store user accounts and permissions.
 
 **Authentication and Authorization:** This component handles user authentication, authorization, and session management. It verifies user credentials, manages user sessions, and ensures that users only have access to the resources they are authorized to access. The View Processing component interacts with this component to authenticate users and authorize access to resources. The Data Models component stores the user information.
-
-For each component in the **mermaid diagram**, make it a clickable link like: **click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//RelevantFile.md"**.
-
-Example of valid mermaid:
-```mermaid
-graph LR
-    A([Request Handling]) -- Receives --> B([URL Routing])
-    B -- Determines --> C(View Processing)
-    C -- Interacts with --> D["Data Models (ORM)"]
-
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Request%20Handling.md"
-click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//URL%20%Routing.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//View%20%Processing.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Data%20Models%20(ORM).md"
-```
-
-The available files are: ['packages_django.dot', 'static_analyzer', '.venv', 'repos', '.gitignore', 'abstract.py', 'call_graph.dot', '.env', 'django_structure.dot', 'Template Rendering.md', 'Data Models.md', 'Authentication and Authorization.md', 'Request Handling.md', 'agents', 'resources', 'URL Routing.md', 'on_boarding.md', 'View Processing.md', '__pycache__', 'main.py', '.idea', 'LICENSE', '.git', 'README.md', 'utils.py']. DON'T change anything else, just add the links. Return the full markdown string.
-For the links use the full links, not relative links.
-```
