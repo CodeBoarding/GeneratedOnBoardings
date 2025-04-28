@@ -4,7 +4,7 @@ This component handles the storage, indexing, and querying of variant data withi
 
 ```mermaid
 graph LR
-    subgraph Storage Backends
+    subgraph Storage_Backends [Storage Backends]
         impala_storage((Impala Storage))
         gcp_storage((GCP Storage))
         schema2_storage((Schema2 Storage))
@@ -15,10 +15,17 @@ graph LR
     query_variants((Query Variants))
 
     User[User] -- "queries" --> query_variants
-    query_variants -- "uses" --> Storage Backends
-    Storage Backends -- "provides data" --> query_variants
+    query_variants -- "uses" --> impala_storage
+    query_variants -- "uses" --> gcp_storage
+    query_variants -- "uses" --> schema2_storage
+    query_variants -- "uses" --> duckdb_storage
+    query_variants -- "uses" --> inmemory_storage
 
-
+    impala_storage -- "provides data" --> query_variants
+    gcp_storage -- "provides data" --> query_variants
+    schema2_storage -- "provides data" --> query_variants
+    duckdb_storage -- "provides data" --> query_variants
+    inmemory_storage -- "provides data" --> query_variants
 
 ```
 
