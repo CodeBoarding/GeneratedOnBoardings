@@ -1,35 +1,39 @@
-# GPF Project Overview
+## GPF: Genomic Data Analysis Platform
 
-GPF (Genomic Prediction Framework) is a comprehensive framework designed for managing, analyzing, and querying large-scale genomic data. It provides tools for data loading, annotation, storage, and querying, enabling researchers to explore and understand complex genetic variations and their impact on phenotypes.
+GPF (Genomic Data Analysis Platform) is a comprehensive platform designed for managing, analyzing, and querying large-scale genomic data. It provides tools for data loading, storage, variant annotation, and querying, with a focus on supporting research in genetics and genomics.
 
 ## Data Flow Diagram
 
 ```mermaid
 graph LR
-    A[GPF Instance] -- manages --> B(Genomic Resources Repository)
-    A -- configures --> D(Annotation Pipeline)
-    A -- provides access to --> E(Query Engine)
-    C(Variants Loader) -- loads data into --> A
-    B -- provides resources to --> D
-    C -- uses --> B
-    D -- annotates --> A
-    E -- queries --> A
+    A[GPF Instance & Configuration] -- Loads & Configures --> B(Genomic Resources)
+    A -- Provides Access --> D(Query Engine)
+    C(Variants Loaders) -- Loads Data Into --> E(Storage Abstraction)
+    B -- Provides Data To --> C
+    E -- Provides Data To --> D
+    D -- Queries --> E
+    D -- Returns Results To --> A
 
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//GPF Instance.md"
-click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genomic Resources Repository.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Variants Loader.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Annotation Pipeline.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Query Engine.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//GPF Instance & Configuration.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genomic Resources.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Variants Loaders.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Query Engine.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Storage Abstraction.md"
 ```
 
 ## Component Descriptions
 
-**GPF Instance:** This is the central hub of the GPF framework. It manages access to genomic data, resources, and analysis configurations. The GPF Instance is configured by the Variants Loader, which loads data into it. It manages the Genomic Resources Repository and configures the Annotation Pipeline. The Query Engine queries the GPF Instance to retrieve data.
+**1. GPF Instance & Configuration:**
+This component serves as the central access point for the entire GPF system. It manages the loading and configuration of datasets, genomic resources, and storage connections. It provides a unified interface for accessing data and functionalities, orchestrating the interactions between other components. It loads genomic resources to be used by the Variants Loaders and provides access to the Query Engine for querying data.
 
-**Genomic Resources Repository:** This component manages access to genomic resources such as reference genomes, gene models, and annotation scores. It provides these resources to the Annotation Pipeline and is used by the Variants Loader to understand the genomic context of the data being loaded.
+**2. Genomic Resources:**
+This component handles the storage, retrieval, and management of genomic resources such as reference genomes, gene models, and other annotation data. It provides the necessary data for variant annotation and interpretation. It is loaded and configured by the GPF Instance and Configuration component and provides data to the Variants Loaders for data transformation and annotation.
 
-**Variants Loader:** This component is responsible for loading variant data from various file formats and transforming it into a unified internal representation. It loads data into the GPF Instance and uses the Genomic Resources Repository to understand the genomic context of the data.
+**3. Variants Loaders:**
+This component is responsible for loading variant data from various file formats (e.g., VCF, DAE, Parquet) into a unified internal representation. It handles the parsing, validation, and transformation of raw data into a format suitable for querying and analysis. It uses Genomic Resources for annotation and loads the transformed data into the Storage Abstraction layer.
 
-**Annotation Pipeline:** This component annotates genetic variants with functional and genomic information. It is configured by the GPF Instance and uses resources from the Genomic Resources Repository to perform the annotation.
+**4. Query Engine:**
+This component provides the functionality to query and retrieve variants based on specified criteria. It translates high-level queries into efficient database queries and returns the results in a structured format. It receives queries from the GPF Instance and Configuration component and retrieves data from the Storage Abstraction layer.
 
-**Query Engine:** This component provides the ability to query and filter variants based on various criteria. It queries the GPF Instance to retrieve data based on user-defined criteria.
+**5. Storage Abstraction:**
+This component abstracts the underlying storage implementation, allowing the system to support different storage formats (e.g., Parquet, Impala, DuckDB) without modifying the core logic. It provides a consistent interface for accessing and manipulating variant data, regardless of the storage format. It receives data from the Variants Loaders and provides data to the Query Engine.

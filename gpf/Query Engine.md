@@ -1,74 +1,41 @@
 ## Query Engine Overview
 
-The Query Engine is responsible for providing a high-level interface to query and filter variants based on various criteria. It abstracts the underlying storage implementation and offers a unified way to explore and analyze data.
+The Query Engine is responsible for handling variant queries, translating them into database queries, and returning results. It orchestrates the interaction between the `SqlQueryBuilder`, `QueryVariantsBase`, and `QueryRunner` components.
 
 ```mermaid
 graph LR
-    GPFInstance--provides-->GenotypeStorage
-    GenotypeStorage--uses-->BigQueryVariants
-    GenotypeStorage--uses-->ParquetPartitionedBigQuery
-    QueryTransformer--transforms query-->SqlQueryBuilder
-    SqlQueryBuilder--builds SQL-->BigQueryVariants
-    BigQueryVariants--executes query-->BigQueryQueryRunner
-    BigQueryQueryRunner--returns data-->QueryResult
-    QueryResult--iterates-->Client
-
-    style GPFInstance fill:#f9f,stroke:#333,stroke-width:2px
-    style GenotypeStorage fill:#ccf,stroke:#333,stroke-width:2px
-    style BigQueryVariants fill:#ccf,stroke:#333,stroke-width:2px
-    style ParquetPartitionedBigQuery fill:#ccf,stroke:#333,stroke-width:2px
-    style QueryTransformer fill:#ccf,stroke:#333,stroke-width:2px
-    style SqlQueryBuilder fill:#ccf,stroke:#333,stroke-width:2px
-    style BigQueryQueryRunner fill:#ccf,stroke:#333,stroke-width:2px
-    style QueryResult fill:#ccf,stroke:#333,stroke-width:2px
-    style Client fill:#f9f,stroke:#333,stroke-width:2px
+    subgraph Query Engine
+    A[Query Request] -- Receives --> B(QueryVariantsBase) 
+    B -- Uses --> C(SqlQueryBuilder)
+    C -- Builds --> D(SQL Query)
+    B -- Creates --> E(QueryRunner)
+    D -- Executes --> E
+    E -- Returns --> F(Variant Data)
+    F -- Sends --> B
+    B -- Returns --> G[Query Results]
+    end
 
 
 ```
 
 ### Component Descriptions:
 
-- **GPFInstance**
-  - *Description*: Provides access to datasets, configurations, and resources.
-  - *Interaction*: Provides `GenotypeStorage` instances.
-  - *Relevant source files*: `dae.gpf_instance.gpf_instance.GPFInstance`
+*   **Query Request:** Represents the initial query request. It triggers the query processing flow.
 
-- **GenotypeStorage**
-  - *Description*: Abstract base class for genotype storage implementations.
-  - *Interaction*: Uses `BigQueryVariants` or other storage-specific classes to access data.
-  - *Relevant source files*: `dae.genotype_storage.genotype_storage.GenotypeStorage`
+*   **QueryVariantsBase:** Serves as the entry point for querying variants. It receives the query request, utilizes the `SqlQueryBuilder` to construct the SQL query, creates a `QueryRunner` to execute the query, and returns the results.
+    *   **Relevant source files:**
+        *   `dae.query_variants.base_query_variants.QueryVariantsBase`
 
-- **BigQueryVariants**
-  - *Description*: Represents variant data stored in Google BigQuery.
-  - *Interaction*: Executes queries via `BigQueryQueryRunner`.
-  - *Relevant source files*: `repos.gpf.gcp_storage.gcp_storage.bigquery_variants.BigQueryVariants`
+*   **SqlQueryBuilder:** Responsible for building the SQL query based on the query criteria. It translates high-level query parameters into a concrete SQL statement.
+    *   **Relevant source files:**
+        *   `dae.query_variants.sql.schema2.sql_query_builder.SqlQueryBuilder`
 
-- **ParquetPartitionedBigQuery**
-  - *Description*: Loads variants from Parquet files in GCS and integrates them with BigQuery.
-  - *Interaction*: Provides data to BigQuery.
-  - *Relevant source files*: `repos.gpf.impala_storage.impala_storage.gcp_variants_loaders.ParquetPartitionedBigQuery`
+*   **SQL Query:** The generated SQL query that will be executed against the database.
 
-- **QueryTransformer**
-  - *Description*: Transforms user queries into a suitable format.
-  - *Interaction*: Transforms queries and passes them to `SqlQueryBuilder`.
-  - *Relevant source files*: `repos.gpf.wdae.wdae.studies.query_transformer.QueryTransformer`
+*   **QueryRunner:** Manages the execution of the SQL query in a background thread. It retrieves the results and makes them available.
+    *   **Relevant source files:**
+        *   `dae.query_variants.query_runners.QueryRunner`
 
-- **SqlQueryBuilder**
-  - *Description*: Builds SQL queries based on the transformed query.
-  - *Interaction*: Builds SQL queries for `BigQueryVariants`.
-  - *Relevant source files*: `dae.query_variants.sql.schema2.sql_query_builder.SqlQueryBuilder`
+*   **Variant Data:** The raw variant data retrieved from the database.
 
-- **BigQueryQueryRunner**
-  - *Description*: Executes SQL queries against BigQuery.
-  - *Interaction*: Returns data to `QueryResult`.
-  - *Relevant source files*: `repos.gpf.gcp_storage.gcp_storage.bigquery_query_runner.BigQueryQueryRunner`
-
-- **QueryResult**
-  - *Description*: Manages the results from the query runners.
-  - *Interaction*: Provides an iterator for the client to access the results.
-  - *Relevant source files*: `dae.query_variants.query_runners.QueryRunner`
-
-- **Client**
-  - *Description*: The user or application consuming the query results.
-  - *Interaction*: Iterates through the `QueryResult` to access the data.
-  - *Relevant source files*: N/A
+*   **Query Results:** The final query results returned to the user.

@@ -1,0 +1,3 @@
+Max retries reached, failed to generate documentation for **Component:** `Genomic Resources`
+   - *Description*: This component handles the storage, retrieval, and management of genomic resources such as reference genomes, gene models, and other annotation data. It provides the necessary data for variant annotation and interpretation.
+   - *Related Classes/Methods*: `dae.genomic_resources.repository_factory.build_genomic_resource_repository`, `dae.genomic_resources.group_repository.GenomicResourceGroupRepo`, `dae.genomic_resources.reference_genome.build_reference_genome_from_resource`, `dae.genomic_resources.gene_models.gene_models.build_gene_models_from_resource`
