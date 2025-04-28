@@ -4,26 +4,28 @@ The Variant Loader component is responsible for loading variant data from differ
 
 ```mermaid
 flowchart LR
-    subgraph Variant Loading Subsystem
-    VcfLoader--Loads data from-->VCF Files
-    SingleVcfLoader--Iterates through-->VcfLoader
-    VcfFamiliesGenotypes--Builds from-->SingleVcfLoader
-    DenovoLoader--Loads data from-->DAE Denovo Files
-    DenovoFamiliesGenotypes--Represents-->DenovoLoader
-    DaeTransmittedLoader--Loads data from-->DAE Transmitted Files
-    DaeTransmittedFamiliesGenotypes--Represents-->DaeTransmittedLoader
+    variant_loading_subsystem["Variant Loading Subsystem"]:::subgraphStyle
+
+    subgraph variant_loading_subsystem
+        VcfLoader--Loads data from-->VCF_Files
+        SingleVcfLoader--Iterates through-->VcfLoader
+        VcfFamiliesGenotypes--Builds from-->SingleVcfLoader
+        DenovoLoader--Loads data from-->DAE_Denovo_Files
+        DenovoFamiliesGenotypes--Represents-->DenovoLoader
+        DaeTransmittedLoader--Loads data from-->DAE_Transmitted_Files
+        DaeTransmittedFamiliesGenotypes--Represents-->DaeTransmittedLoader
     end
 
-    VCF Files--Provides data-->VcfLoader
-    DAE Denovo Files--Provides data-->DenovoLoader
-    DAE Transmitted Files--Provides data-->DaeTransmittedLoader
+    VCF_Files["VCF Files"]--Provides data-->VcfLoader
+    DAE_Denovo_Files["DAE Denovo Files"]--Provides data-->DenovoLoader
+    DAE_Transmitted_Files["DAE Transmitted Files"]--Provides data-->DaeTransmittedLoader
 
-    Variant Loading Subsystem--Uses-->GenomicResource
+    variant_loading_subsystem--Uses-->GenomicResource
     GenomicResource--Provides-->ReferenceGenome
     GenomicResource--Provides-->FamiliesData
 
+    classDef subgraphStyle fill:#f9f,stroke:#333,stroke-width:2px;
 
-    style Variant Loading Subsystem fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
 ### Component Details
