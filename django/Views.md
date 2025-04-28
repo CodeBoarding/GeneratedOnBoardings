@@ -5,7 +5,7 @@ This diagram illustrates the flow of request processing within Django's generic 
 ```mermaid
 graph LR
     subgraph Views
-    A[View] -- dispatch --> B{Handler Method (get, post, etc.)}
+    A[View] -- dispatch --> B{"Handler Method (get, post, etc.)"}
     B -- returns HttpResponse --> C(Rendering)
     B -- returns HttpResponseRedirect --> D(Redirection)
     E[TemplateResponseMixin] -- render_to_response --> C
