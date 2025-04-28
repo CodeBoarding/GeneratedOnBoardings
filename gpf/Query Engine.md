@@ -1,63 +1,74 @@
 ## Query Engine Overview
 
-The Query Engine provides functionalities for querying genetic variants based on various criteria. It builds SQL queries, transforms queries, and deserializes variants, enabling users to efficiently retrieve relevant data. The following diagram illustrates the data flow within the Query Engine:
+The Query Engine is responsible for providing a high-level interface to query and filter variants based on various criteria. It abstracts the underlying storage implementation and offers a unified way to explore and analyze data.
 
 ```mermaid
 graph LR
-    subgraph Query Engine
+    GPFInstance--provides-->GenotypeStorage
+    GenotypeStorage--uses-->BigQueryVariants
+    GenotypeStorage--uses-->ParquetPartitionedBigQuery
+    QueryTransformer--transforms query-->SqlQueryBuilder
+    SqlQueryBuilder--builds SQL-->BigQueryVariants
+    BigQueryVariants--executes query-->BigQueryQueryRunner
+    BigQueryQueryRunner--returns data-->QueryResult
+    QueryResult--iterates-->Client
 
-    QueryTransformer -- transforms --> SqlQueryBuilder
-    SqlQueryBuilder -- builds --> QueryRunner
-    QueryRunner -- executes --> QueryResult
-    QueryResult -- deserializes --> SummaryVariantFactory
-    SummaryVariantFactory -- creates --> FamilyVariant
-    QueryResult -- transforms --> ResponseTransformer
-
-    end
+    style GPFInstance fill:#f9f,stroke:#333,stroke-width:2px
+    style GenotypeStorage fill:#ccf,stroke:#333,stroke-width:2px
+    style BigQueryVariants fill:#ccf,stroke:#333,stroke-width:2px
+    style ParquetPartitionedBigQuery fill:#ccf,stroke:#333,stroke-width:2px
+    style QueryTransformer fill:#ccf,stroke:#333,stroke-width:2px
+    style SqlQueryBuilder fill:#ccf,stroke:#333,stroke-width:2px
+    style BigQueryQueryRunner fill:#ccf,stroke:#333,stroke-width:2px
+    style QueryResult fill:#ccf,stroke:#333,stroke-width:2px
+    style Client fill:#f9f,stroke:#333,stroke-width:2px
 
 
 ```
 
 ### Component Descriptions:
 
+- **GPFInstance**
+  - *Description*: Provides access to datasets, configurations, and resources.
+  - *Interaction*: Provides `GenotypeStorage` instances.
+  - *Relevant source files*: `dae.gpf_instance.gpf_instance.GPFInstance`
+
+- **GenotypeStorage**
+  - *Description*: Abstract base class for genotype storage implementations.
+  - *Interaction*: Uses `BigQueryVariants` or other storage-specific classes to access data.
+  - *Relevant source files*: `dae.genotype_storage.genotype_storage.GenotypeStorage`
+
+- **BigQueryVariants**
+  - *Description*: Represents variant data stored in Google BigQuery.
+  - *Interaction*: Executes queries via `BigQueryQueryRunner`.
+  - *Relevant source files*: `repos.gpf.gcp_storage.gcp_storage.bigquery_variants.BigQueryVariants`
+
+- **ParquetPartitionedBigQuery**
+  - *Description*: Loads variants from Parquet files in GCS and integrates them with BigQuery.
+  - *Interaction*: Provides data to BigQuery.
+  - *Relevant source files*: `repos.gpf.impala_storage.impala_storage.gcp_variants_loaders.ParquetPartitionedBigQuery`
+
 - **QueryTransformer**
-    - *Description*: Transforms user queries into a format suitable for the query engine.
-    - *Interaction*: Receives user queries, transforms them, and sends the transformed query to the `SqlQueryBuilder`.
-    - *Relevant files*:
-        - `dae.studies.query_transformer.QueryTransformer`
+  - *Description*: Transforms user queries into a suitable format.
+  - *Interaction*: Transforms queries and passes them to `SqlQueryBuilder`.
+  - *Relevant source files*: `repos.gpf.wdae.wdae.studies.query_transformer.QueryTransformer`
 
 - **SqlQueryBuilder**
-    - *Description*: Builds SQL queries for variant retrieval based on a schema and user-defined filters.
-    - *Interaction*: Receives transformed queries from `QueryTransformer`, builds SQL queries, and passes them to `QueryRunner`.
-    - *Relevant files*:
-        - `dae.query_variants.sql.schema2.sql_query_builder.SqlQueryBuilder`
+  - *Description*: Builds SQL queries based on the transformed query.
+  - *Interaction*: Builds SQL queries for `BigQueryVariants`.
+  - *Relevant source files*: `dae.query_variants.sql.schema2.sql_query_builder.SqlQueryBuilder`
 
-- **QueryRunner**
-    - *Description*: Executes SQL queries against a data source.
-    - *Interaction*: Receives SQL queries from `SqlQueryBuilder`, executes them, and sends the results to `QueryResult`.
-    - *Relevant files*:
-        - `dae.query_variants.query_runners.QueryRunner`
+- **BigQueryQueryRunner**
+  - *Description*: Executes SQL queries against BigQuery.
+  - *Interaction*: Returns data to `QueryResult`.
+  - *Relevant source files*: `repos.gpf.gcp_storage.gcp_storage.bigquery_query_runner.BigQueryQueryRunner`
 
 - **QueryResult**
-    - *Description*: Manages and provides access to the results of a query.
-    - *Interaction*: Receives results from `QueryRunner`, deserializes them using `SummaryVariantFactory`, transforms them using `ResponseTransformer` and provides access to the transformed results.
-    - *Relevant files*:
-        - `dae.query_variants.query_runners.QueryResult`
+  - *Description*: Manages the results from the query runners.
+  - *Interaction*: Provides an iterator for the client to access the results.
+  - *Relevant source files*: `dae.query_variants.query_runners.QueryRunner`
 
-- **SummaryVariantFactory**
-    - *Description*: Creates summary variants and alleles from raw variant data.
-    - *Interaction*: Receives raw variant data from `QueryResult` and creates `FamilyVariant`.
-    - *Relevant files*:
-        - `dae.variants.variant.SummaryVariantFactory`
-
-- **FamilyVariant**
-    - *Description*: Represents a variant in the context of a family.
-    - *Interaction*: Created by `SummaryVariantFactory` from summary variants and family-specific information.
-    - *Relevant files*:
-        - `dae.variants.family_variant.FamilyVariant`
-
-- **ResponseTransformer**
-    - *Description*: Transforms query results into a format suitable for the user.
-    - *Interaction*: Receives query results from `QueryResult` and transforms them for presentation to the user.
-    - *Relevant files*:
-        - `dae.studies.response_transformer.ResponseTransformer`
+- **Client**
+  - *Description*: The user or application consuming the query results.
+  - *Interaction*: Iterates through the `QueryResult` to access the data.
+  - *Relevant source files*: N/A
