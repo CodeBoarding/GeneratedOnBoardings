@@ -8,7 +8,7 @@ graph LR
     B -- uses --> E(Context)
     D -- renders with --> E
     E -- provides data to --> D
-    D -- generates --> F[Output (HTML, etc.)]
+    D -- generates --> F["Output (HTML, etc.)"]
     B -- renders to --> F
     subgraph Output
         F -- displays to --> G[User]
