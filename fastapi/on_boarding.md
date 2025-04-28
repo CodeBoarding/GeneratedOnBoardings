@@ -1,40 +1,47 @@
-## FastAPI Data Flow Overview
+# FastAPI Data Flow Overview
 
-FastAPI is a modern, high-performance web framework for building APIs with Python. It leverages standard Python type hints to simplify development and provide automatic data validation and serialization. FastAPI is built on top of Starlette and Pydantic, offering features like asynchronous request handling, dependency injection, and automatic OpenAPI documentation.
+FastAPI is a modern, high-performance, web framework for building APIs with Python. It leverages standard Python type hints to automatically generate API documentation and handle request validation. The framework is built on top of Starlette and Pydantic, providing a robust and efficient foundation for developing web applications.
+
+## Data Flow Diagram
 
 ```mermaid
 graph LR
-    A["Client Request"] --> B("FastAPI Application")
-    B -- Receives --> C{"Routing"}
-    C -- Determines Endpoint --> D["Dependency Injection"]
-    D -- Resolves Dependencies --> E("Path Operation Function")
-    E -- Processes Request --> F["Request and Response Handling"]
-    F -- Validates & Serializes --> G("Response")
-    G -- Generates --> H["OpenAPI Schema Generation"]
-    H -- Provides Schema --> I("Documentation/Clients")
-    F -- Sends --> B
-    B -- Returns --> A
+    Client([Client]) -- Sends HTTP Request --> RequestHandling([Request Handling])
+    RequestHandling -- Routes Request --> PathOperations([Path Operations])
+    PathOperations -- Uses --> DependencyInjection([Dependency Injection])
+    DependencyInjection -- Resolves Dependencies --> PathOperations
+    PathOperations -- Executes --> UserCode((User Code))
+    UserCode -- Returns Data --> RequestHandling
+    RequestHandling -- Creates Response --> Client
+    PathOperations -- Generates Schema --> OpenAPISchemaGeneration([OpenAPI Schema Generation])
+    RequestHandling -- Triggers --> ExceptionHandling([Exception Handling])
+    ExceptionHandling -- Handles Exception --> RequestHandling
 
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//Request%20and%20Response%20Handling.md"
-click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//FastAPI%20Application.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//Routing.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//Dependency%20Injection.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//Request%20and%20Response%20Handling.md"
-click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//Request%20and%20Response%20Handling.md"
-click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//OpenAPI%20Schema%20Generation.md"
-click H href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//OpenAPI%20Schema%20Generation.md"
-click I href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//OpenAPI%20Schema%20Generation.md"
 
+
+    style Client fill:#f9f,stroke:#333,stroke-width:2px
+    style UserCode fill:#ccf,stroke:#333,stroke-width:2px
+
+click RequestHandling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//Request%20Handling.md"
+click PathOperations href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//Path%20Operations.md"
+click DependencyInjection href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//Dependency%20Injection.md"
+click OpenAPISchemaGeneration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//OpenAPI%20Schema%20Generation.md"
+click ExceptionHandling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi//Exception%20Handling.md"
 ```
 
 ## Component Descriptions
 
-**1. FastAPI Application:** This is the core of the FastAPI framework. It inherits from Starlette and is responsible for managing the application's lifecycle, including startup, shutdown, and middleware configuration. It receives the initial client request and returns the final response after processing.
+**1. Request Handling:**
+   - *Description*: The Request Handling component is the entry point for all incoming HTTP requests. It receives requests from clients, routes them to the appropriate path operation based on the URL and HTTP method, and constructs the final HTTP response to be sent back to the client. It uses the routing mechanism defined in Path Operations and triggers Exception Handling in case of errors.
 
-**2. Routing:** The routing component maps incoming HTTP requests to the appropriate path operation functions based on the URL path and HTTP method. It determines which endpoint should handle the request and passes control to the dependency injection system.
+**2. Path Operations:**
+   - *Description*: This component defines the application's endpoints. It associates specific URL paths and HTTP methods (GET, POST, PUT, DELETE, etc.) with corresponding handler functions (User Code). It uses Dependency Injection to resolve dependencies required by these handler functions. It also generates schema information for OpenAPI Schema Generation.
 
-**3. Dependency Injection:** This component manages the resolution and injection of dependencies into path operation functions. It ensures that the required dependencies are available before the path operation function is executed, promoting modularity and testability. It receives the endpoint information from the Routing component and provides the resolved dependencies to the Path Operation Function.
+**3. Dependency Injection:**
+   - *Description*: The Dependency Injection component manages the dependencies required by the path operation functions. It resolves these dependencies, potentially using FastAPI's built-in dependency injection system or custom dependency providers, and injects them into the handler functions before execution. It is used by Path Operations to provide necessary resources to the handler functions.
 
-**4. Request and Response Handling:** This component handles the processing of incoming requests and the generation of outgoing responses. It extracts and validates request data, serializes response data, and sets appropriate HTTP headers. It receives data from the Path Operation Function and sends the processed data back to the FastAPI Application.
+**4. OpenAPI Schema Generation:**
+   - *Description*: This component is responsible for automatically generating the OpenAPI schema for the API. It gathers information about the API endpoints, request/response models, and dependencies to create a comprehensive API documentation in the OpenAPI format. It is triggered by Path Operations when the application starts or when the OpenAPI schema is requested.
 
-**5. OpenAPI Schema Generation:** This component automatically generates the OpenAPI schema for the API based on the defined path operation functions and data models. This schema is used for generating interactive API documentation and client SDKs. It receives information from the Request and Response Handling component to generate the schema and provides the schema to documentation or clients.
+**5. Exception Handling:**
+   - *Description*: The Exception Handling component intercepts exceptions raised during request processing, such as validation errors or HTTP exceptions. It uses registered exception handlers to generate appropriate error responses, ensuring that the client receives informative feedback in case of errors. It is triggered by Request Handling when an exception occurs during request processing.
