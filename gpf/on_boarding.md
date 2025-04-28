@@ -1,4 +1,3 @@
-```markdown
 ## GPF Project: Data Flow Overview
 
 GPF (Genomic Prediction Framework) is a comprehensive platform designed for storing, querying, and analyzing large-scale genomic data. It provides tools for variant annotation, enrichment analysis, and phenotype association studies, enabling researchers to gain insights into the genetic basis of diseases.
@@ -32,4 +31,3 @@ click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf
 **Annotation Engine:** The Annotation Engine performs variant annotation using a configurable pipeline of annotators. It uses genomic resources from the GRR and the output of the Variant Loader to produce annotated variants. The annotated variants are then made available through the Query API.
 
 **Query API:** This component provides the API and logic for querying and accessing variant data. It receives queries from the User Interface/External Tools, retrieves data from the storage backend, and returns the results. The Query API uses the annotated variants produced by the Annotation Engine.
-```
