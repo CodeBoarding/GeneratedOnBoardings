@@ -1,4 +1,3 @@
-```markdown
 # Django High-Level Data Flow Overview
 
 Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It takes care of much of the hassle of web development, so you can focus on writing your app without needing to reinvent the wheel. It is a full-featured framework that includes an ORM, templating engine, form handling, and more.
