@@ -1,3 +1,77 @@
-```json
-{
-  "content": "## Request Handling Overview\n\nThis diagram illustrates the flow of an HTTP request through the Django framework, from the initial handling by the ASGI/WSGI handler to the generation of an HTTP response.\n\n```mermaid\ngraph LR\n    subgraph \"Request Handling\"\n      ASGIHandler[\"ASGIHandler\\n(django.core.handlers.asgi)\"]\n      WSGIHandler[\"WSGIHandler\\n(django.core.handlers.wsgi)\"]\n    end\n\n    subgraph \"URL Routing\"\n      URLResolver[\"URLResolver\\n(django.urls.resolvers)\"]\n    end\n\n    subgraph \"Middleware Processing\"\n      MiddlewareMixin[\"MiddlewareMixin\\n(django.middleware)\"]\n      SessionMiddleware[\"SessionMiddleware\\n(django.contrib.sessions.middleware)\"]\n      CommonMiddleware[\"CommonMiddleware\\n(django.middleware.common)\"]\n      CsrfViewMiddleware[\"CsrfViewMiddleware\\n(django.middleware.csrf)\"]\n      AuthenticationMiddleware[\"AuthenticationMiddleware\\n(django.contrib.auth.middleware)\"]\n    end\n\n    subgraph \"View Processing\"\n      View[\"View\\n(django.views)\"]\n      render[\"render\\n(django.shortcuts)\"]\n    end\n\n    subgraph \"Template Rendering\"\n      render_to_string[\"render_to_string\\n(django.template.loader)\"]\n      Template[\"Template\\n(django.template)\"]\n      Context[\"Context\\n(django.template)\"]\n    end\n\n    subgraph \"HTTP Response Handling\"\n      HttpResponse[\"HttpResponse\\n(django.http.response)\"]\n      HttpResponseRedirect[\"HttpResponseRedirect\\n(django.http.response)\"]\n      JsonResponse[\"JsonResponse\\n(django.http.response)\"]\n    end\n\n    subgraph \"Database Interaction\"\n      Model[\"Model\\n(django.db.models)\"]\n      QuerySet[\"QuerySet\\n(django.db.queryset)\"]\n      connection[\"connection\\n(django.db)\"]\n      atomic[\"atomic\\n(django.db.transaction)\"]\n    end\n\n    subgraph \"Authentication and Authorization\"\n      authenticate[\"authenticate\\n(django.contrib.auth)\"]\n      login[\"login\\n(django.contrib.auth)\"]\n      logout[\"logout\\n(django.contrib.auth)\"]\n      login_required[\"login_required\\n(django.contrib.auth.decorators)\"]\n      User[\"User\\n(django.contrib.auth.models)\"]\n    end\n\n    subgraph \"Session Management\"\n      SessionMiddleware2[\"SessionMiddleware\\n(django.contrib.sessions.middleware)\"]\n      SessionStoreDB[\"SessionStore (DB)\\n(django.contrib.sessions.backends.db)\"]\n      SessionStoreFile[\"SessionStore (File)\\n(django.contrib.sessions.backends.file)\"]\n    end\n\n    ASGIHandler --> resolves --> URLResolver\n    WSGIHandler --> resolves --> URLResolver\n    URLResolver --> uses --> View\n    View --> uses --> Model\n    View --> uses --> render\n    render --> uses --> render_to_string\n    render_to_string --> uses --> Template\n    Template --> uses --> Context\n    View --> creates --> HttpResponse\n    View --> creates --> HttpResponseRedirect\n    View --> creates --> JsonResponse\n    ASGIHandler -- processes --> MiddlewareMixin\n    WSGIHandler -- processes --> MiddlewareMixin\n    MiddlewareMixin -- modifies --> View\n    MiddlewareMixin -- uses --> SessionMiddleware2\n    SessionMiddleware2 -- uses --> SessionStoreDB\n    SessionMiddleware2 -- uses --> SessionStoreFile\n    View -- authenticates --> authenticate\n    View -- logs in --> login\n    View -- logs out --> logout\n    View -- authorizes --> login_required\n    authenticate -- uses --> User\n    login -- uses --> User\n    logout -- uses --> User\n    login_required -- uses --> User\n    Model -- interacts --> connection\n    Model -- interacts --> QuerySet\n    QuerySet -- uses --> atomic\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+```mermaid
+graph LR
+    subgraph "Request Handling"
+      ASGIHandler["ASGIHandler\n(django.core.handlers.asgi)"]
+      WSGIHandler["WSGIHandler\n(django.core.handlers.wsgi)"]
+    end
+    subgraph "URL Routing"
+      URLResolver["URLResolver\n(django.urls.resolvers)"]
+    end
+    subgraph "Middleware Processing"
+      MiddlewareMixin["MiddlewareMixin\n(django.middleware)"]
+      SessionMiddleware["SessionMiddleware\n(django.contrib.sessions.middleware)"]
+      CommonMiddleware["CommonMiddleware\n(django.middleware.common)"]
+      CsrfViewMiddleware["CsrfViewMiddleware\n(django.middleware.csrf)"]
+      AuthenticationMiddleware["AuthenticationMiddleware\n(django.contrib.auth.middleware)"]
+    end
+    subgraph "View Processing"
+      View["View\n(django.views)"]
+      render["render\n(django.shortcuts)"]
+    end
+    subgraph "Template Rendering"
+      render_to_string["render_to_string\n(django.template.loader)"]
+      Template["Template\n(django.template)"]
+      Context["Context\n(django.template)"]
+    end
+    subgraph "HTTP Response Handling"
+      HttpResponse["HttpResponse\n(django.http.response)"]
+      HttpResponseRedirect["HttpResponseRedirect\n(django.http.response)"]
+      JsonResponse["JsonResponse\n(django.http.response)"]
+    end
+    subgraph "Database Interaction"
+      Model["Model\n(django.db.models)"]
+      QuerySet["QuerySet\n(django.db.queryset)"]
+      connection["connection\n(django.db)"]
+      atomic["atomic\n(django.db.transaction)"]
+    end
+    subgraph "Authentication and Authorization"
+      authenticate["authenticate\n(django.contrib.auth)"]
+      login["login\n(django.contrib.auth)"]
+      logout["logout\n(django.contrib.auth)"]
+      login_required["login_required\n(django.contrib.auth.decorators)"]
+      User["User\n(django.contrib.auth.models)"]
+    end
+    subgraph "Session Management"
+      SessionMiddleware2["SessionMiddleware\n(django.contrib.sessions.middleware)"]
+      SessionStoreDB["SessionStore (DB)\n(django.contrib.sessions.backends.db)"]
+      SessionStoreFile["SessionStore (File)\n(django.contrib.sessions.backends.file)"]
+    end
+    ASGIHandler --> resolves --> URLResolver
+    WSGIHandler --> resolves --> URLResolver
+    URLResolver --> uses --> View
+    View --> uses --> Model
+    View --> uses --> render
+    render --> uses --> render_to_string
+    render_to_string --> uses --> Template
+    Template --> uses --> Context
+    View --> creates --> HttpResponse
+    View --> creates --> HttpResponseRedirect
+    View --> creates --> JsonResponse
+    ASGIHandler -- processes --> MiddlewareMixin
+    WSGIHandler -- processes --> MiddlewareMixin
+    MiddlewareMixin -- modifies --> View
+    MiddlewareMixin -- uses --> SessionMiddleware2
+    SessionMiddleware2 -- uses --> SessionStoreDB
+    SessionMiddleware2 -- uses --> SessionStoreFile
+    View -- authenticates --> authenticate
+    View -- logs in --> login
+    View -- logs out --> logout
+    View -- authorizes --> login_required
+    authenticate -- uses --> User
+    login -- uses --> User
+    logout -- uses --> User
+    login_required -- uses --> User
+    Model -- interacts --> connection
+    Model -- interacts --> QuerySet
+    QuerySet -- uses --> atomic
+```
