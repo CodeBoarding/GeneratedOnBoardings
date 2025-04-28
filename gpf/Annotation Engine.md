@@ -8,7 +8,7 @@ Here's a high-level data flow diagram illustrating the process:
 graph LR
     A[GPFInstance] -- provides config --> B(Annotation Factory)
     B -- builds --> C(Annotation Pipeline)
-    C -- uses --> D{Annotators \n (EffectAnnotator, \n BcfLiftoverAnnotator, \n GeneScoreAnnotator)}
+    C -- uses --> D{"Annotators (EffectAnnotator, BcfLiftoverAnnotator, GeneScoreAnnotator)"}
     E[Variant] -- input --> C
     C -- annotates --> E
     C -- uses --> F(Annotation Utilities)
