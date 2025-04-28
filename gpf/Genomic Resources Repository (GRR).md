@@ -4,37 +4,53 @@ The Genomic Resources Repository (GRR) component manages and provides access to 
 
 ```mermaid
 flowchart LR
-    subgraph GenomicResourceRepository [Genomic Resource Repository]
+    %% Nodes
+    Factory(Repository Factory)
+    GroupRepo(GenomicResourceGroupRepo)
+    ResourceRepo(GenomicResourceProtocolRepo)
+    RefGenomeBuilder(ReferenceGenome Builder)
+    ReferenceGenome(Reference Genome)
+    SequenceFile((Sequence File))
+    IndexFile((Index File))
+    GeneModelBuilder(GeneModels Builder)
+    GeneModels(Gene Models)
+    GeneModelData((Gene Model Data))
+    GenomicResource(Genomic Resource)
+
+    %% Subgraphs
+    subgraph GRR["Genomic Resource Repository"]
         direction TB
-        Factory(Repository Factory) -- Builds --> GroupRepo(GenomicResourceGroupRepo)
-        GroupRepo -- Contains --> ResourceRepo(GenomicResourceProtocolRepo)
+        Factory -- Builds --> GroupRepo
+        GroupRepo -- Contains --> ResourceRepo
         ResourceRepo -- Provides --> ReferenceGenome
         ResourceRepo -- Provides --> GeneModels
     end
 
-    subgraph ReferenceGenome [Reference Genome] 
+    subgraph RG["Reference Genome"]
         direction TB
-        RefGenomeBuilder(ReferenceGenome Builder) -- Builds --> ReferenceGenome
-        ReferenceGenome -- Opens --> SequenceFile((Sequence File))
-        ReferenceGenome -- Uses --> IndexFile((Index File))
+        RefGenomeBuilder -- Builds --> ReferenceGenome
+        ReferenceGenome -- Opens --> SequenceFile
+        ReferenceGenome -- Uses --> IndexFile
     end
 
-    subgraph GeneModels [Gene Models]
+    subgraph GM["Gene Models"]
         direction TB
-        GeneModelBuilder(GeneModels Builder) -- Builds --> GeneModels
-        GeneModels -- Loads --> GeneModelData((Gene Model Data))
+        GeneModelBuilder -- Builds --> GeneModels
+        GeneModels -- Loads --> GeneModelData
     end
 
-    style GenomicResourceRepository fill:#f9f,stroke:#333,stroke-width:2px
-    style ReferenceGenome fill:#ccf,stroke:#333,stroke-width:2px
-    style GeneModels fill:#ccf,stroke:#333,stroke-width:2px
+    %% Cross Connections
+    Factory -- Configures --> GroupRepo
+    ResourceRepo -- Provides --> GenomicResource
+    GenomicResource -- Uses --> RefGenomeBuilder
+    GenomicResource -- Uses --> GeneModelBuilder
 
-    Factory -- Configures --> GenomicResourceRepository
-    ResourceRepo -- "provides" --> GenomicResource
-    GenomicResource -- "uses" --> RefGenomeBuilder
-    GenomicResource -- "uses" --> GeneModelBuilder
-
-
+    %% Styling
+    classDef grrStyle fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef rgStyle fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef gmStyle fill:#ccf,stroke:#333,stroke-width:2px;
+    
+    class Factory,GroupRepo,Resource
 
 ```
 
