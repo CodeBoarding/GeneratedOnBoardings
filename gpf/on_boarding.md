@@ -1,4 +1,3 @@
-```markdown
 # GPF Project Overview
 
 GPF (Genomic Prediction Framework) is a comprehensive framework designed for managing, analyzing, and querying large-scale genomic data. It provides tools for data loading, annotation, storage, and querying, enabling researchers to explore and understand complex genetic variations and their impact on phenotypes.
@@ -34,4 +33,3 @@ click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf
 **Annotation Pipeline:** This component annotates genetic variants with functional and genomic information. It is configured by the GPF Instance and uses resources from the Genomic Resources Repository to perform the annotation.
 
 **Query Engine:** This component provides the ability to query and filter variants based on various criteria. It queries the GPF Instance to retrieve data based on user-defined criteria.
-```
