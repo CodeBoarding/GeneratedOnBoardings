@@ -4,7 +4,7 @@ GPF (Genomic Prediction Framework) is a comprehensive platform designed for stor
 
 ```mermaid
 graph LR
-    A[GPF Instance & Configuration] -- initializes --> B(Genomic Resources Repository (GRR))
+    A[GPF Instance & Configuration] -- initializes --> B("Genomic Resources Repository (GRR)")
     A -- configures --> C(Variant Loader)
     B -- provides --> C
     C -- loads data & metadata --> D(Annotation Engine)
