@@ -1,51 +1,71 @@
 ## Genomic Resources Repository (GRR) Overview
 
-The Genomic Resources Repository (GRR) manages the storage and retrieval of genomic resources. It provides an abstraction layer for accessing different types of genomic resources like reference genomes, gene models, and annotation scores. The GRR supports various storage protocols (e.g., local file system, HTTP, S3) and provides a unified interface for accessing resources.
-
-### Data Flow Diagram
+The Genomic Resources Repository (GRR) component manages and provides access to genomic resources like reference genomes and gene models. It uses a hierarchical structure to organize resources, allowing for efficient retrieval and utilization of genomic data.
 
 ```mermaid
-graph LR
-    CLI[CLI Management] -- "manages" --> GRR(GenomicResourceRepository)
-    GRR -- "retrieves" --> Resource(GenomicResource)
-    Resource -- "provides" --> ReferenceGenome
-    Resource -- "provides" --> GeneModels
-    ReferenceGenome -- "uses" --> SequenceData((Sequence Data))
-    GeneModels -- "uses" --> TranscriptData((Transcript Data))
+flowchart LR
+    subgraph GenomicResourceRepository [Genomic Resource Repository]
+        direction TB
+        Factory(Repository Factory) -- Builds --> GroupRepo(GenomicResourceGroupRepo)
+        GroupRepo -- Contains --> ResourceRepo(GenomicResourceProtocolRepo)
+        ResourceRepo -- Provides --> ReferenceGenome
+        ResourceRepo -- Provides --> GeneModels
+    end
 
+    subgraph ReferenceGenome [Reference Genome] 
+        direction TB
+        RefGenomeBuilder(ReferenceGenome Builder) -- Builds --> ReferenceGenome
+        ReferenceGenome -- Opens --> SequenceFile((Sequence File))
+        ReferenceGenome -- Uses --> IndexFile((Index File))
+    end
+
+    subgraph GeneModels [Gene Models]
+        direction TB
+        GeneModelBuilder(GeneModels Builder) -- Builds --> GeneModels
+        GeneModels -- Loads --> GeneModelData((Gene Model Data))
+    end
+
+    style GenomicResourceRepository fill:#f9f,stroke:#333,stroke-width:2px
+    style ReferenceGenome fill:#ccf,stroke:#333,stroke-width:2px
+    style GeneModels fill:#ccf,stroke:#333,stroke-width:2px
+
+    Factory -- Configures --> GenomicResourceRepository
+    ResourceRepo -- "provides" --> GenomicResource
+    GenomicResource -- "uses" --> RefGenomeBuilder
+    GenomicResource -- "uses" --> GeneModelBuilder
 
 
 
 ```
 
-### Component Descriptions
+### Component Descriptions:
 
-*   **CLI Management**
-    *   *Purpose*: Provides command-line tools for managing genomic resources, such as listing, importing, and exporting resources. It allows users to interact with the GRR to perform administrative tasks.
-    *   *Functionality*: Handles user input, calls GRR functions to manage resources, and displays output to the user.
-    *   *Neighbouring Components*: Interacts directly with the `GenomicResourceRepository`.
-    *   *Relevant source files*: `dae.genomic_resources.cli.cli_manage`
+**1. Repository Factory**
+   - *Purpose*: Creates and configures different types of genomic resource repositories based on a definition file.
+   - *Functionality*: Reads a configuration file (YAML) specifying the repository type (e.g., HTTP, file, group) and builds the corresponding repository object. It supports creating group repositories, which are composed of other repositories.
+   - *Interaction*: Configures and builds `GenomicResourceGroupRepo` and `GenomicResourceProtocolRepo`.
+   - *Relevant source files*: `dae/genomic_resources/repository_factory.py`
 
-*   **GenomicResourceRepository**
-    *   *Purpose*: Manages access to genomic resources, providing a way to retrieve them. It handles different types of repositories and provides a unified interface for accessing resources.
-    *   *Functionality*: Builds and manages different types of repositories, retrieves resources based on ID and version, and handles caching.
-    *   *Neighbouring Components*: Interacts with `CLI Management` for administrative tasks and provides resources to `ReferenceGenome` and `GeneModels`.
-    *   *Relevant source files*: `dae.genomic_resources.repository_factory.build_genomic_resource_repository`, `dae.genomic_resources.group_repository.GenomicResourceGroupRepo`, `dae.genomic_resources.repository.GenomicResourceRepo`
+**2. GenomicResourceGroupRepo**
+   - *Purpose*: A repository that groups multiple other repositories.
+   - *Functionality*: Organizes a collection of `GenomicResourceRepo` instances. It implements the `GenomicResourceRepo` interface, allowing it to be treated as a single repository. It searches for resources in its child repositories.
+   - *Interaction*: Contains and manages `GenomicResourceRepo` instances. Used by `Repository Factory` to create group repositories.
+   - *Relevant source files*: `dae/genomic_resources/group_repository.py`
 
-*   **GenomicResource**
-    *   *Purpose*: Represents a single genomic resource, providing access to its metadata and data files.
-    *   *Functionality*: Stores metadata about the resource, provides methods for accessing data files, and handles versioning.
-    *   *Neighbouring Components*: Used by `GenomicResourceRepository` to manage resources and provides data to `ReferenceGenome` and `GeneModels`.
-    *   *Relevant source files*: `dae.genomic_resources.repository.GenomicResource`
+**3. GenomicResourceProtocolRepo**
+   - *Purpose*: A repository that accesses resources using a specified protocol (e.g., HTTP, file).
+   - *Functionality*: Provides access to genomic resources stored at a specific location using a protocol like HTTP or file system. It uses `fsspec` to handle different protocols.
+   - *Interaction*: Interacts with `ReferenceGenome` and `GeneModels` by providing access to resource files. Built by `Repository Factory`.
+   - *Relevant source files*: `dae/genomic_resources/repository.py`
 
-*   **ReferenceGenome**
-    *   *Purpose*: Provides access to the reference genome sequence. It allows retrieving sequences based on coordinates and provides functionalities for working with the genome.
-    *   *Functionality*: Loads the genome index, opens sequence files, and provides methods for fetching sequences.
-    *   *Neighbouring Components*: Retrieves sequence data from `SequenceData` and is used by other components needing genome information.
-    *   *Relevant source files*: `dae.genomic_resources.reference_genome.ReferenceGenome`
+**4. Reference Genome**
+   - *Purpose*: Provides access to the reference genome sequence.
+   - *Functionality*: Loads the reference genome sequence and index, allowing for efficient retrieval of nucleotide sequences for specific regions. It handles chromosome lengths and pseudoautosomal regions.
+   - *Interaction*: Uses `SequenceFile` and `IndexFile` to access genome data. Used by other components needing sequence information.
+   - *Relevant source files*: `dae/genomic_resources/reference_genome/reference_genome.py`, `dae/genomic_resources/reference_genome/build_reference_genome_from_resource.py`
 
-*   **GeneModels**
-    *   *Purpose*: Represents gene models, allowing loading and accessing gene information. It provides methods for retrieving gene models based on different criteria.
-    *   *Functionality*: Loads gene models from resource files, stores transcript information, and provides methods for querying gene models based on location or gene name.
-    *   *Neighbouring Components*: Retrieves transcript data from `TranscriptData` and is used by other components needing gene model information.
-    *   *Relevant source files*: `dae.genomic_resources.gene_models.gene_models.GeneModels`
+**5. Gene Models**
+   - *Purpose*: Provides access to gene models and transcript structures.
+   - *Functionality*: Loads gene models from a resource file, providing access to transcript structures, exons, CDS regions, and UTRs. It supports querying gene models by gene name or genomic location.
+   - *Interaction*: Loads `GeneModelData` and provides gene models to other components. Uses `TranscriptModel` and `Exon` classes to represent gene structures.
+   - *Relevant source files*: `dae/genomic_resources/gene_models/gene_models.py`, `dae/genomic_resources/gene_models/gene_models/build_gene_models_from_resource.py`
