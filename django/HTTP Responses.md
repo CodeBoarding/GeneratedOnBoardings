@@ -51,7 +51,8 @@ classDiagram
     class HttpResponseServerError {
     }
 
-    WSGIRequest -- Creates --> HttpResponseBase
+    %% Correct inheritance relationships
+    WSGIRequest --|> HttpResponseBase
     HttpResponseBase <|-- HttpResponse
     HttpResponseBase <|-- StreamingHttpResponse
     StreamingHttpResponse <|-- FileResponse
@@ -65,7 +66,6 @@ classDiagram
     HttpResponse <|-- HttpResponseNotAllowed
     HttpResponse <|-- HttpResponseGone
     HttpResponse <|-- HttpResponseServerError
-
 
 ```
 
