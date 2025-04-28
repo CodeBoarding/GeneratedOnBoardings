@@ -1,4 +1,3 @@
-```markdown
 ## GPF: Genomic Data Analysis Platform
 
 GPF (Genomic Data Analysis Platform) is a comprehensive platform designed for storing, querying, and analyzing large-scale genomic data. It provides tools for variant annotation, pedigree management, and genomic resource management, enabling researchers to gain insights from complex genetic datasets.
