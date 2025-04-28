@@ -12,9 +12,7 @@ graph LR
     ViewFunction -- Returns Response --> FlaskApp
     FlaskApp -- Sends Response --> Client
 
-
-classDef component fill:#f9f,stroke:#333,stroke-width:2px
-class Client, FlaskApp, Router, ViewHandler, ViewFunction component;
+    classDef component fill:#f9f,stroke:#333,stroke-width:2px;
 ```
 
 ### Component Descriptions:
