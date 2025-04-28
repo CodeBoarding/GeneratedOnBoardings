@@ -1,4 +1,3 @@
-```markdown
 ## GPF: Genomic Data Analysis Platform
 
 GPF (Genomic Data Analysis Platform) is a comprehensive platform designed for storing, querying, and analyzing large-scale genomic data. It provides tools for variant annotation, pedigree management, and genomic resource management, enabling researchers to gain insights from complex genetic datasets.
@@ -38,4 +37,3 @@ click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf
 **Pedigree Management:** This component loads, represents, and manipulates pedigree data, which describes family relationships and individual characteristics. It provides functionalities to access and query family structures. It provides family data to the Web API Layer.
 
 **Web API Layer:** This component provides RESTful API endpoints for accessing data and functionalities. It serves as the interface between the backend and the frontend, handling requests for datasets, gene views, and reports. It queries data from the Data Storage and Querying component, utilizes resources from the Genomic Resource Management component, and retrieves family data from the Pedigree Management component. Finally, it presents the data to the user.
-```
