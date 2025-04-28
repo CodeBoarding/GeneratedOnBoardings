@@ -6,7 +6,7 @@ GPF (Genomic Data Analysis Platform) is a comprehensive system designed for mana
 
 ```mermaid
 graph LR
-    A[Web Interface (WDAE)] -- "accesses" --> B(GPF Instance)
+    A["Web Interface (WDAE)"] -- "accesses" --> B(GPF Instance)
     B -- "manages" --> C{Genomic Resources}
     B -- "accesses" --> D[Genotype Storage]
     D -- "queries" --> E(Variant Querying)
