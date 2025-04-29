@@ -13,7 +13,6 @@ graph LR
     G -- Renders Template --> H([HTTP Response])
     H -- Sends HTTP Response --> A
 
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//README.md"
 click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//Request%20Handling.md"
 click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//URL%20Routing.md"
 click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django//View%20Function.md"
