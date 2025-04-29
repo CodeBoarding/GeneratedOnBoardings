@@ -1,4 +1,3 @@
-```markdown
 # GPF Project Overview
 
 GPF (Genomic Prediction Framework) is a comprehensive framework designed for managing, analyzing, and querying large-scale genomic data. It provides tools for importing, storing, annotating, and querying genetic variants, supporting a wide range of research applications from rare disease studies to population genetics.
