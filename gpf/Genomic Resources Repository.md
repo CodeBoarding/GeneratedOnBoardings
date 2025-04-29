@@ -1,68 +1,67 @@
 ## Genomic Resources Repository Overview
 
-This section provides an overview of the Genomic Resources Repository component, detailing its structure, functionality, and interactions with other components. The repository manages access to essential genomic resources such as reference genomes, gene models, and annotation scores, enabling efficient annotation and analysis.
-
-### Data Flow Diagram
+This diagram illustrates the flow of data and interactions between the main components involved in accessing and utilizing genomic resources within the system. The Genomic Resources Repository acts as a central hub, providing access to reference genomes, gene models, and other annotation data.
 
 ```mermaid
 graph LR
-    A[GenomicResourceRepository] -- Provides Access to --> B(ReferenceGenome)
-    A -- Provides Access to --> C(GeneModels)
-    B -- Uses --> D(SequenceData)
-    C -- Contains --> E(TranscriptModel)
-    E -- Contains --> F(Exon)
+    A[Genomic Resource Repository Factory] -- builds --> B(Genomic Resource Group Repository)
+    B -- gets --> C(Genomic Resource Getter)
+    C -- retrieves --> D{Genomic Resource}
+    D -- builds --> E[Reference Genome Builder]
+    D -- builds --> F[Gene Models Builder]
+    E -- opens --> G(Reference Genome Opener)
+    F -- loads --> H(Gene Models Loader)
+    G -- provides sequence --> I((Annotation Pipeline))
+    H -- provides models --> I
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#ddf,stroke:#333,stroke-width:2px
-    style E fill:#ddf,stroke:#333,stroke-width:2px
-    style F fill:#ddf,stroke:#333,stroke-width:2px
+
 
 
 ```
 
 ### Component Descriptions
 
-#### 1. GenomicResourceRepository
+- **Genomic Resource Repository Factory**
+   - *Description*: Responsible for constructing the genomic resource repository from various sources.
+   - *Interaction*: Builds the `Genomic Resource Group Repository` based on configuration files or default settings.
+   - *Relevant source files*: `dae.genomic_resources.repository_factory`
 
-*   **Description**: Manages genomic resources, providing access to reference genomes and gene models. It uses a hierarchical structure to organize resources and supports different repository types like local files, HTTP, and S3.
-*   **Interaction**: Provides access to `ReferenceGenome` and `GeneModels` based on resource identifiers.
-*   **Relevant source files**:
-    *   `dae.genomic_resources.repository_factory`
-    *   `dae.genomic_resources.group_repository.GenomicResourceGroupRepo`
+- **Genomic Resource Group Repository**
+   - *Description*: Manages a collection of genomic resources, organizing them into groups and providing access to individual resources.
+   - *Interaction*: Uses `Genomic Resource Getter` to retrieve specific resources.
+   - *Relevant source files*: `dae.genomic_resources.group_repository.GenomicResourceGroupRepo`
 
-#### 2. ReferenceGenome
+- **Genomic Resource Getter**
+   - *Description*: Retrieves a specific genomic resource from the repository.
+   - *Interaction*: Locates and returns the requested `Genomic Resource`.
+   - *Relevant source files*: `dae.genomic_resources.group_repository.GenomicResourceGroupRepo.get_resource`
 
-*   **Description**: Represents a reference genome, allowing access to sequence information. It manages the loading, indexing, and retrieval of nucleotide sequences for specific chromosome regions.
-*   **Interaction**: Fetches sequence data from `SequenceData` based on chromosome and genomic coordinates. Used by other components for sequence retrieval during annotation.
-*   **Relevant source files**:
-    *   `dae.genomic_resources.reference_genome`
+- **Genomic Resource**
+   - *Description*: Represents a single genomic resource, such as a reference genome or gene model.
+   - *Interaction*: Used by `Reference Genome Builder` and `Gene Models Builder` to create specific data structures.
+   - *Relevant source files*: `dae.genomic_resources.repository.GenomicResource`
 
-#### 3. GeneModels
+- **Reference Genome Builder**
+   - *Description*: Constructs a reference genome from a genomic resource (FASTA file).
+   - *Interaction*: Builds the `Reference Genome Opener` to provide access to the genome sequence.
+   - *Relevant source files*: `dae.genomic_resources.reference_genome.build_reference_genome_from_resource`
 
-*   **Description**: Represents gene models, providing information about gene structures and transcripts. It handles the loading, indexing, and querying of gene models based on gene names or genomic locations.
-*   **Interaction**: Provides access to `TranscriptModel` objects based on gene names or genomic locations. Used for gene-based annotation and analysis.
-*   **Relevant source files**:
-    *   `dae.genomic_resources.gene_models.gene_models`
+- **Gene Models Builder**
+   - *Description*: Constructs gene models from a genomic resource (GFF/GTF file).
+   - *Interaction*: Builds the `Gene Models Loader` to load the gene models data.
+   - *Relevant source files*: `dae.genomic_resources.gene_models.gene_models.build_gene_models_from_resource`
 
-#### 4. SequenceData
+- **Reference Genome Opener**
+   - *Description*: Provides access to the reference genome sequence.
+   - *Interaction*: Provides sequence data to the `Annotation Pipeline`.
+   - *Relevant source files*: `dae.genomic_resources.reference_genome.ReferenceGenome.open`
 
-*   **Description**: Represents the raw sequence data of the reference genome.
-*   **Interaction**: Provides nucleotide sequence information to `ReferenceGenome`.
-*   **Relevant source files**:
-    *   `dae.genomic_resources.reference_genome`
+- **Gene Models Loader**
+   - *Description*: Loads gene models data into a usable format.
+   - *Interaction*: Provides gene models to the `Annotation Pipeline`.
+   - *Relevant source files*: `dae.genomic_resources.gene_models.gene_models.GeneModels.load`
 
-#### 5. TranscriptModel
-
-*   **Description**: Represents a transcript model with gene, transcript ID, chromosome, strand, tx, cds and exons.
-*   **Interaction**: Part of `GeneModels`, contains `Exon` objects.
-*   **Relevant source files**:
-    *   `dae.genomic_resources.gene_models.gene_models`
-
-#### 6. Exon
-
-*   **Description**: Represents an exon with its start, stop and frame.
-*   **Interaction**: Part of `TranscriptModel`.
-*   **Relevant source files**:
-    *   `dae.genomic_resources.gene_models.gene_models`
+- **Annotation Pipeline**
+   - *Description*: Uses genomic resources to annotate variants.
+   - *Interaction*: Retrieves reference genome sequences from `Reference Genome Opener` and gene models from `Gene Models Loader`.
+   - *Relevant source files*: N/A (external component)

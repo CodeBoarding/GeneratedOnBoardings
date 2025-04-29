@@ -1,49 +1,44 @@
 # GPF Project Overview
 
-GPF (Genomic Prediction Framework) is a comprehensive framework designed for managing, analyzing, and querying large-scale genomic data. It provides tools for importing, storing, annotating, and querying genetic variants, supporting a wide range of research applications from rare disease studies to population genetics.
+GPF (Genomic Prediction Framework) is a comprehensive framework designed for managing, analyzing, and querying large-scale genomic data. It provides tools for importing, annotating, storing, and querying genetic variants, as well as managing related phenotype data. GPF aims to facilitate research in genetics and genomics by providing a scalable and efficient platform for data analysis.
 
 ## Data Flow Diagram
 
 ```mermaid
 graph LR
-    A[Data Import & Conversion] -- prepares & loads --> B(GPF Instance & Configuration)
-    B -- configures & provides access to --> C(Genomic Resources Repository)
-    B -- configures --> D(Genotype Storage Abstraction)
-    C -- annotates variants using --> E(Annotation Engine)
-    D -- queries variants from --> E
-    E -- enriches variants --> D
+    A[Data Sources] -- Imports Data --> B(Import Pipeline)
+    B -- Stores Data --> C(Genotype Storage)
+    D(GPF Instance & Configuration) -- Provides Configuration --> E(Genomic Resources Repository)
+    E -- Provides Resources --> F(Annotation Engine)
+    B -- Uses --> F
+    C -- Queries Data --> G(Query Engine)
+    F -- Annotates Data --> C
+    G -- Returns Results --> H[Analysis & Reporting]
 
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Data%20Import%20&%20Conversion.md"
-click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//GPF%20Instance%20&%20Configuration.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genomic%20Resources%20Repository.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genotype%20Storage%20Abstraction.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Annotation%20Engine.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//RelevantFile.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Import%20Pipeline.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genotype%20Storage.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//GPF%20Instance%20&%20Configuration.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genomic%20Resources%20Repository.md"
+click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Annotation%20Engine.md"
+click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//RelevantFile.md"
+click H href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//RelevantFile.md"
 ```
 
 ## Component Descriptions
 
-**A. Data Import & Conversion**
+**A. Data Sources:** Represents the various sources of genomic data that are imported into the GPF ecosystem. This includes VCF files, DAE summary files, and other formats containing variant and pedigree information.
 
-*   **Description**: This component handles the ingestion of raw data from various formats (VCF, DAE, etc.) and converts it into a standardized format suitable for GPF. It ensures data quality and prepares it for subsequent storage and analysis.
-*   **Interaction**: It prepares and loads data into the GPF Instance & Configuration component.
+**B. Import Pipeline:** Responsible for importing and converting data from various formats into the GPF ecosystem. It uses the Annotation Engine to annotate the data and stores the processed data into the Genotype Storage. It relates to the Data Sources by importing data from them, uses the Annotation Engine to annotate the data, and stores the processed data into the Genotype Storage.
 
-**B. GPF Instance & Configuration**
+**C. Genotype Storage:** Abstracts the underlying storage of genotype data, allowing for different storage backends (e.g., DuckDB, Impala). It receives annotated data from the Import Pipeline and provides data to the Query Engine. It relates to the Import Pipeline by storing the processed data, and provides data to the Query Engine for querying.
 
-*   **Description**: This is the central component that manages the GPF instance, loading configurations, and providing access to genomic resources and genotype data. It acts as a central registry and access point for other components.
-*   **Interaction**: It configures and provides access to the Genomic Resources Repository and configures the Genotype Storage Abstraction.
+**D. GPF Instance & Configuration:** Manages the GPF instance lifecycle, including configuration loading and access to core resources. It provides configuration to the Genomic Resources Repository. It relates to the Genomic Resources Repository by providing configuration.
 
-**C. Genomic Resources Repository**
+**E. Genomic Resources Repository:** Provides access to genomic resources like reference genomes, gene models, and annotation scores. It provides resources to the Annotation Engine. It relates to the GPF Instance & Configuration by receiving configuration, and provides resources to the Annotation Engine.
 
-*   **Description**: This component provides access to essential genomic resources such as reference genomes, gene models, and annotation scores. It manages the loading, caching, and retrieval of these resources, enabling efficient annotation and analysis.
-*   **Interaction**: It annotates variants using the Annotation Engine.
+**F. Annotation Engine:** Orchestrates the annotation of genomic variants by utilizing configured annotators and genomic resources. It receives data from the Import Pipeline and uses resources from the Genomic Resources Repository to annotate the data, then sends the annotated data to the Genotype Storage. It relates to the Import Pipeline by receiving data, uses resources from the Genomic Resources Repository, and sends the annotated data to the Genotype Storage.
 
-**D. Genotype Storage Abstraction**
+**G. Query Engine:** Provides the base classes and utilities for querying variants from different storage backends. It queries data from the Genotype Storage and returns results to Analysis & Reporting. It relates to the Genotype Storage by querying data, and returns results to Analysis & Reporting.
 
-*   **Description**: This component abstracts the underlying storage of genotype data, providing a unified interface for querying variants. It supports multiple storage backends, allowing GPF to work with different data storage solutions.
-*   **Interaction**: It queries variants from the Annotation Engine and enriches variants.
-
-**E. Annotation Engine**
-
-*   **Description**: This component orchestrates the annotation of genomic variants using configurable annotation pipelines. It manages the execution of annotators and the flow of data through the pipeline, enriching variants with relevant annotations.
-*   **Interaction**: It annotates variants using Genomic Resources Repository and is queried by Genotype Storage Abstraction.
-```
+**H. Analysis & Reporting:** Represents the downstream analysis and reporting tools that utilize the queried data from the GPF ecosystem.
