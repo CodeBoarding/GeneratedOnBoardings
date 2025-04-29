@@ -1,32 +1,50 @@
-## GPF: Genomic Data Analysis Platform
+```markdown
+# GPF Project Overview
 
-GPF (Genomic Data Analysis Platform) is a comprehensive system designed for managing, querying, and analyzing genomic data. It provides tools for storing and accessing variant data, genomic resources, and pedigree information, with a web interface for user interaction.
+GPF (Genomic Prediction Framework) is a comprehensive framework designed for managing, analyzing, and querying large-scale genomic data. It provides tools for importing, storing, annotating, and querying genetic variants, supporting a wide range of research applications from rare disease studies to population genetics.
 
 ## Data Flow Diagram
 
 ```mermaid
 graph LR
-    A["Web Interface (WDAE)"] -- "accesses" --> B(GPF Instance)
-    B -- "manages" --> C{Genomic Resources}
-    B -- "accesses" --> D[Genotype Storage]
-    D -- "queries" --> E(Variant Querying)
-    E --> D
+    A[Data Import & Conversion] -- prepares & loads --> B(GPF Instance & Configuration)
+    B -- configures & provides access to --> C(Genomic Resources Repository)
+    B -- configures --> D(Genotype Storage Abstraction)
+    C -- annotates variants using --> E(Annotation Engine)
+    D -- queries variants from --> E
+    E -- enriches variants --> D
 
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Web%20Interface%20(WDAE).md"
-click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//GPF%20Instance.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genomic%20Resources.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genotype%20Storage.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Variant%20Querying.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Data%20Import%20&%20Conversion.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//GPF%20Instance%20&%20Configuration.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genomic%20Resources%20Repository.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Genotype%20Storage%20Abstraction.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf//Annotation%20Engine.md"
 ```
 
 ## Component Descriptions
 
-**Web Interface (WDAE):** This component provides the user interface for interacting with the GPF system. It allows users to access datasets, run queries, and manage genomic resources. It accesses the GPF Instance to retrieve and manipulate data.
+**A. Data Import & Conversion**
 
-**GPF Instance:** This component manages the overall GPF instance, providing access to datasets, genomic resources, and configurations. It serves as a central point for accessing and managing data within the GPF system. It manages Genomic Resources and accesses Genotype Storage.
+*   **Description**: This component handles the ingestion of raw data from various formats (VCF, DAE, etc.) and converts it into a standardized format suitable for GPF. It ensures data quality and prepares it for subsequent storage and analysis.
+*   **Interaction**: It prepares and loads data into the GPF Instance & Configuration component.
 
-**Genomic Resources:** This component handles the management of genomic resources, including repositories, reference genomes, and gene models. It provides functionalities to build and access genomic resources. It is managed by the GPF Instance.
+**B. GPF Instance & Configuration**
 
-**Genotype Storage:** This component deals with genotype storage and management, supporting different storage backends. It provides an abstraction layer for accessing variant data from various storage systems. It is accessed by the GPF Instance and queried by the Variant Querying component.
+*   **Description**: This is the central component that manages the GPF instance, loading configurations, and providing access to genomic resources and genotype data. It acts as a central registry and access point for other components.
+*   **Interaction**: It configures and provides access to the Genomic Resources Repository and configures the Genotype Storage Abstraction.
 
-**Variant Querying:** This component provides functionalities for querying variants, including building SQL queries and running query runners. It enables users to efficiently search and retrieve variant data based on specific criteria. It queries the Genotype Storage to retrieve variant data.
+**C. Genomic Resources Repository**
+
+*   **Description**: This component provides access to essential genomic resources such as reference genomes, gene models, and annotation scores. It manages the loading, caching, and retrieval of these resources, enabling efficient annotation and analysis.
+*   **Interaction**: It annotates variants using the Annotation Engine.
+
+**D. Genotype Storage Abstraction**
+
+*   **Description**: This component abstracts the underlying storage of genotype data, providing a unified interface for querying variants. It supports multiple storage backends, allowing GPF to work with different data storage solutions.
+*   **Interaction**: It queries variants from the Annotation Engine and enriches variants.
+
+**E. Annotation Engine**
+
+*   **Description**: This component orchestrates the annotation of genomic variants using configurable annotation pipelines. It manages the execution of annotators and the flow of data through the pipeline, enriching variants with relevant annotations.
+*   **Interaction**: It annotates variants using Genomic Resources Repository and is queried by Genotype Storage Abstraction.
+```
