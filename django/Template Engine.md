@@ -1,40 +1,59 @@
 ## Template Engine Overview
 
-This diagram illustrates the flow of template rendering in Django's template engine.
+This diagram illustrates the flow of the Django Template Engine, highlighting the key components and their interactions.
 
 ```mermaid
 graph LR
-    subgraph Template Engine
-    A[Engine] -- uses --> B(TemplateLoaders)
-    A -- uses --> C(ContextProcessors)
-    A -- uses --> D(TemplateLibraries)
-    A -- compiles --> E(Template)
-    E -- renders --> F(Context)
-    E -- renders --> G[Output]
-    F -- uses --> C
-    end
+    Config([Template Engine Configuration])
+    Loader([Template Loader])
+    Compiler([Template Compiler])
+    ContextP([Context Processor])
+    TemplateS([Template Selection])
+    Renderer([Template Renderer])
+
+    Config -- configures --> Loader
+    Config -- configures --> ContextP
+    Config -- configures --> Compiler
+    TemplateS -- uses --> Loader
+    Loader -- loads --> Compiler
+    ContextP -- prepares --> Renderer
+    Compiler -- compiles --> Renderer
+    Renderer -- renders --> Output([Output])
+    TemplateS -- selects --> Renderer
+
+
 
 
 ```
 
 ### Component Descriptions:
 
-*   **Engine:** The central component that manages template loading, compilation, and rendering. It orchestrates the interaction between template loaders, context processors, and compiled templates. It uses `TemplateLoaders` to find templates, `ContextProcessors` to prepare the context, and compiles the template source into a `Template` object. The `Engine` class is responsible for configuring the template environment.
-    *   Relevant source files: `django.template.engine.Engine`
+*   **Template Engine Configuration**:
+    *Description*: Configures the template engine with settings like template directories, context processors, loaders, and built-in template tags and filters. It initializes the engine with the specified settings.
+    *Interaction*: Configures the `Template Loader`, `Context Processor`, and `Template Compiler` with the necessary settings.
+    *Relevant source files*: `django.template.engine.Engine.__init__`, `django.template.engine.Engine.get_template_builtins`, `django.template.engine.Engine.get_template_libraries`
 
-*   **TemplateLoaders:** Responsible for locating and retrieving template files from various sources, such as the filesystem or installed applications. It provides an abstraction layer for accessing templates, allowing the engine to load templates from different locations without being concerned about the underlying storage mechanism. The `get_template` method uses these loaders to find the appropriate template.
-    *   Relevant source files: `django.template.loaders`, `django.template.loaders.filesystem.Loader`, `django.template.loaders.app_directories.Loader`, `django.template.loaders.cached.Loader`
+*   **Template Loader**:
+    *Description*: Responsible for locating and loading template files from various sources (filesystem, apps, etc.).
+    *Interaction*: Receives configuration from `Template Engine Configuration` and provides template code to the `Template Compiler`.
+    *Relevant source files*: `django.template.loaders.base.Loader`, `django.template.loaders.cached.Loader`, `django.template.engine.Engine.get_template_loaders`, `django.template.engine.Engine.find_template_loader`, `django.template.engine.Engine.find_template`
 
-*   **ContextProcessors:** Prepare the context data that is passed to the template during rendering. They define a set of functions that add variables to the context, making them available within the template. The `Context` object uses these processors to enrich the context with request-specific or application-specific data.
-    *   Relevant source files: `django.template.context_processors`, `django.template.context.Context`
+*   **Template Compiler**:
+    *Description*: Compiles template code into a renderable Template object.
+    *Interaction*: Receives template code from the `Template Loader` and creates a `Template` object that is used by the `Template Renderer`.
+    *Relevant source files*: `django.template.base.Template`, `django.template.engine.Engine.from_string`, `django.template.engine.Engine.get_template`
 
-*   **TemplateLibraries:** Provide a collection of template tags and filters that can be used within templates. They allow developers to extend the template language with custom functionality. The `Engine` uses these libraries during template compilation to register the available tags and filters.
-    *   Relevant source files: `django.template.library`, `django.template.defaulttags`, `django.template.defaultfilters`
+*   **Context Processor**:
+    *Description*: Prepares the context data that will be available to the template during rendering. Adds variables to the context.
+    *Interaction*: Receives configuration from `Template Engine Configuration` and provides context data to the `Template Renderer`.
+    *Relevant source files*: `django.template.context.Context`, `django.template.engine.Engine.template_context_processors`
 
-*   **Template:** Represents a compiled template that is ready for rendering. It takes template code and an engine, compiles the code, and provides a render method to generate the final output with a given context. The `Template` object uses the `Context` to resolve variables and render the template.
-    *   Relevant source files: `django.template.base.Template`
+*   **Template Renderer**:
+    *Description*: Renders the template with the provided context and returns the final output.
+    *Interaction*: Receives the compiled template from `Template Compiler`, context data from `Context Processor`, and renders the final output.
+    *Relevant source files*: `django.template.base.Template.render`, `django.template.engine.Engine.render_to_string`
 
-*   **Context:** A dictionary-like object that holds the variables and data available to the template during rendering. It provides a way to pass data from the application logic to the template. The `Template` object renders itself using the `Context`.
-    *   Relevant source files: `django.template.context.Context`
-
-*   **Output:** The final rendered string that is sent to the client. It is the result of the template engine processing the template with the given context.
+*   **Template Selection**:
+    *Description*: Selects the appropriate template from a list of template names.
+    *Interaction*: Uses the `Template Loader` to find the template. Passes the selected template to the `Template Renderer`.
+    *Relevant source files*: `django.template.engine.Engine.select_template`
