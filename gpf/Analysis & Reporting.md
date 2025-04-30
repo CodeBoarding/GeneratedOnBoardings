@@ -4,13 +4,21 @@ The `Analysis & Reporting` component provides the necessary tools and libraries 
 
 ```mermaid
 graph LR
-    [Genomic Resource Repository] --> [Gene Set Management] : provides resources to
-    [Genomic Resource Repository] --> [Enrichment Tooling] : provides resources to
-    [Gene Set Management] --> [Enrichment Tooling] : provides gene sets to
-    [Gene Set Management] --> [Gene Profile Management] : provides configuration to
-    [Genotype Data] --> [Enrichment Tooling] : is processed by
-    [Enrichment Tooling] --> [Analysis Results] : generates
-    [Gene Profile Management] --> [Gene Profile Data] : stores/retrieves
+    GenomicResourceRepository["Genomic Resource Repository"]
+    GeneSetManagement["Gene Set Management"]
+    EnrichmentTooling["Enrichment Tooling"]
+    GenotypeData["Genotype Data"]
+    AnalysisResults["Analysis Results"]
+    GeneProfileManagement["Gene Profile Management"]
+    GeneProfileData["Gene Profile Data"]
+
+    GenomicResourceRepository -->|provides resources to| GeneSetManagement
+    GenomicResourceRepository -->|provides resources to| EnrichmentTooling
+    GeneSetManagement -->|provides gene sets to| EnrichmentTooling
+    GeneSetManagement -->|provides configuration to| GeneProfileManagement
+    GenotypeData -->|is processed by| EnrichmentTooling
+    EnrichmentTooling -->|generates| AnalysisResults
+    GeneProfileManagement -->|stores/retrieves| GeneProfileData
 ```
 
 ### Component Descriptions
