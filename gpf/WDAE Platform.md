@@ -3,34 +3,27 @@
 The WDAE Platform serves as the web application layer for the GPF project, providing a REST API, managing user interactions, transforming data for the web interface, and orchestrating communication with the core GPF components. It acts as the primary interface for users to access and interact with the underlying genomic data and analysis capabilities.
 
 ```mermaid
-componentDiagram
-    User_Client [User/Client]
-    WDAE_API_Views [WDAE API/Views]
-    WDAE_User_Management [WDAE User Management]
-    Study_Query_Transformer [Study Query Transformer]
-    Remote_Extension_Loading [Remote Extension Loading]
-    Core_GPF [Core GPF Components]
-    WDAE_CLI [WDAE CLI]
-    User_Management_Commands [User Management Commands]
-    Import_Tools_CLI [Import Tools CLI]
+graph TD
+    User_Client["User/Client"]
+    WDAE_API_Views["WDAE API/Views"]
+    WDAE_User_Management["WDAE User Management"]
+    Study_Query_Transformer["Study Query Transformer"]
+    Remote_Extension_Loading["Remote Extension Loading"]
+    Core_GPF["Core GPF Components"]
+    WDAE_CLI["WDAE CLI"]
+    User_Management_Commands["User Management Commands"]
+    Import_Tools_CLI["Import Tools CLI"]
 
-    User_Client --> WDAE_API_Views : Sends Requests
-
-    WDAE_API_Views --> WDAE_User_Management : Manages Users/Auth
-    WDAE_API_Views --> Study_Query_Transformer : Prepares Data Queries
-
-    WDAE_User_Management --> WDAE_API_Views : Provides User Data/Auth Status
-
-    Study_Query_Transformer --> Core_GPF : Queries Data
-
-    Remote_Extension_Loading --> Core_GPF : Registers Extensions
-
-    WDAE_CLI --> WDAE_User_Management : Initializes/Configures
-    WDAE_CLI --> Remote_Extension_Loading : Initializes/Configures
-
-    User_Management_Commands --> WDAE_User_Management : Administers Users
-
-    Import_Tools_CLI --> Core_GPF : Imports Data
+    User_Client -->|Sends Requests| WDAE_API_Views
+    WDAE_API_Views -->|Manages Users/Auth| WDAE_User_Management
+    WDAE_API_Views -->|Prepares Data Queries| Study_Query_Transformer
+    WDAE_User_Management -->|Provides User Data/Auth Status| WDAE_API_Views
+    Study_Query_Transformer -->|Queries Data| Core_GPF
+    Remote_Extension_Loading -->|Registers Extensions| Core_GPF
+    WDAE_CLI -->|Initializes/Configures| WDAE_User_Management
+    WDAE_CLI -->|Initializes/Configures| Remote_Extension_Loading
+    User_Management_Commands -->|Administers Users| WDAE_User_Management
+    Import_Tools_CLI -->|Imports Data| Core_GPF
 ```
 
 ### Component Descriptions:
