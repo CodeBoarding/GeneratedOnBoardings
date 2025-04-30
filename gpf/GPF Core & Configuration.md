@@ -11,7 +11,7 @@ graph TD
     B --> D[Dataset Reloader];
     D --> E[Dataset Model];
     D --> F[Dataset Hierarchy Model];
-    C --> G[Data Sources (Variants, Phenotypes, etc.)];
+    C --> G["Data Sources (Variants, Phenotypes, etc.)"];
 ```
 
 ### Component Descriptions
