@@ -3,7 +3,7 @@
 The `Analysis & Reporting` component provides the necessary tools and libraries for performing biological analyses, specifically enrichment analysis and gene profiling, and for managing collections of gene sets used in these analyses.
 
 ```mermaid
-LR
+graph LR
     [Genomic Resource Repository] --> [Gene Set Management] : provides resources to
     [Genomic Resource Repository] --> [Enrichment Tooling] : provides resources to
     [Gene Set Management] --> [Enrichment Tooling] : provides gene sets to
