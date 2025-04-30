@@ -3,29 +3,23 @@
 The `Analysis & Reporting` component provides the tools and infrastructure for performing various analyses on genetic data, such as enrichment analysis and gene profiling, and for managing collections of gene sets used in these analyses. It is composed of three main sub-components: `Enrichment Tooling`, `Gene Profile Management`, and `Gene Set Management`. These components interact with external data sources like Genotype Data and Genomic Resources to perform their functions and generate results or provide data for reporting.
 
 ```mermaid
-componentDiagram
-    direction LR
-    component "Genotype Data" as GD
-    component "Genomic Resources" as GR
-    component "Gene Set Management" as GSM
-    component "Enrichment Tooling" as ET
-    component "Gene Profile Management" as GPM
-    component "Gene Profile Database" as GPDB
+flowchart LR
+    GD[Genotype Data]
+    GR[Genomic Resources]
+    GSM[Gene Set Management]
+    ET[Enrichment Tooling]
+    GPM[Gene Profile Management]
+    GPDB[Gene Profile Database]
+    AR[Analysis & Reporting]
 
-    GD --> ET : Provides variant data
-    GR --> ET : Provides backgrounds/counters
-    GR --> GSM : Provides gene set definitions
-    GSM --> ET : Provides gene sets
-    ET --> GPM : (Results can update profiles)
-    GPM --> GPDB : Reads/Writes profiles
-    ET --> AnalysisReporting : Outputs results
-    GPM --> AnalysisReporting : Outputs profiles
-
-    component "Analysis & Reporting" as AnalysisReporting {
-        component "Enrichment Tooling"
-        component "Gene Profile Management"
-        component "Gene Set Management"
-    }
+    GD -->|Provides variant data| ET
+    GR -->|Provides backgrounds/counters| ET
+    GR -->|Provides gene set definitions| GSM
+    GSM -->|Provides gene sets| ET
+    ET -->|Results can update profiles| GPM
+    GPM -->|Reads/Writes profiles| GPDB
+    ET -->|Outputs results| AR
+    GPM -->|Outputs profiles| AR
 ```
 
 ### Component Descriptions:
