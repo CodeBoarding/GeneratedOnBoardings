@@ -2,9 +2,9 @@
 graph LR
     A[GenotypeStorageRegistry] -- configures --> B(GenotypeStorage) 
     B -- validates --> C{Configuration} 
-    C -- uses --> D[Backend (e.g., BigQueryVariants, ImpalaVariants)]
+    C -- uses --> D["Backend (e.g., BigQueryVariants, ImpalaVariants)"]
     B -- builds --> D
-    D -- queries --> E((Data Storage: GCP, Impala, DuckDB))
+    D -- queries --> E("(Data Storage: GCP, Impala, DuckDB)")
 
 
 
