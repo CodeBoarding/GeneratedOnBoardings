@@ -3,59 +3,32 @@
 The `Data Storage & Access` component is responsible for the persistence, retrieval, and querying of genotype and phenotype data within the GPF system. It provides a flexible architecture that supports various storage backends and offers standardized interfaces for accessing variant and family data.
 
 ```mermaid
-component-beta
-    title Data Storage & Access Flow
+graph TD
+    title["Data Storage & Access Flow"]
 
-    GPFInstance [(
-        GPF Instance
-        Entry point for data access
-    )]
-    GenotypeData [(
-        Genotype Data
-        Represents a study/group
-    )]
-    QueryVariantsBase [(
-        Query Variants Base
-        Abstract variant querying
-    )]
-    SpecificGenotypeStorageBackends [(
-        Specific Genotype Storage Backends
-        Concrete storage implementations
-    )]
-    SQLQueryBuilding [(
-        SQL Query Building
-        Constructs SQL queries
-    )]
-    QueryExecution [(
-        Query Execution
-        Manages query runners
-    )]
-    VariantRepresentation [(
-        Variant Representation
-        Data structures for variants
-    )]
-    FamiliesDataManagement [(
-        Families Data Management
-        Manages pedigree data
-    )]
-    PhenotypeDataManagement [(
-        Phenotype Data Management
-        Manages phenotype data
-    )]
+    GPFInstance["GPF Instance<br/>Entry point for data access"]
+    GenotypeData["Genotype Data<br/>Represents a study/group"]
+    QueryVariantsBase["Query Variants Base<br/>Abstract variant querying"]
+    SpecificGenotypeStorageBackends["Specific Genotype Storage Backends<br/>Concrete storage implementations"]
+    SQLQueryBuilding["SQL Query Building<br/>Constructs SQL queries"]
+    QueryExecution["Query Execution<br/>Manages query runners"]
+    VariantRepresentation["Variant Representation<br/>Data structures for variants"]
+    FamiliesDataManagement["Families Data Management<br/>Manages pedigree data"]
+    PhenotypeDataManagement["Phenotype Data Management<br/>Manages phenotype data"]
 
-    GPFInstance --> GenotypeData : Accesses
-    GenotypeData --> QueryVariantsBase : Initiates query
-    QueryVariantsBase --> SpecificGenotypeStorageBackends : Interacts with
-    QueryVariantsBase --> SQLQueryBuilding : Uses (for SQL backends)
-    SQLQueryBuilding --> SpecificGenotypeStorageBackends : Queries
-    SpecificGenotypeStorageBackends --> QueryExecution : Executes queries
-    QueryExecution --> VariantRepresentation : Produces/Consumes
-    GenotypeData --> FamiliesDataManagement : Uses
-    GPFInstance --> PhenotypeDataManagement : Accesses
-    PhenotypeDataManagement --> FamiliesDataManagement : Uses
+    GPFInstance -->|Accesses| GenotypeData
+    GenotypeData -->|Initiates query| QueryVariantsBase
+    QueryVariantsBase -->|Interacts with| SpecificGenotypeStorageBackends
+    QueryVariantsBase -->|"Uses (for SQL backends)"| SQLQueryBuilding
+    SQLQueryBuilding -->|Queries| SpecificGenotypeStorageBackends
+    SpecificGenotypeStorageBackends -->|Executes queries| QueryExecution
+    QueryExecution -->|Produces/Consumes| VariantRepresentation
+    GenotypeData -->|Uses| FamiliesDataManagement
+    GPFInstance -->|Accesses| PhenotypeDataManagement
+    PhenotypeDataManagement -->|Uses| FamiliesDataManagement
 
     classDef Abstract fill:#f9f,stroke:#333,stroke-width:2px
-    class QueryVariantsBase,GenotypeStorageBase Abstract
+    class QueryVariantsBase Abstract
 
     classDef Concrete fill:#ccf,stroke:#333,stroke-width:2px
     class SpecificGenotypeStorageBackends,SQLQueryBuilding,QueryExecution,VariantRepresentation,FamiliesDataManagement,PhenotypeDataManagement Concrete
@@ -65,7 +38,6 @@ component-beta
 
     classDef StudyGroup fill:#ffc,stroke:#333,stroke-width:2px
     class GenotypeData StudyGroup
-
 ```
 
 ### Component Descriptions:
