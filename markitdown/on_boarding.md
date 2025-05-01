@@ -1,34 +1,38 @@
 # MarkItDown: High-Level Data Flow Overview
 
-MarkItDown is a versatile tool designed to convert various file formats into Markdown. It supports a wide range of document types, including DOCX, PDF, HTML, and more, leveraging external tools and libraries to extract content and transform it into a human-readable Markdown format.
+MarkItDown is a versatile document conversion tool that transforms various file formats into Markdown. It supports a wide range of input types, including HTML, DOCX, PDF, and more, leveraging a plugin-based architecture for extensibility. The core functionality involves detecting the input file type, selecting the appropriate converter, extracting the content, and formatting it into Markdown.
 
 ```mermaid
 graph LR
-    A[Command-Line Interface] -- Receives Input --> B(Core Conversion Manager)
-    B -- Analyzes Stream --> C{Stream Analyzer}
-    C -- Determines Format --> D[Format Converters]
-    D -- Extracts Content & Converts --> E(Markdown Output)
-    B -- Accesses --> F[External Resource Accessors]
-    F -- Provides Resources --> D
+    A[Input Document] -- Detect Type --> B(Core Conversion Manager)
+    B -- Selects Converter --> C{Specialized Document Converters}
+    C -- Extracts & Converts --> D[Markdown Output]
+    B -- Manages Metadata --> E(Stream Metadata Handler)
+    C -- Uses --> F[HTML-to-Markdown Converter]
+    C -- Uses --> G[DOCX Preprocessing Tools]
 
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Command-Line%20Interface.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//README.md"
 click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Core%20Conversion%20Manager.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Stream%20Analyzer.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Format%20Converters.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Markdown%20Output.md"
-click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//External%20Resource%20Accessors.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Specialized%20Document%20Converters.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//README.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Stream%20Metadata%20Handler.md"
+click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//HTML-to-Markdown%20Converter.md"
+click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//DOCX%20Preprocessing%20Tools.md"
+
 ```
 
 ## Component Descriptions:
 
-**A. Command-Line Interface:** This component serves as the entry point for users, handling command-line arguments and initiating the conversion process. It receives user input, such as the file to be converted and any specified options, and passes this information to the Core Conversion Manager. *Related files*: `repos.markitdown.packages.markitdown.src.markitdown.__main__.main`, `repos.markitdown.packages.markitdown.src.markitdown.__main__._exit_with_error`, `repos.markitdown.packages.markitdown.src.markitdown.__main__._handle_output`.
+**A. Input Document:** Represents the document to be converted. It can be a local file, a remote URL, or a stream of data. The type of the document is detected to determine the appropriate conversion strategy.
 
-**B. Core Conversion Manager:** This component orchestrates the entire conversion process. It receives the input from the CLI, uses the Stream Analyzer to determine the file type, selects the appropriate converter from the Format Converters, and manages the overall flow. It also interacts with External Resource Accessors to utilize external tools if needed. *Related files*: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.__init__`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.convert`.
+**B. Core Conversion Manager:** This is the central orchestrator of the conversion process. It receives the input document, detects its type, selects the appropriate converter from the available specialized converters, manages stream metadata, and initiates the conversion. It relates to `Input Document` by detecting its type, to `Specialized Document Converters` by selecting the right converter, and to `Stream Metadata Handler` by managing the metadata.
 
-**C. Stream Analyzer:** This component analyzes the input stream to determine its format and encoding. It provides crucial information to the Core Conversion Manager, enabling it to select the correct converter. It receives the stream from the Core Conversion Manager and determines the format. *Related files*: `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown._get_stream_info_guesses`.
+**C. Specialized Document Converters:** This component encompasses a collection of individual converters, each responsible for handling a specific document type (e.g., DOCX, PDF, HTML). These converters extract the content from the input document and transform it into Markdown format. It relates to `Core Conversion Manager` by being selected and invoked, to `Markdown Output` by producing the final result, to `HTML-to-Markdown Converter` and `DOCX Preprocessing Tools` by using them for specific conversion tasks.
 
-**D. Format Converters:** This component contains a collection of individual converters, each responsible for handling a specific file format. They receive the file from the Core Conversion Manager, extract the content, convert it to Markdown, and pass the Markdown output to the final output stage. It uses resources from the External Resource Accessors if needed. *Related files*: `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pdf_converter.PdfConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`.
+**D. Markdown Output:** Represents the final Markdown-formatted content generated by the conversion process. This output can be saved to a file, displayed in a user interface, or further processed by other applications.
 
-**E. Markdown Output:** This component represents the final output of the conversion process. It receives the converted Markdown from the Format Converters and presents it to the user, either by writing it to a file or displaying it on the console. *Related files*: `repos.markitdown.packages.markitdown.src.markitdown.__main__._handle_output`.
+**E. Stream Metadata Handler:** This component manages metadata associated with the input stream, such as file type, encoding, and URL. It provides a consistent way to access and modify stream information throughout the conversion process. It relates to `Core Conversion Manager` by providing and managing the metadata.
 
-**F. External Resource Accessors:** This component provides access to external tools and resources required by the Format Converters. It provides resources to the Format Converters. *Related files*: `repos.markitdown.packages.markitdown.src.markitdown.converters._exiftool.exiftool_metadata`, `repos.markitdown.packages.markitdown.src.markitdown.converters._transcribe_audio.transcribe_audio`.
+**F. HTML-to-Markdown Converter:** This specialized converter handles the conversion of HTML content to Markdown format. It is used by the HTML converter and potentially other converters that need to process HTML content. It relates to `Specialized Document Converters` by being used by them.
+
+**G. DOCX Preprocessing Tools:** This component provides utilities for preprocessing DOCX files, including handling equations and other complex formatting elements. It is used by the DOCX converter to prepare the document for conversion. It relates to `Specialized Document Converters` by being used by them.
