@@ -1,31 +1,51 @@
 # MarkItDown: High-Level Data Flow Overview
 
-MarkItDown is a versatile document conversion tool that transforms various file formats and online content into Markdown. It intelligently identifies the input type and applies the appropriate converter to produce clean, readable Markdown output.
+MarkItDown is a versatile tool designed to convert various file formats into Markdown. It supports a wide range of input types, including documents, spreadsheets, presentations, and even audio files, leveraging external tools and plugins to provide comprehensive conversion capabilities.
 
 ```mermaid
- graph LR
-    A[Input Source] --> B(Core Conversion Manager)
-    B -- Analyzes Stream --> C(Stream Analyzer)
-    C -- Provides Info --> B
-    B -- Selects Converter --> D{Converter}
-    D -- Converts Document --> E(Markdown Output)
+graph LR
+    A[Command-Line Interface] -- Parses arguments & Input --> B(Core Conversion Manager)
+    B -- Identifies Stream Info --> C(Stream Information Handler)
+    B -- Registers Converters --> E(Plugin Manager)
+    B -- Selects Converter --> D{Format Converters}
+    D -- Converts Content --> B
+    B -- Returns Markdown --> A
 
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//README.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Command-Line%20Interface.md"
 click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Core%20Conversion%20Manager.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Stream%20Analyzer.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Converter.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//README.md"
-
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Stream%20Information%20Handler.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Format%20Converters.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Plugin%20Manager.md"
 ```
 
 ## Component Descriptions:
 
-**A. Input Source:** Represents the origin of the content to be converted. This could be a local file, a URL, a stream, or any other supported input method. It provides the raw data to the Core Conversion Manager.
+**A. Command-Line Interface:** This component serves as the entry point for users, parsing command-line arguments and receiving input files or streams. It then passes control to the Core Conversion Manager to initiate the conversion process and handles the final output, displaying the generated Markdown or writing it to a file. It relates to the Core Conversion Manager by sending the input and receiving the converted markdown.
 
-**B. Core Conversion Manager:** This is the central orchestrator of the conversion process. It receives the input stream, analyzes it using the Stream Analyzer, selects the appropriate converter based on the stream's characteristics, and then delegates the actual conversion to the chosen converter. It relates to the Stream Analyzer by using it to determine the input type, and to the Converter by selecting and calling the appropriate one.
+*   Related files:
+    *   `repos.markitdown.packages.markitdown.src.markitdown.__main__.main`: Main function to handle command line arguments and program execution.
+    *   `repos.markitdown.packages.markitdown.src.markitdown.__main__._handle_output`: Handles the output of the converted markdown.
 
-**C. Stream Analyzer:** Responsible for determining the characteristics of the input stream, such as its MIME type, file extension, and charset. It uses content-based analysis and filename/URL hints to make educated guesses about the stream's nature. It provides this information back to the Core Conversion Manager to aid in converter selection. It relates to the Core Conversion Manager by providing it with the stream information.
+**B. Core Conversion Manager:** This component orchestrates the entire conversion process. It receives input from the Command-Line Interface, uses the Stream Information Handler to determine the input type, selects the appropriate converter from the Format Converters, and manages the overall conversion flow. It interacts with the Command-Line Interface by receiving the input and returning the converted markdown, with the Stream Information Handler to identify the stream info, with the Plugin Manager to register converters and with the Format Converters to select the right converter.
 
-**D. Converter:** Represents the family of specialized converters responsible for converting specific file formats or content types into Markdown. The Core Conversion Manager selects the appropriate converter based on the input stream's characteristics. It relates to the Core Conversion Manager by receiving the document to convert, and to the Markdown Output by generating the final markdown.
+*   Related files:
+    *   `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`: Core class that manages the conversion process.
+    *   `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.convert`: Main conversion method.
 
-**E. Markdown Output:** The final result of the conversion process, representing the input content in Markdown format. This is the desired output of the MarkItDown tool.
+**C. Stream Information Handler:** This component analyzes the input stream to determine its type (e.g., MIME type, file extension) and character encoding. It provides this information to the Core Conversion Manager, enabling it to select the appropriate converter. It relates to the Core Conversion Manager by providing information about the input stream.
+
+*   Related files:
+    *   `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`: Class to manage stream information.
+    *   `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown._get_stream_info_guesses`: Guesses the stream information.
+
+**D. Format Converters:** This component houses a collection of specialized converters, each responsible for handling a specific file format (e.g., DOCX, PDF, HTML). These converters extract content from their respective formats and convert it into Markdown. It relates to the Core Conversion Manager by receiving the document to convert and returning the converted content.
+
+*   Related files:
+    *   `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`: Converter for DOCX files.
+    *   `repos.markitdown.packages.markitdown.src.markitdown.converters._pdf_converter.PdfConverter`: Converter for PDF files.
+
+**E. Plugin Manager:** This component is responsible for discovering, loading, and registering external plugins. These plugins can provide additional format converters or extend the functionality of the core application. It relates to the Core Conversion Manager by registering the converters.
+
+*   Related files:
+    *   `repos.markitdown.packages.markitdown.src.markitdown._markitdown._load_plugins`: Loads the plugins.
+    *   `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.enable_plugins`: Enables the plugins.
