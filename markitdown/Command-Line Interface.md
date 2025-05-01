@@ -1,40 +1,45 @@
 ## Command-Line Interface Component Overview
 
-This component acts as the entry point for the `markitdown` tool, handling command-line arguments, initiating the conversion process, and managing the final output.
+This component acts as the entry point for the application, handling user input from the command line, parsing arguments, and orchestrating the conversion process. It interacts closely with the `MarkItDown` class to perform the actual conversion and manages output to either a file or standard output.
 
-### Data Flow Diagram
+Here's a data flow diagram illustrating the process:
 
 ```mermaid
 graph LR
-    A[Command-Line Interface] -- Parses arguments & input --> B(MarkItDown) 
-    B -- Selects converter --> C{"Converter (e.g., HtmlConverter, PdfConverter)"}
-    C -- Converts document --> D(DocumentConverterResult)
-    D -- Sends result --> E[_handle_output]
-    E -- Writes output --> F("(Output (File or Stdout))")
-
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
-    style E fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#f9f,stroke:#333,stroke-width:2px
+    A[User Input (Command Line)] -- Parses Arguments --> B(ArgumentParser)
+    B -- Provides Arguments --> C(main)
+    C -- Initializes --> D(MarkItDown)
+    C -- Calls convert --> E(MarkItDown.convert)
+    E -- Infers Stream Info --> F(StreamInfo)
+    E -- Delegates Conversion --> G(DocumentConverter)
+    G -- Returns Document --> H(DocumentConverterResult)
+    E -- Returns Result --> C
+    C -- Handles Output --> I(_handle_output)
+    I -- Writes to --> J[Output (File or Stdout)]
+    C -- On Error --> K(_exit_with_error)
+    K -- Exits --> L[System Exit]
 
 
 ```
 
-### Component Descriptions
+## Component Descriptions:
 
-*   **Command-Line Interface:** This is the entry point of the application. It parses command-line arguments using `argparse`, determines the input source (file, URL, or standard input), and calls the `MarkItDown` class to initiate the conversion. It also handles errors and calls `_handle_output` to write the converted Markdown to the specified output.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown.__main__.main`, `repos.markitdown.packages.markitdown.src.markitdown.__main__._exit_with_error`, `repos.markitdown.packages.markitdown.src.markitdown.__main__._handle_output`
+- **User Input (Command Line):** The starting point where the user provides commands and arguments to the application.
 
-*   **MarkItDown:** The core class responsible for managing the conversion process. It receives the input from the CLI, determines the input type, selects the appropriate converter based on file type or content (using `magika` if necessary), and orchestrates the conversion. It also handles stream information and converter registration.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.ConverterRegistration`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown._get_stream_info_guesses`
+- **ArgumentParser:** Parses the command-line arguments provided by the user. It defines the expected arguments, such as input file, output file, and extension hints. *Relevant source file: `repos.markitdown.packages.markitdown.src.markitdown.__main__.ArgumentParser`*
 
-*   **Converter (e.g., HtmlConverter, PdfConverter):** These are the individual converters responsible for converting specific file types to Markdown. The `MarkItDown` class selects the appropriate converter based on the input file type. Each converter implements the `DocumentConverter` interface.
-    *   Relevant source files: `markitdown._base_converter.DocumentConverter`, `markitdown.converters.PlainTextConverter`, `markitdown.converters.HtmlConverter`, `markitdown.converters.PdfConverter`, `markitdown.converters.DocxConverter`
+- **main:** The main function that orchestrates the entire process. It receives the parsed arguments from `ArgumentParser`, initializes the `MarkItDown` converter, calls the convert function, and handles the output. *Relevant source file: `repos.markitdown.packages.markitdown.src.markitdown.__main__.main`*
 
-*   **DocumentConverterResult:** This dataclass represents the result of the conversion process. It contains the converted Markdown content and any relevant metadata.
-    *   Relevant source files: `markitdown._base_converter.DocumentConverterResult`
+- **MarkItDown:** The core class responsible for converting files to markdown. It determines the appropriate converter based on the file type and delegates the conversion process. *Relevant source file: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`*
 
-*   **_handle_output:** This function receives the converted Markdown from the `MarkItDown` class and writes it to the specified output (either a file or standard output). It handles file creation and writing, and also handles potential errors during the output process.
-    *   Relevant source files: `repos.markitdown.packages.markitdown.src.markitdown.__main__._handle_output`
+- **MarkItDown.convert:** A method of the `MarkItDown` class that takes a file path as input, infers the stream information using `StreamInfo`, and delegates the conversion to the appropriate `DocumentConverter`. *Relevant source file: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`*
+
+- **StreamInfo:** A data class that stores information about the input stream, such as MIME type, extension, and charset. It's used by `MarkItDown` to determine the correct converter. *Relevant source file: `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`*
+
+- **DocumentConverter:** An abstract class representing a document converter. Concrete converter implementations inherit from this class and handle the actual conversion of specific file types to markdown. *Relevant source file: `repos.markitdown.packages.markitdown.src.markitdown._base_converter.DocumentConverter`*
+
+- **DocumentConverterResult:** A data class that stores the result of the conversion, including the markdown content and any extracted text. *Relevant source file: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.DocumentConverterResult`*
+
+- **_handle_output:** Handles writing the converted markdown output to either a file or standard output, based on the user's command-line arguments. *Relevant source file: `repos.markitdown.packages.markitdown.src.markitdown.__main__._handle_output`*
+
+- **_exit_with_error:** Prints an error message to the console and exits the program with a non-zero exit code if an error occurs during the conversion process. *Relevant source file: `repos.markitdown.packages.markitdown.src.markitdown.__main__._exit_with_error`*
