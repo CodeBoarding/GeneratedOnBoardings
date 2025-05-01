@@ -7,10 +7,10 @@ This component acts as the entry point for the `markitdown` tool, handling comma
 ```mermaid
 graph LR
     A[Command-Line Interface] -- Parses arguments & input --> B(MarkItDown) 
-    B -- Selects converter --> C{Converter (e.g., HtmlConverter, PdfConverter)}
+    B -- Selects converter --> C{"Converter (e.g., HtmlConverter, PdfConverter)"}
     C -- Converts document --> D(DocumentConverterResult)
     D -- Sends result --> E[_handle_output]
-    E -- Writes output --> F((Output (File or Stdout)))
+    E -- Writes output --> F("(Output (File or Stdout))")
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#ccf,stroke:#333,stroke-width:2px
