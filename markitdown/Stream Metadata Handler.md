@@ -7,7 +7,7 @@ This component focuses on managing and updating metadata associated with the inp
 ```mermaid
 graph LR
     A[MarkItDown] -- "Initializes" --> B(StreamInfo)
-    B -- "Provides" --> C{Converter (e.g., HtmlConverter)}
+    B -- "Provides" --> C{"Converter (e.g., HtmlConverter)"}
     C -- "Updates" --> B
     C -- "Uses" --> D[Output]
     B -- "Provides" --> D
