@@ -1,38 +1,40 @@
-# MarkItDown: High-Level Data Flow Overview
-
-MarkItDown is a versatile document conversion tool that transforms various file formats into Markdown. It supports a wide range of input types, including HTML, DOCX, PDF, and more, leveraging a plugin-based architecture for extensibility. The core functionality involves detecting the input file type, selecting the appropriate converter, extracting the content, and formatting it into Markdown.
-
 ```mermaid
 graph LR
-    A[Input Document] -- Detect Type --> B(Core Conversion Manager)
-    B -- Selects Converter --> C{Specialized Document Converters}
-    C -- Extracts & Converts --> D[Markdown Output]
-    B -- Manages Metadata --> E(Stream Metadata Handler)
-    C -- Uses --> F[HTML-to-Markdown Converter]
-    C -- Uses --> G[DOCX Preprocessing Tools]
+    Main_Execution["Main Execution"]
+    MarkItDown_Core["MarkItDown Core"]
+    Stream_Information["Stream Information"]
+    Conversion_Services["Conversion Services"]
+    Exception_Handling["Exception Handling"]
+    Main_Execution -- "executes" --> MarkItDown_Core
+    MarkItDown_Core -- "uses" --> Stream_Information
+    MarkItDown_Core -- "converts to markdown" --> Conversion_Services
+    MarkItDown_Core -- "handles" --> Exception_Handling
 
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//README.md"
-click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Core%20Conversion%20Manager.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Specialized%20Document%20Converters.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//README.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Stream%20Metadata%20Handler.md"
-click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//HTML-to-Markdown%20Converter.md"
-click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//DOCX%20Preprocessing%20Tools.md"
-
+click Main_Execution href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Main Execution.md"
+click MarkItDown_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//MarkItDown Core.md"
+click Stream_Information href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Stream Information.md"
+click Conversion_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Conversion Services.md"
+click Exception_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Exception Handling.md"
 ```
 
-## Component Descriptions:
+## Component Details
 
-**A. Input Document:** Represents the document to be converted. It can be a local file, a remote URL, or a stream of data. The type of the document is detected to determine the appropriate conversion strategy.
+### Main Execution
+Handles argument parsing, main program execution, and output handling.
+- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.__main__:main`, `repos.markitdown.packages.markitdown.src.markitdown.__main__._exit_with_error`, `repos.markitdown.packages.markitdown.src.markitdown.__main__._handle_output`
 
-**B. Core Conversion Manager:** This is the central orchestrator of the conversion process. It receives the input document, detects its type, selects the appropriate converter from the available specialized converters, manages stream metadata, and initiates the conversion. It relates to `Input Document` by detecting its type, to `Specialized Document Converters` by selecting the right converter, and to `Stream Metadata Handler` by managing the metadata.
+### MarkItDown Core
+Core class responsible for managing converters, enabling built-in converters and plugins, and orchestrating the conversion process.
+- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.__init__`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.enable_builtins`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.enable_plugins`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.convert`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.register_converter`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.register_page_converter`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown._get_stream_info_guesses`
 
-**C. Specialized Document Converters:** This component encompasses a collection of individual converters, each responsible for handling a specific document type (e.g., DOCX, PDF, HTML). These converters extract the content from the input document and transform it into Markdown format. It relates to `Core Conversion Manager` by being selected and invoked, to `Markdown Output` by producing the final result, to `HTML-to-Markdown Converter` and `DOCX Preprocessing Tools` by using them for specific conversion tasks.
+### Stream Information
+Manages information about the input stream, including file type, encoding, and other metadata.
+- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`, `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo:copy_and_update`
 
-**D. Markdown Output:** Represents the final Markdown-formatted content generated by the conversion process. This output can be saved to a file, displayed in a user interface, or further processed by other applications.
+### Conversion Services
+Handles the conversion of various file types (HTML, multimedia, feeds, documents, text) to markdown.
+- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter:convert_string`, `repos.markitdown.packages.markitdown.src.markitdown.converters._markdownify._CustomMarkdownify`, `repos.markitdown.packages.markitdown.src.markitdown.converters._markdownify._CustomMarkdownify.convert_soup`, `repos.markitdown.packages.markitdown.src.markitdown.converters._image_converter.ImageConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._image_converter.ImageConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._audio_converter.AudioConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._audio_converter.AudioConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._transcribe_audio:transcribe_audio`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter:_parse_atom_type`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter:_parse_rss_type`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter:_parse_content`, `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:pre_process_docx`, `repos.markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter.PlainTextConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter.PlainTextConverter:convert`
 
-**E. Stream Metadata Handler:** This component manages metadata associated with the input stream, such as file type, encoding, and URL. It provides a consistent way to access and modify stream information throughout the conversion process. It relates to `Core Conversion Manager` by providing and managing the metadata.
-
-**F. HTML-to-Markdown Converter:** This specialized converter handles the conversion of HTML content to Markdown format. It is used by the HTML converter and potentially other converters that need to process HTML content. It relates to `Specialized Document Converters` by being used by them.
-
-**G. DOCX Preprocessing Tools:** This component provides utilities for preprocessing DOCX files, including handling equations and other complex formatting elements. It is used by the DOCX converter to prepare the document for conversion. It relates to `Specialized Document Converters` by being used by them.
+### Exception Handling
+Defines custom exceptions for file conversion failures.
+- **Related Classes/Methods**: `markitdown._exceptions.FailedConversionAttempt`, `markitdown._exceptions.FileConversionException`, `markitdown._exceptions.UnsupportedFormatException`
