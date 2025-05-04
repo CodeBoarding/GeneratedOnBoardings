@@ -1,40 +1,37 @@
+# MarkItDown: High-Level Data Flow Overview
+
+MarkItDown is a versatile document conversion tool that transforms various file formats and data sources into Markdown. It supports local files, streams, URIs, and responses, offering a flexible solution for content conversion.
+
 ```mermaid
 graph LR
-    Main_Execution["Main Execution"]
-    MarkItDown_Core["MarkItDown Core"]
-    Stream_Information["Stream Information"]
-    Conversion_Services["Conversion Services"]
-    Exception_Handling["Exception Handling"]
-    Main_Execution -- "executes" --> MarkItDown_Core
-    MarkItDown_Core -- "uses" --> Stream_Information
-    MarkItDown_Core -- "converts to markdown" --> Conversion_Services
-    MarkItDown_Core -- "handles" --> Exception_Handling
+    A[Main Application] -- initializes --> B(MarkItDown Converter)
+    B -- manages --> C{Stream Information Manager}
+    B -- uses --> D[Document Converter Interface]
+    D -- implements --> E((Converters))
+    E -- converts to --> F[Markdownify]
+    F -- converts HTML to --> G(Markdown Output)
+    A -- handles output --> G
 
-click Main_Execution href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Main Execution.md"
-click MarkItDown_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//MarkItDown Core.md"
-click Stream_Information href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Stream Information.md"
-click Conversion_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Conversion Services.md"
-click Exception_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Exception Handling.md"
+click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Main Application.md"
+click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//MarkItDown Converter.md"
+click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Stream Information Manager.md"
+click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Document Converter Interface.md"
+click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Converters.md"
+click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Markdownify.md"
 ```
 
-## Component Details
+## Component Descriptions
 
-### Main Execution
-Handles argument parsing, main program execution, and output handling.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.__main__:main`, `repos.markitdown.packages.markitdown.src.markitdown.__main__._exit_with_error`, `repos.markitdown.packages.markitdown.src.markitdown.__main__._handle_output`
+**A. Main Application:** This is the entry point of the application. It receives input (file path, URL, stream), initializes the `MarkItDown Converter`, and orchestrates the conversion process. It also handles the final output, writing the converted Markdown to a file or standard output. It relates to `MarkItDown Converter` by initializing it and passing the input for conversion, and it relates to `Markdown Output` by writing the final result.
 
-### MarkItDown Core
-Core class responsible for managing converters, enabling built-in converters and plugins, and orchestrating the conversion process.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.__init__`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.enable_builtins`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.enable_plugins`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.convert`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.register_converter`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.register_page_converter`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown._get_stream_info_guesses`
+**B. MarkItDown Converter:** This component is the core of the application. It manages the available converters, determines the input type using `Stream Information Manager`, selects the appropriate converter through `Document Converter Interface`, and triggers the conversion. It relates to `Main Application` by receiving the input and returning the converted output, to `Stream Information Manager` by using it to determine the input type, and to `Document Converter Interface` by using it to select the appropriate converter.
 
-### Stream Information
-Manages information about the input stream, including file type, encoding, and other metadata.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`, `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo:copy_and_update`
+**C. Stream Information Manager:** This component analyzes the input stream to determine its type (e.g., file extension, MIME type). This information is then used by the `MarkItDown Converter` to select the appropriate converter. It relates to `MarkItDown Converter` by providing information about the input stream.
 
-### Conversion Services
-Handles the conversion of various file types (HTML, multimedia, feeds, documents, text) to markdown.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter:convert_string`, `repos.markitdown.packages.markitdown.src.markitdown.converters._markdownify._CustomMarkdownify`, `repos.markitdown.packages.markitdown.src.markitdown.converters._markdownify._CustomMarkdownify.convert_soup`, `repos.markitdown.packages.markitdown.src.markitdown.converters._image_converter.ImageConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._image_converter.ImageConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._audio_converter.AudioConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._audio_converter.AudioConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._transcribe_audio:transcribe_audio`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter:_parse_atom_type`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter:_parse_rss_type`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter:_parse_content`, `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:pre_process_docx`, `repos.markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter:convert`, `repos.markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter.PlainTextConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter.PlainTextConverter:convert`
+**D. Document Converter Interface:** This component defines a standard interface for all converters. It ensures that all converters have a consistent way of being called and used by the `MarkItDown Converter`. It relates to `MarkItDown Converter` by providing a common interface for converters, and to `Converters` by being the interface they implement.
 
-### Exception Handling
-Defines custom exceptions for file conversion failures.
-- **Related Classes/Methods**: `markitdown._exceptions.FailedConversionAttempt`, `markitdown._exceptions.FileConversionException`, `markitdown._exceptions.UnsupportedFormatException`
+**E. Converters:** This represents a collection of specific converters for different file types (e.g., DOCX, XLSX, PDF, HTML). Each converter implements the `Document Converter Interface` and is responsible for converting its specific file type to HTML. It relates to `Document Converter Interface` by implementing its interface, and to `Markdownify` by passing the converted HTML for final conversion to Markdown.
+
+**F. Markdownify:** This component converts HTML to Markdown. It receives HTML from the `Converters` and applies Markdown formatting rules to generate the final Markdown output. It relates to `Converters` by receiving the converted HTML, and to `Markdown Output` by generating the final Markdown output.
+
+**G. Markdown Output:** This component represents the final Markdown output, which is the result of the conversion process. It relates to `Main Application` by sending the final result.
