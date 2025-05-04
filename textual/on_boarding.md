@@ -5,10 +5,7 @@ Textual is a Rapid Application Development (RAD) framework for creating sophisti
 ```mermaid
 flowchart LR
     A[App Driver] -- Initializes & Manages --> B(DOM)
-    B -- Queries & Updates --> C[
-Component Styling
-(CSS)
-]
+    B -- Queries & Updates --> C["Component Styling(CSS)"]
     A -- Sends Events --> D[Event System]
     D -- Dispatches --> A
     A -- Triggers --> E[Action Dispatcher]
