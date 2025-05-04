@@ -1,38 +1,48 @@
 ## Asynchronous Task Management Overview
 
-This component provides tools for running tasks in the background and managing asynchronous operations within the Textual framework. It leverages the `Worker`, `WorkerManager`, and the `work` decorator to simplify the process of offloading work to separate threads or async tasks.
+This component provides the foundation for managing background tasks, timers, and asynchronous operations within the Textual application. It leverages the `MessagePump` to handle messages and events, the `Timer` class for scheduling callbacks, and the `Worker` and `WorkerManager` classes for managing background tasks in separate threads.
 
 ### Data Flow Diagram
 
 ```mermaid
 graph LR
-    DOMNode -- calls --> WorkerManager
-    WorkerManager -- creates --> Worker
-    Worker -- runs --> Work
-    Work -- returns result --> Worker
-    Worker -- notifies --> DOMNode
+    App--creates-->WorkerManager
+    App--uses-->MessagePump
+    App--schedules-->Timer
+    Widget--schedules-->Timer
+    WorkerManager--manages-->Worker
+    _work_decorator--creates-->Worker
+    Worker--runs-->WorkFunction
+    MessagePump--posts Message-->App
+    MessagePump--posts Message-->Widget
+    Timer--posts Timer Event-->MessagePump
+
 
 
 ```
 
 ### Component Descriptions
 
-- **DOMNode**: Represents a node in the Textual DOM (Document Object Model), such as an App, Screen, or Widget. It provides the `run_worker` method to create and manage workers. It uses the `WorkerManager` to add new workers.
-  - **Purpose**: Provides the context for running workers and receives notifications about their completion or errors.
-  - **Interactions**: Calls `WorkerManager` to create and manage workers. Receives notifications from `Worker` upon completion or error.
-  - **Relevant source files**: `textual.dom.DOMNode`
+- **App**: The core application class that inherits from `MessagePump` and manages the event loop, widgets, and terminal interaction. It creates and manages the `WorkerManager` and schedules timers using the `Timer` class. It also processes messages posted to it by the `MessagePump` and other components.
+  - *Relevant source files*: `textual.app.App`
 
-- **WorkerManager**: Manages the lifecycle of `Worker` instances. It provides methods to add, start, cancel, and track workers. It is accessed via `App.workers` or `Widget.workers`.
-  - **Purpose**: Centralized management of background tasks, ensuring proper resource utilization and task coordination.
-  - **Interactions**: Creates `Worker` instances. Is called by `DOMNode` to create workers.
-  - **Relevant source files**: `textual.worker_manager.WorkerManager`
+- **MessagePump**: Base class for managing messages, timers, and callbacks. It provides the foundation for asynchronous operations in Textual. It schedules timers and posts messages to the `App` and `Widget` instances.
+  - *Relevant source files*: `textual.message_pump.MessagePump`
 
-- **Worker**: Represents an individual asynchronous task. It encapsulates the task's state, handles errors, and provides mechanisms for cancellation and waiting for completion. It runs the `Work` in a separate thread or as an async task.
-  - **Purpose**: Executes a given task in the background, managing its state and handling potential errors.
-  - **Interactions**: Receives work from `WorkerManager`. Notifies `DOMNode` about completion or errors.
-  - **Relevant source files**: `textual.worker.Worker`
+- **Timer**: Encapsulates timer functionality, allowing callbacks to be executed after a specified delay or at regular intervals. It interacts with the `MessagePump` to schedule and manage timer events. It posts `Timer` events to the `MessagePump`.
+  - *Relevant source files*: `textual.timer.Timer`
 
-- **Work**: Represents the actual function or coroutine that needs to be executed in the background. It is decorated with `@work`.
-  - **Purpose**: Defines the task to be executed asynchronously.
-  - **Interactions**: Runs inside the `Worker`. Returns a result to the `Worker`.
-  - **Relevant source files**: `textual._work_decorator.work`
+- **Widget**: Base class for UI elements, providing rendering, event handling, and state management. Widgets can schedule auto-refreshing, which uses the timer mechanism. It schedules timers using the `Timer` class and posts messages to the `MessagePump`.
+  - *Relevant source files*: `textual.widget.Widget`
+
+- **WorkerManager**: Manages a collection of `Worker` instances, providing methods for adding, starting, canceling, and monitoring workers. It is responsible for coordinating background tasks within the application. It creates and manages `Worker` instances.
+  - *Relevant source files*: `textual.worker_manager.WorkerManager`
+
+- **Worker**: Represents a background task that can be run in a separate thread. It provides a mechanism for executing functions asynchronously without blocking the main thread. It runs the `WorkFunction` in a separate thread.
+  - *Relevant source files*: `textual.worker.Worker`
+
+- **WorkFunction**: Represents the actual function or coroutine that will be executed by the `Worker`. The `_work_decorator` creates a `Worker` instance that encapsulates this function.
+  - *Relevant source files*: `textual._work_decorator.work`
+
+- **_work_decorator**: A decorator that simplifies the creation and management of `Worker` instances. It allows functions to be easily executed in a background thread by annotating them with the `@work` decorator. It creates `Worker` instances.
+  - *Relevant source files*: `textual._work_decorator.work`
