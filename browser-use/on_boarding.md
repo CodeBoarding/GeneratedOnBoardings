@@ -1,33 +1,33 @@
-Okay, I'm ready to generate the high-level data flow diagram for the `browser-use` project.
-
-**1. Project Description:**
-
-The `browser-use` project enables AI agents to interact with web browsers programmatically. It provides tools and services for agents to navigate web pages, extract information, and perform actions, allowing them to automate tasks and interact with web-based applications.
-
-**2. Data Flow Diagram (Mermaid Format):**
-
 ```mermaid
 graph LR
-    A[Agent Core] -- Orchestrates --> B(Browser Context Management)
-    A -- Sends Action Request --> C(Action Controller)
-    B -- Provides Page Content --> D(DOM Parser)
-    D -- Extracts DOM --> A
-    C -- Uses --> E(Action Registry)
-    C -- Interacts with --> B
-    A -- Manages --> F(Message Handler)
-    F -- Communicates with LLM --> A
+    Agent_Orchestrator["Agent Orchestrator"]
+    Browser_Interaction_Manager["Browser Interaction Manager"]
+    Action_Execution_Engine["Action Execution Engine"]
+    User_Interface["User Interface"]
+    Agent_Orchestrator -- "Uses" --> Browser_Interaction_Manager
+    Agent_Orchestrator -- "Uses" --> Action_Execution_Engine
+    User_Interface -- "Uses" --> Agent_Orchestrator
+    User_Interface -- "Uses" --> Browser_Interaction_Manager
+    click Agent_Orchestrator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Agent Orchestrator.md" "Details"
+    click Browser_Interaction_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Browser Interaction Manager.md" "Details"
+    click Action_Execution_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Action Execution Engine.md" "Details"
+    click User_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/User Interface.md" "Details"
 ```
 
-**3. Component Descriptions:**
+## Component Details
 
-*   **Agent Core:** This component manages the agent's lifecycle, planning, and execution. It orchestrates the interaction between the Browser Context Management, Action Controller, DOM Parser, and Message Handler. It receives parsed DOM from the DOM Parser and sends action requests to the Action Controller. It also manages communication with the LLM through the Message Handler.
+### Agent Orchestrator
+The Agent Orchestrator is the central component responsible for managing the agent's lifecycle. It coordinates task execution, planning, and interactions between the LLM, browser, and controller services. It handles memory management, prompt engineering, and signal handling to ensure smooth and efficient operation, making it the brain of the entire system.
+- **Related Classes/Methods**: `browser_use.agent.service.Agent`
 
-*   **Browser Context Management:** This component provides an interface for interacting with the browser, including navigation, content retrieval, and state management. It receives navigation requests from the Agent Core and provides page content to the DOM Parser. It also interacts with the Action Controller to execute actions in the browser.
+### Browser Interaction Manager
+The Browser Interaction Manager handles all interactions with the browser, including navigation, content extraction, and element manipulation. It provides a high-level API for the agent to interact with web pages, abstracting away the complexities of the underlying browser technology. It manages browser contexts, tabs, and DOM manipulation, acting as the interface between the agent and the web.
+- **Related Classes/Methods**: `browser_use.browser.context.BrowserContext`
 
-*   **Action Controller:** This component executes actions in the browser based on instructions from the Agent Core. It uses the Action Registry to determine the available actions and interacts with the Browser Context Management to perform the actions.
+### Action Execution Engine
+The Action Execution Engine is responsible for executing actions in the browser based on the agent's plan. It interacts with the browser context to perform tasks such as clicking elements, inputting text, and scrolling. It also maintains a registry of available actions and their descriptions, used for generating prompts and executing actions, effectively translating the agent's plans into browser actions.
+- **Related Classes/Methods**: `browser_use.controller.service.Controller`
 
-*   **DOM Parser:** This component parses the DOM structure of a web page and extracts relevant information. It receives page content from the Browser Context Management and provides a structured representation of the DOM to the Agent Core.
-
-*   **Action Registry:** This component maintains a registry of available actions that the agent can perform. It is used by the Action Controller to determine the available actions and execute them.
-
-*   **Message Handler:** This component manages the messages exchanged between the agent and the LLM. It is used by the Agent Core to construct prompts, manage conversation history, and communicate with the LLM.
+### User Interface
+The User Interface provides a textual interface for users to interact with the agent. It handles user input, displays agent output, and manages the application's configuration. It also sets up logging and signal handling to ensure a smooth user experience, serving as the primary point of contact for users.
+- **Related Classes/Methods**: `browser_use.cli`
