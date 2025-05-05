@@ -2,34 +2,40 @@
 graph LR
     Core_Conversion_Manager["Core Conversion Manager"]
     Base_Converter_Interface["Base Converter Interface"]
-    Content_Converters["Content Converters"]
-    Exception_Management["Exception Management"]
-    Core_Conversion_Manager -- "manages and orchestrates" --> Content_Converters
-    Core_Conversion_Manager -- "uses" --> Base_Converter_Interface
-    Content_Converters -- "implements" --> Base_Converter_Interface
-    Core_Conversion_Manager -- "raises" --> Exception_Management
-    Content_Converters -- "raises" --> Exception_Management
-
-click Core_Conversion_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Core Conversion Manager.md"
-click Base_Converter_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Base Converter Interface.md"
-click Content_Converters href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Content Converters.md"
-click Exception_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown//Exception Management.md"
+    Content_Conversion_Handlers["Content Conversion Handlers"]
+    Markdownify_Wrapper["Markdownify Wrapper"]
+    Exception_Handler["Exception Handler"]
+    Core_Conversion_Manager -- "manages and orchestrates" --> Base_Converter_Interface
+    Core_Conversion_Manager -- "uses for content conversion" --> Content_Conversion_Handlers
+    Content_Conversion_Handlers -- "implements" --> Base_Converter_Interface
+    Content_Conversion_Handlers -- "uses for HTML conversion" --> Markdownify_Wrapper
+    Core_Conversion_Manager -- "raises" --> Exception_Handler
+    Content_Conversion_Handlers -- "raises" --> Exception_Handler
+    click Core_Conversion_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Core Conversion Manager.md" "Details"
+    click Base_Converter_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Base Converter Interface.md" "Details"
+    click Content_Conversion_Handlers href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Content Conversion Handlers.md" "Details"
+    click Markdownify_Wrapper href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Markdownify Wrapper.md" "Details"
+    click Exception_Handler href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Exception Handler.md" "Details"
 ```
 
 ## Component Details
 
 ### Core Conversion Manager
-The central component responsible for orchestrating the entire conversion process. It handles input from various sources (files, streams, URIs), registers available converters, manages stream information, and normalizes character sets. It acts as the entry point and manages the overall workflow.
+The Core Conversion Manager is the central orchestrator of the markitdown library. It handles the intake of various input types, including local files, streams, and URIs, and delegates the conversion process to registered converters. It manages stream information, normalizes character sets, and serves as the primary entry point for all conversion tasks.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.ConverterRegistration`, `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`, `repos.markitdown.packages.markitdown.src.markitdown._uri_utils`
 
 ### Base Converter Interface
-Defines the abstract base class for all specific converters. It provides a common interface and structure for converters to inherit from, ensuring consistency in how different content types are handled. It also defines the structure of the conversion result, including content and metadata.
+The Base Converter Interface defines the abstract base class for all specific converters within the markitdown library. It establishes a common interface and structure, ensuring consistency across different conversion types. It also defines the structure of the conversion result, including content, title, and other metadata, providing a standardized format for all converters to adhere to.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._base_converter.DocumentConverterResult`, `repos.markitdown.packages.markitdown.src.markitdown._base_converter`
 
-### Content Converters
-A collection of converters designed for various content types, including text-based formats, complex documents, multimedia, web content, and specialized formats. These converters handle the extraction and conversion of content, often leveraging external libraries and APIs for parsing and formatting.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._markdownify._CustomMarkdownify`, `repos.markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter.PlainTextConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._epub_converter.EpubConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._xlsx_converter.XlsxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pdf_converter.PdfConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._image_converter.ImageConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._audio_converter.AudioConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._youtube_converter.YouTubeConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._ipynb_converter.IpynbConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter`
+### Content Conversion Handlers
+Content Conversion Handlers are a collection of components dedicated to converting various content types into Markdown. This includes handlers for HTML, plain text, documents (Office, PDFs), ebooks, multimedia (images, audio, YouTube), and web feeds (RSS). Each handler is responsible for extracting and transforming content from its specific format into a Markdown representation, often leveraging external libraries or APIs for format-specific processing.
+- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter.PlainTextConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._xlsx_converter.XlsxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._epub_converter.EpubConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pdf_converter.PdfConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._image_converter.ImageConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._audio_converter.AudioConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._youtube_converter.YouTubeConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._ipynb_converter.IpynbConverter`
 
-### Exception Management
-Defines custom exceptions used within the markitdown library for error handling and reporting.
+### Markdownify Wrapper
+The Markdownify Wrapper component encapsulates the Markdownify library, providing custom conversion rules and configurations specifically tailored for HTML to Markdown conversion within the markitdown project. This allows for fine-grained control over the conversion process, ensuring that the output Markdown adheres to specific formatting and styling requirements.
+- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._markdownify._CustomMarkdownify`
+
+### Exception Handler
+The Exception Handler component defines custom exceptions used within the markitdown library. This allows for more specific and informative error handling throughout the conversion process.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._exceptions`

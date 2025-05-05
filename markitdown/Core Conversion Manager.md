@@ -3,7 +3,7 @@ graph LR
     MarkItDown["MarkItDown"]
     StreamInfo["StreamInfo"]
     ConverterRegistration["ConverterRegistration"]
-    _load_plugins["_load_plugins"]
+    DocumentConverter["DocumentConverter"]
     PlainTextConverter["PlainTextConverter"]
     ZipConverter["ZipConverter"]
     HtmlConverter["HtmlConverter"]
@@ -22,123 +22,131 @@ graph LR
     EpubConverter["EpubConverter"]
     CsvConverter["CsvConverter"]
     DocumentIntelligenceConverter["DocumentIntelligenceConverter"]
-    MarkItDown -- "initializes" --> MarkItDown
-    MarkItDown -- "registers" --> ConverterRegistration
-    MarkItDown -- "loads" --> _load_plugins
-    MarkItDown -- "converts URI to local path" --> MarkItDown
-    MarkItDown -- "converts local files" --> StreamInfo
-    MarkItDown -- "copies and updates" --> StreamInfo
-    MarkItDown -- "converts streams" --> StreamInfo
-    MarkItDown -- "converts responses" --> StreamInfo
-    MarkItDown -- "guesses stream info" --> StreamInfo
-    MarkItDown -- "converts" --> StreamInfo
-    StreamInfo -- "copies and updates" --> StreamInfo
-    MarkItDown -- "registers" --> PlainTextConverter
-    MarkItDown -- "registers" --> ZipConverter
-    MarkItDown -- "registers" --> HtmlConverter
-    MarkItDown -- "registers" --> RssConverter
-    MarkItDown -- "registers" --> WikipediaConverter
-    MarkItDown -- "registers" --> YouTubeConverter
-    MarkItDown -- "registers" --> BingSerpConverter
-    MarkItDown -- "registers" --> DocxConverter
-    MarkItDown -- "registers" --> XlsxConverter
-    MarkItDown -- "registers" --> PptxConverter
-    MarkItDown -- "registers" --> AudioConverter
-    MarkItDown -- "registers" --> ImageConverter
-    MarkItDown -- "registers" --> IpynbConverter
-    MarkItDown -- "registers" --> PdfConverter
-    MarkItDown -- "registers" --> OutlookMsgConverter
-    MarkItDown -- "registers" --> EpubConverter
-    MarkItDown -- "registers" --> CsvConverter
-    MarkItDown -- "registers" --> DocumentIntelligenceConverter
+    _load_plugins["_load_plugins"]
+    MarkItDown -- "creates" --> MarkItDown
+    StreamInfo -- "updates" --> StreamInfo
+    MarkItDown -- "enables" --> MarkItDown_enable_builtins
+    MarkItDown -- "enables" --> MarkItDown_enable_plugins
+    MarkItDown_enable_builtins -- "registers" --> MarkItDown_register_converter
+    MarkItDown_enable_plugins -- "loads" --> _load_plugins
+    MarkItDown -- "converts" --> MarkItDown_convert_uri
+    MarkItDown -- "converts" --> MarkItDown_convert_local
+    MarkItDown -- "converts" --> MarkItDown_convert_response
+    MarkItDown -- "converts" --> MarkItDown_convert_stream
+    MarkItDown_convert_local -- "creates" --> StreamInfo
+    MarkItDown_convert_local -- "updates" --> StreamInfo_copy_and_update
+    MarkItDown_convert_local -- "guesses" --> MarkItDown__get_stream_info_guesses
+    MarkItDown_convert_local -- "converts" --> MarkItDown__convert
+    MarkItDown_convert_stream -- "creates" --> StreamInfo
+    MarkItDown_convert_stream -- "updates" --> StreamInfo_copy_and_update
+    MarkItDown_convert_stream -- "guesses" --> MarkItDown__get_stream_info_guesses
+    MarkItDown_convert_stream -- "converts" --> MarkItDown__convert
+    MarkItDown_convert_url -- "converts" --> MarkItDown_convert_uri
+    MarkItDown_convert_uri -- "converts" --> MarkItDown_convert_local
+    MarkItDown_convert_uri -- "creates" --> StreamInfo
+    MarkItDown_convert_uri -- "updates" --> StreamInfo_copy_and_update
+    MarkItDown_convert_uri -- "converts" --> MarkItDown_convert_stream
+    MarkItDown_convert_uri -- "converts" --> MarkItDown_convert_response
+    MarkItDown_convert_response -- "creates" --> StreamInfo
+    MarkItDown_convert_response -- "updates" --> StreamInfo_copy_and_update
+    MarkItDown_convert_response -- "guesses" --> MarkItDown__get_stream_info_guesses
+    MarkItDown_convert_response -- "converts" --> MarkItDown__convert
+    MarkItDown__convert -- "creates" --> StreamInfo
+    MarkItDown_register_page_converter -- "registers" --> MarkItDown_register_converter
+    MarkItDown_register_converter -- "creates" --> ConverterRegistration
+    MarkItDown__get_stream_info_guesses -- "guesses" --> StreamInfo
 ```
 
 ## Component Details
 
 ### MarkItDown
-The main class responsible for converting various file types to markdown. It orchestrates the conversion process by registering converters, loading plugins, and handling different input types (files, streams, URIs).
+The central class that orchestrates the conversion process. It manages converter registration, stream information, and delegates the conversion to appropriate converters based on the input type and content.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`
 
 ### StreamInfo
-A class that holds information about the input stream, such as encoding and mime type. It helps in determining the correct converter to use and how to process the input data.
+A data class that holds metadata about the input stream, such as MIME type, file extension, character set, filename, local path, and URL. It provides context to the converters.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`
 
 ### ConverterRegistration
-A class that registers available converters. It allows the `MarkItDown` class to discover and use the appropriate converter for a given input type.
+A data class that associates a DocumentConverter with a priority. This allows the MarkItDown class to manage the order in which converters are attempted during the conversion process.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.ConverterRegistration`
 
-### _load_plugins
-A function that loads plugins, extending the functionality of the `MarkItDown` class with additional converters or input handlers.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._markitdown._load_plugins`
+### DocumentConverter
+An abstract base class for all converters. Concrete converters inherit from this class and implement the `accepts` and `convert` methods.
+- **Related Classes/Methods**: _None_
 
 ### PlainTextConverter
-A converter for plain text files. It extracts the text content and formats it as markdown.
+A concrete converter for plain text files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter.PlainTextConverter`
 
 ### ZipConverter
-A converter for zip files. It extracts the contents of the zip file and converts each entry to markdown.
+A concrete converter for zip files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._zip_converter.ZipConverter`
 
 ### HtmlConverter
-A converter for HTML files. It parses the HTML content and converts it to markdown.
+A concrete converter for HTML files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`
 
 ### RssConverter
-A converter for RSS files. It extracts the content from RSS feeds and converts it to markdown.
+A concrete converter for RSS feeds.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter`
 
 ### WikipediaConverter
-A converter for Wikipedia pages. It retrieves the content of a Wikipedia page and converts it to markdown.
+A concrete converter for Wikipedia pages.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._wikipedia_converter.WikipediaConverter`
 
 ### YouTubeConverter
-A converter for YouTube videos. It extracts information about a YouTube video and converts it to markdown.
+A concrete converter for YouTube videos.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._youtube_converter.YouTubeConverter`
 
 ### BingSerpConverter
-A converter for Bing search results. It extracts the search results from Bing and converts them to markdown.
+A concrete converter for Bing search results.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._bing_serp_converter.BingSerpConverter`
 
 ### DocxConverter
-A converter for DOCX files. It extracts the text and formatting from a DOCX file and converts it to markdown.
+A concrete converter for DOCX files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`
 
 ### XlsxConverter
-A converter for XLSX files. It extracts the data from an XLSX file and converts it to markdown.
+A concrete converter for XLSX files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._xlsx_converter.XlsxConverter`
 
 ### PptxConverter
-A converter for PPTX files. It extracts the text and images from a PPTX file and converts it to markdown.
+A concrete converter for PPTX files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter`
 
 ### AudioConverter
-A converter for audio files. It extracts metadata from audio files and converts it to markdown.
+A concrete converter for audio files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._audio_converter.AudioConverter`
 
 ### ImageConverter
-A converter for image files. It extracts metadata from image files and converts it to markdown.
+A concrete converter for image files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._image_converter.ImageConverter`
 
 ### IpynbConverter
-A converter for Jupyter Notebook files. It extracts the code and output from a Jupyter Notebook and converts it to markdown.
+A concrete converter for Jupyter Notebook files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._ipynb_converter.IpynbConverter`
 
 ### PdfConverter
-A converter for PDF files. It extracts the text and images from a PDF file and converts it to markdown.
+A concrete converter for PDF files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._pdf_converter.PdfConverter`
 
 ### OutlookMsgConverter
-A converter for Outlook message files. It extracts the content from an Outlook message and converts it to markdown.
+A concrete converter for Outlook message files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._outlook_msg_converter.OutlookMsgConverter`
 
 ### EpubConverter
-A converter for EPUB files. It extracts the content from an EPUB file and converts it to markdown.
+A concrete converter for EPUB files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._epub_converter.EpubConverter`
 
 ### CsvConverter
-A converter for CSV files. It extracts the data from a CSV file and converts it to markdown.
+A concrete converter for CSV files.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._csv_converter.CsvConverter`
 
 ### DocumentIntelligenceConverter
-A converter using Document Intelligence. It uses an external Document Intelligence service to extract content and convert it to markdown.
+A concrete converter that uses document intelligence.
 - **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter`
+
+### _load_plugins
+A function to load plugins.
+- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._markitdown._load_plugins`
