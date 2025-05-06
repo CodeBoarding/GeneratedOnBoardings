@@ -1,39 +1,33 @@
-# Sudoku Project Overview
-
-The Sudoku project is a Python application that generates and solves Sudoku puzzles using various algorithms, including Wave Function Collapse and NumPy-based methods. It provides a user interface for interacting with the puzzles and validating their solutions.
-
-## Data Flow Diagram
-
 ```mermaid
 graph LR
-    A[User Interface] -- "Interacts with" --> B(Puzzle Generator)
-    B -- "Generates" --> C{Sudoku Grid}
-    C -- "Validates" --> D[Sudoku Checker]
-    D -- "Provides Feedback to" --> B
-    C -- "Presents" --> A
-    B -- "Uses" --> E[Core Sudoku Logic]
-    E -- "Manages" --> C
-
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku//User%20Interface.md"
-click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku//Puzzle%20Generator.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku//Sudoku%20Grid.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku//Sudoku%20Checker.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku//Core%20Sudoku%20Logic.md"
+    Application_Core["Application Core"]
+    Puzzle_Management_Module["Puzzle Management Module"]
+    Puzzle_Evaluation_Module["Puzzle Evaluation Module"]
+    Visual_Output_Module["Visual Output Module"]
+    Application_Core -- "Orchestrates" --> Puzzle_Management_Module
+    Application_Core -- "Orchestrates" --> Puzzle_Evaluation_Module
+    Application_Core -- "Orchestrates" --> Visual_Output_Module
+    Puzzle_Evaluation_Module -- "Used by" --> Puzzle_Management_Module
+    click Application_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku/Application Core.md" "Details"
+    click Puzzle_Management_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku/Puzzle Management Module.md" "Details"
+    click Puzzle_Evaluation_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku/Puzzle Evaluation Module.md" "Details"
+    click Visual_Output_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku/Visual Output Module.md" "Details"
 ```
 
-## Component Descriptions
+## Component Details
 
-**A. User Interface:**
-The User Interface component provides a way for users to interact with the Sudoku game. It displays the Sudoku grid, allows users to input numbers, and triggers puzzle generation and solving. It relates to the Puzzle Generator by sending user requests and receiving the generated or solved Sudoku grid for display.
+### Application Core
+The Application Core serves as the central orchestrator for the Sudoku application. It manages the application's lifecycle, from user input and puzzle generation to solving, rating, and image creation. It acts as the main entry point, coordinating interactions between the other components to deliver the application's functionality.
+- **Related Classes/Methods**: `src/main/main.py`
 
-**B. Puzzle Generator:**
-The Puzzle Generator component is responsible for creating new Sudoku puzzles. It uses the Core Sudoku Logic to generate a complete grid and then applies a masking technique to create a puzzle with a specific difficulty level. It interacts with the User Interface by receiving requests for new puzzles and sending the generated puzzles for display. It also uses the Sudoku Checker to validate the generated puzzles.
+### Puzzle Management Module
+The Puzzle Management Module encompasses the generation, solving, and validation of Sudoku puzzles. It provides functionalities for creating new puzzles with varying difficulty levels, solving existing puzzles using different algorithms, and ensuring the validity and solvability of puzzles through constraint checking and dead-end detection. This module is crucial for providing the core Sudoku puzzle logic.
+- **Related Classes/Methods**: `src/generators/Generators.py`, `src/utils/GeneratorUtils.py`, `src/solver/solver.py`, `src/utils/SolverUtils.py`, `src/checkers/SudoCheck.py`
 
-**C. Sudoku Grid:**
-The Sudoku Grid component represents the Sudoku puzzle as a data structure. It stores the state of each cell in the grid and provides methods for accessing and modifying the grid. It is managed by the Core Sudoku Logic and presented to the User Interface for display.
+### Puzzle Evaluation Module
+The Puzzle Evaluation Module focuses on assessing the difficulty of Sudoku puzzles. It employs solving techniques and difficulty assessment functions to categorize puzzles into different difficulty levels. This module relies on the Puzzle Management Module to analyze the puzzle and determine its difficulty based on the solving strategies required.
+- **Related Classes/Methods**: `src/ratingSudos/rating.py`, `src/utils/RatingUtils.py`
 
-**D. Sudoku Checker:**
-The Sudoku Checker component validates the Sudoku grid to ensure it follows the Sudoku rules. It checks that each row, column, and 3x3 subgrid contains unique numbers. It provides feedback to the Puzzle Generator to ensure that only valid puzzles are generated.
-
-**E. Core Sudoku Logic:**
-The Core Sudoku Logic component encapsulates the core algorithms for generating and solving Sudoku puzzles. It uses the Wave Function Collapse algorithm to generate valid Sudoku grids. It manages the Sudoku Grid and is used by the Puzzle Generator to create new puzzles.
+### Visual Output Module
+The Visual Output Module is responsible for generating visual representations of Sudoku puzzles. It creates images and PDFs, highlighting the differences between the original and solved states. This module takes a Sudoku grid as input and produces a visual output for display or printing, enhancing the user experience.
+- **Related Classes/Methods**: `src/burnImage/burnSudo2Img.py`
