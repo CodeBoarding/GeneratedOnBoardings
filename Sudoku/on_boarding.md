@@ -1,33 +1,48 @@
 ```mermaid
 graph LR
-    Application_Core["Application Core"]
-    Puzzle_Management_Module["Puzzle Management Module"]
-    Puzzle_Evaluation_Module["Puzzle Evaluation Module"]
-    Visual_Output_Module["Visual Output Module"]
-    Application_Core -- "Orchestrates" --> Puzzle_Management_Module
-    Application_Core -- "Orchestrates" --> Puzzle_Evaluation_Module
-    Application_Core -- "Orchestrates" --> Visual_Output_Module
-    Puzzle_Evaluation_Module -- "Used by" --> Puzzle_Management_Module
-    click Application_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku/Application Core.md" "Details"
-    click Puzzle_Management_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku/Puzzle Management Module.md" "Details"
-    click Puzzle_Evaluation_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku/Puzzle Evaluation Module.md" "Details"
-    click Visual_Output_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Sudoku/Visual Output Module.md" "Details"
+    Core_Logic_Grid_Management["Core Logic & Grid Management"]
+    Puzzle_Generation_Solving_Engine["Puzzle Generation & Solving Engine"]
+    Puzzle_Masking_Difficulty_Control["Puzzle Masking & Difficulty Control"]
+    Solution_Validation["Solution Validation"]
+    User_Interface["User Interface"]
+    Alternative_Puzzle_Generation_NumPy_["Alternative Puzzle Generation (NumPy)"]
+    Puzzle_Generation_Solving_Engine -- "Uses" --> Core_Logic_Grid_Management
+    Puzzle_Generation_Solving_Engine -- "Uses" --> Puzzle_Masking_Difficulty_Control
+    Puzzle_Generation_Solving_Engine -- "Uses" --> Solution_Validation
+    User_Interface -- "Displays" --> Core_Logic_Grid_Management
+    User_Interface -- "Interacts with" --> Puzzle_Generation_Solving_Engine
+    Alternative_Puzzle_Generation_NumPy_ -- "Uses" --> Puzzle_Masking_Difficulty_Control
+    Solution_Validation -- "Validates" --> Core_Logic_Grid_Management
+    click Core_Logic_Grid_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/sudoku/Core Logic & Grid Management.md" "Details"
+    click Puzzle_Generation_Solving_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/sudoku/Puzzle Generation & Solving Engine.md" "Details"
+    click Puzzle_Masking_Difficulty_Control href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/sudoku/Puzzle Masking & Difficulty Control.md" "Details"
+    click Solution_Validation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/sudoku/Solution Validation.md" "Details"
+    click User_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/sudoku/User Interface.md" "Details"
+    click Alternative_Puzzle_Generation_NumPy_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/sudoku/Alternative Puzzle Generation (NumPy).md" "Details"
 ```
 
 ## Component Details
 
-### Application Core
-The Application Core serves as the central orchestrator for the Sudoku application. It manages the application's lifecycle, from user input and puzzle generation to solving, rating, and image creation. It acts as the main entry point, coordinating interactions between the other components to deliver the application's functionality.
-- **Related Classes/Methods**: `src/main/main.py`
+### Core Logic & Grid Management
+This component forms the foundation of the Sudoku game. It encompasses the data structures and algorithms necessary for representing the Sudoku grid, managing cell states (possible values), and propagating constraints based on Sudoku rules. It provides the essential building blocks for both puzzle generation and solving processes.
+- **Related Classes/Methods**: `sudokum.method.wave_function_collapse.grid.Grid`, `sudokum.method.wave_function_collapse.cell.Cell`, `sudokum.method.wave_function_collapse.pq.PriorityQueue`
 
-### Puzzle Management Module
-The Puzzle Management Module encompasses the generation, solving, and validation of Sudoku puzzles. It provides functionalities for creating new puzzles with varying difficulty levels, solving existing puzzles using different algorithms, and ensuring the validity and solvability of puzzles through constraint checking and dead-end detection. This module is crucial for providing the core Sudoku puzzle logic.
-- **Related Classes/Methods**: `src/generators/Generators.py`, `src/utils/GeneratorUtils.py`, `src/solver/solver.py`, `src/utils/SolverUtils.py`, `src/checkers/SudoCheck.py`
+### Puzzle Generation & Solving Engine
+This component implements the core logic for both generating new Sudoku puzzles and solving existing ones. It leverages the Wave Function Collapse algorithm to create valid Sudoku grids and to deduce the correct values for empty cells in a puzzle. It includes functionalities for resetting the grid, propagating constraints, and collapsing cells based on the WFC algorithm.
+- **Related Classes/Methods**: `sudokum.method.wave_function_collapse.generate.generate`, `sudokum.method.wave_function_collapse.generate.reset`, `sudokum.method.wave_function_collapse.generate.propagate`, `sudokum.method.wave_function_collapse.generate.wave_function_collapse`, `sudokum.method.wave_function_collapse.solve.solve`
 
-### Puzzle Evaluation Module
-The Puzzle Evaluation Module focuses on assessing the difficulty of Sudoku puzzles. It employs solving techniques and difficulty assessment functions to categorize puzzles into different difficulty levels. This module relies on the Puzzle Management Module to analyze the puzzle and determine its difficulty based on the solving strategies required.
-- **Related Classes/Methods**: `src/ratingSudos/rating.py`, `src/utils/RatingUtils.py`
+### Puzzle Masking & Difficulty Control
+This component focuses on transforming a solved Sudoku grid into a playable puzzle by strategically removing numbers. The algorithm determines which cells to hide, aiming to create a puzzle with a unique solution and a desired level of difficulty. This component is crucial for generating engaging and challenging Sudoku puzzles.
+- **Related Classes/Methods**: `sudokum.method.mask.mask`
 
-### Visual Output Module
-The Visual Output Module is responsible for generating visual representations of Sudoku puzzles. It creates images and PDFs, highlighting the differences between the original and solved states. This module takes a Sudoku grid as input and produces a visual output for display or printing, enhancing the user experience.
-- **Related Classes/Methods**: `src/burnImage/burnSudo2Img.py`
+### Solution Validation
+This component ensures the integrity of the Sudoku puzzles and solutions. It validates Sudoku grids to confirm that they adhere to the fundamental Sudoku rules, verifying the uniqueness and correctness of solutions. This component is essential for guaranteeing the quality and playability of the generated puzzles.
+- **Related Classes/Methods**: `sudokum.checker.check`
+
+### User Interface
+This component provides the interface through which users interact with the Sudoku game. It handles the display of the Sudoku grid, captures user input, and renders the puzzle's state. It allows users to visualize the puzzle, make moves, and experience the puzzle generation and solving processes.
+- **Related Classes/Methods**: `sudokum.method.wave_function_collapse.view.Generation`, `sudokum.method.wave_function_collapse.view.HumanGeneration`, `sudokum.method.wave_function_collapse.view.WaveFunctionCollapseGeneration`, `sudokum.method.wave_function_collapse.view.display`
+
+### Alternative Puzzle Generation (NumPy)
+This component offers an alternative approach to generating Sudoku puzzles, potentially leveraging NumPy for efficient array operations. It provides a different method for puzzle creation compared to the Wave Function Collapse algorithm, offering flexibility and potentially different puzzle characteristics.
+- **Related Classes/Methods**: `sudokum.method.np_union.generate`, `sudokum.method.np_union.solve`
