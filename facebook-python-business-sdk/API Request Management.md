@@ -7,56 +7,47 @@ graph LR
     FacebookAdsApiBatch["FacebookAdsApiBatch"]
     Cursor["Cursor"]
     TypeChecker["TypeChecker"]
-    ObjectParser["ObjectParser"]
-    CrashReporter["CrashReporter"]
+    api_utils["api_utils"]
     FacebookAdsApi -- "initializes" --> FacebookSession
-    FacebookAdsApi -- "creates requests" --> FacebookRequest
-    FacebookAdsApi -- "creates batches" --> FacebookAdsApiBatch
-    FacebookAdsApiBatch -- "executes requests" --> FacebookResponse
-    FacebookAdsApi -- "handles responses" --> FacebookResponse
-    FacebookRequest -- "executes request" --> FacebookResponse
-    FacebookRequest -- "handles pagination" --> Cursor
-    Cursor -- "parses objects" --> ObjectParser
-    FacebookRequest -- "validates types" --> TypeChecker
-    CrashReporter -- "reports crashes" --> FacebookAdsApi
-    CrashReporter -- "reports crashes" --> FacebookSession
-    CrashReporter -- "reports crashes" --> FacebookRequest
+    FacebookAdsApi -- "calls" --> FacebookResponse
+    FacebookAdsApi -- "creates" --> FacebookAdsApiBatch
+    FacebookRequest -- "initializes" --> TypeChecker
+    FacebookRequest -- "initializes" --> FacebookAdsApi
+    FacebookRequest -- "handles files" --> api_utils
+    FacebookRequest -- "executes" --> Cursor
+    FacebookAdsApiBatch -- "executes" --> FacebookResponse
 ```
 
 ## Component Details
 
 ### FacebookSession
-Manages the session with the Facebook API, handling access tokens and app secret proofs. It encapsulates the authentication details required for making API requests, ensuring secure communication with Facebook's servers. It is initialized with the app ID, app secret, and access token.
+Manages the session with the Facebook API, including access token handling, app secret proof generation, and API versioning. It is responsible for initializing the session and providing methods for refreshing the access token. It encapsulates the authentication details and provides a secure context for API interactions.
 - **Related Classes/Methods**: `facebook_business.session.FacebookSession`
 
 ### FacebookAdsApi
-The primary interface for interacting with the Facebook Ads API. It initializes the API with session details obtained from `FacebookSession` and provides methods for creating `FacebookRequest` and `FacebookAdsApiBatch` objects. It acts as the entry point for most API operations.
+The main entry point for interacting with the Facebook Ads API. It handles API initialization, session management, and calling different API endpoints. It also enables crash reporting and handles errors. It acts as a central hub, coordinating requests and responses with the Facebook API.
 - **Related Classes/Methods**: `facebook_business.api.FacebookAdsApi`
 
 ### FacebookRequest
-Represents a single API request to Facebook. It handles the construction of the request, including parameters, file uploads, and execution. It uses `TypeChecker` to validate parameters and `api_utils` for encoding. Upon execution, it receives a `FacebookResponse`.
+Represents a single API request to Facebook. It handles parameter encoding, file uploads, request execution, and error handling. It also interacts with the TypeChecker to validate parameters. It encapsulates the details of a specific API call, ensuring proper formatting and execution.
 - **Related Classes/Methods**: `facebook_business.api.FacebookRequest`
 
 ### FacebookResponse
-Represents the response received from a Facebook API request. It handles error checking, JSON parsing, and returns the data. It is created by `FacebookRequest` after executing the API call and provides the data or error information.
+Represents the response from a Facebook API request. It handles error checking, JSON parsing, and returning the data. It also raises exceptions for API errors. It provides a structured way to access the data returned by the Facebook API, handling potential errors and data transformations.
 - **Related Classes/Methods**: `facebook_business.api.FacebookResponse`
 
 ### FacebookAdsApiBatch
-Enables the execution of multiple API requests in a single batch. It optimizes the process of sending multiple requests to Facebook, reducing overhead. It contains a list of `FacebookRequest` objects and returns a list of `FacebookResponse` objects upon execution.
+Enables batch execution of multiple API requests. It handles adding requests to the batch and executing the batch. It interacts with the FacebookAdsApi to execute the requests. It optimizes API interactions by grouping multiple requests into a single call, improving efficiency.
 - **Related Classes/Methods**: `facebook_business.api.FacebookAdsApiBatch`
 
 ### Cursor
-Handles pagination of API responses, allowing iteration over large datasets. It fetches subsequent pages of data using cursors provided in the API responses. It uses `ObjectParser` to parse the objects in the response.
+Handles pagination of API responses, allowing iteration over large datasets. It fetches the next page of data and parses the objects. It interacts with the ObjectParser to parse the objects. It simplifies the process of retrieving large amounts of data by automatically handling pagination.
 - **Related Classes/Methods**: `facebook_business.api.Cursor`
 
 ### TypeChecker
-Validates the types of parameters passed to the API requests. It ensures that the data being sent to Facebook conforms to the expected types, preventing errors. It is used by `FacebookRequest` before sending the request.
+Validates the types of parameters passed to the API requests. It handles type conversion and raises exceptions for invalid parameter types. It is used by the FacebookRequest to validate parameters. It ensures data integrity by verifying that the parameters passed to the API are of the correct type.
 - **Related Classes/Methods**: `facebook_business.typechecker.TypeChecker`
 
-### ObjectParser
-Parses the JSON responses from the API into Python objects, making the data easier to work with in Python code. It is used by `Cursor` to convert the raw JSON data into usable objects.
-- **Related Classes/Methods**: `facebook_business.adobjects.objectparser.ObjectParser`
-
-### CrashReporter
-Reports crashes and exceptions to Facebook, aiding in debugging and improving the SDK. It is used by `FacebookAdsApi`, `FacebookSession`, and `FacebookRequest` to report any errors encountered during their operation.
-- **Related Classes/Methods**: `facebook_business.crashreporter.CrashReporter`
+### api_utils
+Provides utility functions for the API, such as handling warnings and file uploads. It is used by the FacebookRequest to handle files and parameters. It offers a collection of helper functions that streamline common API tasks.
+- **Related Classes/Methods**: `facebook_business.utils.api_utils`

@@ -1,61 +1,64 @@
 ```mermaid
 graph LR
-    AdObject["AdObject"]
-    AbstractCrudObject["AbstractCrudObject"]
-    FacebookRequest["FacebookRequest"]
     API["API"]
+    FacebookRequest["FacebookRequest"]
     TypeChecker["TypeChecker"]
+    AbstractCrudObject["AbstractCrudObject"]
     ObjectParser["ObjectParser"]
     AdAccount["AdAccount"]
     AdSet["AdSet"]
     Campaign["Campaign"]
-    AbstractCrudObject -- "Base class for" --> AdObject
-    AbstractCrudObject -- "Uses" --> FacebookRequest
-    API -- "Uses" --> FacebookRequest
-    FacebookRequest -- "Validates parameters" --> TypeChecker
-    AdAccount -- "Inherits from" --> AdObject
-    AdSet -- "Inherits from" --> AdObject
-    Campaign -- "Inherits from" --> AdObject
-    AdObject -- "Inherits from" --> AbstractCrudObject
-    AdObject -- "Uses for object parsing" --> ObjectParser
-    AdObject -- "Uses for API requests" --> FacebookRequest
-    AdObject -- "Uses for type validation" --> TypeChecker
+    AdCreative["AdCreative"]
+    Business["Business"]
+    FacebookRequest -- "uses" --> API
+    FacebookRequest -- "validates parameters of" --> TypeChecker
+    AdAccount -- "is a base class of" --> AbstractCrudObject
+    AdSet -- "is a base class of" --> AbstractCrudObject
+    Campaign -- "is a base class of" --> AbstractCrudObject
+    AdCreative -- "is a base class of" --> AbstractCrudObject
+    Business -- "is a base class of" --> AbstractCrudObject
+    AbstractCrudObject -- "parses API responses for" --> ObjectParser
+    AbstractCrudObject -- "makes API calls" --> API
 ```
 
 ## Component Details
 
-### AdObject
-The AdObject class serves as a base class for various Facebook Ads objects, providing common functionalities and attributes. It provides a foundation for interacting with different data entities within the Facebook ecosystem.
-- **Related Classes/Methods**: `facebook_business.adobjects.adobject.AdObject`
-
-### AbstractCrudObject
-Abstract class providing common CRUD (Create, Read, Update, Delete) operations for Facebook objects. It defines the basic interface for managing data entities within the Facebook ecosystem.
-- **Related Classes/Methods**: `facebook_business.adobjects.abstractcrudobject.AbstractCrudObject`
+### API
+The API component is responsible for handling the communication with the Facebook Graph API. It encapsulates the authentication process, constructs the requests, sends them to Facebook, and parses the responses. It provides a low-level interface for interacting with the API.
+- **Related Classes/Methods**: `facebook_business.api.API`
 
 ### FacebookRequest
-Encapsulates a request to the Facebook API, handling parameters, fields, and execution. It's used by other components to interact with the Facebook API, providing a standardized way to send requests and receive responses.
+The FacebookRequest component encapsulates a single request to the Facebook API. It manages the parameters, fields, and HTTP method for the request. It uses the API component to execute the request and handles potential errors or exceptions.
 - **Related Classes/Methods**: `facebook_business.api.FacebookRequest`
 
-### API
-The API module is responsible for making the calls to the Facebook Graph API. It handles authentication, request construction, and response parsing, acting as the primary interface for communicating with the Facebook platform.
-- **Related Classes/Methods**: `facebook_business.api`
-
 ### TypeChecker
-Validates the types of parameters passed to the Facebook API. It ensures that the data being sent to Facebook is of the correct type, maintaining data integrity and preventing errors.
+The TypeChecker component is responsible for validating the data types of parameters passed to the Facebook API. It ensures that the data being sent to Facebook conforms to the expected types, preventing errors and maintaining data integrity. It is used by the FacebookRequest component before sending a request.
 - **Related Classes/Methods**: `facebook_business.typechecker.TypeChecker`
 
+### AbstractCrudObject
+The AbstractCrudObject component is an abstract base class that provides common CRUD (Create, Read, Update, Delete) operations for Facebook objects. It defines the basic structure and methods for interacting with Facebook objects, such as retrieving data, creating new objects, updating existing objects, and deleting objects. Concrete Facebook objects inherit from this class.
+- **Related Classes/Methods**: `facebook_business.adobjects.abstractcrudobject.AbstractCrudObject`
+
 ### ObjectParser
-Parses objects returned from the Facebook API. It transforms the raw data received from Facebook into usable Python objects, facilitating data access and manipulation.
+The ObjectParser component is responsible for parsing the responses received from the Facebook API and converting them into Python objects. It takes the raw JSON data returned by the API and transforms it into instances of the appropriate classes, making it easier to work with the data in Python. It is used by AbstractCrudObject and its subclasses.
 - **Related Classes/Methods**: `facebook_business.adobjects.objectparser.ObjectParser`
 
 ### AdAccount
-Represents a Facebook Ad Account, providing methods to interact with the ad account's data, such as creating, reading, updating, and deleting campaigns, ad sets, and ads.
+The AdAccount component represents a Facebook Ad Account. It inherits from AbstractCrudObject and provides methods for managing ad campaigns, ad sets, ads, and other advertising-related entities within the ad account. It uses the API component to interact with the Facebook API.
 - **Related Classes/Methods**: `facebook_business.adobjects.adaccount.AdAccount`
 
 ### AdSet
-Represents a Facebook Ad Set, providing methods to interact with the ad set's data, such as creating, reading, updating, and deleting ads, and managing targeting and budget.
+The AdSet component represents a Facebook Ad Set. It inherits from AbstractCrudObject and provides methods for managing targeting, budget, and schedule for a group of ads. It uses the API component to interact with the Facebook API.
 - **Related Classes/Methods**: `facebook_business.adobjects.adset.AdSet`
 
 ### Campaign
-Represents a Facebook Campaign, providing methods to interact with the campaign's data, such as creating, reading, updating, and deleting ad sets, and managing campaign objectives and budget.
+The Campaign component represents a Facebook Campaign. It inherits from AbstractCrudObject and provides methods for managing the overall advertising objective and strategy. It uses the API component to interact with the Facebook API.
 - **Related Classes/Methods**: `facebook_business.adobjects.campaign.Campaign`
+
+### AdCreative
+The AdCreative component represents a Facebook Ad Creative. It inherits from AbstractCrudObject and provides methods for managing the visual and textual content of an ad. It uses the API component to interact with the Facebook API.
+- **Related Classes/Methods**: `facebook_business.adobjects.adcreative.AdCreative`
+
+### Business
+The Business component represents a Facebook Business. It inherits from AbstractCrudObject and provides methods for managing business assets, such as ad accounts, pages, and users. It uses the API component to interact with the Facebook API.
+- **Related Classes/Methods**: `facebook_business.adobjects.business.Business`
