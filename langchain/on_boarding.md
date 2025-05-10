@@ -1,76 +1,61 @@
 ```mermaid
 graph LR
-    Language_Model_Abstraction["Language Model Abstraction"]
+    Language_Model_Interface["Language Model Interface"]
     Prompt_Engineering["Prompt Engineering"]
-    Chain_Orchestration["Chain Orchestration"]
-    Knowledge_Retrieval["Knowledge Retrieval"]
-    Vector_Database["Vector Database"]
-    Embedding_Services["Embedding Services"]
-    Tooling["Tooling"]
-    Agent_Framework["Agent Framework"]
-    Callback_System["Callback System"]
-    Chain_Orchestration -- "uses" --> Language_Model_Abstraction
-    Chain_Orchestration -- "uses" --> Prompt_Engineering
-    Chain_Orchestration -- "uses" --> Knowledge_Retrieval
-    Chain_Orchestration -- "uses" --> Tooling
-    Knowledge_Retrieval -- "uses" --> Vector_Database
-    Knowledge_Retrieval -- "uses" --> Embedding_Services
-    Vector_Database -- "uses" --> Embedding_Services
-    Agent_Framework -- "uses" --> Language_Model_Abstraction
-    Agent_Framework -- "uses" --> Tooling
-    Agent_Framework -- "uses" --> Prompt_Engineering
-    Callback_System -- "used by" --> Language_Model_Abstraction
-    Callback_System -- "used by" --> Chain_Orchestration
-    Callback_System -- "used by" --> Knowledge_Retrieval
-    Callback_System -- "used by" --> Vector_Database
-    Callback_System -- "used by" --> Embedding_Services
-    Callback_System -- "used by" --> Agent_Framework
-    Callback_System -- "used by" --> Tooling
-    click Language_Model_Abstraction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Language Model Abstraction.md" "Details"
+    Data_Transformation_and_Structuring["Data Transformation and Structuring"]
+    Knowledge_Management["Knowledge Management"]
+    External_Tool_Integration["External Tool Integration"]
+    Chain_Execution_and_Orchestration["Chain Execution and Orchestration"]
+    Event_Monitoring_and_Control["Event Monitoring and Control"]
+    Language_Model_Interface -- "uses" --> Prompt_Engineering
+    Language_Model_Interface -- "uses" --> Data_Transformation_and_Structuring
+    Chain_Execution_and_Orchestration -- "uses" --> Language_Model_Interface
+    Chain_Execution_and_Orchestration -- "uses" --> Prompt_Engineering
+    Chain_Execution_and_Orchestration -- "uses" --> Data_Transformation_and_Structuring
+    Chain_Execution_and_Orchestration -- "uses" --> Knowledge_Management
+    Chain_Execution_and_Orchestration -- "uses" --> External_Tool_Integration
+    Vector_Store_and_Embedding_Management -- "uses" --> Data_Transformation_and_Structuring
+    Language_Model_Interface -- "integrates" --> External_Tool_Integration
+    Chain_Execution_and_Orchestration -- "uses" --> Event_Monitoring_and_Control
+    Language_Model_Interface -- "uses" --> Event_Monitoring_and_Control
+    Vector_Store_and_Embedding_Management -- "uses" --> Event_Monitoring_and_Control
+    Data_Transformation_and_Structuring -- "uses" --> Event_Monitoring_and_Control
+    Chain_Execution_and_Orchestration -- "uses" --> Event_Monitoring_and_Control
+    click Language_Model_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Language Model Interface.md" "Details"
     click Prompt_Engineering href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Prompt Engineering.md" "Details"
-    click Chain_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Chain Orchestration.md" "Details"
-    click Knowledge_Retrieval href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Knowledge Retrieval.md" "Details"
-    click Vector_Database href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Vector Database.md" "Details"
-    click Embedding_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Embedding Services.md" "Details"
-    click Tooling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Tooling.md" "Details"
-    click Agent_Framework href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Agent Framework.md" "Details"
-    click Callback_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Callback System.md" "Details"
+    click Data_Transformation_and_Structuring href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Data Transformation and Structuring.md" "Details"
+    click Knowledge_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Knowledge Management.md" "Details"
+    click External_Tool_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/External Tool Integration.md" "Details"
+    click Chain_Execution_and_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Chain Execution and Orchestration.md" "Details"
+    click Event_Monitoring_and_Control href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Event Monitoring and Control.md" "Details"
 ```
 
 ## Component Details
 
-### Language Model Abstraction
-This component provides a unified interface for interacting with various language models (LLMs and ChatModels). It handles prompting, generation, and streaming, abstracting away the specifics of each model. It serves as the core for generating responses and interacting with external LLM services.
+### Language Model Interface
+This component provides a unified interface for interacting with various language models, including LLMs and ChatModels. It handles tasks such as generating text from prompts, managing model configurations, and streaming responses. It abstracts away the specific details of each language model provider, allowing the rest of the application to interact with language models in a consistent way.
 - **Related Classes/Methods**: `langchain_core.language_models.base`, `langchain_core.language_models.llms`, `langchain_core.language_models.chat_models`
 
 ### Prompt Engineering
-This component focuses on the creation, formatting, and management of prompts for language models. It includes tools for constructing prompts from strings, messages, and examples, ensuring that the input to the language model is well-structured and effective. It plays a crucial role in guiding the language model to produce the desired output.
+This component is responsible for creating, managing, and formatting prompts that are fed into language models. It includes tools for constructing prompts from templates, incorporating few-shot examples, and creating specialized chat prompts. It ensures that the prompts are well-structured and optimized for the specific language model being used.
 - **Related Classes/Methods**: `langchain_core.prompts.base`, `langchain_core.prompts.prompt`, `langchain_core.prompts.chat`
 
-### Chain Orchestration
-This component defines sequences of calls to language models or other utilities to accomplish complex tasks. Chains manage the flow of data through a series of operations, such as question answering, summarization, or data transformation. It acts as the central coordinator for executing multi-step processes involving language models.
-- **Related Classes/Methods**: `langchain.chains.base`, `langchain.chains.llm`, `langchain.chains.retrieval_qa`
+### Data Transformation and Structuring
+This component focuses on taking the raw output from language models and transforming it into structured data that can be easily used by other parts of the application. It includes parsers for various formats, such as JSON and lists, and provides mechanisms for handling parsing errors and retrying parsing attempts. It ensures that the output from language models is reliable and consistent.
+- **Related Classes/Methods**: `langchain_core.output_parsers.base`, `langchain_core.output_parsers.json`, `langchain_core.output_parsers.list`, `langchain_core.documents.base`, `langchain_core.document_loaders.base`, `langchain_core.document_transformers`
 
-### Knowledge Retrieval
-This component is responsible for fetching relevant documents or data from various sources based on a query. Retrievers connect the language model to external knowledge sources, enabling it to access and incorporate information from vector stores, web APIs, and other data repositories. It provides the language model with the context needed to answer questions or perform tasks effectively.
-- **Related Classes/Methods**: `langchain_core.retrievers.BaseRetriever`, `langchain.retrievers.self_query.base`, `langchain.retrievers.ensemble.EnsembleRetriever`
+### Knowledge Management
+This component provides tools for loading, transforming, and managing documents. It includes document loaders for various file formats and data sources, as well as text splitters for breaking documents into smaller chunks. It also includes document transformers for tasks such as translation and summarization. It serves as the foundation for working with unstructured data in the Langchain framework. It also provides an abstraction for vector stores, which are used to store and retrieve embeddings of documents. It includes implementations for in-memory vector stores and interfaces for connecting to external vector databases. It also manages the creation and retrieval of embeddings using different embedding models. It enables efficient similarity search and retrieval of documents based on their semantic content.
+- **Related Classes/Methods**: `langchain_core.vectorstores.base`, `langchain_core.vectorstores.in_memory`, `langchain_core.embeddings.embeddings`
 
-### Vector Database
-This component stores and searches embeddings of documents, providing efficient similarity search capabilities for retrieving relevant information. Vector stores enable the language model to quickly find and access information that is semantically similar to a given query. It serves as the memory component for retrieving relevant knowledge.
-- **Related Classes/Methods**: `langchain_core.vectorstores.base`, `langchain_core.vectorstores.in_memory`, `langchain.vectorstores.chroma`
+### External Tool Integration
+This component provides an abstraction for tools that can be used by language models to interact with the outside world. It includes base classes for tools and toolkits, as well as tools for interacting with external services, such as search engines and APIs. It allows language models to perform actions and access information beyond their internal knowledge.
+- **Related Classes/Methods**: `langchain_core.tools.base`, `langchain_core.tools.convert`, `langchain_core.tools.retriever`
 
-### Embedding Services
-This component creates numerical representations of text or other data, capturing semantic meaning. Embeddings are used to represent the meaning of text in a way that can be easily compared and searched. It transforms raw text into a format suitable for similarity search and other downstream tasks.
-- **Related Classes/Methods**: `langchain_core.embeddings.embeddings`, `langchain_core.embeddings.fake`, `langchain_openai.embeddings.base`
+### Chain Execution and Orchestration
+This component provides a standard interface for chains, models, and tools, enabling them to be composed together into complex workflows. It includes base classes for runnables and runnable sequences, as well as tools for configuring and executing runnables. It allows developers to create sophisticated applications by combining different Langchain components.
+- **Related Classes/Methods**: `langchain_core.runnables.base`, `langchain_core.runnables.chain`, `langchain_core.runnables.config`
 
-### Tooling
-This component provides a standard interface for tools that agents can use to interact with the outside world. Tools enable the language model to perform actions such as searching the web, accessing files, and interacting with APIs. It extends the capabilities of the language model beyond text generation, allowing it to perform real-world tasks.
-- **Related Classes/Methods**: `langchain_core.tools.base`, `langchain_core.tools.convert`, `langchain.tools.python.tool`
-
-### Agent Framework
-This component uses language models to decide which actions to take, orchestrating the interaction between the language model and external tools. Agents plan, execute actions, and parse outputs to achieve a specific goal. It acts as the brain of the system, making decisions and coordinating the execution of tasks.
-- **Related Classes/Methods**: `langchain_core.agents.AgentAction`, `langchain_core.agents.AgentFinish`, `langchain.agents.agent.Agent`, `langchain.agents.agent.AgentExecutor`
-
-### Callback System
-This component monitors and manages the execution of language model chains and agents, providing a standard interface for logging, tracing, and streaming output. Callbacks enable developers to track the progress of tasks, debug issues, and provide real-time feedback to users. It provides observability and control over the execution of language model workflows.
-- **Related Classes/Methods**: `langchain_core.callbacks.base`, `langchain_core.callbacks.manager`, `langchain_core.callbacks.stdout`
+### Event Monitoring and Control
+This component provides a way to hook into the execution of language model chains and other components. It includes base classes for callback handlers and callback managers, as well as implementations for logging and tracing. It enables developers to monitor and debug Langchain applications, as well as to implement custom logic that is triggered by specific events.
+- **Related Classes/Methods**: `langchain_core.callbacks.base`, `langchain_core.callbacks.manager`

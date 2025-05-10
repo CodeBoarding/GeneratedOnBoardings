@@ -1,52 +1,55 @@
 ```mermaid
 graph LR
-    BasePromptTemplate["BasePromptTemplate"]
-    StringPromptTemplate["StringPromptTemplate"]
     ChatPromptTemplate["ChatPromptTemplate"]
-    PromptValue["PromptValue"]
-    StringPromptValue["StringPromptValue"]
-    ChatPromptValueConcrete["ChatPromptValueConcrete"]
-    BaseOutputParser["BaseOutputParser"]
-    RunnableSerializable["RunnableSerializable"]
-    BasePromptTemplate -- "is base class of" --> StringPromptTemplate
-    BasePromptTemplate -- "is base class of" --> ChatPromptTemplate
-    BasePromptTemplate -- "returns" --> PromptValue
-    PromptValue -- "is implemented by" --> StringPromptValue
-    PromptValue -- "is implemented by" --> ChatPromptValueConcrete
-    BasePromptTemplate -- "has a" --> BaseOutputParser
-    BasePromptTemplate -- "is a" --> RunnableSerializable
+    BaseChatPromptTemplate["BaseChatPromptTemplate"]
+    BaseMessagePromptTemplate["BaseMessagePromptTemplate"]
+    BaseMessage["BaseMessage"]
+    HumanMessagePromptTemplate["HumanMessagePromptTemplate"]
+    PromptTemplate["PromptTemplate"]
+    MessagesPlaceholder["MessagesPlaceholder"]
+    ChatMessagePromptTemplate["ChatMessagePromptTemplate"]
+    ChatPromptTemplate -- "inherits from" --> BaseChatPromptTemplate
+    ChatPromptTemplate -- "uses" --> BaseMessage
+    ChatPromptTemplate -- "uses" --> BaseMessagePromptTemplate
+    BaseChatPromptTemplate -- "inherits from" --> BasePromptTemplate
+    BaseMessagePromptTemplate -- "inherits from" --> BasePromptTemplate
+    HumanMessagePromptTemplate -- "inherits from" --> BaseMessagePromptTemplate
+    HumanMessagePromptTemplate -- "uses" --> PromptTemplate
+    ChatMessagePromptTemplate -- "creates prompts for" --> BaseMessage
+    ChatMessagePromptTemplate -- "inherits from" --> BaseMessagePromptTemplate
+    MessagesPlaceholder -- "used in" --> ChatPromptTemplate
 ```
 
 ## Component Details
 
-### BasePromptTemplate
-Abstract class serving as the foundation for all prompt templates. It defines the core interface for formatting prompts, managing input variables, and handling partial variables. It ensures that all derived prompt templates adhere to a consistent structure and provides common functionalities like validation and serialization. It inherits from `RunnableSerializable` enabling it to be part of a Langchain Runnable sequence.
-- **Related Classes/Methods**: `langchain_core.prompts.base.BasePromptTemplate`
-
-### StringPromptTemplate
-Concrete class that extends `BasePromptTemplate` and represents a prompt as a string. It takes a template string and a list of input variables, and it formats the template string with the input variables to produce a final prompt string. It is commonly used for simple prompts where the language model expects a text-based input.
-- **Related Classes/Methods**: `langchain_core.prompts.prompt.StringPromptTemplate`
-
 ### ChatPromptTemplate
-Concrete class that extends `BasePromptTemplate` and represents a prompt as a list of chat messages. It takes a list of message templates, each of which can be a string or a `BaseMessagePromptTemplate`, and it formats the message templates with the input variables to produce a final list of chat messages. It is designed for chat-based language models that require structured conversations as input.
+A prompt template specifically designed for chat models. It allows creating prompts from a list of messages, each potentially having its own template. It inherits from `BaseChatPromptTemplate` and uses `MessageLike` objects to construct prompts. It provides methods for formatting messages, partial filling of variables, and combining templates.
 - **Related Classes/Methods**: `langchain_core.prompts.chat.ChatPromptTemplate`
 
-### PromptValue
-Represents the final formatted prompt value, encapsulating the result of applying a prompt template with specific inputs. It provides a unified interface for accessing the prompt in different formats, such as a string or a list of messages, making it compatible with various language models and downstream tasks. It is the return type of the `BasePromptTemplate.format_prompt()` method.
-- **Related Classes/Methods**: `langchain_core.prompt_values.PromptValue`
+### BaseChatPromptTemplate
+Abstract class for chat prompt templates. Defines the basic structure and methods for chat prompt templates, such as `format_messages` and `aformat_messages`. It inherits from `BasePromptTemplate`.
+- **Related Classes/Methods**: `langchain_core.prompts.chat.BaseChatPromptTemplate`
 
-### StringPromptValue
-A concrete implementation of `PromptValue` that represents the prompt as a single string. It is commonly used for simple prompts where the language model expects a text-based input. It is returned when a `StringPromptTemplate` is formatted.
-- **Related Classes/Methods**: `langchain_core.prompt_values.StringPromptValue`
+### BaseMessagePromptTemplate
+Abstract class for message prompt templates. Defines the basic structure and methods for message prompt templates.
+- **Related Classes/Methods**: `langchain_core.prompts.message.BaseMessagePromptTemplate`
 
-### ChatPromptValueConcrete
-A concrete implementation of `PromptValue` that represents the prompt as a list of messages. It is designed for chat-based language models that require structured conversations as input. It is returned when a `ChatPromptTemplate` is formatted.
-- **Related Classes/Methods**: `langchain_core.prompt_values.ChatPromptValueConcrete`
+### BaseMessage
+Represents a message in a chat conversation. It serves as a base class for more specific message types like HumanMessage, AIMessage, SystemMessage, FunctionMessage and ToolMessage. These messages are the building blocks for constructing chat prompts.
+- **Related Classes/Methods**: `langchain_core.messages.base.BaseMessage`
 
-### BaseOutputParser
-Abstract class that defines the interface for parsing the output of a language model. It provides methods for extracting structured information from the raw text generated by the model, enabling seamless integration with downstream tasks and applications. It is used by `BasePromptTemplate` to parse the output of the language model.
-- **Related Classes/Methods**: `langchain_core.output_parsers.base.BaseOutputParser`
+### HumanMessagePromptTemplate
+A message prompt template for human messages. It inherits from `BaseMessagePromptTemplate` and is used to create human messages from templates. It uses PromptTemplate to format the content of the human message.
+- **Related Classes/Methods**: `langchain_core.prompts.chat.HumanMessagePromptTemplate`
 
-### RunnableSerializable
-Abstract class that defines the interface for runnable and serializable objects. It provides methods for running and serializing objects, enabling seamless integration with other Langchain components and persistence of objects. `BasePromptTemplate` inherits from it.
-- **Related Classes/Methods**: `langchain_core.runnables.base.RunnableSerializable`
+### PromptTemplate
+A general-purpose prompt template that takes a template string and a set of input variables to generate a prompt. It is used for formatting prompts by substituting variables into a template string.
+- **Related Classes/Methods**: `langchain_core.prompts.prompt.PromptTemplate`
+
+### MessagesPlaceholder
+A placeholder for a list of messages in a chat prompt template. It allows including a variable number of messages in a chat prompt, enabling dynamic insertion of message sequences.
+- **Related Classes/Methods**: `langchain_core.prompts.chat.MessagesPlaceholder`
+
+### ChatMessagePromptTemplate
+A message prompt template for chat messages with a specific role. It inherits from `BaseMessagePromptTemplate` and allows specifying the role of the message (e.g., human, ai, system). It's used to create structured chat messages with defined roles.
+- **Related Classes/Methods**: `langchain_core.prompts.chat.ChatMessagePromptTemplate`
