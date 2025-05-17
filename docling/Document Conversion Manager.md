@@ -1,47 +1,58 @@
 ```mermaid
 graph LR
     DocumentConverter["DocumentConverter"]
-    InputDocument["InputDocument"]
-    BasePipeline["BasePipeline"]
-    ConversionResult["ConversionResult"]
-    AbstractDocumentBackend["AbstractDocumentBackend"]
-    FormatOption["FormatOption"]
-    _DocumentConversionInput["_DocumentConversionInput"]
-    DocumentConverter -- "converts documents" --> InputDocument
-    DocumentConverter -- "executes pipeline" --> BasePipeline
-    DocumentConverter -- "returns conversion result" --> ConversionResult
-    BasePipeline -- "uses document backend" --> AbstractDocumentBackend
-    _DocumentConversionInput -- "defines document limits" --> InputDocument
-    DocumentConverter -- "uses format options" --> FormatOption
-    DocumentConverter -- "creates input document" --> InputDocument
+    Conversion_Pipeline_Execution["Conversion Pipeline Execution"]
+    Format_Option_Handling["Format Option Handling"]
+    Document_Chunking["Document Chunking"]
+    Conversion_Result["Conversion Result"]
+    Error_Handling["Error Handling"]
+    Document_Limits["Document Limits"]
+    Input_Document["Input Document"]
+    Base_Pipeline["Base Pipeline"]
+    DocumentConverter -- "orchestrates" --> Conversion_Pipeline_Execution
+    DocumentConverter -- "uses" --> Format_Option_Handling
+    DocumentConverter -- "uses" --> Document_Limits
+    DocumentConverter -- "uses" --> Input_Document
+    Conversion_Pipeline_Execution -- "executes" --> Base_Pipeline
+    Conversion_Pipeline_Execution -- "returns" --> Conversion_Result
+    Conversion_Pipeline_Execution -- "handles errors" --> Error_Handling
+    DocumentConverter -- "chunkifies document" --> Document_Chunking
 ```
 
 ## Component Details
 
 ### DocumentConverter
-The central component responsible for orchestrating the document conversion process. It receives a document as input, determines its format, selects the appropriate conversion pipeline based on the format, and executes the pipeline. It manages the overall flow of the conversion, handling errors and returning the converted output or any errors encountered.
+The central component responsible for orchestrating the document conversion process. It handles document loading, format detection, pipeline selection, and output generation. It initializes and executes the conversion pipeline, managing document limits and error handling to ensure correct processing and transformation into the desired Docling format.
 - **Related Classes/Methods**: `repos.docling.docling.document_converter.DocumentConverter`
 
-### InputDocument
-Represents the document to be converted, encapsulating its source (path or stream), format, and any specified limits (size, page count). It's created from the initial input and passed to the conversion pipeline. It provides a structured way to access document-related information during the conversion process.
-- **Related Classes/Methods**: `docling.datamodel.document.InputDocument`
+### Conversion Pipeline Execution
+This component focuses on the execution of the selected conversion pipeline. It takes a document and runs it through the pipeline, managing the flow of data and transformations. It also handles potential errors during pipeline execution and returns the conversion result.
+- **Related Classes/Methods**: `repos.docling.docling.document_converter.DocumentConverter:_execute_pipeline`
 
-### BasePipeline
-An abstract base class that defines the interface and common structure for all document conversion pipelines. Concrete pipeline implementations inherit from this class and implement the specific conversion logic for different document formats. It ensures that all pipelines adhere to a consistent structure and provide the necessary methods for conversion.
-- **Related Classes/Methods**: `docling.pipeline.base_pipeline.BasePipeline`
+### Format Option Handling
+This component manages the options for different document formats, including the selection of the appropriate conversion pipeline. It determines which pipeline to use based on the document's format and any specified options, ensuring that the correct pipeline is applied for each document type.
+- **Related Classes/Methods**: `repos.docling.docling.document_converter.FormatOption`, `repos.docling.docling.document_converter.DocumentConverter:_get_pipeline`, `repos.docling.docling.document_converter._get_default_option`
 
-### ConversionResult
-Represents the outcome of the document conversion process. It contains the converted content (e.g., text, images), any errors that occurred during conversion, and timing information. It provides a standardized way to return the results of the conversion, regardless of the specific pipeline used.
+### Document Chunking
+This component is responsible for splitting a document into smaller chunks for processing. It divides the document into manageable pieces for conversion, allowing the system to handle large documents efficiently.
+- **Related Classes/Methods**: `docling.utils.utils.chunkify`
+
+### Conversion Result
+This component represents the outcome of a document conversion, including the converted content, status, and any errors encountered. It encapsulates the result of the conversion process, providing a structured way to access the converted document and any associated information.
 - **Related Classes/Methods**: `docling.datamodel.document.ConversionResult`
 
-### AbstractDocumentBackend
-An abstract base class that defines the interface for document backends. Document backends are responsible for loading and parsing documents of specific formats. Concrete backend implementations inherit from this class and provide the format-specific logic for accessing the document's content and structure.
-- **Related Classes/Methods**: `docling.backend.abstract_backend.AbstractDocumentBackend`
+### Error Handling
+This component manages errors that occur during the document conversion process. It includes the ConversionError exception class, which is raised when an error occurs, and the ErrorItem data model, which provides details about specific errors.
+- **Related Classes/Methods**: `docling.exceptions.ConversionError`, `docling.datamodel.base_models.ErrorItem`
 
-### FormatOption
-A data model that encapsulates the pipeline class and pipeline options for a specific document format. It's used to configure the conversion process for different file types. The DocumentConverter uses FormatOption to select the appropriate pipeline for a given document format.
-- **Related Classes/Methods**: `docling.document_converter.FormatOption`
+### Document Limits
+This component defines the constraints on document size and other parameters. It ensures that the documents being converted adhere to the specified limits, preventing the system from being overloaded or processing excessively large files.
+- **Related Classes/Methods**: `docling.datamodel.settings.DocumentLimits`
 
-### _DocumentConversionInput
-A data model representing the input to the document conversion process. It encapsulates the document source (path or stream) and any associated limits on document size or number of pages. It's used to pass the input parameters to the DocumentConverter.
-- **Related Classes/Methods**: `docling.datamodel.document._DocumentConversionInput`
+### Input Document
+This component represents the document to be converted, including its format and limits. It encapsulates the input document and its associated metadata, providing a structured way to access the document's content and properties.
+- **Related Classes/Methods**: `docling.datamodel.document.InputDocument`
+
+### Base Pipeline
+This component serves as the base class for all conversion pipelines. It defines the basic structure and methods for a conversion pipeline, providing a common interface for all pipeline implementations.
+- **Related Classes/Methods**: `docling.pipeline.base_pipeline.BasePipeline`
