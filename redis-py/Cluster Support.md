@@ -7,52 +7,56 @@ graph LR
     ClusterPipeline["ClusterPipeline"]
     PipelineStrategy["PipelineStrategy"]
     TransactionStrategy["TransactionStrategy"]
-    ClusterMultiKeyCommands["ClusterMultiKeyCommands"]
+    AbstractStrategy["AbstractStrategy"]
     LoadBalancer["LoadBalancer"]
     RedisCluster -- "manages" --> NodesManager
     NodesManager -- "contains" --> ClusterNode
-    RedisCluster -- "uses" --> ClusterPubSub
-    RedisCluster -- "uses" --> ClusterPipeline
+    RedisCluster -- "uses" --> ClusterNode
+    RedisCluster -- "uses" --> NodesManager
+    RedisCluster -- "creates" --> ClusterPubSub
+    RedisCluster -- "creates" --> ClusterPipeline
     ClusterPipeline -- "uses" --> PipelineStrategy
     ClusterPipeline -- "uses" --> TransactionStrategy
-    RedisCluster -- "uses" --> ClusterMultiKeyCommands
+    PipelineStrategy -- "inherits from" --> AbstractStrategy
+    TransactionStrategy -- "inherits from" --> AbstractStrategy
     NodesManager -- "uses" --> LoadBalancer
+    ClusterPipeline -- "uses" --> AbstractStrategy
 ```
 
 ## Component Details
 
 ### RedisCluster
-The RedisCluster class serves as the primary interface for interacting with a Redis Cluster. It encapsulates the complexities of managing connections to multiple Redis nodes, routing commands based on key hashing, and handling cluster topology changes. It provides methods for executing Redis commands, managing pub/sub subscriptions, and performing pipeline operations within the cluster.
+Represents a Redis Cluster client. It handles connection management, command execution, and data sharding across multiple Redis nodes. It initializes and manages the NodesManager, and provides methods for executing commands, creating pipelines, and handling PubSub.
 - **Related Classes/Methods**: `redis.cluster.RedisCluster`, `redis.asyncio.cluster.RedisCluster`
 
 ### NodesManager
-The NodesManager component is responsible for maintaining an up-to-date view of the Redis Cluster topology. It discovers new nodes, monitors the health of existing nodes, and updates the slot distribution map. It also manages the connections to the individual Redis nodes, providing a pool of connections for executing commands.
+Manages the cluster nodes, including discovering, updating, and maintaining information about the nodes in the cluster. It is responsible for node discovery, slot assignment, and connection management. It uses a LoadBalancer to distribute requests among replica nodes.
 - **Related Classes/Methods**: `redis.cluster.NodesManager`, `redis.asyncio.cluster.NodesManager`
 
 ### ClusterNode
-The ClusterNode class represents a single node within the Redis Cluster. It stores information about the node's host, port, and role (primary or replica). It is used by the NodesManager to track the individual nodes in the cluster and their associated connections.
+Represents a single node in the Redis Cluster, storing its host, port, and other relevant information. It provides methods for acquiring connections and executing commands on the node.
 - **Related Classes/Methods**: `redis.cluster.ClusterNode`, `redis.asyncio.cluster.ClusterNode`
 
 ### ClusterPubSub
-The ClusterPubSub class extends the Redis PubSub functionality to support Redis Cluster. It handles the distribution of messages across the cluster nodes, ensuring that subscribers receive messages published to the appropriate channels.
+Implements PubSub functionality for Redis Cluster, allowing clients to subscribe to channels and receive messages. It extends the base PubSub class and adds cluster-specific logic for handling subscriptions and message distribution.
 - **Related Classes/Methods**: `redis.cluster.ClusterPubSub`
 
 ### ClusterPipeline
-The ClusterPipeline class extends the Redis Pipeline functionality to support Redis Cluster. It allows executing multiple commands in a single request, improving performance by reducing network round trips. The pipeline intelligently routes commands to the appropriate nodes based on key hashing.
+Provides pipeline functionality for Redis Cluster, allowing clients to execute multiple commands in a single request. It extends the base Pipeline class and adds cluster-specific logic for command grouping and routing.
 - **Related Classes/Methods**: `redis.cluster.ClusterPipeline`
 
 ### PipelineStrategy
-The PipelineStrategy component is responsible for determining the target nodes for each command in a pipeline and sending the commands to the appropriate nodes. It ensures that commands are executed on the correct nodes based on the key hashing and cluster topology.
+Handles the execution strategy for pipelines, including command grouping and sending commands to the appropriate nodes. It inherits from AbstractStrategy and implements the execute_command method.
 - **Related Classes/Methods**: `redis.cluster.PipelineStrategy`
 
 ### TransactionStrategy
-The TransactionStrategy component handles the execution of transactions in a Redis Cluster. It ensures that all commands in a transaction are executed on the same node, maintaining atomicity and consistency.
+Handles the execution strategy for transactions, ensuring atomicity and consistency across multiple nodes. It inherits from AbstractStrategy and implements the execute_command method.
 - **Related Classes/Methods**: `redis.cluster.TransactionStrategy`
 
-### ClusterMultiKeyCommands
-The ClusterMultiKeyCommands component implements multi-key commands for Redis Cluster. It partitions the keys by slot and executes the commands on the appropriate nodes, handling the complexities of distributing multi-key operations across the cluster.
-- **Related Classes/Methods**: `redis.commands.cluster.ClusterMultiKeyCommands`
+### AbstractStrategy
+Abstract class that defines common methods for PipelineStrategy and TransactionStrategy. It provides a base class for handling command execution in a cluster environment.
+- **Related Classes/Methods**: `redis.cluster.AbstractStrategy`
 
 ### LoadBalancer
-The LoadBalancer component balances the load between replica nodes in a Redis Cluster. It selects the appropriate replica node for read operations, distributing the load and improving performance.
+Distributes requests among replica nodes to improve read performance and availability. It is used by the NodesManager to select the appropriate node for read operations.
 - **Related Classes/Methods**: `redis.cluster.LoadBalancer`
