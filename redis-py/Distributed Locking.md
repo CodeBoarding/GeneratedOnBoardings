@@ -1,68 +1,62 @@
 ```mermaid
 graph LR
     Lock["Lock"]
-    acquire["acquire"]
-    release["release"]
-    extend["extend"]
-    reacquire["reacquire"]
-    do_acquire["do_acquire"]
-    do_release["do_release"]
-    do_extend["do_extend"]
-    do_reacquire["do_reacquire"]
-    Redis_Client["Redis Client"]
-    Lock -- "uses" --> Redis_Client
-    Lock -- "calls" --> acquire
-    Lock -- "calls" --> release
-    Lock -- "calls" --> extend
-    Lock -- "calls" --> reacquire
-    acquire -- "calls" --> do_acquire
-    release -- "calls" --> do_release
-    extend -- "calls" --> do_extend
-    reacquire -- "calls" --> do_reacquire
-    do_acquire -- "uses" --> Redis_Client
-    do_release -- "uses" --> Redis_Client
-    do_extend -- "uses" --> Redis_Client
-    do_reacquire -- "uses" --> Redis_Client
+    AsyncLock["AsyncLock"]
+    Lock_Acquisition["Lock Acquisition"]
+    Lock_Release["Lock Release"]
+    Lock_Extension["Lock Extension"]
+    Lock_Reacquisition["Lock Reacquisition"]
+    LockError["LockError"]
+    LockNotOwnedError["LockNotOwnedError"]
+    Lua_Script_Registration["Lua Script Registration"]
+    AsyncLock -- "inherits from" --> Lock
+    Lock_Acquisition -- "calls" --> Lock_do_acquire
+    Lock_Release -- "calls" --> Lock_do_release
+    Lock_Extension -- "calls" --> Lock_do_extend
+    Lock_Reacquisition -- "calls" --> Lock_do_reacquire
+    Lock_Release -- "raises" --> LockError
+    Lock_Extension -- "raises" --> LockError
+    Lock_Reacquisition -- "raises" --> LockError
+    Lock_do_release -- "raises" --> LockNotOwnedError
+    Lock_do_extend -- "raises" --> LockNotOwnedError
+    Lock_do_reacquire -- "raises" --> LockNotOwnedError
+    Lock -- "uses" --> Lua_Script_Registration
 ```
 
 ## Component Details
 
 ### Lock
-The Lock class provides a distributed locking mechanism using Redis. It allows clients to acquire, release, extend, and reacquire locks, ensuring exclusive access to shared resources. It uses Lua scripts for atomic operations and thread-local storage to manage lock ownership.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock`, `repos.redis-py.redis.asyncio.lock.Lock`
+The Lock class provides a mechanism for acquiring and releasing distributed locks using Redis. It ensures that only one client can hold the lock at a time, preventing race conditions and data corruption. The lock can be used as a context manager using the `with` statement, ensuring that the lock is automatically released when the block is exited. It uses Lua scripts for atomic operations.
+- **Related Classes/Methods**: `redis.lock.Lock`
 
-### acquire
-The acquire method attempts to acquire the lock, blocking until it is obtained or the timeout expires. It internally calls the do_acquire method to perform the actual lock acquisition logic.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock:acquire`, `repos.redis-py.redis.asyncio.lock.Lock:acquire`
+### AsyncLock
+The AsyncLock class is an asynchronous version of the Lock class, designed for use with asyncio. It provides the same functionality as the synchronous Lock but uses asynchronous methods for interacting with Redis. This allows for non-blocking lock acquisition and release in asynchronous applications.
+- **Related Classes/Methods**: `redis.asyncio.lock.Lock`
 
-### release
-The release method releases the lock, allowing other clients to acquire it. It internally calls the do_release method to perform the actual lock release logic and raises a LockNotOwnedError if the lock is not owned by the client.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock:release`, `repos.redis-py.redis.asyncio.lock.Lock:release`
+### Lock Acquisition
+The lock acquisition process involves attempting to obtain the lock using the `acquire` method. This method calls an internal `do_acquire` method, which executes a Lua script on the Redis server to atomically set the lock if it is not already held. The `acquire` method can also block until the lock is acquired or a timeout is reached.
+- **Related Classes/Methods**: `redis.lock.Lock:acquire`, `redis.lock.Lock.do_acquire`
 
-### extend
-The extend method extends the lock's expiration time, preventing it from being automatically released. It internally calls the do_extend method to perform the actual lock extension logic and raises a LockNotOwnedError if the lock is not owned by the client.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock:extend`, `repos.redis-py.redis.asyncio.lock.Lock:extend`
+### Lock Release
+The lock release process involves releasing the lock using the `release` method. This method calls an internal `do_release` method, which executes a Lua script on the Redis server to atomically release the lock only if the client owns it. If the client does not own the lock, a LockNotOwnedError is raised.
+- **Related Classes/Methods**: `redis.lock.Lock:release`, `redis.lock.Lock.do_release`
 
-### reacquire
-The reacquire method reacquires the lock if it has been lost due to expiration or other reasons. It internally calls the do_reacquire method to perform the actual lock reacquisition logic and raises a LockNotOwnedError if the lock is not owned by the client.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock:reacquire`, `repos.redis-py.redis.asyncio.lock.Lock:reacquire`
+### Lock Extension
+The lock extension process involves extending the lock's expiration time using the `extend` method. This method calls an internal `do_extend` method, which executes a Lua script on the Redis server to atomically extend the lock's expiration time only if the client owns it. If the client does not own the lock, a LockNotOwnedError is raised.
+- **Related Classes/Methods**: `redis.lock.Lock:extend`, `redis.lock.Lock.do_extend`
 
-### do_acquire
-The do_acquire method is an internal method that handles the actual lock acquisition logic by interacting with the Redis server.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock:do_acquire`, `repos.redis-py.redis.asyncio.lock.Lock:do_acquire`
+### Lock Reacquisition
+The lock reacquisition process involves reacquiring the lock if it has expired using the `reacquire` method. This method calls an internal `do_reacquire` method, which executes a Lua script on the Redis server to atomically reacquire the lock only if the client owns it. If the client does not own the lock, a LockNotOwnedError is raised.
+- **Related Classes/Methods**: `redis.lock.Lock:reacquire`, `redis.lock.Lock.do_reacquire`
 
-### do_release
-The do_release method is an internal method that handles the actual lock release logic by interacting with the Redis server.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock:do_release`, `repos.redis-py.redis.asyncio.lock.Lock:do_release`
+### LockError
+The LockError exception is raised when there is an error related to the lock, such as failing to acquire the lock or an invalid operation. It serves as a base class for more specific lock-related exceptions.
+- **Related Classes/Methods**: `redis.exceptions.LockError`
 
-### do_extend
-The do_extend method is an internal method that handles the actual lock extension logic by interacting with the Redis server.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock:do_extend`, `repos.redis-py.redis.asyncio.lock.Lock:do_extend`
+### LockNotOwnedError
+The LockNotOwnedError exception is raised when attempting to release, extend, or reacquire a lock that is not currently owned by the client. This ensures that only the client that acquired the lock can perform these operations.
+- **Related Classes/Methods**: `redis.exceptions.LockNotOwnedError`
 
-### do_reacquire
-The do_reacquire method is an internal method that handles the actual lock reacquisition logic by interacting with the Redis server.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock:do_reacquire`, `repos.redis-py.redis.asyncio.lock.Lock:do_reacquire`
-
-### Redis Client
-The Redis client instance is used by the Lock class and its internal methods (do_acquire, do_release, do_extend, do_reacquire) to interact with the Redis server for performing lock operations.
-- **Related Classes/Methods**: `repos.redis-py.redis.lock.Lock`, `repos.redis-py.redis.asyncio.lock.Lock`
+### Lua Script Registration
+The Lua Script Registration component is responsible for registering the Lua scripts used for atomic lock operations with the Redis client. This is done during the Lock object initialization using the `register_scripts` method. Registering the scripts ensures that they are available for use by the lock acquisition, release, extension, and reacquisition processes.
+- **Related Classes/Methods**: `redis.lock.Lock.register_scripts`
