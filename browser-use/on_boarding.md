@@ -2,47 +2,54 @@
 graph LR
     User_Interface["User Interface"]
     Agent_Orchestration["Agent Orchestration"]
-    Browser_Control["Browser Control"]
-    DOM_Parsing["DOM Parsing"]
-    LLM_Communication["LLM Communication"]
-    System_Utilities["System Utilities"]
-    User_Interface -- "Interacts with" --> Agent_Orchestration
-    Agent_Orchestration -- "Orchestrates actions using" --> Browser_Control
-    DOM_Parsing -- "Parses HTML content for" --> Browser_Control
-    LLM_Communication -- "Manages messages for" --> Agent_Orchestration
-    System_Utilities -- "Handles signals for" --> Agent_Orchestration
+    Context_Management["Context Management"]
+    Action_Execution["Action Execution"]
+    Browser_Automation["Browser Automation"]
+    Web_Content_Processing["Web Content Processing"]
+    System_Configuration["System Configuration"]
+    User_Interface -- "interacts with" --> Agent_Orchestration
+    Agent_Orchestration -- "uses" --> Context_Management
+    Agent_Orchestration -- "delegates actions to" --> Action_Execution
+    Action_Execution -- "uses" --> Browser_Automation
+    Browser_Automation -- "relies on" --> Web_Content_Processing
+    User_Interface -- "uses" --> System_Configuration
     click User_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/User Interface.md" "Details"
     click Agent_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Agent Orchestration.md" "Details"
-    click Browser_Control href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Browser Control.md" "Details"
-    click DOM_Parsing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/DOM Parsing.md" "Details"
-    click LLM_Communication href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/LLM Communication.md" "Details"
-    click System_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/System Utilities.md" "Details"
+    click Context_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Context Management.md" "Details"
+    click Action_Execution href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Action Execution.md" "Details"
+    click Browser_Automation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Browser Automation.md" "Details"
+    click Web_Content_Processing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Web Content Processing.md" "Details"
+    click System_Configuration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/System Configuration.md" "Details"
 ```
 
 ## Component Details
 
-The Browser Use project automates web browser interactions using an AI agent. It provides a user interface (both CLI and TUI) for task initiation and monitoring. The agent orchestrates browser actions based on LLM planning, interacting with the browser through a controller service. The system parses web page content to extract relevant information and manages communication with the LLM. Essential utilities handle signals and ensure graceful operation.
+The BrowserUse project automates web browser interactions based on user instructions. It leverages a language model to plan actions, a controller to execute those actions, and Playwright for browser automation. The system provides a command-line interface for users to interact with the agent, view the conversation history, and manage tasks. The core flow involves the user providing a task, the agent planning a series of actions, the controller executing those actions in a browser environment, and the results being presented back to the user.
 
 ### User Interface
-The User Interface component provides multiple ways for users to interact with the Browser Use application. It includes a Command Line Interface (CLI) for configuration and task initiation, and a Textual User Interface (TUI) for visual monitoring and control of the agent's progress. The UI allows users to input tasks, view the agent's actions, and monitor the browser state.
-- **Related Classes/Methods**: `browser-use.browser_use.cli`, `browser-use.browser_use.cli.load_user_config`, `browser-use.browser_use.cli.get_default_config`, `browser-use.browser_use.cli.save_user_config`, `browser-use.browser_use.cli.update_config_with_click_args`, `browser-use.browser_use.cli.textual_interface`, `browser-use.browser_use.cli.main`, `browser-use.browser_use.cli.BrowserUseApp`, `browser-use.browser_use.cli.BrowserUseApp.on_mount`, `browser-use.browser_use.cli.BrowserUseApp.on_input_submitted`, `browser-use.browser_use.cli.BrowserUseApp.update_info_panels`, `browser-use.browser_use.cli.BrowserUseApp.run_task`, `browser-use.browser_use.cli.BrowserUseApp.action_quit`
+The User Interface component provides a command-line interface for users to interact with the BrowserUse application. It handles user input, displays information panels, and manages the execution of tasks. It uses Textual to create a rich terminal UI, allowing users to monitor and control the automated browsing process.
+- **Related Classes/Methods**: `browser_use.cli.BrowserUseApp`, `browser_use.cli:load_user_config`, `browser_use.cli:textual_interface`, `browser_use.cli:main`
 
 ### Agent Orchestration
-The Agent Orchestration component is the core of the application, responsible for planning and executing browser interactions. It uses an LLM to determine the next action based on the current browser state and task objectives. It interacts with the Browser Control component to execute those actions and manages the overall task flow.
-- **Related Classes/Methods**: `browser_use.agent.service.Agent`, `browser_use.agent.service.Agent.add_new_task`, `browser_use.agent.service.Agent.step`, `browser_use.agent.service.Agent.get_next_action`, `browser_use.agent.service.Agent.run`, `browser_use.agent.service.Agent.multi_act`
+The Agent Orchestration component is responsible for planning and executing tasks. It interacts with a language model (LLM) to determine actions, manages the history of actions, and handles errors. It orchestrates the task execution flow by delegating actions to the Action Execution component and managing the conversation with the user through the Message Management component.
+- **Related Classes/Methods**: `browser_use.agent.service.Agent`, `browser_use.agent.service.Agent:add_new_task`, `browser_use.agent.service.Agent:step`, `browser_use.agent.service.Agent:run`, `browser_use.agent.playwright_script_generator.PlaywrightScriptGenerator`
 
-### Browser Control
-The Browser Control component provides an interface for the Agent to interact with the browser. It receives actions from the Agent, translates them into browser commands, and executes them using the Browser Context. It also manages the browser instance and its contexts, providing a controlled environment for the agent's actions.
-- **Related Classes/Methods**: `browser_use.controller.service.Controller`, `browser_use.controller.service.Controller.act`, `browser_use.browser.context.BrowserContext`, `browser_use.browser.context.BrowserContext.navigate_to`, `browser_use.browser.context.BrowserContext.get_state`, `browser_use.browser.context.BrowserContext.execute_javascript`, `browser_use.browser.context.BrowserContext.get_page_html`, `browser_use.browser.browser.Browser`, `browser_use.browser.browser.Browser.new_context`, `browser_use.browser.browser.Browser.close`
+### Context Management
+The Context Management component manages the conversation history between the user and the agent, including input messages, model outputs, and tool messages. It also handles token counting and filtering of sensitive data. It provides a view of the message history for the user interface, ensuring a coherent and secure interaction flow.
+- **Related Classes/Methods**: `browser_use.agent.message_manager.service.MessageManager`, `browser_use.agent.message_manager.views.MessageHistory`
 
-### DOM Parsing
-The DOM Parsing component is responsible for parsing the HTML content of a web page and extracting relevant information, such as clickable elements and text content. It provides methods for constructing a DOM tree and navigating it to identify elements of interest, enabling the agent to understand and interact with web pages effectively.
-- **Related Classes/Methods**: `browser-use.browser_use.dom.service.DomService`, `browser-use.browser_use.dom.service.DomService.get_clickable_elements`, `browser-use.browser_use.dom.service.DomService._build_dom_tree`, `browser-use.browser_use.dom.service.DomService._construct_dom_tree`, `browser-use.browser_use.dom.service.DomService._parse_node`
+### Action Execution
+The Action Execution component is responsible for executing actions determined by the agent. It interacts with the action registry to find and execute the appropriate action. It serves as the bridge between the agent's planned actions and the actual execution of those actions via the Browser Automation Engine.
+- **Related Classes/Methods**: `browser_use.controller.service.Controller`, `browser_use.controller.registry.service.Registry`
 
-### LLM Communication
-The LLM Communication component manages the messages exchanged between the agent and the LLM. It handles token counting, filtering sensitive data, and formatting messages for the LLM to ensure effective communication and prevent information leakage. This component is crucial for the agent's ability to reason and make decisions based on the LLM's output.
-- **Related Classes/Methods**: `browser_use.agent.message_manager.service.MessageManager`, `browser_use.agent.message_manager.service.MessageManager.add_new_task`, `browser_use.agent.message_manager.service.MessageManager.add_state_message`, `browser_use.agent.message_manager.service.MessageManager.add_model_output`, `browser_use.agent.message_manager.service.MessageManager.get_messages`
+### Browser Automation
+The Browser Automation component handles the automation of browser interactions using Playwright. It manages browser contexts, tabs, and page state, and provides methods for navigating, executing JavaScript, and extracting DOM information. It is the core component for interacting with web pages programmatically, enabling the execution of actions planned by the agent.
+- **Related Classes/Methods**: `browser_use.browser.browser.Browser`, `browser_use.browser.context.BrowserContext`
 
-### System Utilities
-The System Utilities component provides essential functionalities such as signal handling, allowing the application to gracefully handle interruptions and exit cleanly. It also includes other utility functions that support the core components, ensuring the stability and reliability of the application.
-- **Related Classes/Methods**: `browser-use.browser_use.utils.SignalHandler`, `browser-use.browser_use.utils.SignalHandler.register`, `browser-use.browser_use.utils.SignalHandler.sigint_handler`, `browser-use.browser_use.utils.SignalHandler.wait_for_resume`
+### Web Content Processing
+The Web Content Processing component provides services for extracting and processing the Document Object Model (DOM) of web pages. It builds DOM trees, identifies clickable elements, and handles cross-origin iframes. It enables the system to understand and interact with the structure of web pages, facilitating targeted actions and information extraction.
+- **Related Classes/Methods**: `browser_use.dom.service.DomService`, `browser_use.dom.views.DOMElementNode`
+
+### System Configuration
+The System Configuration component configures the logging for the application, including setting up rich logging with custom formatters. It also handles signals such as SIGINT (Ctrl+C) to allow for graceful interruption and resumption of tasks, ensuring the application runs smoothly and can be gracefully stopped.
+- **Related Classes/Methods**: `browser_use.logging_config:setup_logging`, `browser_use.browser_use.utils.SignalHandler`

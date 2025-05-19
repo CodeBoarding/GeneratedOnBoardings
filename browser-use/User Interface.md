@@ -1,65 +1,60 @@
 ```mermaid
 graph LR
-    CLI_Entrypoint["CLI Entrypoint"]
-    Configuration_Manager["Configuration Manager"]
-    Textual_Interface_Setup["Textual Interface Setup"]
     BrowserUseApp["BrowserUseApp"]
-    TUI_Event_Handlers["TUI Event Handlers"]
-    Task_Runner["Task Runner"]
-    Rich_Log_Handler["Rich Log Handler"]
-    Browser_Component["Browser Component"]
-    Controller_Service["Controller Service"]
-    Agent_Service["Agent Service"]
-    CLI_Entrypoint -- "calls" --> Configuration_Manager
-    CLI_Entrypoint -- "calls" --> Textual_Interface_Setup
-    Textual_Interface_Setup -- "calls" --> Browser_Component
-    Textual_Interface_Setup -- "calls" --> Controller_Service
-    Textual_Interface_Setup -- "calls" --> BrowserUseApp
-    TUI_Event_Handlers -- "calls" --> Task_Runner
-    Task_Runner -- "calls" --> Agent_Service
-    Rich_Log_Handler -- "uses" --> BrowserUseApp
+    load_user_config["load_user_config"]
+    setup_richlog_logging["setup_richlog_logging"]
+    Event_Handlers_on_mount_on_key_on_input_submitted_["Event Handlers (on_mount, on_key, on_input_submitted)"]
+    UI_Update_update_info_panels_["UI Update (update_info_panels)"]
+    Task_Execution_run_task_["Task Execution (run_task)"]
+    Quit_Action_action_quit_["Quit Action (action_quit)"]
+    textual_interface["textual_interface"]
+    main["main"]
+    main -- "initializes" --> textual_interface
+    main -- "loads" --> load_user_config
+    textual_interface -- "creates" --> BrowserUseApp
+    BrowserUseApp -- "calls" --> setup_richlog_logging
+    BrowserUseApp -- "handles" --> Event_Handlers_on_mount_on_key_on_input_submitted_
+    BrowserUseApp -- "updates" --> UI_Update_update_info_panels_
+    BrowserUseApp -- "runs" --> Task_Execution_run_task_
+    BrowserUseApp -- "handles" --> Quit_Action_action_quit_
 ```
 
 ## Component Details
 
-The User Interface component provides a way for users to interact with the Browser Use application. It encompasses both a Command Line Interface (CLI) and a Textual User Interface (TUI). The CLI handles configuration loading, updating, and saving, while the TUI provides a visual interface for monitoring and controlling the agent's progress. Users can input tasks, view agent actions, and monitor the browser state through the TUI.
-
-### CLI Entrypoint
-The `browser_use.cli:main` function serves as the entry point for the command-line interface. It orchestrates the loading of user configurations, updates these configurations based on command-line arguments, saves the updated configuration, and then initiates the Textual User Interface (TUI).
-- **Related Classes/Methods**: `browser-use.browser_use.cli`
-
-### Configuration Manager
-This component, consisting of `browser_use.cli:load_user_config` and `browser_use.cli:save_user_config`, handles the loading and saving of user configurations. It loads configurations from a file, or defaults if the file doesn't exist, and saves updated configurations back to the file.
-- **Related Classes/Methods**: `browser-use.browser_use.cli`
-
-### Textual Interface Setup
-The `browser_use.cli:textual_interface` function is responsible for setting up and running the Textual User Interface (TUI). It initializes the Browser, Controller, and BrowserUseApp components, effectively launching the TUI application.
-- **Related Classes/Methods**: `browser-use.browser_use.cli`
+The User Interface component provides a command-line interface for users to interact with the BrowserUse application. It initializes the application, loads user configurations, sets up logging, manages the textual UI, handles user input, executes tasks, and updates the UI with real-time feedback. The component uses Textual to create a rich terminal UI, allowing users to monitor and control the automated browsing process.
 
 ### BrowserUseApp
-The `browser_use.cli.BrowserUseApp` class is the core of the Textual User Interface (TUI). It manages user input, updates the display, and orchestrates task execution. It contains the main layout and functionality of the TUI, providing a visual representation of the application's state and allowing users to interact with it.
-- **Related Classes/Methods**: `browser-use.browser_use.cli`
+The main application class, extending Textual's App, manages the textual interface, user interactions, and task execution. It initializes the UI, sets up logging using `setup_richlog_logging`, and defines event handlers for user input, such as `on_mount`, `on_key`, and `on_input_submitted`. It also includes methods for updating the UI (`update_info_panels`), running tasks (`run_task`), and handling the quit action (`action_quit`).
+- **Related Classes/Methods**: `browser_use.cli.BrowserUseApp`
 
-### TUI Event Handlers
-This component includes `browser_use.cli.BrowserUseApp:on_mount` and `browser_use.cli.BrowserUseApp:on_input_submitted`. `on_mount` sets up the rich logging and updates the info panels when the application is mounted. `on_input_submitted` handles user input submitted through the Textual interface, saves the user configuration, and initiates task execution.
-- **Related Classes/Methods**: `browser-use.browser_use.cli`
+### load_user_config
+This component is responsible for loading the user configuration from a specified file or using default settings. The configuration dictates the application's behavior, including task definitions and browser settings. It ensures that the application starts with the correct parameters and task specifications.
+- **Related Classes/Methods**: `browser_use.cli:load_user_config`
 
-### Task Runner
-The `browser_use.cli.BrowserUseApp:run_task` function is responsible for running tasks using the agent service. It interacts with the Agent to add and run the task, updating the info panels and hiding the intro panels.
-- **Related Classes/Methods**: `browser-use.browser_use.cli`
+### setup_richlog_logging
+Configures rich logging for the application, enabling detailed logging of events and errors to a file. This aids in debugging and monitoring the application's behavior by providing a comprehensive record of application events.
+- **Related Classes/Methods**: `browser_use.cli.BrowserUseApp:setup_richlog_logging`
 
-### Rich Log Handler
-The `browser_use.cli.RichLogHandler` is a custom logging handler that redirects logs to a RichLog widget within the Textual UI. This enables the application to display logs directly within the TUI, providing real-time feedback on the application's operations.
-- **Related Classes/Methods**: `browser-use.browser_use.cli`
+### Event Handlers (on_mount, on_key, on_input_submitted)
+These event handlers manage user interactions and application lifecycle events. `on_mount` performs initial UI setup, `on_key` handles key presses (e.g., 'q' to quit), and `on_input_submitted` processes user input to initiate actions.
+- **Related Classes/Methods**: `browser_use.cli.BrowserUseApp:on_mount`, `browser_use.cli.BrowserUseApp:on_key`, `browser_use.cli.BrowserUseApp:on_input_submitted`
 
-### Browser Component
-The `browser_use.browser.browser.Browser` component is responsible for interacting with the web browser. It provides the functionality for the agent to perform tasks within the browser environment.
-- **Related Classes/Methods**: `browser-use.browser.browser`
+### UI Update (update_info_panels)
+Updates the information panels in the UI with relevant data, such as task status and browser information. This provides real-time feedback to the user, allowing them to monitor the progress and state of the application.
+- **Related Classes/Methods**: `browser_use.cli.BrowserUseApp:update_info_panels`
 
-### Controller Service
-The `browser_use.controller.service.Controller` service provides control and coordination between the agent and the browser. It manages the interaction between these two components, ensuring smooth task execution.
-- **Related Classes/Methods**: `browser-use.controller.service`
+### Task Execution (run_task)
+Executes a specific task based on user input or configuration. This involves interacting with the browser automation component to perform actions such as navigating to URLs and filling out forms. It is the core functionality for automating browser interactions.
+- **Related Classes/Methods**: `browser_use.cli.BrowserUseApp:run_task`
 
-### Agent Service
-The `browser_use.agent.service.Agent` service is responsible for managing and running tasks. It interacts with the browser and controller components to execute tasks and achieve the desired outcome.
-- **Related Classes/Methods**: `browser-use.agent.service`
+### Quit Action (action_quit)
+Handles the quit action of the application, gracefully shutting down the UI and any running tasks. This ensures a clean exit from the application, preventing any resource leaks or incomplete operations.
+- **Related Classes/Methods**: `browser_use.cli.BrowserUseApp:action_quit`
+
+### textual_interface
+Sets up the Textual interface and initializes the BrowserUseApp. This function is responsible for creating the application instance and starting the Textual event loop, which drives the UI and handles user interactions.
+- **Related Classes/Methods**: `browser_use.cli:textual_interface`
+
+### main
+The main entry point of the application. It parses command-line arguments, loads the user configuration using `load_user_config`, sets up the textual interface using `textual_interface`, and starts the application. It orchestrates the initial setup and execution of the application.
+- **Related Classes/Methods**: `browser_use.cli:main`
