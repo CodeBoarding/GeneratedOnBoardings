@@ -1,53 +1,38 @@
 ```mermaid
 graph LR
-    FacebookSession["FacebookSession"]
     FacebookAdsApi["FacebookAdsApi"]
     FacebookRequest["FacebookRequest"]
     FacebookResponse["FacebookResponse"]
     FacebookAdsApiBatch["FacebookAdsApiBatch"]
     Cursor["Cursor"]
-    TypeChecker["TypeChecker"]
-    api_utils["api_utils"]
-    FacebookAdsApi -- "initializes" --> FacebookSession
-    FacebookAdsApi -- "calls" --> FacebookResponse
+    FacebookAdsApi -- "creates" --> FacebookRequest
     FacebookAdsApi -- "creates" --> FacebookAdsApiBatch
-    FacebookRequest -- "initializes" --> TypeChecker
-    FacebookRequest -- "initializes" --> FacebookAdsApi
-    FacebookRequest -- "handles files" --> api_utils
-    FacebookRequest -- "executes" --> Cursor
+    FacebookRequest -- "executes" --> FacebookResponse
+    FacebookAdsApiBatch -- "adds" --> FacebookRequest
     FacebookAdsApiBatch -- "executes" --> FacebookResponse
+    Cursor -- "uses" --> FacebookResponse
 ```
 
 ## Component Details
 
-### FacebookSession
-Manages the session with the Facebook API, including access token handling, app secret proof generation, and API versioning. It is responsible for initializing the session and providing methods for refreshing the access token. It encapsulates the authentication details and provides a secure context for API interactions.
-- **Related Classes/Methods**: `facebook_business.session.FacebookSession`
+The API Request Management subsystem is responsible for handling communication with the Facebook Marketing API. It provides a structured way to create, execute, and manage API requests, including support for batch operations and pagination. The core components work together to abstract the complexities of the API, offering a simplified interface for developers to interact with various API endpoints and retrieve data efficiently.
 
 ### FacebookAdsApi
-The main entry point for interacting with the Facebook Ads API. It handles API initialization, session management, and calling different API endpoints. It also enables crash reporting and handles errors. It acts as a central hub, coordinating requests and responses with the Facebook API.
+The FacebookAdsApi class serves as the primary entry point for interacting with the Facebook Ads API. It initializes the API context with access token and app secret, and provides methods for creating and executing API requests. It also supports creating batch requests for improved efficiency.
 - **Related Classes/Methods**: `facebook_business.api.FacebookAdsApi`
 
 ### FacebookRequest
-Represents a single API request to Facebook. It handles parameter encoding, file uploads, request execution, and error handling. It also interacts with the TypeChecker to validate parameters. It encapsulates the details of a specific API call, ensuring proper formatting and execution.
+The FacebookRequest class represents a single API request to the Facebook Marketing API. It encapsulates the request parameters, fields, and files, and provides methods for building the request payload and executing the request. It returns a FacebookResponse object containing the API response data.
 - **Related Classes/Methods**: `facebook_business.api.FacebookRequest`
 
 ### FacebookResponse
-Represents the response from a Facebook API request. It handles error checking, JSON parsing, and returning the data. It also raises exceptions for API errors. It provides a structured way to access the data returned by the Facebook API, handling potential errors and data transformations.
+The FacebookResponse class represents the response received from a Facebook API request. It provides methods for checking the success or failure of the request, accessing the response data, and handling errors. It parses the JSON response from the API and provides access to the data and error details.
 - **Related Classes/Methods**: `facebook_business.api.FacebookResponse`
 
 ### FacebookAdsApiBatch
-Enables batch execution of multiple API requests. It handles adding requests to the batch and executing the batch. It interacts with the FacebookAdsApi to execute the requests. It optimizes API interactions by grouping multiple requests into a single call, improving efficiency.
+The FacebookAdsApiBatch class represents a batch of API requests that can be executed together in a single API call. It allows adding multiple FacebookRequest objects to the batch and executing them as a single unit, improving efficiency by reducing the number of HTTP requests. It returns a list of FacebookResponse objects, one for each request in the batch.
 - **Related Classes/Methods**: `facebook_business.api.FacebookAdsApiBatch`
 
 ### Cursor
-Handles pagination of API responses, allowing iteration over large datasets. It fetches the next page of data and parses the objects. It interacts with the ObjectParser to parse the objects. It simplifies the process of retrieving large amounts of data by automatically handling pagination.
+The Cursor class handles pagination of API responses. It allows iterating through multiple pages of results returned by the Facebook Marketing API. It fetches the next page of data from the API and provides an iterator interface for accessing the results, simplifying the process of retrieving large datasets.
 - **Related Classes/Methods**: `facebook_business.api.Cursor`
-
-### TypeChecker
-Validates the types of parameters passed to the API requests. It handles type conversion and raises exceptions for invalid parameter types. It is used by the FacebookRequest to validate parameters. It ensures data integrity by verifying that the parameters passed to the API are of the correct type.
-- **Related Classes/Methods**: `facebook_business.typechecker.TypeChecker`
-
-### api_utils
-Provides utility functions for the API, such as handling warnings and file uploads. It is used by the FacebookRequest to handle files and parameters. It offers a collection of helper functions that streamline common API tasks.
-- **Related Classes/Methods**: `facebook_business.utils.api_utils`
