@@ -6,55 +6,61 @@ graph LR
     acquire_token_by_authorization_code["acquire_token_by_authorization_code"]
     acquire_token_silent["acquire_token_silent"]
     acquire_token_by_refresh_token["acquire_token_by_refresh_token"]
+    acquire_token_for_client["acquire_token_for_client"]
+    acquire_token_on_behalf_of["acquire_token_on_behalf_of"]
     get_accounts["get_accounts"]
     remove_account["remove_account"]
-    initiate_device_flow["initiate_device_flow"]
     PublicClientApplication -- "is a" --> ClientApplication
     ConfidentialClientApplication -- "is a" --> ClientApplication
-    ClientApplication -- "acquires token using" --> acquire_token_by_authorization_code
-    ClientApplication -- "acquires token silently using" --> acquire_token_silent
-    ClientApplication -- "acquires token using" --> acquire_token_by_refresh_token
-    ClientApplication -- "manages" --> get_accounts
-    ClientApplication -- "manages" --> remove_account
-    PublicClientApplication -- "initiates" --> initiate_device_flow
+    ClientApplication -- "uses" --> acquire_token_by_authorization_code
+    ClientApplication -- "uses" --> acquire_token_silent
+    ClientApplication -- "uses" --> acquire_token_by_refresh_token
+    ConfidentialClientApplication -- "uses" --> acquire_token_for_client
+    ConfidentialClientApplication -- "uses" --> acquire_token_on_behalf_of
+    ClientApplication -- "uses" --> get_accounts
+    ClientApplication -- "uses" --> remove_account
 ```
 
 ## Component Details
 
-The MSAL Python library provides authentication and authorization services for applications accessing Microsoft cloud resources. The core functionality revolves around the `ClientApplication` class and its subclasses (`PublicClientApplication`, `ConfidentialClientApplication`), which manage the application's lifecycle, configuration, and token acquisition/renewal. Different authentication flows are supported, including authorization code, silent acquisition, refresh token, username/password (discouraged), client credentials, and on-behalf-of flows. The library also handles account management (listing and removal) and device flow for headless devices. It simplifies the process of integrating with Azure Active Directory and other Microsoft identity platforms.
+The MSAL Python library provides authentication and authorization services for applications interacting with Microsoft identity platform. The core functionality revolves around the `ClientApplication` class, which serves as the main entry point for developers. It supports different client types like `PublicClientApplication` for desktop/mobile apps and `ConfidentialClientApplication` for web apps/services. The library offers methods to acquire tokens using various flows such as authorization code flow, silent token acquisition, refresh token flow, client credentials flow, and on-behalf-of flow. It also provides functionalities for managing user accounts and interacting with the token cache.
 
 ### ClientApplication
-The base class for client applications, providing common functionality for token acquisition and management. It handles authority configuration, telemetry, and client building. It defines the common interface and logic for acquiring tokens and managing accounts, serving as the foundation for more specialized client types.
-- **Related Classes/Methods**: `msal.application.ClientApplication`
+The central class for managing authentication and authorization. It handles the lifecycle of client applications, manages token acquisition, account management, and interacts with the token cache and broker. It serves as the base class for PublicClientApplication and ConfidentialClientApplication.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication`
 
 ### PublicClientApplication
-Represents a public client application (e.g., a desktop or mobile app) that can acquire tokens on behalf of a user. It supports interactive authentication and device flow. It extends the `ClientApplication` class with specific methods for handling public client scenarios, such as interactive login and device code flow.
-- **Related Classes/Methods**: `msal.application.PublicClientApplication`
+A subclass of ClientApplication designed for public client applications (e.g., desktop or mobile apps). It supports interactive authentication flows and device code flow, where the client secret cannot be securely stored.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.PublicClientApplication`
 
 ### ConfidentialClientApplication
-Represents a confidential client application (e.g., a web app or service) that can securely store a client secret. It supports client credentials flow and on-behalf-of flow. It extends the `ClientApplication` class with methods tailored for confidential client scenarios, such as acquiring tokens using client credentials or acting on behalf of a user.
-- **Related Classes/Methods**: `msal.application.ConfidentialClientApplication`
+A subclass of ClientApplication tailored for confidential client applications (e.g., web apps or services). It supports client credentials flow and on-behalf-of flow, where the client secret can be securely stored securely on the server-side.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ConfidentialClientApplication`
 
 ### acquire_token_by_authorization_code
-Acquires a token using an authorization code obtained from an authorization server. This is a standard OAuth 2.0 flow, where the application redirects the user to the authorization server, receives an authorization code, and then exchanges it for an access token.
-- **Related Classes/Methods**: `msal.application.ClientApplication:acquire_token_by_authorization_code`
+Acquires a token using the authorization code flow. This method is called after the user has granted consent and the application has received an authorization code from the authorization server.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication:acquire_token_by_authorization_code`, `microsoft-authentication-library-for-python.msal.application.ClientApplication:acquire_token_by_auth_code_flow`
 
 ### acquire_token_silent
-Attempts to acquire a token silently, without user interaction, using cached tokens or refresh tokens. This method checks the cache for valid tokens and, if none are found, attempts to use a refresh token to obtain a new access token without prompting the user.
-- **Related Classes/Methods**: `msal.application.ClientApplication:acquire_token_silent`
+Acquires a token silently from the cache or by refreshing the token if necessary. This method attempts to acquire a token without user interaction, checking the cache for valid tokens and refreshing them if needed.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication:acquire_token_silent`, `microsoft-authentication-library-for-python.msal.application.ClientApplication:_acquire_token_silent_with_error`, `microsoft-authentication-library-for-python.msal.application.ClientApplication:_acquire_token_silent_from_cache_and_possibly_refresh_it`
 
 ### acquire_token_by_refresh_token
-Acquires a new access token using a refresh token. This allows the application to maintain long-term access without requiring the user to re-authenticate. Refresh tokens are typically long-lived and can be used to obtain new access tokens as needed.
-- **Related Classes/Methods**: `msal.application.ClientApplication:acquire_token_by_refresh_token`
+Acquires a new access token using a refresh token. This allows the application to obtain a new token without requiring the user to re-authenticate, using the refresh token obtained during a previous authentication flow.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication:acquire_token_by_refresh_token`
+
+### acquire_token_for_client
+Acquires a token for a client application using client credentials. This is typically used in service-to-service authentication scenarios, where the application authenticates itself using its own credentials.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ConfidentialClientApplication:acquire_token_for_client`, `microsoft-authentication-library-for-python.msal.application.ConfidentialClientApplication:_acquire_token_for_client`
+
+### acquire_token_on_behalf_of
+Acquires a token on behalf of a user, using a user assertion (e.g., a SAML token). This is used in scenarios where a service needs to act on behalf of a user, delegating the user's identity to the service.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ConfidentialClientApplication:acquire_token_on_behalf_of`
 
 ### get_accounts
-Retrieves a list of accounts that are currently signed in. This method allows the application to enumerate the accounts for which it has tokens in the cache, enabling scenarios such as displaying a list of signed-in users or allowing the user to switch between accounts.
-- **Related Classes/Methods**: `msal.application.ClientApplication:get_accounts`
+Retrieves a list of accounts from the token cache. This allows the application to enumerate the accounts that are currently signed in.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication:get_accounts`
 
 ### remove_account
-Removes an account from the cache, effectively signing the user out. This method deletes the tokens associated with a specific account from the cache, requiring the user to re-authenticate the next time the application needs to access resources on their behalf.
-- **Related Classes/Methods**: `msal.application.ClientApplication:remove_account`
-
-### initiate_device_flow
-Initiates the device code flow, which allows users to authenticate on devices without a browser. This method generates a device code and verification URI, which the user can use to authenticate on a separate device with a browser.
-- **Related Classes/Methods**: `msal.application.PublicClientApplication:initiate_device_flow`
+Removes an account from the token cache. This allows the application to sign out a user and remove their credentials from the cache.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication:remove_account`

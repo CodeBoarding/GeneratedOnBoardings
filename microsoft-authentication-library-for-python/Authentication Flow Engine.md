@@ -3,41 +3,42 @@ graph LR
     ClientApplication["ClientApplication"]
     PublicClientApplication["PublicClientApplication"]
     ConfidentialClientApplication["ConfidentialClientApplication"]
-    oauth2cli_oauth2_Client["oauth2cli.oauth2.Client"]
-    oauth2cli_oidc_Client["oauth2cli.oidc.Client"]
-    ManagedIdentityClient["ManagedIdentityClient"]
+    OAuth2_Client["OAuth2 Client"]
+    TokenCache["TokenCache"]
+    AuthorityResolver["AuthorityResolver"]
     PublicClientApplication -- "inherits from" --> ClientApplication
     ConfidentialClientApplication -- "inherits from" --> ClientApplication
-    oauth2cli_oidc_Client -- "extends" --> oauth2cli_oauth2_Client
-    ClientApplication -- "uses" --> oauth2cli_oauth2_Client
-    ClientApplication -- "uses" --> oauth2cli_oidc_Client
-    ManagedIdentityClient -- "inherits from" --> ClientApplication
+    ClientApplication -- "uses" --> OAuth2_Client
+    PublicClientApplication -- "uses" --> OAuth2_Client
+    ConfidentialClientApplication -- "uses" --> OAuth2_Client
+    ClientApplication -- "uses" --> TokenCache
+    ClientApplication -- "uses" --> AuthorityResolver
 ```
 
 ## Component Details
 
-The Authentication Flow Engine orchestrates the acquisition of tokens using various authentication flows supported by MSAL. It encompasses the logic for handling authorization code, device code, username/password, and refresh token flows. The engine interacts with the Token Cache for storing and retrieving tokens and the Authority Resolver for validating the authority. It uses different client application types (Public, Confidential, Managed Identity) to initiate and execute the appropriate flow based on the application's environment and security requirements. The engine relies on the oauth2cli library for core OAuth 2.0 protocol interactions.
+The Authentication Flow Engine orchestrates the acquisition of tokens using various authentication flows supported by MSAL. It manages the interaction between different components like ClientApplication, OAuth2 Client, Token Cache, and Authority Resolver to execute these flows, acquire tokens, and handle the complexities of the authentication process. The engine supports flows like authorization code flow, device flow, username/password flow, and refresh token flow, ensuring a consistent and secure authentication experience.
 
 ### ClientApplication
-The base class providing common functionality for acquiring tokens, including token caching, authority validation, and request construction. It serves as the foundation for PublicClientApplication and ConfidentialClientApplication.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication`
+Abstract base class that manages common token acquisition logic, including authority management, telemetry, account finding, and silent token acquisition. It orchestrates the overall authentication process and serves as the foundation for PublicClientApplication and ConfidentialClientApplication.
+- **Related Classes/Methods**: `msal.application.ClientApplication`
 
 ### PublicClientApplication
-A client application type designed for devices or browsers where client secrets cannot be safely stored. It supports interactive authentication flows like authorization code flow with PKCE and device code flow.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.PublicClientApplication`
+Represents a client application running on a device or desktop. It provides methods for interactive authentication and device flow authentication, inheriting from ClientApplication and implementing specific flows tailored for public clients.
+- **Related Classes/Methods**: `msal.application.PublicClientApplication`
 
 ### ConfidentialClientApplication
-A client application type suitable for server-side applications where client secrets can be securely stored. It supports client credentials flow and other flows appropriate for server-side authentication.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ConfidentialClientApplication`
+Represents a client application running on a server. It provides methods for acquiring tokens using client credentials and on-behalf-of flows. Inheriting from ClientApplication, it implements flows specific to confidential clients.
+- **Related Classes/Methods**: `msal.application.ConfidentialClientApplication`
 
-### oauth2cli.oauth2.Client
-A client class that handles the core OAuth 2.0 protocol interactions, such as building authorization request URIs and obtaining tokens from the token endpoint.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.oauth2cli.oauth2.Client`
+### OAuth2 Client
+Handles low-level OAuth 2.0 protocol interactions. It provides methods for building authorization request URIs, obtaining tokens by various grant types, and managing token requests and responses. It interacts with the authentication server to exchange credentials for tokens.
+- **Related Classes/Methods**: `msal.oauth2cli.oauth2.Client`
 
-### oauth2cli.oidc.Client
-Extends the oauth2.Client to support OpenID Connect (OIDC) specific features, such as handling ID tokens and userinfo endpoint.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.oauth2cli.oidc.Client`
+### TokenCache
+Persists and retrieves tokens, refresh tokens, and other authentication data. It ensures tokens are reused when possible and handles token expiration. It interacts with ClientApplication to store and retrieve tokens.
+- **Related Classes/Methods**: `msal.token_cache`
 
-### ManagedIdentityClient
-A client for acquiring tokens using managed identities, which are identities managed by Azure for applications running in Azure environments.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.managed_identity.ManagedIdentityClient`
+### AuthorityResolver
+Resolves the authority URL and validates the authority configuration. It ensures the application is communicating with a trusted authority. It interacts with ClientApplication to validate the authority.
+- **Related Classes/Methods**: `msal.authority`

@@ -2,45 +2,42 @@
 graph LR
     ThrottledHttpClientBase["ThrottledHttpClientBase"]
     ThrottledHttpClient["ThrottledHttpClient"]
+    _ThrottledHttpClient["_ThrottledHttpClient"]
+    HttpClient_oauth2cli_["HttpClient (oauth2cli)"]
     RetryAfterParser["RetryAfterParser"]
     NormalizedResponse["NormalizedResponse"]
-    HttpClient_msal_oauth2cli_http_["HttpClient (msal.oauth2cli.http)"]
-    _ThrottledHttpClient_msal_managed_identity_["_ThrottledHttpClient (msal.managed_identity)"]
     ThrottledHttpClient -- "inherits from" --> ThrottledHttpClientBase
     ThrottledHttpClientBase -- "uses" --> RetryAfterParser
     ThrottledHttpClientBase -- "uses" --> NormalizedResponse
-    ThrottledHttpClientBase -- "uses" --> HttpClient_msal_oauth2cli_http_
-    ThrottledHttpClient -- "uses" --> RetryAfterParser
-    ThrottledHttpClient -- "uses" --> NormalizedResponse
-    _ThrottledHttpClient_msal_managed_identity_ -- "inherits from" --> ThrottledHttpClient
-    _ThrottledHttpClient_msal_managed_identity_ -- "uses" --> RetryAfterParser
-    _ThrottledHttpClient_msal_managed_identity_ -- "uses" --> NormalizedResponse
+    ThrottledHttpClient -- "sends requests with" --> NormalizedResponse
+    _ThrottledHttpClient -- "sends requests with" --> NormalizedResponse
+    HttpClient_oauth2cli_ -- "sends requests with" --> NormalizedResponse
 ```
 
 ## Component Details
 
-The Network Communication Handler ensures reliable communication with the Microsoft identity platform by managing HTTP requests with throttling and retry logic. It normalizes responses, parses 'Retry-After' headers, and provides a consistent interface for making HTTP requests, handling potential errors, and optimizing performance. The core components work together to provide a robust and resilient communication layer for the library, especially in scenarios where throttling is expected.
+The Network Communication Handler in MSAL Python provides a robust and reliable mechanism for sending HTTP requests to the Microsoft identity platform. It incorporates throttling and retry logic to handle rate limiting and transient errors, ensuring that authentication and authorization requests are completed successfully. The core of this handler is the ThrottledHttpClient, which manages the underlying HTTP connections, retries requests based on Retry-After headers, and normalizes responses for consistent error handling. It also includes specialized clients for managed identity scenarios and a basic HTTP client for OAuth 2.0 flows.
 
 ### ThrottledHttpClientBase
-This abstract base class defines the interface for HTTP clients that implement throttling logic. It outlines the methods for handling HTTP requests and managing retries based on server-side throttling signals. It serves as a blueprint for concrete throttled HTTP client implementations.
+Abstract base class defining the interface for throttled HTTP clients. It provides common functionality for handling retry-after headers and managing request retries, setting the foundation for concrete implementations.
 - **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.throttled_http_client.ThrottledHttpClientBase`
 
 ### ThrottledHttpClient
-This class implements the ThrottledHttpClientBase and provides a concrete implementation for handling throttled HTTP requests. It incorporates retry mechanisms based on the 'Retry-After' header, allowing the client to automatically retry requests after a specified delay. It builds upon the base class to provide a functional throttled HTTP client.
+Concrete implementation of a throttled HTTP client, inheriting from ThrottledHttpClientBase. It uses the requests library to make HTTP requests and implements retry logic based on Retry-After headers.
 - **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.throttled_http_client.ThrottledHttpClient`
 
+### _ThrottledHttpClient
+A specialized throttled HTTP client tailored for managed identity scenarios. It likely incorporates specific logic or configurations optimized for managed identity authentication.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.managed_identity._ThrottledHttpClient`
+
+### HttpClient (oauth2cli)
+A basic HTTP client used within the oauth2cli component for OAuth 2.0 flows. It provides simple GET and POST request functionality.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.oauth2cli.http.HttpClient`
+
 ### RetryAfterParser
-This class is responsible for parsing the 'Retry-After' header from HTTP responses. It extracts the delay duration specified by the server, which indicates how long the client should wait before retrying the request. It provides a utility for interpreting the server's throttling instructions.
+Component responsible for parsing the Retry-After header from HTTP responses. It extracts the delay duration to determine how long to wait before retrying a request.
 - **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.throttled_http_client.RetryAfterParser`
 
 ### NormalizedResponse
-This class normalizes the HTTP response. It provides a consistent interface for accessing response data, such as status code and headers. It also includes a method for raising exceptions based on the response status, ensuring consistent error handling across different HTTP client implementations.
+Represents a normalized HTTP response, encapsulating the response data (status code, headers, content). It provides methods for handling response status and errors in a consistent way across different HTTP clients.
 - **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.throttled_http_client.NormalizedResponse`
-
-### HttpClient (msal.oauth2cli.http)
-This class provides basic HTTP client functionality for making HTTP requests (POST and GET). It is a dependency for the ThrottledHttpClientBase, providing the underlying mechanism for sending and receiving HTTP data.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.oauth2cli.http.HttpClient`
-
-### _ThrottledHttpClient (msal.managed_identity)
-This class is a specialized HTTP client tailored for managed identity scenarios. It likely incorporates throttling logic similar to ThrottledHttpClient, potentially with customizations specific to managed identity environments. It inherits from ThrottledHttpClient and uses RetryAfterParser and NormalizedResponse.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.managed_identity._ThrottledHttpClient`

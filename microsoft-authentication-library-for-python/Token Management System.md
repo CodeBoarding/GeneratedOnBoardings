@@ -1,58 +1,49 @@
 ```mermaid
 graph LR
-    ClientApplication["ClientApplication"]
     TokenCache["TokenCache"]
-    acquire_token_silent["acquire_token_silent"]
-    acquire_token_by_refresh_token["acquire_token_by_refresh_token"]
-    get_accounts["get_accounts"]
-    remove_account["remove_account"]
-    CacheAccessor["CacheAccessor"]
+    _get_access_token["_get_access_token"]
+    search["search"]
+    add["add"]
+    remove_rt["remove_rt"]
     SerializableTokenCache["SerializableTokenCache"]
-    acquire_token_silent -- "acquires token from" --> TokenCache
-    acquire_token_by_refresh_token -- "acquires token using" --> TokenCache
-    ClientApplication -- "manages accounts in" --> TokenCache
-    remove_account -- "removes account from" --> TokenCache
-    ClientApplication -- "invokes" --> acquire_token_silent
-    ClientApplication -- "invokes" --> acquire_token_by_refresh_token
-    ClientApplication -- "invokes" --> get_accounts
-    ClientApplication -- "invokes" --> remove_account
-    SerializableTokenCache -- "implements persistence for" --> TokenCache
-    SerializableTokenCache -- "uses" --> CacheAccessor
-    CacheAccessor -- "defines interface for" --> TokenCache
+    SerializableTokenCache_add["SerializableTokenCache:add"]
+    SerializableTokenCache -- "inherits from" --> TokenCache
+    SerializableTokenCache_add -- "adds token to" --> SerializableTokenCache
+    TokenCache_remove_rt -- "removes refresh token from" --> TokenCache
+    TokenCache_add -- "adds token to" --> TokenCache
+    TokenCache_search -- "searches in" --> TokenCache
+    _get_access_token -- "gets access token from" --> TokenCache
+    SerializableTokenCache_add -- "adds token to" --> TokenCache
 ```
 
 ## Component Details
 
-The Token Management System in MSAL Python is responsible for securely storing, retrieving, and managing tokens used for authentication and authorization. It optimizes token retrieval to minimize repeated authentication requests and ensures tokens are readily available for subsequent requests. The system uses a cache to persist tokens and provides methods for searching, adding, removing, and updating tokens. It also handles serialization and deserialization of the cache for persistent storage.
-
-### ClientApplication
-The ClientApplication is the main entry point for developers to interact with the MSAL library. It provides methods to acquire tokens, manage user accounts, and configure the authentication flow. It orchestrates the token acquisition process by interacting with the TokenCache and other internal components.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication`
+The Token Management System is responsible for securely storing, retrieving, and managing tokens used for authentication and authorization. It provides functionalities for searching, adding, removing, and updating tokens in a cache. The system also handles serialization and deserialization of the cache for persistence, ensuring tokens are available across application sessions and minimizing repeated authentication. The core of the system revolves around the `TokenCache` and `SerializableTokenCache` classes, which provide the necessary methods for token manipulation and persistence.
 
 ### TokenCache
-The TokenCache is responsible for storing and retrieving tokens securely. It provides methods to add, search, update, and remove tokens from the cache. It interacts with the ClientApplication to provide tokens when available and persist them after acquisition.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.token_cache.TokenCache`, `microsoft-authentication-library-for-python.msal.token_cache.SerializableTokenCache`
+The TokenCache class is the central component for managing tokens in memory. It provides methods for adding, searching, and removing tokens, as well as parsing account information. It acts as an in-memory store for tokens, providing fast access to cached credentials.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.token_cache.TokenCache`
 
-### acquire_token_silent
-acquire_token_silent attempts to acquire a token from the cache without prompting the user. It checks the cache for a valid token and returns it if found. If no valid token is found, it may attempt to refresh an existing token using a refresh token.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication:acquire_token_silent`, `microsoft-authentication-library-for-python.msal.application.ClientApplication:_acquire_token_silent_with_error`, `microsoft-authentication-library-for-python.msal.application.ClientApplication:_acquire_token_silent_from_cache_and_possibly_refresh_it`
+### _get_access_token
+This method retrieves an access token from the cache based on the provided parameters. It searches the cache for a matching access token and returns it if found. It is a key method for retrieving cached tokens for authentication.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.token_cache.TokenCache:_get_access_token`
 
-### acquire_token_by_refresh_token
-acquire_token_by_refresh_token acquires a new access token using a refresh token. It exchanges the refresh token for a new access token and updates the cache with the new token.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication:acquire_token_by_refresh_token`
+### search
+The search method allows searching the token cache for tokens matching specific criteria. It provides a flexible way to find tokens based on various parameters, such as account, environment, and scopes.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.token_cache.TokenCache:search`
 
-### get_accounts
-get_accounts retrieves a list of accounts from the token cache. It allows the application to enumerate the accounts for which it has tokens.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication:get_accounts`
+### add
+The add method is used to add new tokens to the cache. It takes a token and its associated metadata as input and stores it in the cache for future use. This method is crucial for persisting newly acquired tokens.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.token_cache.TokenCache:add`
 
-### remove_account
-remove_account removes all tokens associated with a specific account from the token cache. It is used to sign out a user from the application.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.application.ClientApplication:remove_account`, `microsoft-authentication-library-for-python.msal.token_cache.TokenCache:remove_account`
-
-### CacheAccessor
-CacheAccessor is an abstract base class for token cache persistence. Defines the interface for reading and writing the token cache to persistent storage.
-- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.token_cache.CacheAccessor`
+### remove_rt
+This method removes a refresh token from the cache. It is used to invalidate a refresh token, typically when an account is removed or a token is revoked.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.token_cache.TokenCache:remove_rt`
 
 ### SerializableTokenCache
-SerializableTokenCache is a concrete implementation of TokenCache that supports serialization and deserialization of the cache to persistent storage. It uses a CacheAccessor to handle the actual reading and writing of the cache data.
+The SerializableTokenCache class extends the TokenCache to provide serialization capabilities. It allows the cache to be saved to a persistent storage and loaded back into memory, ensuring that tokens are available across application sessions.
 - **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.token_cache.SerializableTokenCache`
+
+### SerializableTokenCache:add
+This method overrides the add method of the base TokenCache class to include serialization logic. When a token is added to the cache, it is also serialized and saved to persistent storage.
+- **Related Classes/Methods**: `microsoft-authentication-library-for-python.msal.token_cache.SerializableTokenCache:add`
