@@ -3,58 +3,61 @@ graph LR
     Engine["Engine"]
     Template["Template"]
     Context["Context"]
-    NodeList["NodeList"]
-    Lexer["Lexer"]
-    Parser["Parser"]
-    Variable["Variable"]
-    Token["Token"]
+    get_template["get_template"]
+    render_to_string["render_to_string"]
+    Node["Node"]
     FilterExpression["FilterExpression"]
-    Engine -- "calls" --> Template
-    Template -- "uses" --> NodeList
-    Template -- "uses" --> Lexer
-    Template -- "uses" --> Parser
-    Engine -- "uses" --> Context
-    Template -- "renders" --> NodeList
-    Parser -- "uses" --> Lexer
-    Template -- "uses" --> Variable
-    Parser -- "uses" --> Token
-    Template -- "uses" --> FilterExpression
+    Library["Library"]
+    render["render"]
+    render -- "uses" --> Engine
+    render -- "uses" --> get_template
+    Engine -- "loads" --> Template
+    Engine -- "renders" --> Template
+    get_template -- "loads" --> Template
+    Template -- "uses" --> Context
+    render_to_string -- "uses" --> Engine
+    Engine -- "creates" --> Template
+    Template -- "contains" --> Node
+    Node -- "evaluates" --> FilterExpression
+    Engine -- "registers" --> Library
 ```
 
 ## Component Details
 
+The Django template engine is responsible for transforming data into presentable HTML or other text-based formats. It involves loading templates, compiling them into a renderable format, providing a context (data) for rendering, and then producing the final output. The core components work together to provide a flexible and extensible system for generating dynamic content.
+
 ### Engine
-The Engine is the central component responsible for managing the template loading, compilation, and rendering processes. It interacts with the template backends to load templates from various sources, compiles them into a usable format, and renders them with a given context. The Engine orchestrates the entire template rendering workflow.
-- **Related Classes/Methods**: `django.template.engine:Engine`
+The Engine class is the central component for managing and rendering templates. It handles template loading from various sources, template compilation, and rendering with a given context. It also manages the template cache, improving performance by storing compiled templates for reuse.
+- **Related Classes/Methods**: `django.template.engine.Engine`, `django.template.engine.Engine:get_template`, `django.template.engine.Engine:render_to_string`
 
 ### Template
-The Template component represents a compiled template, ready for rendering. It encapsulates the parsed template content and provides methods for rendering it with a specific context. The Template uses NodeList, Lexer, and Parser internally to process the template source and generate the final output.
-- **Related Classes/Methods**: `django.template.base:Template`
+Represents a compiled template. It holds the parsed template structure (nodes) and provides a `render` method to generate the final output by combining the template with a context. The template is compiled once and can be rendered multiple times with different contexts.
+- **Related Classes/Methods**: `django.template.base.Template`, `django.template.base.Template:render`
 
 ### Context
-The Context component provides the data and environment for rendering templates. It holds variables, settings, and other information that are accessible within the template during rendering. The Engine uses the Context to pass data to the Template for rendering.
-- **Related Classes/Methods**: `django.template.context:Context`, `django.template.context:BaseContext`, `django.template.context:RenderContext`
+The `Context` class holds the variables available within a template. It's a dictionary-like object that provides a way to pass data to the template during rendering. It also handles context processors, which add additional variables to the context.
+- **Related Classes/Methods**: `django.template.context.Context`
 
-### NodeList
-The NodeList component represents a sequence of template nodes. It is the compiled representation of the template content, consisting of various nodes such as text nodes, variable nodes, and tag nodes. The Template renders the NodeList to generate the final output.
-- **Related Classes/Methods**: `django.template.base:NodeList`
+### get_template
+Responsible for loading a template from the available template loaders based on its name. It abstracts the process of finding and reading template files from different locations (e.g., file system, database).
+- **Related Classes/Methods**: `django.template.loader:get_template`
 
-### Lexer
-The Lexer component is responsible for tokenizing the template source code. It breaks down the template source into a stream of tokens, which are then used by the Parser to build the template's node list. The Lexer identifies different types of tokens, such as variables, tags, and literals.
-- **Related Classes/Methods**: `django.template.base:Lexer`, `django.template.base:DebugLexer`
+### render_to_string
+A utility function that combines template loading and rendering into a single step. It loads a template, renders it with a given context, and returns the rendered content as a string. This is useful for generating HTML fragments or emails.
+- **Related Classes/Methods**: `django.template.loader:render_to_string`
 
-### Parser
-The Parser component takes the tokens generated by the Lexer and builds the template's node list. It interprets the tokens and creates a hierarchical representation of the template content, consisting of various nodes. The Parser uses the Lexer to generate tokens and constructs the NodeList.
-- **Related Classes/Methods**: `django.template.base:Parser`
-
-### Variable
-The Variable component represents a template variable. It is used to resolve variables within the template context during rendering. The Variable retrieves the value of a variable from the Context and inserts it into the rendered output.
-- **Related Classes/Methods**: `django.template.base:Variable`
-
-### Token
-The Token component represents a single token in the template language. It is generated by the Lexer and used by the Parser to build the template's node list. Tokens can represent various elements of the template language, such as variables, tags, and literals.
-- **Related Classes/Methods**: `django.template.base:Token`
+### Node
+Base class for all template nodes. Template parsing creates a tree of Node objects. The render method of each node is called during template rendering. Nodes represent elements within the template structure, such as variables, tags, and filters.
+- **Related Classes/Methods**: `django.template.base.Node`
 
 ### FilterExpression
-The FilterExpression component represents a filter expression in the template language. It is used to apply filters to variables during rendering. The FilterExpression takes a variable and a filter function and applies the filter to the variable's value.
-- **Related Classes/Methods**: `django.template.base:FilterExpression`
+Represents a filter expression in a template. It parses the filter expression and applies the filters to the variable during rendering. Filter expressions allow for modifying variable values within the template.
+- **Related Classes/Methods**: `django.template.base.FilterExpression`
+
+### Library
+A class that stores template tags and filters. Template libraries are used to register custom tags and filters for use in templates, extending the template language with custom functionality.
+- **Related Classes/Methods**: `django.template.library.Library`
+
+### render
+A high-level function that simplifies the process of rendering a template with a context and returning an HTTP response. It encapsulates the calls to template loading, context processing, and response creation.
+- **Related Classes/Methods**: `django.shortcuts.render`

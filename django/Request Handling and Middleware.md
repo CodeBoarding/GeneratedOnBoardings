@@ -2,59 +2,59 @@
 graph LR
     HttpRequest["HttpRequest"]
     HttpResponse["HttpResponse"]
+    WSGIHandler["WSGIHandler"]
+    ASGIHandler["ASGIHandler"]
     Middleware["Middleware"]
     URL_Resolver["URL Resolver"]
     View["View"]
     Template_Engine["Template Engine"]
-    Session_Management["Session Management"]
-    Exception_Handling["Exception Handling"]
-    Shortcuts["Shortcuts"]
-    HttpRequest -- "creates" --> View
+    WSGIHandler -- "is a" --> HttpRequest
+    ASGIHandler -- "is a" --> HttpRequest
+    WSGIHandler -- "creates" --> HttpRequest
+    ASGIHandler -- "creates" --> HttpRequest
+    WSGIHandler -- "processes" --> HttpRequest
+    ASGIHandler -- "processes" --> HttpRequest
     View -- "returns" --> HttpResponse
+    Template_Engine -- "uses" --> View
     Middleware -- "processes" --> HttpRequest
     Middleware -- "processes" --> HttpResponse
     URL_Resolver -- "maps to" --> View
-    View -- "uses" --> Template_Engine
-    Session_Management -- "stores data" --> HttpRequest
-    Exception_Handling -- "handles" --> View
-    Shortcuts -- "creates" --> HttpResponse
-    Shortcuts -- "uses" --> Template_Engine
+    WSGIHandler -- "uses" --> Middleware
+    ASGIHandler -- "uses" --> Middleware
 ```
 
 ## Component Details
 
+The Request Handling and Middleware component is the entry point for all HTTP requests to a Django application. It receives requests, processes them through a chain of middleware components, and generates HTTP responses. The middleware components perform tasks such as session management, authentication, CSRF protection, and request logging. The URL resolver maps URLs to views, which then interact with the template engine to generate the response content.
+
 ### HttpRequest
-Represents an incoming HTTP request. It encapsulates all the information about the request, such as headers, GET and POST parameters, and the request body. Django uses this object to pass request data to view functions.
-- **Related Classes/Methods**: `django.http.request.HttpRequest`
+Represents an incoming HTTP request. It encapsulates all the information about the request, including headers, query parameters, POST data, and uploaded files. It provides methods for accessing this data and other request-related information.
+- **Related Classes/Methods**: `django.django.http.request.HttpRequest`
 
 ### HttpResponse
-Represents the HTTP response that a Django view returns. It contains the content, headers, and status code of the response. Django handles the creation and sending of HttpResponse objects to the client.
-- **Related Classes/Methods**: `django.http.response.HttpResponse`
+Represents an outgoing HTTP response. It allows setting the content, status code, and headers of the response. It also provides methods for setting and deleting cookies.
+- **Related Classes/Methods**: `django.django.http.response.HttpResponse`, `django.django.http.response.HttpResponseBase`
+
+### WSGIHandler
+The WSGI handler that processes requests. It receives a WSGI environment and returns a WSGI response. It is the entry point for WSGI-based Django applications.
+- **Related Classes/Methods**: `django.django.core.handlers.wsgi.WSGIHandler`
+
+### ASGIHandler
+The ASGI handler that processes requests. It receives an ASGI scope and sends events to the ASGI channel. It is the entry point for ASGI-based Django applications.
+- **Related Classes/Methods**: `django.django.core.handlers.asgi.ASGIHandler`
 
 ### Middleware
-Middleware provides a way to process requests and responses globally. Each middleware component performs a specific function, such as adding headers, handling sessions, or logging requests. Middleware components are chained together to form a processing pipeline.
-- **Related Classes/Methods**: `django.core.handlers.base.BaseHandler`, `django.middleware.common.CommonMiddleware`, `django.middleware.csrf.CsrfViewMiddleware`, `django.contrib.sessions.middleware.SessionMiddleware`
+Middleware components are a chain of functions that process the request and response at different stages of the request-response cycle. They perform tasks such as authentication, session management, CSRF protection, and request logging.
+- **Related Classes/Methods**: `django.django.middleware.common`, `django.django.middleware.csrf`, `django.django.middleware.security`, `django.django.contrib.sessions.middleware`, `django.django.contrib.auth.middleware`, `django.django.contrib.messages.middleware`
 
 ### URL Resolver
-The URL resolver maps incoming URLs to specific view functions. It uses a URL configuration (urlpatterns) to define the mapping rules. When a request comes in, the URL resolver finds the matching view and passes the HttpRequest object to it.
-- **Related Classes/Methods**: `django.urls.resolvers.URLResolver`, `django.urls.resolvers.URLPattern`
+The URL resolver maps incoming URLs to specific views. It uses the URL patterns defined in the project's URL configuration to determine which view should handle the request.
+- **Related Classes/Methods**: `django.django.urls.resolvers`
 
 ### View
-A view is a callable that takes an HttpRequest object as input and returns an HttpResponse object. It contains the application logic for processing a request and generating a response. Views can be functions or classes.
-- **Related Classes/Methods**: `django.views.generic.base.View`
+A view is a callable that takes an HttpRequest object and returns an HttpResponse object. It is responsible for processing the request and generating the response.
+- **Related Classes/Methods**: `django.django.views.generic.base`, `django.django.views`
 
 ### Template Engine
-The template engine renders dynamic content into HTML or other formats. It uses templates that contain placeholders for data, which are filled in by the view. The rendered template is then included in the HttpResponse.
-- **Related Classes/Methods**: `django.template.engine.Engine`, `django.template.loader`
-
-### Session Management
-Django's session management allows you to store and retrieve data associated with individual users across multiple requests. The SessionMiddleware enables session functionality, and the session data is stored in a database or other storage backend.
-- **Related Classes/Methods**: `django.contrib.sessions.middleware.SessionMiddleware`, `django.contrib.sessions.backends.db.SessionStore`
-
-### Exception Handling
-Django provides a mechanism for handling exceptions that occur during request processing. When an exception is raised, Django's exception handling middleware intercepts it and generates an appropriate error response, such as a 404 or 500 error page.
-- **Related Classes/Methods**: `django.core.handlers.exception.handle_uncaught_exception`
-
-### Shortcuts
-Django provides shortcut functions like render, redirect, and get_object_or_404 to simplify common tasks in views. These functions abstract away some of the boilerplate code required to generate responses and handle common scenarios.
-- **Related Classes/Methods**: `django.shortcuts`
+The template engine renders templates with a given context and returns a string. This string is then used as the content of the HttpResponse.
+- **Related Classes/Methods**: `django.django.template.engine`
