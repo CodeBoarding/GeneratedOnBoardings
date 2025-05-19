@@ -1,58 +1,42 @@
 ```mermaid
 graph LR
-    RedBeatScheduler["RedBeatScheduler"]
-    RedBeatEntry["RedBeatEntry"]
-    RedBeatConfig["RedBeatConfig"]
-    RedisConnection["RedisConnection"]
-    ScheduleSerializer["ScheduleSerializer"]
-    RRuleSchedule["RRuleSchedule"]
-    DistributedLock["DistributedLock"]
-    RedBeatScheduler -- "manages" --> RedBeatEntry
-    RedBeatScheduler -- "uses" --> RedisConnection
-    RedBeatScheduler -- "uses" --> ScheduleSerializer
-    RedBeatScheduler -- "uses" --> RedBeatConfig
-    RedBeatEntry -- "stores in" --> RedisConnection
-    RedBeatEntry -- "encodes/decodes" --> ScheduleSerializer
-    RedBeatConfig -- "defines" --> RedBeatEntry
-    RedBeatEntry -- "used for scheduling" --> RRuleSchedule
-    RedBeatScheduler -- "acquires" --> DistributedLock
-    click RedBeatScheduler href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/RedBeatScheduler.md" "Details"
-    click RedBeatEntry href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/RedBeatEntry.md" "Details"
-    click RedBeatConfig href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/RedBeatConfig.md" "Details"
-    click RedisConnection href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/RedisConnection.md" "Details"
-    click ScheduleSerializer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/ScheduleSerializer.md" "Details"
-    click RRuleSchedule href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/RRuleSchedule.md" "Details"
-    click DistributedLock href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/DistributedLock.md" "Details"
+    Task_Scheduling_Orchestrator["Task Scheduling Orchestrator"]
+    Scheduled_Task_Definition["Scheduled Task Definition"]
+    Redis_Connection_Manager["Redis Connection Manager"]
+    Recurrence_Rule_Engine["Recurrence Rule Engine"]
+    Task_Data_Serializer["Task Data Serializer"]
+    Task_Scheduling_Orchestrator -- "manages" --> Scheduled_Task_Definition
+    Task_Scheduling_Orchestrator -- "uses" --> Redis_Connection_Manager
+    Scheduled_Task_Definition -- "loads definitions from" --> Redis_Connection_Manager
+    Scheduled_Task_Definition -- "uses" --> Recurrence_Rule_Engine
+    Scheduled_Task_Definition -- "uses" --> Task_Data_Serializer
+    click Task_Scheduling_Orchestrator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/Task Scheduling Orchestrator.md" "Details"
+    click Scheduled_Task_Definition href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/Scheduled Task Definition.md" "Details"
+    click Redis_Connection_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/Redis Connection Manager.md" "Details"
+    click Recurrence_Rule_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/Recurrence Rule Engine.md" "Details"
+    click Task_Data_Serializer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redbeat/Task Data Serializer.md" "Details"
 ```
 
 ## Component Details
 
-RedBeat extends Celery's beat scheduler to persist schedules in Redis, enabling dynamic schedule management and distributed execution. It allows users to define and modify task schedules at runtime, providing flexibility and scalability for Celery-based applications. The core components work together to manage schedules, connect to Redis, serialize data, and ensure tasks are executed according to their defined schedules.
+The RedBeat library extends Celery's beat scheduler to store schedules in Redis, enabling dynamic schedule management and persistence across Celery worker restarts. It provides a way to define and manage periodic tasks through a Redis-backed storage mechanism, offering greater flexibility and reliability compared to Celery's default scheduler.
 
-### RedBeatScheduler
-The central component responsible for managing and executing Celery tasks based on schedules stored in Redis. It retrieves schedules, determines task execution times, and triggers tasks accordingly. It also handles distributed locking to prevent multiple beat processes from running simultaneously.
+### Task Scheduling Orchestrator
+This component serves as the central orchestrator for managing and executing scheduled tasks. It initializes the schedule from Redis, continuously monitors for due tasks, and utilizes RedBeatEntry to schedule individual tasks. It also handles persistence of schedule changes back to Redis, ensuring that the task schedules are maintained even after Celery worker restarts.
 - **Related Classes/Methods**: `redbeat.redbeat.schedulers.RedBeatScheduler`
 
-### RedBeatEntry
-Represents a single scheduled task, encapsulating its schedule, task details, and metadata. It handles loading, saving, and deleting schedule entries in Redis, as well as determining if a task is due for execution based on the schedule.
+### Scheduled Task Definition
+This component represents a single scheduled task, encapsulating its definition, metadata, and scheduling logic. It handles loading task definitions from Redis, calculating the next due time using rrule, saving and deleting entries, and rescheduling tasks. It acts as an intermediary between the scheduler and the task definition stored in Redis, providing a consistent interface for managing individual tasks.
 - **Related Classes/Methods**: `redbeat.redbeat.schedulers.RedBeatSchedulerEntry`
 
-### RedBeatConfig
-Manages the configuration settings for RedBeat, including Redis connection parameters, key prefixes, and other settings. It provides a centralized point for accessing and managing configuration values used throughout the RedBeat system.
-- **Related Classes/Methods**: `redbeat.redbeat.schedulers.RedBeatConfig`
+### Redis Connection Manager
+This component manages the connection to the Redis server, including connection pooling, retries, and ensuring the connection is established. It provides a consistent interface for accessing Redis and abstracts away the underlying connection details, allowing other components to interact with Redis without needing to manage the connection directly.
+- **Related Classes/Methods**: `redbeat.redbeat.schedulers.get_redis`, `redbeat.redbeat.schedulers.ensure_conf`
 
-### RedisConnection
-Handles the connection to the Redis server, including connection pooling, retry mechanisms, and configuration management. It provides a reliable and efficient interface for interacting with Redis, ensuring that RedBeat can consistently access and manage schedules.
-- **Related Classes/Methods**: `redbeat.redbeat.schedulers.get_redis`, `redbeat.redbeat.schedulers.RetryingConnection`
-
-### ScheduleSerializer
-Responsible for serializing and deserializing schedule definitions to and from JSON format for storage in Redis. It handles the conversion of timestamps and other data types to ensure compatibility with Redis and consistent data representation.
-- **Related Classes/Methods**: `redbeat.redbeat.decoder.RedBeatJSONDecoder`, `redbeat.redbeat.decoder.RedBeatJSONEncoder`, `redbeat.redbeat.decoder.to_timestamp`, `redbeat.redbeat.decoder.from_timestamp`
-
-### RRuleSchedule
-Implements scheduling based on recurrence rules (rrule), allowing for complex and flexible scheduling patterns. It integrates with the `dateutil` library to provide advanced scheduling capabilities, enabling users to define sophisticated schedules.
+### Recurrence Rule Engine
+This component defines the schedule definition for a task, using rrule to define the recurrence pattern. It encapsulates the logic for calculating the next due time based on the schedule and provides a consistent interface for accessing the schedule parameters, enabling flexible and complex scheduling configurations.
 - **Related Classes/Methods**: `redbeat.redbeat.schedules.rrule`
 
-### DistributedLock
-Provides a mechanism for acquiring a distributed lock to prevent multiple beat processes from running concurrently and interfering with each other. It ensures that only one beat process is active at a time, preventing race conditions and data corruption.
-- **Related Classes/Methods**: `redbeat.redbeat.schedulers.acquire_distributed_beat_lock`
+### Task Data Serializer
+This component handles the serialization and deserialization of task data to and from JSON format for storage in Redis. It ensures that task data is stored in a consistent format and can be easily retrieved and processed, enabling seamless storage and retrieval of task information within Redis.
+- **Related Classes/Methods**: `redbeat.redbeat.decoder.RedBeatJSONDecoder`, `redbeat.redbeat.decoder.RedBeatJSONEncoder`
