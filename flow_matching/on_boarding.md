@@ -1,62 +1,51 @@
 ```mermaid
 graph LR
-    Execution_Manager["Execution Manager"]
-    Data_Pipeline["Data Pipeline"]
-    Model_Definitions["Model Definitions"]
-    Probabilistic_Flow["Probabilistic Flow"]
-    Loss_Computation["Loss Computation"]
-    Sampling_and_Solving["Sampling and Solving"]
-    Utilities_and_Helpers["Utilities and Helpers"]
-    Generation_and_Evaluation["Generation and Evaluation"]
-    Execution_Manager -- "orchestrates" --> Data_Pipeline
-    Execution_Manager -- "orchestrates" --> Model_Definitions
-    Execution_Manager -- "orchestrates" --> Probabilistic_Flow
-    Execution_Manager -- "orchestrates" --> Loss_Computation
-    Execution_Manager -- "orchestrates" --> Sampling_and_Solving
-    Execution_Manager -- "orchestrates" --> Utilities_and_Helpers
-    Execution_Manager -- "orchestrates" --> Generation_and_Evaluation
-    Probabilistic_Flow -- "defines path" --> Probabilistic_Flow
-    Sampling_and_Solving -- "samples from" --> Probabilistic_Flow
-    click Execution_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Execution Manager.md" "Details"
-    click Data_Pipeline href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Data Pipeline.md" "Details"
-    click Model_Definitions href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Model Definitions.md" "Details"
-    click Probabilistic_Flow href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Probabilistic Flow.md" "Details"
-    click Loss_Computation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Loss Computation.md" "Details"
-    click Sampling_and_Solving href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Sampling and Solving.md" "Details"
-    click Utilities_and_Helpers href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Utilities and Helpers.md" "Details"
-    click Generation_and_Evaluation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Generation and Evaluation.md" "Details"
+    Data_Management["Data Management"]
+    Generative_Models["Generative Models"]
+    Flow_Definition_and_Scheduling["Flow Definition and Scheduling"]
+    Sampling_Solvers["Sampling Solvers"]
+    Training_and_Evaluation["Training and Evaluation"]
+    Utilities_and_Support["Utilities and Support"]
+    Data_Management -- "feeds data to" --> Training_and_Evaluation
+    Generative_Models -- "uses" --> Training_and_Evaluation
+    Flow_Definition_and_Scheduling -- "defines path for" --> Sampling_Solvers
+    Sampling_Solvers -- "samples from" --> Flow_Definition_and_Scheduling
+    Training_and_Evaluation -- "evaluates" --> Generative_Models
+    Utilities_and_Support -- "logs progress of" --> Training_and_Evaluation
+    Sampling_Solvers -- "uses" --> Utilities_and_Support
+    Flow_Definition_and_Scheduling -- "uses" --> Utilities_and_Support
+    click Data_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Data Management.md" "Details"
+    click Generative_Models href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Generative Models.md" "Details"
+    click Flow_Definition_and_Scheduling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Flow Definition and Scheduling.md" "Details"
+    click Sampling_Solvers href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Sampling Solvers.md" "Details"
+    click Training_and_Evaluation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Training and Evaluation.md" "Details"
+    click Utilities_and_Support href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/flow_matching/Utilities and Support.md" "Details"
 ```
 
 ## Component Details
 
-### Execution Manager
-This component serves as the central orchestrator for training and evaluation workflows. It initializes and manages the execution of training and evaluation scripts for both text and image-based flow matching models. It coordinates data loading, model instantiation, and the overall training loop, ensuring proper resource allocation and experiment setup.
-- **Related Classes/Methods**: `repos.flow_matching.examples.text.train:run_mp_training`, `repos.flow_matching.examples.text.scripts.eval:run_mp_eval`, `repos.flow_matching.examples.image.submitit_train:main`, `repos.flow_matching.examples.image.training.train_loop:train_one_epoch`, `repos.flow_matching.examples.image.training.eval_loop:eval_model`
+The flow matching project implements a generative modeling approach using flow-based techniques. It encompasses data handling, model architectures for both text and images, probability path definitions, ODE solvers, and training/evaluation loops. The core idea is to learn a continuous transformation (a 'flow') that maps a simple initial distribution to a complex target distribution, enabling the generation of new samples from the target distribution. The project supports various probability path definitions and ODE solvers to control the sampling process, and includes utilities for logging, checkpointing, and geometric operations on manifolds.
 
-### Data Pipeline
-The Data Pipeline component handles the loading, preprocessing, and preparation of data for both text and image modalities. It abstracts away the complexities of dataset handling, providing a consistent interface for accessing and feeding data to the models. This includes tokenization and detokenization for text data, as well as loading and transforming image data.
-- **Related Classes/Methods**: `repos.flow_matching.examples.text.data.data:get_data_state`, `repos.flow_matching.examples.text.data.data:_get_dataset`, `repos.flow_matching.examples.text.data.data:_get_hf_dataset`
+### Data Management
+This component is responsible for loading, preprocessing, and batching data for both text and image datasets. It handles fetching data from various sources, including Hugging Face datasets, and prepares the data into suitable formats for training and evaluation. The component ensures efficient data flow to the models and manages data iterators.
+- **Related Classes/Methods**: `flow_matching.examples.text.data.data:_get_hf_dataset`, `flow_matching.examples.text.data.data:_get_dataset`, `flow_matching.examples.text.data.data:get_data_state`, `flow_matching.examples.image.submitit_train:main`
 
-### Model Definitions
-This component encapsulates the definitions of the neural network architectures used in the flow matching process. It includes both transformer-based models for text generation and UNet-based models for image generation. The component provides modular and reusable model building blocks, such as attention mechanisms, residual connections, and embedding layers.
-- **Related Classes/Methods**: `repos.flow_matching.examples.text.model.transformer.Transformer`, `repos.flow_matching.examples.text.model.transformer.DDiTBlock`, `repos.flow_matching.examples.text.model.transformer.DDitFinalLayer`, `repos.flow_matching.examples.text.model.transformer.TimestepEmbedder`, `repos.flow_matching.examples.text.model.rotary:apply_rotary_emb_torch`, `repos.flow_matching.examples.image.models.unet.UNetModel`, `repos.flow_matching.examples.image.models.unet.ResBlock`, `repos.flow_matching.examples.image.models.unet.AttentionBlock`, `repos.flow_matching.examples.image.models.unet.QKVAttention`, `repos.flow_matching.examples.image.models.discrete_unet.DiscreteUNetModel`
+### Generative Models
+This component defines the neural network architectures used for generative modeling. It includes a Transformer-based model for text generation and a UNet-based model for image generation. The component encapsulates the structure and forward pass of these models, including their constituent blocks like attention mechanisms, residual blocks, and normalization layers.
+- **Related Classes/Methods**: `flow_matching.examples.text.model.transformer.TimestepEmbedder:forward`, `flow_matching.examples.text.model.transformer.DDiTBlock:__init__`, `flow_matching.examples.text.model.transformer.DDiTBlock:forward`, `flow_matching.examples.text.model.transformer.DDitFinalLayer:__init__`, `flow_matching.examples.text.model.transformer.DDitFinalLayer:forward`, `flow_matching.examples.text.model.transformer.Transformer:__init__`, `flow_matching.examples.text.model.transformer.Transformer:forward`, `flow_matching.examples.image.models.discrete_unet.DiscreteUNetModel:__post_init__`, `flow_matching.examples.image.models.discrete_unet.DiscreteUNetModel:forward`, `flow_matching.examples.image.models.unet.AttentionPool2d:__init__`, `flow_matching.examples.image.models.unet.AttentionPool2d:forward`, `flow_matching.examples.image.models.unet.ResBlock:__init__`, `flow_matching.examples.image.models.unet.ResBlock:_forward`, `flow_matching.examples.image.models.unet.AttentionBlock:__init__`, `flow_matching.examples.image.models.unet.AttentionBlock:_forward`, `flow_matching.examples.image.models.unet.QKVAttentionLegacy:count_flops`, `flow_matching.examples.image.models.unet.QKVAttention:count_flops`, `flow_matching.examples.image.models.unet.UNetModel:__post_init__`, `flow_matching.examples.image.models.unet.UNetModel:forward`
 
-### Probabilistic Flow
-The Probabilistic Flow component defines the stochastic paths that guide the transformation of data distributions during flow matching. It offers a variety of path constructions, including affine, geodesic, and mixture paths, allowing for flexible control over the flow process. This component also includes schedulers that govern the evolution of these paths over time.
-- **Related Classes/Methods**: `flow_matching.path.affine.AffineProbPath`, `flow_matching.path.geodesic.GeodesicProbPath`, `flow_matching.path.mixture.MixtureDiscreteProbPath`, `flow_matching.path.affine.CondOTProbPath`, `flow_matching.path.scheduler.scheduler.PolynomialConvexScheduler`, `flow_matching.path.scheduler.scheduler.VPScheduler`, `flow_matching.path.scheduler.scheduler.CosineScheduler`, `flow_matching.path.scheduler.scheduler.CondOTScheduler`
+### Flow Definition and Scheduling
+This component defines the path between the initial and target distributions and the scheduler for controlling the diffusion process. It includes affine, geodesic, and mixture probability paths, along with various scheduling strategies. This component transforms the model based on the defined schedule, guiding the flow from the initial to the target distribution.
+- **Related Classes/Methods**: `flow_matching.flow_matching.path.mixture.MixtureDiscreteProbPath:sample`, `flow_matching.flow_matching.path.mixture.MixtureDiscreteProbPath:posterior_to_velocity`, `flow_matching.flow_matching.path.geodesic.GeodesicProbPath:sample`, `flow_matching.flow_matching.path.affine.AffineProbPath:sample`, `flow_matching.flow_matching.path.affine.CondOTProbPath:__init__`, `flow_matching.flow_matching.path.scheduler.schedule_transform.ScheduleTransformedModel:__init__`, `flow_matching.flow_matching.path.scheduler.scheduler.ConvexScheduler:snr_inverse`, `flow_matching.flow_matching.path.scheduler.scheduler.CondOTScheduler:__call__`, `flow_matching.flow_matching.path.scheduler.scheduler.PolynomialConvexScheduler:__call__`, `flow_matching.flow_matching.path.scheduler.scheduler.VPScheduler:__call__`, `flow_matching.flow_matching.path.scheduler.scheduler.LinearVPScheduler:__call__`, `flow_matching.flow_matching.path.scheduler.scheduler.CosineScheduler:__call__`
 
-### Loss Computation
-This component defines the loss functions used to train the flow matching models. It provides implementations of various loss functions, such as the generalized KL divergence, which quantify the discrepancy between the learned flow and the target data distribution. These loss functions guide the optimization process, enabling the model to learn the desired data transformations.
-- **Related Classes/Methods**: `flow_matching.loss.generalized_loss.MixturePathGeneralizedKL`
+### Sampling Solvers
+This component implements different ODE solvers for sampling from the learned flow. This includes Riemannian ODE solvers and discrete solvers. The solvers are responsible for generating samples by integrating the learned vector field along the defined probability path, effectively reversing the diffusion process.
+- **Related Classes/Methods**: `flow_matching.flow_matching.solver.riemannian_ode_solver.RiemannianODESolver:sample`, `flow_matching.flow_matching.solver.riemannian_ode_solver:interp`, `flow_matching.flow_matching.solver.riemannian_ode_solver:_euler_step`, `flow_matching.flow_matching.solver.riemannian_ode_solver:_midpoint_step`, `flow_matching.flow_matching.solver.riemannian_ode_solver:_rk4_step`, `flow_matching.flow_matching.solver.discrete_solver.MixtureDiscreteEulerSolver:sample`, `flow_matching.flow_matching.solver.ode_solver.ODESolver:compute_likelihood`
 
-### Sampling and Solving
-The Sampling and Solving component provides the numerical solvers used to sample from the probabilistic paths defined in the Probabilistic Flow component. It includes both discrete solvers, such as the Mixture Discrete Euler Solver, and ODE solvers for continuous paths. These solvers enable the generation of samples from the learned flow matching models.
-- **Related Classes/Methods**: `flow_matching.solver.discrete_solver.MixtureDiscreteEulerSolver`, `flow_matching.solver.ode_solver.ODESolver`, `flow_matching.solver.riemannian_ode_solver.RiemannianODESolver`
+### Training and Evaluation
+This component manages the training and evaluation processes for the models. This includes optimization steps, loss calculation, gradient scaling, and evaluation metric computation. The component orchestrates the training and evaluation loops, ensuring proper model updates and performance monitoring.
+- **Related Classes/Methods**: `flow_matching.examples.text.logic.training:optimization_step`, `flow_matching.examples.text.logic.training:step`, `flow_matching.examples.image.training.train_loop:train_one_epoch`, `flow_matching.examples.image.training.grad_scaler.NativeScalerWithGradNormCount:__call__`, `flow_matching.examples.text.logic.evaluate:compute_entropy`, `flow_matching.examples.text.logic.evaluate:estimate_likelihood`, `flow_matching.examples.image.training.eval_loop.CFGScaledModel:__init__`, `flow_matching.examples.image.training.eval_loop:eval_model`
 
-### Utilities and Helpers
-This component groups together a collection of utility functions and helper classes that support various aspects of the training and evaluation process. It includes tools for distributed training, gradient scaling, exponential moving average (EMA) updates, logging, and checkpointing. These utilities streamline the development and experimentation process.
-- **Related Classes/Methods**: `repos.flow_matching.examples.image.training.distributed_mode`, `repos.flow_matching.examples.image.training.grad_scaler.NativeScalerWithGradNormCount`, `repos.flow_matching.examples.image.models.ema.EMA`, `repos.flow_matching.examples.text.utils.logging.TrainLogger`, `repos.flow_matching.examples.text.utils.checkpointing`, `repos.flow_matching.examples.image.training.load_and_save`
-
-### Generation and Evaluation
-This component encapsulates the logic for generating samples from the trained models and evaluating their performance. It includes functions for generating samples from the trained model and computing metrics such as entropy and likelihood to assess the quality of the generated samples.
-- **Related Classes/Methods**: `repos.flow_matching.examples.text.logic.generate:generate_samples`, `repos.flow_matching.examples.text.logic.evaluate:compute_entropy`, `repos.flow_matching.examples.text.logic.evaluate:estimate_likelihood`
+### Utilities and Support
+This component provides utility functions for logging training progress, saving/restoring model checkpoints, and defining manifolds. This component supports the training and evaluation processes by providing essential tools for monitoring, persistence, and geometric operations.
+- **Related Classes/Methods**: `flow_matching.examples.text.utils.logging.TrainLogger:__init__`, `flow_matching.examples.text.utils.logging.TrainLogger:_init_text_logger`, `flow_matching.examples.text.utils.checkpointing:get_work_dirs`, `flow_matching.examples.image.training.load_and_save:save_model`, `flow_matching.examples.image.submitit_train.Trainer:checkpoint`, `flow_matching.flow_matching.utils.manifolds.sphere.Sphere:expmap`, `flow_matching.flow_matching.utils.manifolds.sphere.Sphere:logmap`
