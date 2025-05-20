@@ -1,44 +1,45 @@
-## Exception Handling in FastAPI
-
-This document describes the exception handling mechanism in FastAPI, focusing on how exceptions are caught and transformed into appropriate HTTP responses.
-
-### Data Flow Diagram
-
 ```mermaid
 graph LR
-    Client -- Sends Request --> FastAPIApp
-    FastAPIApp -- Executes Route --> RouteHandler
-    RouteHandler -- Calls Function --> FunctionLogic
-    FunctionLogic -- Raises Exception --> ExceptionHandler
-    ExceptionHandler -- Creates Error Response --> FastAPIApp
-    FastAPIApp -- Sends Response --> Client
-
-    style Client fill:#f9f,stroke:#333,stroke-width:2px
-    style FastAPIApp fill:#ccf,stroke:#333,stroke-width:2px
-    style RouteHandler fill:#ccf,stroke:#333,stroke-width:2px
-    style FunctionLogic fill:#ccf,stroke:#333,stroke-width:2px
-    style ExceptionHandler fill:#fcf,stroke:#333,stroke-width:2px
+    HTTPException["HTTPException"]
+    RequestValidationError["RequestValidationError"]
+    ResponseValidationError["ResponseValidationError"]
+    http_exception_handler["http_exception_handler"]
+    request_validation_exception_handler["request_validation_exception_handler"]
+    websocket_request_validation_exception_handler["websocket_request_validation_exception_handler"]
+    Validation_Error_Body["Validation Error Body"]
+    http_exception_handler -- "handles" --> HTTPException
+    request_validation_exception_handler -- "handles" --> RequestValidationError
+    websocket_request_validation_exception_handler -- "handles" --> RequestValidationError
 ```
 
-### Component Descriptions
+## Component Details
 
-*   **Client**: Initiates the request to the FastAPI application.
-    *   *Interaction*: Sends HTTP requests and receives HTTP responses.
+The exception handling component in FastAPI provides a structured way to manage errors that occur during request processing. It defines base exception classes like `HTTPException`, `RequestValidationError`, and `ResponseValidationError` for common error scenarios. FastAPI includes default exception handlers for these exceptions, which format the errors into appropriate JSON responses. Developers can also define custom exception handlers to handle specific exceptions or to customize the error response format. The exception handling mechanism ensures that errors are handled gracefully and that clients receive informative error messages.
 
-*   **FastAPIApp**: The core FastAPI application instance.
-    *   *Functionality*: Receives requests, routes them to appropriate handlers, and sends responses. It also manages the exception handling process.
-    *   *Interaction*: Receives requests from the Client and sends responses back. It also calls the RouteHandler and ExceptionHandler.
-    *   *Relevant source files*: `fastapi.applications.FastAPI`
+### HTTPException
+Represents an HTTP exception with a specific status code and detail message. It's used to raise HTTP-related errors within the application.
+- **Related Classes/Methods**: `fastapi/exceptions.py`
 
-*   **RouteHandler**: Handles the execution of a specific route.
-    *   *Functionality*: Executes the function associated with a route.
-    *   *Interaction*: Called by FastAPIApp to execute a route. Calls FunctionLogic.
+### RequestValidationError
+Represents an exception raised when the incoming request data fails validation. It contains details about the validation errors, such as the field that failed validation and the error message.
+- **Related Classes/Methods**: `fastapi/exceptions.py`
 
-*   **FunctionLogic**: Contains the core logic of a route.
-    *   *Functionality*: Performs the main operations of a route, which may raise exceptions.
-    *   *Interaction*: Called by RouteHandler. May raise exceptions that are caught by the ExceptionHandler.
+### ResponseValidationError
+Represents an exception raised when the outgoing response data fails validation. It contains details about the validation errors.
+- **Related Classes/Methods**: `fastapi/exceptions.py`
 
-*   **ExceptionHandler**: Intercepts exceptions and generates appropriate error responses.
-    *   *Functionality*: Catches exceptions raised during request processing and uses registered exception handlers to create error responses.
-    *   *Interaction*: Receives exceptions from FunctionLogic. Sends error responses to FastAPIApp.
-    *   *Relevant source files*: `fastapi.exception_handlers.http_exception_handler`, `fastapi.exception_handlers.request_validation_exception_handler`
+### http_exception_handler
+A default exception handler for HTTPException exceptions. It formats the exception into a JSON response with the appropriate status code and detail message.
+- **Related Classes/Methods**: `fastapi/exception_handlers.py`
+
+### request_validation_exception_handler
+A default exception handler for RequestValidationError exceptions. It formats the validation errors into a JSON response with a 422 status code.
+- **Related Classes/Methods**: `fastapi/exception_handlers.py`
+
+### websocket_request_validation_exception_handler
+A default exception handler for RequestValidationError exceptions in WebSocket requests. It closes the WebSocket connection with a 422 status code and sends the validation errors.
+- **Related Classes/Methods**: `fastapi/exception_handlers.py`
+
+### Validation Error Body
+Represents the structure of the validation error body returned in the response. It includes a list of errors, each containing the location, message, and error type.
+- **Related Classes/Methods**: `fastapi/exception_handlers.py`
