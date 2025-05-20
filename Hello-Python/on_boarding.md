@@ -1,18 +1,13 @@
 ```mermaid
 graph LR
-    Core_Package["Core Package"]
     Arithmetics_Module["Arithmetics Module"]
-    Core_Package -- "Contains" --> Arithmetics_Module
-    click Core_Package href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Hello-Python/Core Package.md" "Details"
     click Arithmetics_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Hello-Python/Arithmetics Module.md" "Details"
 ```
 
 ## Component Details
 
-### Core Package
-The core package serves as the main container for all modules and provides the entry point for execution. It orchestrates the interaction between different modules to perform the overall application logic.
-- **Related Classes/Methods**: `mypackage`
+The Hello-Python project is a simple application that demonstrates basic arithmetic operations. The main flow involves performing a summation of two numbers using the Arithmetics Module. The purpose is to showcase a basic Python project structure and functionality.
 
 ### Arithmetics Module
-This module contains arithmetic functions such as addition. It provides basic mathematical operations for use by other modules within the core package.
+This module encapsulates the arithmetic operations. Currently, it only provides the functionality to sum two numbers. Its main responsibility is to perform basic calculations.
 - **Related Classes/Methods**: `mypackage.arithmetics`
