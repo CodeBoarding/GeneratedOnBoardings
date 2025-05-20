@@ -1,56 +1,61 @@
 ```mermaid
-flowchart LR
-    subgraph Client Interface
-        Client(Client) -- Uses --> BaseClient
-        AsyncClient(AsyncClient) -- Uses --> BaseClient
-    end
-
-    BaseClient -- Uses --> Utils
-    BaseClient -- Handles --> Exceptions
-
-    Client -- Sends Request --> API[(Invariant API)]
-    AsyncClient -- Sends Request --> API
-
-    API -- Returns Response --> Client
-    API -- Returns Response --> AsyncClient
-
-    style Client fill:#f9f,stroke:#333,stroke-width:2px
-    style AsyncClient fill:#f9f,stroke:#333,stroke-width:2px
-    style BaseClient fill:#ccf,stroke:#333,stroke-width:2px
-    style Utils fill:#ccf,stroke:#333,stroke-width:2px
-    style Exceptions fill:#ccf,stroke:#333,stroke-width:2px
-
-
+graph LR
+    BaseClient["BaseClient"]
+    Client["Client"]
+    AsyncClient["AsyncClient"]
+    request["request"]
+    push_trace["push_trace"]
+    create_request["create_request"]
+    dataset_metadata["dataset_metadata"]
+    append_messages["append_messages"]
+    API_Configuration["API Configuration"]
+    Client -- "inherits from" --> BaseClient
+    AsyncClient -- "inherits from" --> BaseClient
+    Client_push_trace -- "calls" --> create_request
+    AsyncClient_push_trace -- "calls" --> create_request
+    create_request -- "calls" --> request
+    dataset_metadata -- "calls" --> request
+    Client_append_messages -- "calls" --> create_request
+    AsyncClient_append_messages -- "calls" --> create_request
+    BaseClient -- "uses" --> API_Configuration
 ```
 
-### Component Descriptions:
+## Component Details
 
-**Client Interface:**
-   - *Description*: Defines the interface for interacting with the Invariant API, providing both synchronous and asynchronous implementations.
-   - *Functionality*: Exposes `Client` and `AsyncClient` classes for synchronous and asynchronous API interactions, respectively. These classes inherit from `BaseClient` and provide methods for sending requests and receiving responses from the Invariant API.
-   - *Interactions*: Uses `BaseClient` for core functionality. Sends requests to and receives responses from the Invariant API.
-   - *Relevant source files*: `invariant_sdk.client`, `invariant_sdk.async_client`
+The Invariant SDK provides a client interface for interacting with the Invariant API, offering both synchronous and asynchronous options. The core functionality revolves around sending HTTP requests to the API, handling authentication, and managing data serialization. The client interface abstracts away the underlying complexities, providing a user-friendly way to push traces, manage dataset metadata, and append messages to the Invariant service.
 
-**BaseClient:**
-   - *Description*: Handles the base functionality for interacting with the Invariant API, including request preparation and error handling. It serves as the foundation for both synchronous and asynchronous clients.
-   - *Functionality*: Provides methods for preparing requests, handling HTTP errors, and constructing API endpoints. It uses `Utils` to retrieve API keys and URLs and `Exceptions` to raise custom exceptions.
-   - *Interactions*: Used by `Client` and `AsyncClient`. Uses `Utils` for configuration and `Exceptions` for error handling.
-   - *Relevant source files*: `invariant_sdk.base_client`
+### BaseClient
+The BaseClient class serves as the foundation for both synchronous and asynchronous clients. It handles the initialization process, including setting up the API URL and API key, and provides a base implementation for making HTTP requests with error handling.
+- **Related Classes/Methods**: `invariant-sdk.python.invariant_sdk.base_client.BaseClient`
 
-**Utils:**
-   - *Description*: Offers utility functions for the SDK, such as retrieving the API URL and API key from environment variables or configuration files. These utilities are used by the clients to configure their interaction with the API.
-   - *Functionality*: Provides functions to fetch API URL and API key from environment variables.
-   - *Interactions*: Used by `BaseClient` to configure API interaction.
-   - *Relevant source files*: `invariant_sdk.utils`
+### Client
+The Client class is a synchronous implementation that inherits from BaseClient. It provides methods for interacting with the Invariant API in a synchronous manner, such as pushing traces, retrieving and updating dataset metadata, and appending messages.
+- **Related Classes/Methods**: `invariant-sdk.python.invariant_sdk.client.Client`
 
-**Exceptions:**
-   - *Description*: Defines custom exception types specific to the Invariant SDK. These exceptions provide more informative error reporting and handling for API interactions.
-   - *Functionality*: Defines custom exception classes for API errors, authentication errors, and other SDK-specific errors.
-   - *Interactions*: Used by `BaseClient` to handle and raise exceptions.
-   - *Relevant source files*: `invariant_sdk.types.exceptions`
+### AsyncClient
+The AsyncClient class is an asynchronous implementation that inherits from BaseClient. It mirrors the functionality of the synchronous Client but provides asynchronous methods for interacting with the Invariant API, enabling non-blocking operations.
+- **Related Classes/Methods**: `invariant-sdk.python.invariant_sdk.async_client.AsyncClient`
 
-**Invariant API:**
-   - *Description*: The external API that the SDK interacts with.
-   - *Functionality*: Receives requests from the `Client` and `AsyncClient`, processes them, and returns responses.
-   - *Interactions*: Receives requests from and sends responses to `Client` and `AsyncClient`.
-   - *Relevant source files*: N/A (External API)
+### request
+The request method is responsible for constructing and sending HTTP requests to the Invariant API. It handles the actual communication with the API, including setting headers, handling authentication, and processing responses. This method is implemented in both the Client and AsyncClient classes.
+- **Related Classes/Methods**: `invariant-sdk.python.invariant_sdk.client.Client:request`, `invariant-sdk.python.invariant_sdk.async_client.AsyncClient:request`
+
+### push_trace
+The push_trace method allows users to send trace data to the Invariant API. It takes trace data as input, constructs a request object, and then uses the request method to send the data to the API. This method is available in both the Client and AsyncClient classes.
+- **Related Classes/Methods**: `invariant-sdk.python.invariant_sdk.client.Client:push_trace`, `invariant-sdk.python.invariant_sdk.async_client.AsyncClient:push_trace`
+
+### create_request
+The create_request methods (create_request_and_push_trace, create_request_and_update_dataset_metadata, create_request_and_append_messages) are responsible for creating the request object for each specific API endpoint. They take the necessary data as input and construct the appropriate request object, which is then passed to the request method for sending to the API.
+- **Related Classes/Methods**: `invariant-sdk.python.invariant_sdk.client.Client:create_request_and_push_trace`, `invariant-sdk.python.invariant_sdk.async_client.AsyncClient:create_request_and_push_trace`, `invariant-sdk.python.invariant_sdk.client.Client:create_request_and_update_dataset_metadata`, `invariant-sdk.python.invariant_sdk.async_client.AsyncClient:create_request_and_update_dataset_metadata`, `invariant-sdk.python.invariant_sdk.client.Client:create_request_and_append_messages`, `invariant-sdk.python.invariant_sdk.async_client.AsyncClient:create_request_and_append_messages`
+
+### dataset_metadata
+The dataset metadata methods (get_dataset_metadata, update_dataset_metadata) allow users to retrieve and update dataset metadata from the Invariant API. They use the request method to send requests to the API and handle the responses. These methods are available in both the Client and AsyncClient classes.
+- **Related Classes/Methods**: `invariant-sdk.python.invariant_sdk.client.Client:get_dataset_metadata`, `invariant-sdk.python.invariant_sdk.async_client.AsyncClient:get_dataset_metadata`, `invariant-sdk.python.invariant_sdk.client.Client:update_dataset_metadata`, `invariant-sdk.python.invariant_sdk.async_client.AsyncClient:update_dataset_metadata`
+
+### append_messages
+The append_messages method allows users to append messages to the Invariant API. It takes messages as input, constructs a request object, and then uses the request method to send the messages to the API. This method is available in both the Client and AsyncClient classes.
+- **Related Classes/Methods**: `invariant-sdk.python.invariant_sdk.client.Client:append_messages`, `invariant-sdk.python.invariant_sdk.async_client.AsyncClient:append_messages`
+
+### API Configuration
+The API Configuration methods (get_api_url, get_api_key) are responsible for retrieving the API URL and API key from the environment or configuration. These values are used to authenticate with the Invariant API.
+- **Related Classes/Methods**: `invariant-sdk.python.invariant_sdk.utils:get_api_url`, `invariant-sdk.python.invariant_sdk.utils:get_api_key`
