@@ -1,10 +1,5 @@
 # Generated Diagrams for python projects
-<p align="center">
-  <a href="https://codeboarding.org" target="_blank">
-    <img src="codeboarding_logo.png" alt="CodeBoarding Logo" width="200"/>
-  </a>
-</p>
- <a href="https://www.python.org/">
+<a href="https://www.python.org/">
     <img alt="Build" src="https://img.shields.io/badge/python-3x-blue">
     
 </a>
@@ -12,6 +7,8 @@
 These onboarding diagrams were automatically generated using [CodeBoarding.org](https://codeboarding.org) — a tool that helps developers explore unfamiliar codebases through interactive and visual documentation.
 
 Got feedback? We'd love to hear it! Open an issue or drop us an email to help us improve.
+
+Got feedback? We’d love to hear it! Open an issue or drop us an email at [codeboarding@gmail.com](mailto:codeboarding@gmail.com) to help us improve.
 
 Interested in onboarding diagrams for your own project? Try it out at [CodeBoarding.org/demo](https://codeboarding.org/demo) or open an issue and we will generate one for you!
 
