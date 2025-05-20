@@ -1,75 +1,85 @@
 ```mermaid
 graph LR
-    User_Interface_and_Configuration["User Interface and Configuration"]
-    Data_Abstraction_and_Storage["Data Abstraction and Storage"]
+    User_Interface_Orchestration["User Interface & Orchestration"]
+    Configuration_Management["Configuration Management"]
+    Data_Ingestion_Graph_Construction["Data Ingestion & Graph Construction"]
+    Indexing_Embedding_Management["Indexing & Embedding Management"]
+    Vector_Store_Abstraction["Vector Store Abstraction"]
     Language_Model_Integration["Language Model Integration"]
-    Vector_Store_Management["Vector Store Management"]
-    Graph_Indexing_Pipeline["Graph Indexing Pipeline"]
-    Query_Processing_and_Retrieval["Query Processing and Retrieval"]
-    Graph_Operations_and_Analysis["Graph Operations and Analysis"]
-    Text_Processing_and_Knowledge_Extraction["Text Processing and Knowledge Extraction"]
-    Monitoring_and_Callbacks["Monitoring and Callbacks"]
-    User_Interface_and_Configuration -- "orchestrates" --> Graph_Indexing_Pipeline
-    User_Interface_and_Configuration -- "orchestrates" --> Query_Processing_and_Retrieval
-    Graph_Indexing_Pipeline -- "defines" --> Data_Abstraction_and_Storage
-    Query_Processing_and_Retrieval -- "defines" --> Data_Abstraction_and_Storage
-    Graph_Indexing_Pipeline -- "uses" --> Language_Model_Integration
-    Query_Processing_and_Retrieval -- "uses" --> Language_Model_Integration
-    Graph_Indexing_Pipeline -- "uses" --> Vector_Store_Management
-    Query_Processing_and_Retrieval -- "uses" --> Vector_Store_Management
-    Graph_Indexing_Pipeline -- "uses" --> Graph_Operations_and_Analysis
-    Query_Processing_and_Retrieval -- "uses" --> Graph_Operations_and_Analysis
-    Graph_Indexing_Pipeline -- "uses" --> Text_Processing_and_Knowledge_Extraction
-    Query_Processing_and_Retrieval -- "uses" --> Text_Processing_and_Knowledge_Extraction
-    Graph_Indexing_Pipeline -- "uses" --> Monitoring_and_Callbacks
-    Query_Processing_and_Retrieval -- "uses" --> Monitoring_and_Callbacks
-    Graph_Indexing_Pipeline -- "loads and validates" --> User_Interface_and_Configuration
-    Query_Processing_and_Retrieval -- "loads and validates" --> User_Interface_and_Configuration
-    click User_Interface_and_Configuration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/User Interface and Configuration.md" "Details"
-    click Data_Abstraction_and_Storage href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Data Abstraction and Storage.md" "Details"
+    Query_Processing_Context_Building["Query Processing & Context Building"]
+    Workflow_Management_Caching["Workflow Management & Caching"]
+    Storage_Logging["Storage & Logging"]
+    User_Interface_Orchestration -- "orchestrates" --> Data_Ingestion_Graph_Construction
+    User_Interface_Orchestration -- "orchestrates" --> Indexing_Embedding_Management
+    User_Interface_Orchestration -- "orchestrates" --> Query_Processing_Context_Building
+    User_Interface_Orchestration -- "loads" --> Configuration_Management
+    Configuration_Management -- "provides configuration to" --> Data_Ingestion_Graph_Construction
+    Configuration_Management -- "provides configuration to" --> Indexing_Embedding_Management
+    Configuration_Management -- "provides configuration to" --> Query_Processing_Context_Building
+    Configuration_Management -- "provides configuration to" --> Vector_Store_Abstraction
+    Configuration_Management -- "provides configuration to" --> Language_Model_Integration
+    Configuration_Management -- "provides configuration to" --> Workflow_Management_Caching
+    Configuration_Management -- "provides configuration to" --> Storage_Logging
+    Data_Ingestion_Graph_Construction -- "chunks data for" --> Indexing_Embedding_Management
+    Data_Ingestion_Graph_Construction -- "extracts entities and relationships for" --> Indexing_Embedding_Management
+    Indexing_Embedding_Management -- "stores embeddings in" --> Vector_Store_Abstraction
+    Indexing_Embedding_Management -- "uses" --> Language_Model_Integration
+    Query_Processing_Context_Building -- "retrieves embeddings from" --> Vector_Store_Abstraction
+    Query_Processing_Context_Building -- "uses" --> Language_Model_Integration
+    Query_Processing_Context_Building -- "builds context with" --> Query_Processing_Context_Building
+    Workflow_Management_Caching -- "manages" --> Data_Ingestion_Graph_Construction
+    Workflow_Management_Caching -- "manages" --> Indexing_Embedding_Management
+    Indexing_Embedding_Management -- "persists data using" --> Storage_Logging
+    Workflow_Management_Caching -- "caches data within" --> Workflow_Management_Caching
+    Workflow_Management_Caching -- "logs progress through" --> Storage_Logging
+    Query_Processing_Context_Building -- "logs progress through" --> Storage_Logging
+    click User_Interface_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/User Interface & Orchestration.md" "Details"
+    click Configuration_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Configuration Management.md" "Details"
+    click Data_Ingestion_Graph_Construction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Data Ingestion & Graph Construction.md" "Details"
+    click Indexing_Embedding_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Indexing & Embedding Management.md" "Details"
+    click Vector_Store_Abstraction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Vector Store Abstraction.md" "Details"
     click Language_Model_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Language Model Integration.md" "Details"
-    click Vector_Store_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Vector Store Management.md" "Details"
-    click Graph_Indexing_Pipeline href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Graph Indexing Pipeline.md" "Details"
-    click Query_Processing_and_Retrieval href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Query Processing and Retrieval.md" "Details"
-    click Graph_Operations_and_Analysis href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Graph Operations and Analysis.md" "Details"
-    click Text_Processing_and_Knowledge_Extraction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Text Processing and Knowledge Extraction.md" "Details"
-    click Monitoring_and_Callbacks href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Monitoring and Callbacks.md" "Details"
+    click Query_Processing_Context_Building href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Query Processing & Context Building.md" "Details"
+    click Workflow_Management_Caching href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Workflow Management & Caching.md" "Details"
+    click Storage_Logging href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/graphrag/Storage & Logging.md" "Details"
 ```
 
 ## Component Details
 
-### User Interface and Configuration
-This component provides the entry point for users to interact with the GraphRAG system. It handles command-line argument parsing, configuration loading, and management, orchestrating the indexing and querying tasks based on user input and configuration settings. It is responsible for loading configurations from various sources and providing a consistent interface for accessing configuration values.
-- **Related Classes/Methods**: `graphrag.cli.main`, `graphrag.cli.index`, `graphrag.cli.query`, `graphrag.cli.initialize`, `graphrag.cli.prompt_tune`, `graphrag.config.load_config`, `graphrag.config.models.graph_rag_config`, `graphrag.config.environment_reader`, `graphrag.config.defaults`, `graphrag.config.enums`
+The GraphRAG system enhances question answering by integrating knowledge graphs with retrieval-augmented generation. It ingests data from various sources, constructs a graph representation by extracting entities and relationships, and indexes both text and graph embeddings for efficient retrieval. During querying, it retrieves relevant context from the vector store and graph, leveraging language models to generate accurate and informative answers. The system also includes components for configuration management, workflow orchestration, caching, storage abstraction, and logging, ensuring efficient and reliable operation.
 
-### Data Abstraction and Storage
-This component defines the data model used throughout the application, including entities, relationships, text units, and communities. It provides a consistent way to represent and manipulate data, and includes schema definitions for validation. It also abstracts the storage and caching mechanisms, providing a unified interface for interacting with different storage backends and cache implementations, ensuring data persistence and efficient retrieval.
-- **Related Classes/Methods**: `graphrag.data_model.entity`, `graphrag.data_model.relationship`, `graphrag.data_model.text_unit`, `graphrag.data_model.community`, `graphrag.data_model.community_report`, `graphrag.data_model.covariate`, `graphrag.data_model.document`, `graphrag.storage.factory`, `graphrag.storage.blob_pipeline_storage`, `graphrag.storage.cosmosdb_pipeline_storage`, `graphrag.storage.file_pipeline_storage`, `graphrag.storage.memory_pipeline_storage`, `graphrag.storage.pipeline_storage`, `graphrag.cache.factory`, `graphrag.cache.memory_pipeline_cache`, `graphrag.cache.json_pipeline_cache`, `graphrag.cache.noop_pipeline_cache`, `graphrag.cache.pipeline_cache`
+### User Interface & Orchestration
+This component provides the primary interface for users to interact with the GraphRAG system. It handles command-line arguments, orchestrates the execution of indexing and querying workflows, and presents results to the user. It acts as the entry point and central coordinator for the system's functionality.
+- **Related Classes/Methods**: `graphrag.graphrag.cli.main`, `graphrag.graphrag.cli.initialize`, `graphrag.graphrag.cli.index`, `graphrag.graphrag.cli.query`, `graphrag.graphrag.cli.prompt_tune`
+
+### Configuration Management
+This component manages the system's configuration, loading parameters from files and environment variables. It ensures that all required settings are valid and provides a central point of access for configuration values. This promotes consistency and simplifies management of the system's behavior.
+- **Related Classes/Methods**: `graphrag.graphrag.config.load_config`, `graphrag.graphrag.config.create_graphrag_config`, `graphrag.graphrag.config.models.graph_rag_config`, `graphrag.graphrag.config.environment_reader`
+
+### Data Ingestion & Graph Construction
+This component handles the ingestion, processing, and transformation of raw data into a structured knowledge graph. It includes functionalities for loading data from various sources, chunking text, extracting entities and relationships, and building the graph representation. It acts as the foundation for the GraphRAG system, converting unstructured data into a structured format suitable for indexing and querying.
+- **Related Classes/Methods**: `graphrag.graphrag.index.input.factory`, `graphrag.graphrag.index.input.text`, `graphrag.graphrag.index.input.csv`, `graphrag.graphrag.index.input.json`, `graphrag.graphrag.index.input.util`, `graphrag.graphrag.index.text_splitting.chunk_text`, `graphrag.graphrag.index.text_splitting.text_splitting`, `graphrag.graphrag.index.operations.build_noun_graph.build_noun_graph`, `graphrag.graphrag.index.operations.build_noun_graph.np_extractors.factory`, `graphrag.graphrag.index.operations.extract_graph.extract_graph`, `graphrag.graphrag.index.operations.extract_graph.graph_extractor`
+
+### Indexing & Embedding Management
+This component is responsible for indexing the graph data for efficient retrieval. It embeds the text and graph nodes using language models and stores the embeddings in a vector store. It also clusters the graph to identify communities and summarizes the communities to provide context for search. This component prepares the data for efficient querying by creating searchable representations of the text and graph.
+- **Related Classes/Methods**: `graphrag.graphrag.index.operations.embed_text.embed_text`, `graphrag.graphrag.index.operations.embed_graph.embed_graph`, `graphrag.graphrag.index.operations.cluster_graph.cluster_graph`, `graphrag.graphrag.index.operations.summarize_communities.summarize_communities`
+
+### Vector Store Abstraction
+This component provides an abstraction layer for interacting with different vector stores, such as CosmosDB, Azure AI Search, and LanceDB. It allows the system to store and retrieve embeddings efficiently, enabling similarity search and retrieval of relevant context for question answering. It acts as the data repository for the embeddings, providing a consistent interface for accessing them.
+- **Related Classes/Methods**: `graphrag.graphrag.vector_stores.factory`, `graphrag.graphrag.vector_stores.cosmosdb`, `graphrag.graphrag.vector_stores.azure_ai_search`, `graphrag.graphrag.vector_stores.lancedb`, `graphrag.graphrag.utils.api`
 
 ### Language Model Integration
-This component manages integration with different language models, such as OpenAI and Azure OpenAI. It provides a consistent interface for calling language models for tasks such as text embedding, graph extraction, and community summarization. It abstracts the underlying language model providers and handles caching of language model responses, optimizing language model usage.
-- **Related Classes/Methods**: `graphrag.language_model.manager`, `graphrag.language_model.factory`, `graphrag.language_model.providers.fnllm.models`, `graphrag.language_model.providers.fnllm.utils`, `graphrag.language_model.providers.fnllm.cache`, `graphrag.language_model.protocol`
+This component manages the integration with various language models, such as OpenAI and Azure OpenAI. It provides a factory for creating language model instances and a manager for caching and reusing models. It also handles authentication and rate limiting for the language models. It acts as the interface to the language models, providing a consistent way to access their capabilities.
+- **Related Classes/Methods**: `graphrag.graphrag.language_model.factory`, `graphrag.graphrag.language_model.manager`, `graphrag.graphrag.language_model.providers.fnllm.models`
 
-### Vector Store Management
-This component provides an abstraction layer for interacting with different vector stores, such as LanceDB, Azure AI Search, and Cosmos DB. It defines a common interface for storing and searching vector embeddings, and handles the details of connecting to and interacting with each vector store, enabling efficient similarity searches.
-- **Related Classes/Methods**: `graphrag.vector_stores.factory`, `graphrag.vector_stores.lancedb`, `graphrag.vector_stores.azure_ai_search`, `graphrag.vector_stores.cosmosdb`, `graphrag.vector_stores.base`
+### Query Processing & Context Building
+This component implements the query engine that performs search and question answering. It supports different search methods, including basic, local, global, and drift search. It retrieves relevant context from the vector store and graph, and it uses a language model to generate a response. It acts as the brain of the system, orchestrating the search and retrieval process to generate accurate and informative answers.
+- **Related Classes/Methods**: `graphrag.graphrag.query.factory`, `graphrag.graphrag.query.structured_search.basic_search.search`, `graphrag.graphrag.query.structured_search.local_search.search`, `graphrag.graphrag.query.structured_search.global_search.search`, `graphrag.graphrag.query.structured_search.drift_search.search`, `graphrag.graphrag.query.context_builder.community_context`, `graphrag.graphrag.query.context_builder.source_context`, `graphrag.graphrag.query.context_builder.local_context`, `graphrag.graphrag.query.context_builder.global_context`, `graphrag.graphrag.query.context_builder.drift_context`
 
-### Graph Indexing Pipeline
-This component defines the workflow for indexing data and building the knowledge graph. It includes steps for reading input data, extracting entities and relationships, computing embeddings, and storing the graph in a vector store. It orchestrates the various operations involved in building the knowledge graph, transforming raw data into a structured knowledge representation.
-- **Related Classes/Methods**: `graphrag.index.run.run_pipeline`, `graphrag.index.workflows.factory`, `graphrag.index.workflows`, `graphrag.index.input.factory`, `graphrag.index.operations`, `graphrag.index.utils`, `graphrag.index.update`
+### Workflow Management & Caching
+This component manages the execution of workflows for indexing and updating the graph RAG system. It defines the steps in the workflow and orchestrates the execution of these steps. It also handles caching and error handling for the workflows. It acts as the orchestrator of the indexing and updating processes, ensuring that they are executed efficiently and reliably. It also provides caching mechanisms for the pipeline, improving performance by storing intermediate results and reusing them in subsequent runs.
+- **Related Classes/Methods**: `graphrag.graphrag.index.workflows.factory`, `graphrag.graphrag.index.run.run_pipeline`, `graphrag.graphrag.cache.factory`, `graphrag.graphrag.cache.memory_pipeline_cache`, `graphrag.graphrag.cache.json_pipeline_cache`
 
-### Query Processing and Retrieval
-This component handles querying the knowledge graph and retrieving relevant information. It supports different search strategies, such as local search, global search, and drift search, and integrates with the language model to generate answers. It orchestrates the search process and generates the final response, providing users with relevant and informative answers.
-- **Related Classes/Methods**: `graphrag.query`, `graphrag.query.factory`, `graphrag.query.structured_search`, `graphrag.query.context_builder`, `graphrag.query.input`, `graphrag.query.llm`, `graphrag.query.question_gen`
-
-### Graph Operations and Analysis
-This component provides functionalities for creating, manipulating, and analyzing graphs. It includes operations for clustering, pruning, embedding, and laying out graphs, as well as utilities for working with graph data structures. These operations are used during the indexing and querying pipelines, enabling graph-based reasoning and analysis.
-- **Related Classes/Methods**: `graphrag.index.operations.create_graph`, `graphrag.index.operations.cluster_graph`, `graphrag.index.operations.prune_graph`, `graphrag.index.operations.embed_graph`, `graphrag.index.operations.layout_graph`, `graphrag.index.operations.graph_to_dataframes`
-
-### Text Processing and Knowledge Extraction
-This component provides functionalities for processing text data, such as chunking, splitting, and embedding. It includes strategies for different chunking methods and integrates with the language model to compute text embeddings. It also includes functionalities for extracting noun phrases, covariates, community summaries, and description summaries, enriching the knowledge graph with extracted information.
-- **Related Classes/Methods**: `graphrag.index.operations.chunk_text`, `graphrag.index.operations.embed_text`, `graphrag.index.text_splitting`, `graphrag.index.operations.build_noun_graph.np_extractors`, `graphrag.index.operations.extract_covariates`, `graphrag.index.operations.summarize_communities`, `graphrag.index.operations.summarize_descriptions`
-
-### Monitoring and Callbacks
-This component provides a flexible callback system for monitoring and logging the progress of indexing and querying tasks. It supports different callback types, such as console, file, and blob storage, and allows users to customize the behavior of the application. It provides insights into the execution of the pipelines, facilitating debugging and performance optimization.
-- **Related Classes/Methods**: `graphrag.callbacks`
+### Storage & Logging
+This component provides an abstraction layer for interacting with different storage systems and handles logging and callbacks. It allows the system to store and retrieve data efficiently, enabling persistence of the graph and vector store. It also provides logging and callback mechanisms for monitoring the progress of the indexing and querying processes.
+- **Related Classes/Methods**: `graphrag.graphrag.storage.factory`, `graphrag.graphrag.storage.blob_pipeline_storage`, `graphrag.graphrag.storage.cosmosdb_pipeline_storage`, `graphrag.graphrag.storage.file_pipeline_storage`, `graphrag.graphrag.logger.factory`, `graphrag.graphrag.logger.console`, `graphrag.graphrag.logger.rich_progress`, `graphrag.graphrag.callbacks.workflow_callbacks_manager`

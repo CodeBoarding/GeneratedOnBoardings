@@ -3,61 +3,67 @@ graph LR
     ModelManager["ModelManager"]
     ModelFactory["ModelFactory"]
     LanguageModelConfig["LanguageModelConfig"]
-    FNLLMCacheProvider["FNLLMCacheProvider"]
     OpenAIChatFNLLM["OpenAIChatFNLLM"]
     OpenAIEmbeddingFNLLM["OpenAIEmbeddingFNLLM"]
     AzureOpenAIChatFNLLM["AzureOpenAIChatFNLLM"]
     AzureOpenAIEmbeddingFNLLM["AzureOpenAIEmbeddingFNLLM"]
-    ModelManager -- "manages" --> OpenAIChatFNLLM
-    ModelManager -- "manages" --> OpenAIEmbeddingFNLLM
-    ModelManager -- "manages" --> AzureOpenAIChatFNLLM
-    ModelManager -- "manages" --> AzureOpenAIEmbeddingFNLLM
-    ModelFactory -- "creates" --> OpenAIChatFNLLM
-    ModelFactory -- "creates" --> OpenAIEmbeddingFNLLM
-    ModelFactory -- "creates" --> AzureOpenAIChatFNLLM
-    ModelFactory -- "creates" --> AzureOpenAIEmbeddingFNLLM
-    OpenAIChatFNLLM -- "configures" --> LanguageModelConfig
-    OpenAIEmbeddingFNLLM -- "configures" --> LanguageModelConfig
-    AzureOpenAIChatFNLLM -- "configures" --> LanguageModelConfig
-    AzureOpenAIEmbeddingFNLLM -- "configures" --> LanguageModelConfig
-    OpenAIChatFNLLM -- "caches" --> FNLLMCacheProvider
-    OpenAIEmbeddingFNLLM -- "caches" --> FNLLMCacheProvider
-    AzureOpenAIChatFNLLM -- "caches" --> FNLLMCacheProvider
-    AzureOpenAIEmbeddingFNLLM -- "caches" --> FNLLMCacheProvider
-    ModelManager -- "creates chat model" --> ModelFactory
-    ModelManager -- "creates embedding model" --> ModelFactory
+    FNLLMCacheProvider["FNLLMCacheProvider"]
+    ModelManager -- "manages and provides access to" --> OpenAIChatFNLLM
+    ModelManager -- "manages and provides access to" --> OpenAIEmbeddingFNLLM
+    ModelManager -- "manages and provides access to" --> AzureOpenAIChatFNLLM
+    ModelManager -- "manages and provides access to" --> AzureOpenAIEmbeddingFNLLM
+    ModelFactory -- "validates if a model is supported" --> OpenAIChatFNLLM
+    ModelFactory -- "validates if a model is supported" --> OpenAIEmbeddingFNLLM
+    ModelFactory -- "validates if a model is supported" --> AzureOpenAIChatFNLLM
+    ModelFactory -- "validates if a model is supported" --> AzureOpenAIEmbeddingFNLLM
+    LanguageModelConfig -- "configures and validates" --> OpenAIChatFNLLM
+    LanguageModelConfig -- "configures and validates" --> OpenAIEmbeddingFNLLM
+    LanguageModelConfig -- "configures and validates" --> AzureOpenAIChatFNLLM
+    LanguageModelConfig -- "configures and validates" --> AzureOpenAIEmbeddingFNLLM
+    FNLLMCacheProvider -- "caches requests for" --> OpenAIChatFNLLM
+    FNLLMCacheProvider -- "caches requests for" --> OpenAIEmbeddingFNLLM
+    FNLLMCacheProvider -- "caches requests for" --> AzureOpenAIChatFNLLM
+    FNLLMCacheProvider -- "caches requests for" --> AzureOpenAIEmbeddingFNLLM
+    ModelManager -- "manages instances of" --> LanguageModelConfig
+    ModelFactory -- "creates instances of" --> OpenAIChatFNLLM
+    ModelFactory -- "creates instances of" --> OpenAIEmbeddingFNLLM
+    ModelFactory -- "creates instances of" --> AzureOpenAIChatFNLLM
+    ModelFactory -- "creates instances of" --> AzureOpenAIEmbeddingFNLLM
+    ModelManager -- "provides access to" --> ModelFactory
 ```
 
 ## Component Details
 
+The Language Model Integration component provides a unified interface for interacting with various language models, such as OpenAI and Azure OpenAI. It manages the configuration, instantiation, caching, and access to these models, ensuring consistent and efficient usage throughout the GraphRAG system. The central flow involves the ModelManager providing access to language models based on configurations validated by LanguageModelConfig and created by ModelFactory. Concrete implementations like OpenAIChatFNLLM and AzureOpenAIEmbeddingFNLLM handle the actual API calls, potentially leveraging FNLLMCacheProvider for performance optimization.
+
 ### ModelManager
-The ModelManager is a singleton class responsible for managing and caching language models (both chat and embedding models). It provides methods to register new models, retrieve existing models, and create models if they don't exist. It acts as a central point for accessing and reusing language models throughout the application, ensuring efficient resource utilization and consistent model access across the system.
-- **Related Classes/Methods**: `graphrag.language_model.manager.ModelManager`
+The ModelManager is a singleton responsible for managing and providing access to language models (both chat and embedding models). It maintains a registry of available models, ensuring that only one instance of each model exists. It acts as a central point for retrieving and reusing language model instances.
+- **Related Classes/Methods**: `graphrag.graphrag.language_model.manager.ModelManager`
 
 ### ModelFactory
-The ModelFactory is responsible for creating instances of language models (both chat and embedding models) based on their configuration. It encapsulates the logic for instantiating different types of models, handling provider-specific initialization, and ensuring that the models are created with the correct parameters. This abstraction simplifies the process of adding or modifying language model integrations.
-- **Related Classes/Methods**: `graphrag.language_model.factory.ModelFactory`
+The ModelFactory is responsible for creating instances of language models. It determines if a given model is supported by the system and handles the instantiation process based on the provided configuration. It ensures that only valid and supported models are created.
+- **Related Classes/Methods**: `graphrag.graphrag.language_model.factory.ModelFactory`
 
 ### LanguageModelConfig
-The LanguageModelConfig class represents the configuration for a language model. It stores information such as the model name, provider, and other parameters required to initialize the model. It is used to pass configuration information to the ModelFactory when creating new models, providing a structured way to define and manage language model settings.
-- **Related Classes/Methods**: `graphrag.config.models.language_model_config.LanguageModelConfig`
-
-### FNLLMCacheProvider
-The FNLLMCacheProvider is responsible for caching the responses from the language models. It provides a way to store and retrieve responses, so that the same request does not have to be sent to the language model multiple times. This improves performance and reduces costs by avoiding redundant API calls to the language model providers.
-- **Related Classes/Methods**: `graphrag.language_model.providers.fnllm.cache.FNLLMCacheProvider`
+The LanguageModelConfig defines the configuration schema for language models. It includes validation logic for API keys, authentication types, model types, and other settings specific to different language model providers (e.g., OpenAI, Azure OpenAI). It ensures that the language model configurations are valid before being used.
+- **Related Classes/Methods**: `graphrag.graphrag.config.models.language_model_config.LanguageModelConfig`
 
 ### OpenAIChatFNLLM
-The OpenAIChatFNLLM class is a concrete implementation of a chat language model that uses the OpenAI API. It provides methods for generating responses to chat messages. It uses the FNLLMCacheProvider to cache the responses from the OpenAI API, optimizing performance and reducing costs.
-- **Related Classes/Methods**: `graphrag.language_model.providers.fnllm.models.OpenAIChatFNLLM`
+The OpenAIChatFNLLM is a concrete implementation of a chat language model using the OpenAI API. It provides methods for generating chat completions (`chat` and `achat`). It handles the specific details of interacting with the OpenAI chat API.
+- **Related Classes/Methods**: `graphrag.graphrag.language_model.providers.fnllm.models.OpenAIChatFNLLM`
 
 ### OpenAIEmbeddingFNLLM
-The OpenAIEmbeddingFNLLM class is a concrete implementation of an embedding language model that uses the OpenAI API. It provides methods for generating embeddings for text. It uses the FNLLMCacheProvider to cache the responses from the OpenAI API, optimizing performance and reducing costs.
-- **Related Classes/Methods**: `graphrag.language_model.providers.fnllm.models.OpenAIEmbeddingFNLLM`
+The OpenAIEmbeddingFNLLM is a concrete implementation of an embedding language model using the OpenAI API. It provides methods for generating embeddings for text (`embed` and `embed_batch`). It handles the specific details of interacting with the OpenAI embedding API.
+- **Related Classes/Methods**: `graphrag.graphrag.language_model.providers.fnllm.models.OpenAIEmbeddingFNLLM`
 
 ### AzureOpenAIChatFNLLM
-The AzureOpenAIChatFNLLM class is a concrete implementation of a chat language model that uses the Azure OpenAI API. It provides methods for generating responses to chat messages. It uses the FNLLMCacheProvider to cache the responses from the Azure OpenAI API, optimizing performance and reducing costs.
-- **Related Classes/Methods**: `graphrag.language_model.providers.fnllm.models.AzureOpenAIChatFNLLM`
+The AzureOpenAIChatFNLLM is a concrete implementation of a chat language model using the Azure OpenAI API. It provides methods for generating chat completions (`chat` and `achat`). It handles the specific details of interacting with the Azure OpenAI chat API.
+- **Related Classes/Methods**: `graphrag.graphrag.language_model.providers.fnllm.models.AzureOpenAIChatFNLLM`
 
 ### AzureOpenAIEmbeddingFNLLM
-The AzureOpenAIEmbeddingFNLLM class is a concrete implementation of an embedding language model that uses the Azure OpenAI API. It provides methods for generating embeddings for text. It uses the FNLLMCacheProvider to cache the responses from the Azure OpenAI API, optimizing performance and reducing costs.
-- **Related Classes/Methods**: `graphrag.language_model.providers.fnllm.models.AzureOpenAIEmbeddingFNLLM`
+The AzureOpenAIEmbeddingFNLLM is a concrete implementation of an embedding language model using the Azure OpenAI API. It provides methods for generating embeddings for text (`embed` and `embed_batch`). It handles the specific details of interacting with the Azure OpenAI embedding API.
+- **Related Classes/Methods**: `graphrag.graphrag.language_model.providers.fnllm.models.AzureOpenAIEmbeddingFNLLM`
+
+### FNLLMCacheProvider
+The FNLLMCacheProvider provides caching functionality for language model requests. It can improve performance by reducing the number of API calls to the language model provider. It stores and retrieves responses to avoid redundant API requests.
+- **Related Classes/Methods**: `graphrag.graphrag.language_model.providers.fnllm.cache.FNLLMCacheProvider`
