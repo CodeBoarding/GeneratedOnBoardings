@@ -1,74 +1,68 @@
 ```mermaid
 graph LR
-    GPF_Core["GPF Core"]
+    GPF_Core_Management["GPF Core Management"]
     Genomic_Resources_Management["Genomic Resources Management"]
-    Annotation_Engine["Annotation Engine"]
-    Storage_Backends["Storage Backends"]
-    Variants_Loaders["Variants Loaders"]
-    Pedigree_Manager["Pedigree Manager"]
-    WDAE_API["WDAE API"]
+    Data_Processing_and_Annotation["Data Processing and Annotation"]
+    Data_Storage_and_Import["Data Storage and Import"]
+    Variant_Querying_and_Retrieval["Variant Querying and Retrieval"]
+    Web_API["Web API"]
+    Phenotype_Data_Management["Phenotype Data Management"]
     Task_Management["Task Management"]
-    Command_Line_Tools["Command-Line Tools"]
-    GPF_Core -- "Uses" --> Genomic_Resources_Management
-    GPF_Core -- "Uses" --> Annotation_Engine
-    GPF_Core -- "Uses" --> Storage_Backends
-    Annotation_Engine -- "Uses" --> Genomic_Resources_Management
-    Annotation_Engine -- "Uses" --> Storage_Backends
-    Storage_Backends -- "Uses" --> Task_Management
-    Variants_Loaders -- "Uses" --> Pedigree_Manager
-    WDAE_API -- "Uses" --> GPF_Core
-    Command_Line_Tools -- "Uses" --> GPF_Core
-    Command_Line_Tools -- "Uses" --> Annotation_Engine
-    Command_Line_Tools -- "Uses" --> Genomic_Resources_Management
-    GPF_Core -- "Uses" --> WDAE_API
-    Annotation_Engine -- "Uses" --> Pedigree_Manager
-    GPF_Core -- "Uses" --> Task_Management
-    Variants_Loaders -- "Uses" --> Storage_Backends
-    click GPF_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/GPF Core.md" "Details"
+    GPF_Core_Management -- "uses" --> Genomic_Resources_Management
+    GPF_Core_Management -- "uses" --> Data_Processing_and_Annotation
+    GPF_Core_Management -- "uses" --> Data_Storage_and_Import
+    GPF_Core_Management -- "uses" --> Variant_Querying_and_Retrieval
+    GPF_Core_Management -- "uses" --> Phenotype_Data_Management
+    Data_Processing_and_Annotation -- "uses" --> Genomic_Resources_Management
+    Data_Storage_and_Import -- "uses" --> Data_Processing_and_Annotation
+    Variant_Querying_and_Retrieval -- "uses" --> Data_Storage_and_Import
+    Web_API -- "uses" --> GPF_Core_Management
+    Web_API -- "uses" --> Variant_Querying_and_Retrieval
+    Web_API -- "uses" --> Phenotype_Data_Management
+    Phenotype_Data_Management -- "uses" --> Genomic_Resources_Management
+    Data_Storage_and_Import -- "uses" --> Task_Management
+    click GPF_Core_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/GPF Core Management.md" "Details"
     click Genomic_Resources_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Genomic Resources Management.md" "Details"
-    click Annotation_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Annotation Engine.md" "Details"
-    click Storage_Backends href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Storage Backends.md" "Details"
-    click Variants_Loaders href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Variants Loaders.md" "Details"
-    click Pedigree_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Pedigree Manager.md" "Details"
-    click WDAE_API href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/WDAE API.md" "Details"
+    click Data_Processing_and_Annotation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Data Processing and Annotation.md" "Details"
+    click Data_Storage_and_Import href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Data Storage and Import.md" "Details"
+    click Variant_Querying_and_Retrieval href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Variant Querying and Retrieval.md" "Details"
+    click Web_API href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Web API.md" "Details"
+    click Phenotype_Data_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Phenotype Data Management.md" "Details"
     click Task_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Task Management.md" "Details"
-    click Command_Line_Tools href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Command-Line Tools.md" "Details"
 ```
 
 ## Component Details
 
-### GPF Core
-The GPF Core component serves as the central hub for managing genomic data and resources within the GPF ecosystem. It is responsible for configuration loading, genomic resource management, and providing data access interfaces. This component initializes and manages the GPF instance, offering access to genomic resources, annotation pipelines, and storage backends. It also integrates with WDAE components to provide data and functionalities for web-based analysis, ensuring a cohesive and efficient data management system.
-- **Related Classes/Methods**: `dae.gpf_instance.gpf_instance.GPFInstance`, `dae.configuration.gpf_config_parser.GPFConfigParser`, `dae.genomic_resources.repository_factory.build_genomic_resource_repository`
+The GPF system facilitates the management, annotation, storage, querying, and web-based access to genomic data. It revolves around a central GPF Instance Manager that orchestrates access to genomic resources, data annotation pipelines, data import/storage functionalities, and variant querying services. The Web API provides a user interface for interacting with the system, while phenotype data management and task management systems support comprehensive data analysis and efficient processing.
+
+### GPF Core Management
+This component is responsible for managing the overall configuration and context of a GPF instance. It handles loading and managing various databases, genomic resources, and storage configurations. It also provides access to genotype data, phenotype data, gene sets, and annotation pipelines. It acts as a central hub for accessing various functionalities within GPF.
+- **Related Classes/Methods**: `gpf.dae.dae.gpf_instance.gpf_instance.GPFInstance`
 
 ### Genomic Resources Management
-The Genomic Resources Management component is dedicated to the storage, retrieval, and caching of genomic resources, including reference genomes, gene models, and annotation scores. It offers functionalities for building, accessing, and managing these resources, ensuring efficient access to essential genomic data for annotation and analysis pipelines. This component supports various storage protocols, such as local filesystems and cloud-based storage, providing flexibility and scalability in resource management.
-- **Related Classes/Methods**: `dae.genomic_resources.reference_genome.ReferenceGenome`, `dae.genomic_resources.gene_models.gene_models.GeneModels`, `dae.genomic_resources.repository.GenomicResourceRepo`, `dae.genomic_resources.fsspec_protocol.FsspecReadOnlyProtocol`, `dae.genomic_resources.fsspec_protocol.FsspecReadWriteProtocol`
+This component deals with managing and accessing genomic resources such as reference genomes, gene models, and genomic scores. It provides functionalities for loading, caching, and querying these resources, as well as building histograms and statistics. This service is crucial for annotation and variant analysis.
+- **Related Classes/Methods**: `gpf.dae.dae.genomic_resources.reference_genome.ReferenceGenome`, `gpf.dae.dae.genomic_resources.gene_models.gene_models.GeneModels`, `gpf.dae.dae.genomic_resources.genomic_scores.GenomicScore`, `gpf.dae.dae.genomic_resources.genomic_context.GenomicContext`
 
-### Annotation Engine
-The Annotation Engine component is responsible for defining and executing annotation pipelines for genomic variants. It includes modules for configuring, building, and running annotation processes, as well as handling different annotation sources and effects. This component integrates with genomic resources and effect annotation components to provide comprehensive variant annotation capabilities. It is utilized by both command-line tools and WDAE for annotating genomic data, ensuring consistent and reliable annotation across different platforms.
-- **Related Classes/Methods**: `dae.annotation.annotation_pipeline.AnnotationPipeline`, `dae.annotation.annotation_factory.build_annotation_pipeline`, `dae.annotation.annotator_base.AnnotatorBase`, `dae.annotation.effect.EffectTypesMixin`, `dae.effect_annotation.effect.AnnotationEffect`, `dae.effect_annotation.effect.EffectTranscript`, `dae.effect_annotation.effect.EffectGene`, `dae.effect_annotation.annotator.EffectAnnotator`
+### Data Processing and Annotation
+This component is responsible for annotating genomic variants with various information, such as genomic scores, functional effects, and allele frequencies. It includes tools for building annotation pipelines, running annotation tasks, and managing annotation configurations. This engine enriches variant data with relevant annotations for downstream analysis.
+- **Related Classes/Methods**: `gpf.dae.dae.annotation.annotation_pipeline.AnnotationPipeline`, `gpf.dae.dae.annotation.annotator_base.AnnotatorBase`, `gpf.dae.dae.annotation.annotation_factory`, `gpf.dae.dae.annotation.score_annotator`, `gpf.dae.dae.annotation.effect_annotator`
 
-### Storage Backends
-The Storage Backends component provides functionalities for storing and querying genomic data in various formats, including Parquet, Impala, GCP (BigQuery), and DuckDB. It includes modules for writing, reading, and managing data in these storage systems, as well as defining schemas and query interfaces. This component supports different storage layouts and query optimization techniques to ensure efficient data access and analysis, catering to diverse storage needs and performance requirements.
-- **Related Classes/Methods**: `dae.parquet.parquet_writer.ParquetWriter`, `dae.variants_loaders.parquet.loader.ParquetLoader`, `dae.schema2_storage.schema2_layout.Schema2DatasetLayout`, `dae.parquet.schema2.serializers.AlleleParquetSerializer`, `impala_storage.schema1.impala_genotype_storage.ImpalaGenotypeStorage`, `impala_storage.schema1.impala_variants.ImpalaVariants`, `impala_storage.helpers.impala_query_runner.ImpalaQueryRunner`, `impala_storage.schema1.summary_variants_query_builder.SummaryVariantsQueryBuilder`, `impala_storage.schema1.family_variants_query_builder.FamilyVariantsQueryBuilder`, `gcp_storage.gcp_genotype_storage.GcpGenotypeStorage`, `gcp_storage.bigquery_variants.BigQueryVariants`, `gcp_storage.bigquery_query_runner.BigQueryQueryRunner`, `dae.duckdb_storage.duckdb_genotype_storage.DuckDbStorage`, `dae.duckdb_storage.duckdb2_variants.DuckDb2Variants`, `dae.duckdb_storage.duckdb2_variants.DuckDb2Runner`
+### Data Storage and Import
+This component handles the import of genomic data from various formats (VCF, DAE, CNV) into a genotype storage. It builds import pipelines, manages data partitions, and writes data to Parquet files, supporting storage backends like Impala, GCP, and DuckDB. This system is responsible for efficiently storing and organizing genomic data.
+- **Related Classes/Methods**: `gpf.dae.dae.import_tools.import_tools.ImportProject`, `gpf.dae.dae.parquet_storage.storage.ParquetGenotypeStorage`, `gpf.dae.dae.parquet.parquet_writer`, `gpf.dae.dae.variants_loaders`, `gpf.dae.dae.schema2_storage.schema2_import_storage.Schema2ImportStorage`, `gpf.impala_storage.impala_storage.schema1.impala_schema1.ImpalaSchema1ImportStorage`, `gpf.gcp_storage.gcp_storage.gcp_import_storage.GcpImportStorage`, `gpf.dae.dae.duckdb_storage.duckdb_import_storage`
 
-### Variants Loaders
-The Variants Loaders component provides functionalities for loading genomic variants from different file formats, such as VCF, DAE, and CNV. It includes modules for parsing and transforming variant data into a common format, as well as handling pedigree information. This component integrates with the Pedigree Manager component to ensure accurate family structures and variant annotations, facilitating seamless data integration and analysis.
-- **Related Classes/Methods**: `dae.variants_loaders.vcf.loader.VcfLoader`, `dae.variants_loaders.dae.loader.DenovoLoader`, `dae.variants_loaders.dae.loader.DaeTransmittedLoader`, `dae.variants_loaders.cnv.loader.CNVLoader`, `dae.variants_loaders.raw.loader.VariantsLoader`
+### Variant Querying and Retrieval
+This component provides functionalities for querying genomic variants from the genotype storage. It builds SQL queries, transforms query parameters, and runs queries against different storage backends, supporting both summary and family variants. This service enables efficient retrieval of variant data based on specific criteria.
+- **Related Classes/Methods**: `gpf.dae.dae.query_variants`, `gpf.dae.dae.variants.family_variant`, `gpf.dae.dae.duckdb_storage.duckdb_variants`, `gpf.impala_storage.impala_storage.schema1.impala_variants.ImpalaVariants`, `gpf.impala2_storage.impala2_storage.schema2.impala_variants.ImpalaVariants`
 
-### Pedigree Manager
-The Pedigree Manager component is responsible for handling the loading, processing, and management of pedigree data. It includes modules for loading pedigree files, building family structures, and tagging families based on various criteria. This component is utilized by the Variants Loaders component to ensure accurate family structures and variant annotations, contributing to the overall data quality and reliability.
-- **Related Classes/Methods**: `dae.pedigrees.loader.FamiliesLoader`, `dae.pedigrees.family.Family`, `dae.pedigrees.families_data.FamiliesData`, `dae.pedigrees.family_tag_builder.FamilyTagsBuilder`
+### Web API
+This component implements the web interface for accessing and visualizing genomic data. It manages datasets, queries variants, explores gene sets, performs enrichment analysis, and handles user authentication and authorization. This API provides a user-friendly interface for interacting with GPF functionalities.
+- **Related Classes/Methods**: `gpf.wdae.wdae.datasets_api`, `gpf.wdae.wdae.genotype_browser`, `gpf.wdae.wdae.gene_sets`, `gpf.wdae.wdae.enrichment_api`, `gpf.wdae.wdae.users_api`, `gpf.wdae.wdae.gpf_instance`, `gpf.wdae.wdae.wdae.wgpf`
 
-### WDAE API
-The WDAE API component provides the API endpoints and functionalities for managing and accessing datasets, users, and analysis tools within the WDAE. It includes modules for handling dataset permissions, retrieving dataset configurations, managing users and groups, and providing access to gene view, phenotype browser, and enrichment analysis functionalities. This component relies on the GPF Core component for data access and analysis capabilities, enabling a comprehensive web-based data analysis environment.
-- **Related Classes/Methods**: `wdae.wdae.datasets_api.views.DatasetView`, `wdae.wdae.datasets_api.permissions.IsDatasetAllowed`, `wdae.wdae.datasets_api.permissions.user_has_permission`, `wdae.wdae.users_api.views.UserViewSet`, `wdae.wdae.users_api.models.WdaeUser`, `wdae.wdae.users_api.serializers.UserSerializer`, `wdae.wdae.gene_view.views.ConfigView`, `wdae.wdae.gene_view.views.QueryVariantsView`, `wdae.wdae.studies.study_wrapper.StudyWrapper.get_gene_view_summary_variants`, `wdae.wdae.pheno_browser_api.views.PhenoConfigView`, `wdae.wdae.pheno_browser_api.views.PhenoMeasuresView`, `wdae.wdae.pheno_browser_api.views.PhenoMeasureValues`, `wdae.wdae.enrichment_api.views.EnrichmentModelsView`, `wdae.wdae.enrichment_api.views.EnrichmentTestView`
+### Phenotype Data Management
+This component handles the management and analysis of phenotype data. It imports phenotype data, builds phenotype browsers, and performs pheno tool analysis. This manager integrates phenotype data with genomic data for comprehensive analysis.
+- **Related Classes/Methods**: `gpf.dae.dae.pheno`, `gpf.dae.dae.pheno_tool`, `gpf.dae.dae.pheno_browser`
 
 ### Task Management
-The Task Management component provides functionalities for defining and executing task graphs, which are used to orchestrate complex data processing pipelines. It includes modules for creating tasks, defining dependencies, and running task graphs in different execution environments. This component is used by various components, such as the Annotation Engine and Storage Backends, to manage data processing workflows, ensuring efficient and scalable data processing.
-- **Related Classes/Methods**: `dae.task_graph.graph.TaskGraph`, `dae.task_graph.executor.SequentialExecutor`, `dae.task_graph.executor.DaskExecutor`, `dae.task_graph.cli_tools.TaskGraphCli`
-
-### Command-Line Tools
-The Command-Line Tools component provides command-line interfaces for managing GPF instances, re-annotating data, and generating denovo gene sets. It relies on the GPF Core, Annotation Engine, and Genomic Resources components to perform these tasks. This component offers a convenient way to manage and process genomic data from the command line, providing flexibility and control over data processing workflows.
-- **Related Classes/Methods**: `wdae.wdae.wdae.wgpf.cli`, `dae.annotation.reannotate_instance.ReannotateInstanceTool`, `dae.tools.generate_denovo_gene_sets.main`
+This component provides a framework for managing and executing complex tasks with dependencies. It creates task graphs, schedules tasks, and caches task results, supporting execution backends like sequential execution and Dask execution. This system optimizes the execution of data processing pipelines.
+- **Related Classes/Methods**: `gpf.dae.dae.task_graph`
