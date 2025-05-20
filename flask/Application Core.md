@@ -1,49 +1,60 @@
-## Application Core Overview
-
-The Application Core manages the Flask application instance, configuration, and overall lifecycle. It initializes and configures the application, handles context management, and provides access to application-level resources.
-
-Here's a high-level component flow diagram illustrating the Application Core's structure and interactions:
-
 ```mermaid
 graph LR
-    A[Flask Application] -- Initializes & Configures --> B(Configuration Management)
-    A -- Creates --> C(Request Context)
-    A -- Creates --> D(Application Context)
-    A -- Uses --> E(URL Routing)
-    A -- Uses --> F(Error Handling)
-    A -- Uses --> G(Templating Engine)
-    C -- Manages --> H(Session Management)
-    A -- Creates --> I(Response Handling)
-
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
-    style E fill:#ccf,stroke:#333,stroke-width:2px
-    style F fill:#ccf,stroke:#333,stroke-width:2px
-    style G fill:#ccf,stroke:#333,stroke-width:2px
-    style H fill:#ccf,stroke:#333,stroke-width:2px
-    style I fill:#ccf,stroke:#333,stroke-width:2px
-
-
+    Flask_App_Instance["Flask App Instance"]
+    WSGI_Application["WSGI Application"]
+    Request_Dispatcher["Request Dispatcher"]
+    Request_Preprocessor["Request Preprocessor"]
+    URL_Dispatcher["URL Dispatcher"]
+    Response_Maker["Response Maker"]
+    Response_Processor["Response Processor"]
+    Request_Finalizer["Request Finalizer"]
+    Exception_Handler["Exception Handler"]
+    WSGI_Application -- "delegates to" --> Request_Dispatcher
+    Request_Dispatcher -- "calls" --> Request_Preprocessor
+    Request_Dispatcher -- "calls" --> URL_Dispatcher
+    Request_Dispatcher -- "calls" --> Response_Maker
+    Request_Dispatcher -- "calls" --> Response_Processor
+    Request_Dispatcher -- "calls" --> Request_Finalizer
+    Request_Dispatcher -- "calls" --> Exception_Handler
+    Flask_App_Instance -- "creates" --> WSGI_Application
 ```
 
-### Component Descriptions:
+## Component Details
 
-*   **Flask Application:** The core Flask application class responsible for managing the application lifecycle, routing, and configuration. It initializes and configures the application, dispatches requests to the appropriate view functions, and handles errors. **Relevant source files:** `flask.app.Flask`
+The Flask application core manages the lifecycle of a web request from the moment it's received by the WSGI server until a response is sent back to the client. It initializes the application, sets up the application and request contexts, dispatches the request to the appropriate view function based on the URL, handles any exceptions that occur during processing, and ensures that resources are properly cleaned up after the request is complete. The core orchestrates the interaction between various components like request preprocessors, view functions, response processors, and exception handlers to deliver a complete web application experience.
 
-*   **Configuration Management:** Handles application configuration, loading from files, environment variables, and other sources. It provides a centralized way to manage application settings. **Relevant source files:** `flask.config.Config`
+### Flask App Instance
+The central Flask application object. It's responsible for initializing the application, loading configuration, registering extensions, and acting as the central point for request handling. It holds the WSGI application callable and manages the application context.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask`
 
-*   **Request Context:** Encapsulates request-specific information, including the request object, URL adapter, and session. It provides a context within which request processing occurs. **Relevant source files:** `flask.ctx.RequestContext`
+### WSGI Application
+The WSGI application callable that receives requests from the WSGI server. It sets up the request and application contexts and then delegates the actual request handling to the `full_dispatch_request` method.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:wsgi_app`, `flask.src.flask.app.Flask:__call__`
 
-*   **Application Context:** Manages application-level data during a request, providing access to resources like the database connection. It ensures that resources are available throughout the request lifecycle. **Relevant source files:** `flask.ctx.AppContext`
+### Request Dispatcher
+The core of the request handling process. It preprocesses the request, dispatches it to the view function, and finalizes the request by processing the response. It also handles exceptions that occur during request processing.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:full_dispatch_request`
 
-*   **URL Routing:** Maps URLs to view functions, handling request dispatching based on the URL requested. It determines which view function should handle a given request. **Relevant source files:** `flask.app.Flask.add_url_rule`, `flask.sansio.app.App.add_url_rule`, `flask.app.Flask.create_url_adapter`
+### Request Preprocessor
+Functions that are executed before the request is handled by the view function. They can modify the request or return a response directly, short-circuiting the normal request handling.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:preprocess_request`
 
-*   **Error Handling:** Manages exceptions and errors that occur during request processing, providing mechanisms for handling HTTP exceptions and user-defined exceptions. It ensures that errors are handled gracefully and that appropriate responses are returned to the client. **Relevant source files:** `flask.app.Flask.handle_http_exception`, `flask.app.Flask.handle_user_exception`, `flask.app.Flask.log_exception`
+### URL Dispatcher
+Matches the URL to an endpoint and calls the associated view function. It handles routing and view function execution.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:dispatch_request`
 
-*   **Templating Engine:** Renders templates to generate dynamic HTML content, allowing developers to separate presentation logic from application code. It uses a templating language (e.g., Jinja2) to generate HTML output. **Relevant source files:** `flask.templating.Environment`, `flask.app.Flask.create_jinja_environment`, `flask.sansio.app.App.add_template_filter`, `flask.sansio.app.App.add_template_test`, `flask.sansio.app.App.add_template_global`
+### Response Maker
+Converts the return value of a view function into a Response object. It handles different return types and ensures a consistent response format.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:make_response`
 
-*   **Session Management:** Provides an interface for implementing session management, allowing applications to store and retrieve user-specific data across requests. It enables applications to maintain user state across multiple requests. **Relevant source files:** `flask.sessions.SessionInterface.is_null_session`, `flask.sessions.SecureCookieSessionInterface.save_session`
+### Response Processor
+Functions that are executed after the view function has returned a response. They can modify the response before it is sent to the client.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:process_response`
 
-*   **Response Handling:** Represents the outgoing HTTP response, including headers, body, and status code. It is responsible for converting return values from view functions into valid HTTP responses. **Relevant source files:** `flask.wrappers.Response`
+### Request Finalizer
+Performs actions after the request has been handled, such as closing database connections or cleaning up resources.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:finalize_request`
+
+### Exception Handler
+Handles exceptions that occur during request processing. It can be customized to provide specific error handling logic for user exceptions and HTTP exceptions.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:handle_exception`, `flask.src.flask.app.Flask:handle_user_exception`, `flask.src.flask.app.Flask:handle_http_exception`
