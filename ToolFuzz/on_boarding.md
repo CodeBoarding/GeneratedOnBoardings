@@ -1,90 +1,46 @@
-# ToolFuzz: High-Level Data Flow Overview
-
-ToolFuzz is a framework designed to automatically test and evaluate the robustness and correctness of tools used by AI agents. It employs fuzzing techniques, correctness oracles, and diverse execution environments to identify potential runtime failures, incorrect outputs, and vulnerabilities in these tools.
-
 ```mermaid
-flowchart LR
-    A[Tool Definition & Extraction] -- provides tool info --> B(Agent Execution Framework)
-    B -- executes tool calls --> C(Runtime Fuzzing Engine)
-    C -- generates fuzzed inputs --> B
-    B -- produces outputs --> D(Correctness Assessment)
-    E[Prompt Management] -- provides prompts --> B
-    D -- evaluates outputs --> F(Test Harness & Reporting)
-    G[Environment Management] -- sets up environment --> B
-
-click A href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz//Tool Definition & Extraction.md"
-click B href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz//Agent Execution Framework.md"
-click C href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz//Runtime Fuzzing Engine.md"
-click D href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz//Correctness Assessment.md"
-click E href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz//Prompt Management.md"
-click F href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz//Test Harness & Reporting.md"
-click G href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz//Environment Management.md"
-
+graph LR
+    Agent_Execution["Agent Execution"]
+    Tool_Management["Tool Management"]
+    Fuzzing_Engine["Fuzzing Engine"]
+    Evaluation_and_Repair["Evaluation and Repair"]
+    Environment_Control["Environment Control"]
+    Fuzzing_Engine -- "executes agents" --> Agent_Execution
+    Fuzzing_Engine -- "extracts tool information" --> Tool_Management
+    Agent_Execution -- "loads tools" --> Tool_Management
+    Environment_Control -- "provides tools for testing" --> Agent_Execution
+    Evaluation_and_Repair -- "provides buggy tools for testing" --> Fuzzing_Engine
+    Evaluation_and_Repair -- "fixes buggy tools" --> Evaluation_and_Repair
+    Fuzzing_Engine -- "generates prompts" --> Fuzzing_Engine
+    Evaluation_and_Repair -- "loads tools" --> Tool_Management
+    Evaluation_and_Repair -- "uses agent executors" --> Agent_Execution
+    click Agent_Execution href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz/Agent Execution.md" "Details"
+    click Tool_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz/Tool Management.md" "Details"
+    click Fuzzing_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz/Fuzzing Engine.md" "Details"
+    click Evaluation_and_Repair href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz/Evaluation and Repair.md" "Details"
+    click Environment_Control href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/ToolFuzz/Environment Control.md" "Details"
 ```
 
-## Component Descriptions:
+## Component Details
 
-**A. Tool Definition & Extraction:**
-This component extracts information about tools from various frameworks (Langchain, Autogen, CrewAI, Llama Index). It uses ToolWrappers to provide a unified interface for accessing tool arguments, documentation, and source code. It provides tool information to the Agent Execution Framework, enabling it to execute tools correctly. 
+ToolFuzz is a framework for fuzzing tools used by AI agents. It focuses on identifying correctness and runtime issues in tools from various sources, including Langchain, Autogen, LlamaIndex and CrewAI. The framework provides components for loading tools, generating prompts, executing agents, and evaluating results. It also includes features for managing controlled environments, defining buggy tools, and automatically fixing tool flaws. The main flow involves loading tools, generating prompts based on tool specifications, executing agents with those tools, and then evaluating the results to identify potential issues.
 
-*Related Files:*
-*   `src.toolfuzz.tools.info_extractors.tool_wrapper_factory.ToolWrapperFactory`: Creates tool extractors for different frameworks.
-*   `src.toolfuzz.tools.info_extractors.tool_wrapper.ToolWrapper`: Base class for tool wrappers.
-*   `src.toolfuzz.tools.info_extractors.llama_index_tool_wrapper.LLamaIndexToolWrapper`: Extracts information from Llama Index tools.
-*   `src.toolfuzz.tools.info_extractors.autogen_tool_wrapper.AutogenToolWrapper`: Extracts information from Autogen tools.
-*   `src.toolfuzz.tools.info_extractors.langchain_tool_wrapper.LangchainToolWrapper`: Extracts information from Langchain tools.
-*   `src.toolfuzz.tools.info_extractors.crew_ai_tool_wrapper.CrewAIToolWrapper`: Extracts information from CrewAI tools.
+### Agent Execution
+This component provides a unified interface for executing agents from different frameworks (Langchain, Autogen, LlamaIndex, CrewAI) with various tools. It handles the execution of agents, manages tool interactions, and provides a consistent environment for fuzzing. It abstracts away the complexities of different agent frameworks, allowing the fuzzer to focus on testing the tools themselves.
+- **Related Classes/Methods**: `src.toolfuzz.agent_executors.agent_executor`, `src.toolfuzz.agent_executors.autogen.assistant_agent`, `src.toolfuzz.agent_executors.autogen.routed_agent`, `src.toolfuzz.agent_executors.langchain.openai_function`, `src.toolfuzz.agent_executors.langchain.react_new`, `src.toolfuzz.agent_executors.langchain.react_old`, `src.toolfuzz.agent_executors.crewai.agent`, `src.toolfuzz.agent_executors.llama_index.react_agent`, `src.toolfuzz.agent_executors.llama_index.openai_agent`, `src.toolfuzz.agent_executors.llama_index.llama_index_agent`, `src.toolfuzz.agent_executors.llama_index.function_calling_agent`, `src.toolfuzz.agent_executors.llama_index.lats_agent`, `src.toolfuzz.agent_executors.llama_index.coa_agent`
 
-**B. Agent Execution Framework:**
-This component provides a unified interface for executing agents from different frameworks (Langchain, Autogen, CrewAI, Llama Index). It handles the execution of prompts and tool calls, and captures the agent's responses, tool outputs, and any exceptions raised. It receives tool information from Tool Definition & Extraction, executes fuzzed tool calls from the Runtime Fuzzing Engine, receives prompts from Prompt Management, and sends outputs to Correctness Assessment. It also relies on Environment Management to set up the execution environment.
+### Tool Management
+This component is responsible for loading, extracting, wrapping, and managing information about tools from different sources. It provides a standardized interface for accessing tool metadata, arguments, and documentation, which is crucial for prompt generation and fuzzing. It handles the complexities of different tool formats and provides a consistent view of the tools to the rest of the system.
+- **Related Classes/Methods**: `src.toolfuzz.tools.info_extractors.tool_wrapper_factory`, `src.toolfuzz.tools.info_extractors.tool_wrapper`, `src.toolfuzz.tools.info_extractors.llama_index_tool_wrapper`, `src.toolfuzz.tools.info_extractors.autogen_tool_wrapper`, `src.toolfuzz.tools.info_extractors.langchain_tool_wrapper`, `src.toolfuzz.tools.info_extractors.crew_ai_tool_wrapper`, `src.eval.toolfuzz.loaders.langchain_tool_loaders`, `src.eval.toolfuzz.loaders.langchain_toolkit_loaders`, `src.eval.toolfuzz.loaders.module_tool_loader`, `src.eval.toolfuzz.utils.tools`, `src.eval.toolfuzz.utils.tool_loader`, `src.eval.toolfuzz.loaders.custom_tools_loader`, `src.eval.toolfuzz.loaders.langchain_loader`, `src.toolfuzz.tools.info_extractors.dataclasses`
 
-*Related Files:*
-*   `src.toolfuzz.agent_executors.agent_executor.TestingAgentExecutor`: Base class for agent executors.
-*   `src.toolfuzz.agent_executors.autogen.assistant_agent.AssistantAgentExecutor`: Executes Autogen assistant agents.
-*   `src.toolfuzz.agent_executors.langchain.react_new.ReactAgentNew`: Executes Langchain React agents.
-*   `src.toolfuzz.agent_executors.crewai.agent.CrewAIAgent`: Executes CrewAI agents.
-*   `src.toolfuzz.agent_executors.llama_index.llama_index_agent.LlamaIndexAgent`: Executes Llama Index agents.
-*   `src.toolfuzz.agent_executors.llama_index.function_calling_agent.FunctionCallingAgentExecutor`: Executes Llama Index function calling agents.
+### Fuzzing Engine
+This component encompasses the core fuzzing logic, including prompt generation, agent execution, and result evaluation. It includes both correctness and runtime fuzzing strategies, focusing on identifying different types of tool-related issues. It orchestrates the entire fuzzing process, from generating inputs to analyzing outputs.
+- **Related Classes/Methods**: `src.toolfuzz.correctness.correctness_fuzzer`, `src.toolfuzz.runtime.runtime_fuzzer`, `src.toolfuzz.correctness.prompt_generation.prompt_generator`, `src.toolfuzz.runtime.prompt_generation.prompt_generator`, `src.toolfuzz.correctness.prompt_generation.llm_responses`, `src.toolfuzz.runtime.prompt_generation.llm_responses`, `src.toolfuzz.correctness.prompt_generation.prompts`, `src.toolfuzz.runtime.prompt_generation.prompts`, `src.toolfuzz.runtime.fuzz.fuzzer`, `src.toolfuzz.runtime.fuzz.taints`, `src.toolfuzz.runtime.fuzz.type_generators`
 
-**C. Runtime Fuzzing Engine:**
-This component is responsible for fuzzing tool inputs at runtime to identify potential errors and vulnerabilities. It generates a variety of inputs based on the tool's argument types and constraints, and then executes the tool with these inputs. It receives tool information from Tool Definition & Extraction and sends fuzzed inputs to the Agent Execution Framework.
+### Evaluation and Repair
+This component provides functionalities for evaluating the effectiveness of ToolFuzz and automatically fixing buggy tools. It includes baseline evaluation methods for comparing ToolFuzz against traditional testing approaches, as well as a ToolFixer class that attempts to correct flaws in tool source code and examples. It closes the loop by not only identifying issues but also attempting to resolve them.
+- **Related Classes/Methods**: `src.eval.baseline.baseline_greybox`, `src.eval.baseline.baseline_whitebox`, `src.eval.tool_fixing.tool_fixer`, `src.eval.tool_fixing.github_toolkit_fixer`, `src.eval.tool_fixing.fix_file_toolkit`, `src.eval.buggy_tools.underspecified_fields`, `src.eval.buggy_tools.mismatched_examples`, `src.eval.buggy_tools.insufficient_permissions`, `src.eval.buggy_tools.well_known_parameters`, `src.eval.buggy_tools.relational_constraints`, `src.eval.buggy_tools.long_output`, `src.eval.buggy_tools.open_street_map`, `src.eval.buggy_tools.underspecified_tools`, `src.eval.buggy_tools.decorators`
 
-*Related Files:*
-*   `src.toolfuzz.runtime.runtime_fuzzer.RuntimeErrorTester`: Tests tools for runtime errors.
-*   `src.toolfuzz.runtime.fuzz.fuzzer.Fuzzer`: Base class for fuzzers.
-*   `src.toolfuzz.runtime.fuzz.type_generators.StringGenerator`: Generates string inputs.
-*   `src.toolfuzz.runtime.fuzz.type_generators`: Contains various type generators.
-
-**D. Correctness Assessment:**
-This component determines the correctness of tool outputs and agent behavior. It uses a CorrectnessOracle to evaluate tool outputs, agent responses, and the relevance of agent outputs to the given prompts. It receives outputs from the Agent Execution Framework, prompts from Prompt Management, and sends evaluation results to the Test Harness & Reporting component.
-
-*Related Files:*
-*   `src.toolfuzz.correctness.correctness_oracle.CorrectnessOracle`: Evaluates the correctness of tool outputs and agent behavior.
-*   `src.toolfuzz.correctness.correctness_oracle:flatten`: Utility function for flattening data structures.
-
-**E. Prompt Management:**
-This component generates prompts for testing tool correctness and runtime failures. It uses different prompt generation strategies to create prompts that are designed to trigger specific behaviors or vulnerabilities in the tools. It provides prompts to the Agent Execution Framework and Correctness Assessment components.
-
-*Related Files:*
-*   `src.toolfuzz.prompt_generation.prompt_generator.PromptGenerator`: Base class for prompt generators.
-*   `src.toolfuzz.correctness.prompt_generation.prompt_generator.CorrectnessPromptGenerator`: Generates prompts for testing tool correctness.
-*   `src.toolfuzz.runtime.prompt_generation.prompt_generator.RuntimeFailurePromptGeneration`: Generates prompts for testing runtime failures.
-
-**F. Test Harness & Reporting:**
-This component provides the infrastructure for running tests, collecting results, and generating reports. It includes functions for saving test results in JSON and HTML formats, and for transforming test results into a more human-readable format. It receives evaluation results from the Correctness Assessment component.
-
-*Related Files:*
-*   `src.toolfuzz.utils.save_test_results`: Saves test results in JSON format.
-*   `src.toolfuzz.utils.save_test_results_html`: Saves test results in HTML format.
-*   `src.toolfuzz.utils.transform_test_results`: Transforms test results into a more human-readable format.
-*   `src.toolfuzz.dataclasses.TestResult`: Data class for storing test results.
-*   `src.toolfuzz.dataclasses.TestFailureResult`: Data class for storing test failure results.
-
-**G. Environment Management:**
-This component manages the execution environment for the agents and tools. It includes functionality for resetting the context between tests, and for setting up controlled Docker and Git environments. It sets up the environment for the Agent Execution Framework.
-
-*Related Files:*
-*   `src.eval.toolfuzz.envs.reset_context.DummyResetContext`: Dummy reset context.
-*   `src.eval.toolfuzz.envs.reset_context.ResetContext`: Resets the context between tests.
-*   `repos.ToolFuzz.src.eval.controlled_docker_env.agent_terminal:main`: Sets up and runs agents in a controlled Docker environment.
-*   `repos.ToolFuzz.src.eval.controlled_git.agent:setup`: Sets up agents in a controlled Git environment.
+### Environment Control
+This component provides controlled environments, such as a Git environment, for testing tools that interact with external systems. It includes functionalities for setting up the environment, running prompts, and evaluating the results. This allows for testing tools in realistic scenarios without affecting real-world systems.
+- **Related Classes/Methods**: `src.eval.controlled_git.agent`, `src.eval.controlled_git.environment_state`, `src.eval.controlled_git.generate_states`, `src.eval.controlled_git.examples.comment_on_issue`, `src.eval.controlled_git.examples.create_file`, `src.eval.controlled_git.examples.create_pr`, `src.eval.controlled_git.examples.delete_file`, `src.eval.controlled_git.examples.new_branch`, `src.eval.controlled_git.examples.update_files`, `src.eval.controlled_git.tool_example`
