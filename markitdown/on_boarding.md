@@ -1,80 +1,48 @@
 ```mermaid
 graph LR
-    Application_Orchestration["Application Orchestration"]
-    Core_Conversion_Manager["Core Conversion Manager"]
-    Stream_Information_Management["Stream Information Management"]
-    Converter_Abstraction_Layer["Converter Abstraction Layer"]
-    HTML_Conversion_Engine["HTML Conversion Engine"]
-    Document_Format_Conversion_Suite["Document Format Conversion Suite"]
-    Web_Content_Integration["Web Content Integration"]
-    Multimedia_Processing_Module["Multimedia Processing Module"]
-    Plain_Text_Handling["Plain Text Handling"]
-    Application_Orchestration -- "initializes" --> Core_Conversion_Manager
-    Core_Conversion_Manager -- "converts input using" --> HTML_Conversion_Engine
-    HTML_Conversion_Engine -- "converts HTML to Markdown" --> HTML_Conversion_Engine
-    Document_Format_Conversion_Suite -- "converts Docx to Markdown" --> HTML_Conversion_Engine
-    Web_Content_Integration -- "converts YouTube video info to Markdown" --> Core_Conversion_Manager
-    Web_Content_Integration -- "converts RSS/Atom feeds to Markdown" --> HTML_Conversion_Engine
-    Plain_Text_Handling -- "converts plain text to Markdown" --> Core_Conversion_Manager
-    Multimedia_Processing_Module -- "extracts metadata from images" --> Multimedia_Processing_Module
-    Multimedia_Processing_Module -- "extracts metadata from audio files" --> Multimedia_Processing_Module
-    Multimedia_Processing_Module -- "transcribes audio files" --> Multimedia_Processing_Module
-    Core_Conversion_Manager -- "manages stream information" --> Stream_Information_Management
-    Converter_Abstraction_Layer -- "uses stream information" --> Stream_Information_Management
-    HTML_Conversion_Engine -- "is a base class for" --> Converter_Abstraction_Layer
-    Document_Format_Conversion_Suite -- "is a base class for" --> Converter_Abstraction_Layer
-    Web_Content_Integration -- "is a base class for" --> Converter_Abstraction_Layer
-    Multimedia_Processing_Module -- "is a base class for" --> Converter_Abstraction_Layer
-    Plain_Text_Handling -- "is a base class for" --> Converter_Abstraction_Layer
-    Core_Conversion_Manager -- "delegates conversion to" --> Document_Format_Conversion_Suite
-    Core_Conversion_Manager -- "delegates conversion to" --> Web_Content_Integration
-    Core_Conversion_Manager -- "delegates conversion to" --> Multimedia_Processing_Module
-    Core_Conversion_Manager -- "delegates conversion to" --> Plain_Text_Handling
-    click Application_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Application Orchestration.md" "Details"
-    click Core_Conversion_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Core Conversion Manager.md" "Details"
-    click Stream_Information_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Stream Information Management.md" "Details"
-    click Converter_Abstraction_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Converter Abstraction Layer.md" "Details"
-    click HTML_Conversion_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/HTML Conversion Engine.md" "Details"
-    click Document_Format_Conversion_Suite href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Document Format Conversion Suite.md" "Details"
-    click Web_Content_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Web Content Integration.md" "Details"
-    click Multimedia_Processing_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Multimedia Processing Module.md" "Details"
-    click Plain_Text_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Plain Text Handling.md" "Details"
+    Application_Entrypoint["Application Entrypoint"]
+    MarkItDown_Core["MarkItDown Core"]
+    Converter_Interface["Converter Interface"]
+    Stream_Information_Manager["Stream Information Manager"]
+    Document_Converters["Document Converters"]
+    DOCX_Preprocessor["DOCX Preprocessor"]
+    Application_Entrypoint -- "initiates conversion" --> MarkItDown_Core
+    MarkItDown_Core -- "manages" --> Converter_Interface
+    MarkItDown_Core -- "uses" --> Stream_Information_Manager
+    Document_Converters -- "implements" --> Converter_Interface
+    Document_Converters -- "uses" --> DOCX_Preprocessor
+    click Application_Entrypoint href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Application Entrypoint.md" "Details"
+    click MarkItDown_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/MarkItDown Core.md" "Details"
+    click Converter_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Converter Interface.md" "Details"
+    click Stream_Information_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Stream Information Manager.md" "Details"
+    click Document_Converters href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Document Converters.md" "Details"
+    click DOCX_Preprocessor href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/DOCX Preprocessor.md" "Details"
 ```
 
 ## Component Details
 
-### Application Orchestration
-This component serves as the entry point and orchestrates the entire MarkItDown conversion process. It handles command-line arguments, input/output streams, error handling, and the overall application flow. It initializes the core converter and manages the execution of the conversion process.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.__main__:main`, `repos.markitdown.packages.markitdown.src.markitdown.__main__:_exit_with_error`, `repos.markitdown.packages.markitdown.src.markitdown.__main__:_handle_output`
+The MarkItDown project facilitates the conversion of various document formats into Markdown. The application begins with the `Application Entrypoint`, which parses command-line arguments and determines the input source. It then leverages the `MarkItDown Core` to manage the conversion process. The core utilizes `Stream Information Manager` to identify the input type and selects the appropriate converter from the `Document Converters`. Each converter implements the `Converter Interface` and may use specialized preprocessors like the `DOCX Preprocessor` to handle format-specific nuances. The final output is a Markdown representation of the original document.
 
-### Core Conversion Manager
-The Core Conversion Manager is the central component responsible for managing the conversion process. It handles different input types (files, streams, URLs), loads plugins, registers converters, and dispatches the conversion task to the appropriate converter based on the input type. It also manages stream information and provides a unified interface for conversion operations.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.__init__`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.convert`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.convert_local`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.convert_stream`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.convert_uri`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.convert_response`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown._convert`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.enable_builtins`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.enable_plugins`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.register_converter`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown.register_page_converter`, `repos.markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown._get_stream_info_guesses`
+### Application Entrypoint
+The entry point of the application, responsible for parsing command-line arguments, determining the input source (file, URL, etc.), and initiating the conversion process by calling the appropriate methods in the MarkItDown Core.
+- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.__main__:main`, `markitdown.packages.markitdown-mcp.src.markitdown_mcp.__main__:main`, `markitdown.packages.markitdown-mcp.src.markitdown_mcp.__main__:convert_to_markdown`
 
-### Stream Information Management
-This component is responsible for managing information about the input stream, such as filename, extension, MIME type, and URL. It provides methods for copying and updating stream information, ensuring that the correct metadata is associated with the input being processed. This information is used by the converters to handle the input appropriately.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo`, `repos.markitdown.packages.markitdown.src.markitdown._stream_info.StreamInfo:copy_and_update`
+### MarkItDown Core
+The central class that manages converters, enables built-in converters and plugins, and orchestrates the conversion process. It determines the appropriate converter based on the input stream's information and provides methods to convert from various sources.
+- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown._markitdown.MarkItDown`
 
-### Converter Abstraction Layer
-This component defines the abstract base class for all specific converters. It specifies the interface that all converters must implement and provides a data structure for conversion results. This ensures that all converters adhere to a common standard, facilitating extensibility and maintainability.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown._base_converter.DocumentConverter`, `repos.markitdown.packages.markitdown.src.markitdown._base_converter.DocumentConverterResult`
+### Converter Interface
+An abstract base class that defines the interface for all document converters. It specifies the methods that all converters must implement, ensuring a consistent way to convert different document types to Markdown.
+- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown._base_converter`
 
-### HTML Conversion Engine
-This component is responsible for converting HTML documents to Markdown. It leverages the Markdownify converter to perform the conversion. It is a core component used by other converters (e.g., DocxConverter, EpubConverter, XlsxConverter) to handle HTML content within those formats.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._html_converter.HtmlConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._markdownify._CustomMarkdownify`
+### Stream Information Manager
+Manages information about input streams, including filename, extension, MIME type, and URL. This information is crucial for determining the appropriate converter to use.
+- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown._stream_info`
 
-### Document Format Conversion Suite
-This component provides specialized converters for various document formats like Docx, Pptx, Epub, and Xlsx. They extract content from these formats and convert it to Markdown, often leveraging the HTML Conversion Engine for handling HTML content within the documents. They provide format-specific logic for extracting and converting content.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._docx_converter.DocxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process`, `repos.markitdown.packages.markitdown.src.markitdown.converters._pptx_converter.PptxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._epub_converter.EpubConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._xlsx_converter.XlsxConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._xlsx_converter.XlsConverter`
+### Document Converters
+A collection of concrete converter classes, each responsible for converting a specific document format (e.g., DOCX, PDF, HTML) to Markdown. These converters implement the Converter Interface and utilize various libraries and techniques to perform the conversion.
+- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converters._html_converter`, `markitdown.packages.markitdown.src.markitdown.converters._markdownify`, `markitdown.packages.markitdown.src.markitdown.converters._docx_converter`, `markitdown.packages.markitdown.src.markitdown.converters._pdf_converter`, `markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter`, `markitdown.packages.markitdown.src.markitdown.converters._image_converter`, `markitdown.packages.markitdown.src.markitdown.converters._audio_converter`, `markitdown.packages.markitdown.src.markitdown.converters._rss_converter`, `markitdown.packages.markitdown.src.markitdown.converters._youtube_converter`, `markitdown.packages.markitdown.src.markitdown.converters._doc_intel_converter`
 
-### Web Content Integration
-This component handles the conversion of content from web-based sources like YouTube videos and RSS/Atom feeds. They retrieve data from these sources and format it into Markdown. They provide integration with external web services.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._youtube_converter.YouTubeConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._rss_converter.RssConverter`
-
-### Multimedia Processing Module
-This component is responsible for handling multimedia files like images and audio. It extracts metadata using ExifTool and, in the case of audio, transcribes the content using a transcription service. They provide specialized processing for multimedia content.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._image_converter.ImageConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._exiftool.exiftool_metadata`, `repos.markitdown.packages.markitdown.src.markitdown.converters._audio_converter.AudioConverter`, `repos.markitdown.packages.markitdown.src.markitdown.converters._transcribe_audio:transcribe_audio`
-
-### Plain Text Handling
-This component is a simple converter that handles plain text files. It simply returns the text content as Markdown without any further processing. It serves as a basic converter for text-based input.
-- **Related Classes/Methods**: `repos.markitdown.packages.markitdown.src.markitdown.converters._plain_text_converter.PlainTextConverter`
+### DOCX Preprocessor
+Provides utility functions for pre-processing DOCX files, specifically for converting mathematical equations from OMML to LaTeX format. This ensures that mathematical content is accurately represented in the Markdown output.
+- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process`, `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml`
