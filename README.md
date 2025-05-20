@@ -9,14 +9,14 @@
     
 </a>
 
-All of these onboarding diagrams were generated using [CodeBoarding.org](https://codeboarding.org) — a tool designed to help developers to get to know new code-bases through interactive, visual documentation.
+These onboarding diagrams were automatically generated using [CodeBoarding.org](https://codeboarding.org) — a tool that helps developers explore unfamiliar codebases through interactive and visual documentation.
 
-We're always looking to improve, so feel free to share your thoughts by opening an issue or sending us an email.
+Got feedback? We'd love to hear it! Open an issue or drop us an email to help us improve.
 
 Interested in onboarding diagrams for your own project? Try it out at [CodeBoarding.org/demo](https://codeboarding.org/demo) or open an issue and we will generate one for you!
 
 
-## Onboarding Documentation
+## Generated Project Documentation
 
 <table>
   <tr>
