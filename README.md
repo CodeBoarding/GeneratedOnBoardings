@@ -6,8 +6,6 @@
 
 These onboarding diagrams were automatically generated using [CodeBoarding.org](https://codeboarding.org) — a tool that helps developers explore unfamiliar codebases through interactive and visual documentation.
 
-Got feedback? We'd love to hear it! Open an issue or drop us an email to help us improve.
-
 Got feedback? We’d love to hear it! Open an issue or drop us an email at [codeboarding@gmail.com](mailto:codeboarding@gmail.com) to help us improve.
 
 Interested in onboarding diagrams for your own project? Try it out at [CodeBoarding.org/demo](https://codeboarding.org/demo) or open an issue and we will generate one for you!
