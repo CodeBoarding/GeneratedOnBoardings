@@ -6,53 +6,55 @@ graph LR
     BaseLLMCache["BaseLLMCache"]
     MessageHistory["MessageHistory"]
     BaseMessageHistory["BaseMessageHistory"]
-    SearchIndex["SearchIndex"]
-    RedisConnectionFactory["RedisConnectionFactory"]
-    HFTextVectorizer["HFTextVectorizer"]
-    BaseCache -- "is a base class of" --> EmbeddingsCache
-    BaseCache -- "is a base class of" --> BaseLLMCache
-    BaseLLMCache -- "is a base class of" --> SemanticCache
-    BaseMessageHistory -- "is a base class of" --> MessageHistory
-    SemanticCache -- "uses" --> SearchIndex
-    MessageHistory -- "uses" --> SearchIndex
-    BaseCache -- "uses" --> RedisConnectionFactory
-    SemanticCache -- "uses" --> HFTextVectorizer
+    SemanticMessageHistory["SemanticMessageHistory"]
+    SemanticRouter["SemanticRouter"]
+    BaseCache -- "is base class of" --> EmbeddingsCache
+    EmbeddingsCache -- "uses" --> CacheEntry_embeddings_
+    BaseLLMCache -- "is base class of" --> SemanticCache
+    SemanticCache -- "uses" --> CacheEntry_LLM_
+    SemanticCache -- "uses" --> CacheHit
+    SemanticCache -- "uses" --> SemanticCacheIndexSchema
+    MessageHistory -- "uses" --> ChatMessage
+    MessageHistory -- "uses" --> MessageHistorySchema
+    BaseMessageHistory -- "is base class of" --> SemanticMessageHistory
+    SemanticMessageHistory -- "uses" --> SemanticMessageHistorySchema
+    SemanticRouter -- "uses" --> SemanticRouterIndexSchema
+    BaseCache -- "is base class of" --> BaseLLMCache
+    BaseMessageHistory -- "is base class of" --> MessageHistory
 ```
 
 ## Component Details
 
+The Extension Framework provides a suite of tools to enhance LLM applications with Redis. It includes caching mechanisms for both embeddings and LLM responses, semantic routing for directing queries to appropriate indexes, and message history management for tracking conversations. These extensions leverage Redis's vector similarity search capabilities to improve performance and efficiency.
+
 ### BaseCache
-Abstract base class for implementing cache extensions, providing common functionalities like Redis client management, key generation, and TTL handling. It handles connection and disconnection to Redis and defines the basic interface for cache operations.
+The BaseCache class serves as an abstract foundation for implementing various caching strategies within the RedisVL extension framework. It offers core functionalities such as key generation, Redis client management, and expiration control, providing a consistent interface for derived cache implementations like EmbeddingsCache and SemanticCache.
 - **Related Classes/Methods**: `redisvl.extensions.cache.base.BaseCache`
 
 ### EmbeddingsCache
-Extends BaseCache to provide caching functionality specifically for embeddings, including methods for storing, retrieving, and managing embeddings in Redis. It provides methods for checking existence, getting, setting, and dropping embeddings based on text and model name, optimizing embedding retrieval.
-- **Related Classes/Methods**: `redisvl.extensions.cache.embeddings.embeddings.EmbeddingsCache`
+The EmbeddingsCache extends the BaseCache to provide a specialized cache for storing and retrieving embeddings. It offers methods for storing embeddings, retrieving them based on keys, checking for their existence, and removing them when necessary. This cache is crucial for optimizing embedding retrieval in LLM applications.
+- **Related Classes/Methods**: `redisvl.extensions.cache.embeddings.embeddings.EmbeddingsCache`, `redisvl.extensions.cache.embeddings.schema.CacheEntry`
 
 ### SemanticCache
-Extends BaseLLMCache to implement a semantic cache for LLM responses, using vector embeddings and semantic similarity search to determine cache hits. It interacts with a vectorizer to create embeddings and uses Redis indexes for semantic search, enhancing LLM response efficiency.
-- **Related Classes/Methods**: `redisvl.extensions.cache.llm.semantic.SemanticCache`
+The SemanticCache extends the BaseLLMCache and implements a cache for LLM responses using semantic similarity. It stores embeddings of LLM inputs in a Redis index and uses vector similarity search to retrieve cached responses for semantically similar queries. This cache significantly reduces LLM computation by reusing previous results.
+- **Related Classes/Methods**: `redisvl.extensions.cache.llm.semantic.SemanticCache`, `redisvl.extensions.cache.llm.schema.CacheEntry`, `redisvl.extensions.cache.llm.schema.CacheHit`, `redisvl.extensions.cache.llm.schema.SemanticCacheIndexSchema`
 
 ### BaseLLMCache
-Abstract base class for LLM cache extensions, inheriting from BaseCache and providing common functionalities for LLM caching. It provides methods for storing, checking, deleting, and updating cache entries, forming the foundation for LLM-specific caching strategies.
+The BaseLLMCache class is an abstract base class for LLM caches, providing common functionalities and structure for specialized LLM cache implementations like SemanticCache. It likely builds upon BaseCache to add LLM-specific caching logic.
 - **Related Classes/Methods**: `redisvl.extensions.cache.llm.base.BaseLLMCache`
 
 ### MessageHistory
-Extension for managing message history in Redis, using a Redis index to store and retrieve messages based on various criteria. It provides methods for adding, retrieving, clearing, and deleting messages, enabling conversational context management.
-- **Related Classes/Methods**: `redisvl.extensions.message_history.message_history.MessageHistory`
+The MessageHistory class manages the history of messages in a conversation. It provides methods for storing new messages, retrieving existing messages, and deleting messages when necessary. This component is essential for maintaining context in conversational AI applications.
+- **Related Classes/Methods**: `redisvl.extensions.message_history.message_history.MessageHistory`, `redisvl.extensions.message_history.schema.ChatMessage`, `redisvl.extensions.message_history.schema.MessageHistorySchema`
 
 ### BaseMessageHistory
-Abstract base class for message history extensions, providing common functionalities for managing message history. It provides methods for adding messages, retrieving recent messages, clearing history, and deleting the history, defining the structure for message history implementations.
+The BaseMessageHistory class serves as an abstract base for message history implementations. It provides a common interface for different message history strategies, such as storing messages in a simple list or using semantic similarity for retrieval.
 - **Related Classes/Methods**: `redisvl.extensions.message_history.base_history.BaseMessageHistory`
 
-### SearchIndex
-Class used to interact with Redis as a vector database. It provides methods for creating, deleting, loading data, querying, and searching the index, serving as the primary interface for vector-based operations.
-- **Related Classes/Methods**: `redisvl.index.index.SearchIndex`
+### SemanticMessageHistory
+The SemanticMessageHistory extends BaseMessageHistory and implements a message history that uses semantic similarity to retrieve relevant messages. It stores embeddings of messages and uses vector search to find messages that are semantically similar to a given query. This allows for more context-aware conversation management.
+- **Related Classes/Methods**: `redisvl.extensions.message_history.semantic_history.SemanticMessageHistory`, `redisvl.extensions.message_history.schema.SemanticMessageHistorySchema`
 
-### RedisConnectionFactory
-Factory class for creating Redis connections, both synchronous and asynchronous. It handles the creation and validation of Redis connections, ensuring reliable Redis access.
-- **Related Classes/Methods**: `redisvl.redis.connection.RedisConnectionFactory`
-
-### HFTextVectorizer
-Text vectorizer using Hugging Face transformers. It provides methods for embedding text using Hugging Face models, enabling semantic search capabilities.
-- **Related Classes/Methods**: `redisvl.utils.vectorize.text.huggingface.HFTextVectorizer`
+### SemanticRouter
+The SemanticRouter class routes requests based on semantic similarity to predefined routes. It uses a Redis index to store route embeddings and classifies incoming requests by finding the most similar route. This allows for dynamic routing of queries to the appropriate resources.
+- **Related Classes/Methods**: `redisvl.extensions.router.semantic.SemanticRouter`, `redisvl.extensions.router.schema.SemanticRouterIndexSchema`, `redisvl.extensions.router.schema.Route`

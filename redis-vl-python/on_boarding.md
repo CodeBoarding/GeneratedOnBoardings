@@ -1,53 +1,60 @@
 ```mermaid
 graph LR
-    User_Interface["User Interface"]
-    Index_Manager["Index Manager"]
-    Data_Processing["Data Processing"]
-    Redis_Interface["Redis Interface"]
+    Index_Management["Index Management"]
+    Query_Processing["Query Processing"]
+    Data_Handling["Data Handling"]
+    Vectorization_Reranking["Vectorization & Reranking"]
+    CLI_Tooling["CLI Tooling"]
+    Redis_Connection_Management["Redis Connection Management"]
     Extension_Framework["Extension Framework"]
-    Utilities["Utilities"]
-    User_Interface -- "uses" --> Index_Manager
-    User_Interface -- "uses" --> Data_Processing
-    User_Interface -- "uses" --> Redis_Interface
-    Index_Manager -- "uses" --> Data_Processing
-    Index_Manager -- "uses" --> Redis_Interface
-    Index_Manager -- "uses" --> Utilities
-    Data_Processing -- "uses" --> Redis_Interface
-    Data_Processing -- "uses" --> Utilities
-    Extension_Framework -- "uses" --> Index_Manager
-    Extension_Framework -- "uses" --> Data_Processing
-    Extension_Framework -- "uses" --> Redis_Interface
-    Redis_Interface -- "uses" --> Utilities
-    click User_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/User Interface.md" "Details"
-    click Index_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Index Manager.md" "Details"
-    click Data_Processing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Data Processing.md" "Details"
-    click Redis_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Redis Interface.md" "Details"
+    Index_Management -- "manages" --> Data_Handling
+    Query_Processing -- "executes queries on" --> Index_Management
+    Vectorization_Reranking -- "vectorizes data for" --> Index_Management
+    Vectorization_Reranking -- "reranks results from" --> Query_Processing
+    Index_Management -- "connects to" --> Redis_Connection_Management
+    Extension_Framework -- "uses" --> Vectorization_Reranking
+    Extension_Framework -- "uses" --> Index_Management
+    Extension_Framework -- "uses" --> Redis_Connection_Management
+    CLI_Tooling -- "manages indexes with" --> Index_Management
+    Data_Handling -- "stores data in" --> Index_Management
+    Index_Management -- "connects to redis with" --> Redis_Connection_Management
+    click Index_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Index Management.md" "Details"
+    click Query_Processing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Query Processing.md" "Details"
+    click Data_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Data Handling.md" "Details"
+    click Vectorization_Reranking href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Vectorization & Reranking.md" "Details"
+    click CLI_Tooling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/CLI Tooling.md" "Details"
+    click Redis_Connection_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Redis Connection Management.md" "Details"
     click Extension_Framework href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Extension Framework.md" "Details"
-    click Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-vl-python/Utilities.md" "Details"
 ```
 
 ## Component Details
 
-### User Interface
-The User Interface component provides the primary means for users to interact with the RedisVL system. It encompasses both the command-line interface (CLI) and any potential future graphical user interfaces. This component is responsible for accepting user commands, displaying results, and managing the overall user experience.
-- **Related Classes/Methods**: `redisvl.cli.main`, `redisvl.cli.index`, `redisvl.cli.stats`, `redisvl.cli.version`, `redisvl.cli.utils`, `redisvl.cli.runner`
+The redis-vl-python library provides a set of tools and abstractions for building vector-based search applications on top of Redis. It simplifies the process of creating, managing, and querying vector indexes, as well as integrating with various vectorization models and LLMs. The library offers components for defining index schemas, managing data storage, executing queries, and enhancing search results. It also includes extensions for LLM semantic caching, embeddings caching, semantic routing, and message history management, enabling advanced search and retrieval scenarios.
 
-### Index Manager
-The Index Manager component is the core of RedisVL, responsible for managing the lifecycle of vector indexes within Redis. It handles index creation, deletion, connection management, schema definition, and search query execution. This component orchestrates the interaction between the schema, query, and Redis connection components to provide a unified interface for managing vector indexes.
-- **Related Classes/Methods**: `redisvl.index.index`, `redisvl.index.storage`
+### Index Management
+This component is responsible for the creation, deletion, and management of vector indexes within Redis. It provides a high-level interface for defining index schemas, connecting to Redis, and performing index-related operations. It serves as the central point for managing the lifecycle of Redis vector indexes, abstracting away the underlying Redis commands and data structures.
+- **Related Classes/Methods**: `redisvl.index.index.SearchIndex`, `redisvl.index.index.AsyncSearchIndex`, `redisvl.index.index.BaseSearchIndex`, `redisvl.schema.schema.IndexSchema`, `redisvl.schema.fields.BaseField`, `redisvl.redis.connection.RedisConnectionFactory`
 
-### Data Processing
-The Data Processing component focuses on transforming raw data into a suitable format for vector search. It includes functionalities for schema definition, data vectorization, query processing, and result optimization. This component ensures that data is properly structured, vectorized, and queried to achieve optimal search performance.
-- **Related Classes/Methods**: `redisvl.schema.schema`, `redisvl.schema.fields`, `redisvl.schema.type_utils`, `redisvl.schema.validation`, `redisvl.query.query`, `redisvl.query.filter`, `redisvl.query.aggregate`, `redisvl.utils.vectorize`, `redisvl.utils.vectorize.base`, `redisvl.utils.vectorize.text`, `redisvl.utils.rerank`, `redisvl.utils.rerank.base`, `redisvl.utils.rerank.cohere`, `redisvl.utils.rerank.hf_cross_encoder`, `redisvl.utils.rerank.voyageai`, `redisvl.utils.optimize`, `redisvl.utils.optimize.base`, `redisvl.utils.optimize.cache`, `redisvl.utils.optimize.router`, `redisvl.utils.optimize.schema`, `redisvl.utils.optimize.utils`
+### Query Processing
+This component handles the construction and execution of queries against a Redis index. It supports various query types, including vector similarity searches, text searches, and filtered queries. It provides mechanisms for combining different query types and processing the results, enabling complex search scenarios. It relies on the Index Management component to interact with the Redis index and retrieve data.
+- **Related Classes/Methods**: `redisvl.query.query.BaseQuery`, `redisvl.query.query.VectorQuery`, `redisvl.query.query.TextQuery`, `redisvl.query.query.FilterQuery`, `redisvl.query.aggregate.HybridQuery`, `redisvl.query.filter.FilterExpression`, `redisvl.query.filter.Tag`, `redisvl.query.filter.Num`, `redisvl.query.filter.Geo`, `redisvl.query.filter.Text`, `redisvl.query.filter.Timestamp`
 
-### Redis Interface
-The Redis Interface component manages the connection and communication with the Redis database. It provides functionalities for creating synchronous and asynchronous connections, validating Redis modules, and converting data between Python and Redis formats. This component acts as the bridge between the application logic and the Redis database.
-- **Related Classes/Methods**: `redisvl.redis.connection`, `redisvl.redis.utils`
+### Data Handling
+This component manages the storage and retrieval of data within a Redis index. It provides methods for writing data to Redis, either synchronously or asynchronously, and for retrieving data by ID. It abstracts the underlying Redis data structures and provides a consistent interface for data access, supporting different storage strategies like storing data as hashes or JSON objects.
+- **Related Classes/Methods**: `redisvl.index.storage.BaseStorage`, `redisvl.index.storage.HashStorage`, `redisvl.index.storage.JsonStorage`
+
+### Vectorization & Reranking
+This component provides utilities for converting text into vector embeddings and reranking search results based on semantic similarity. It supports various vectorization models, including OpenAI, Cohere, and Hugging Face models, as well as reranking models like Cohere and VoyageAI. It enables the creation of vector representations for semantic search and improves the relevance and accuracy of search results.
+- **Related Classes/Methods**: `redisvl.utils.vectorize.base.BaseVectorizer`, `redisvl.utils.vectorize.text.openai.OpenAITextVectorizer`, `redisvl.utils.vectorize.text.cohere.CohereTextVectorizer`, `redisvl.utils.vectorize.text.huggingface.HFTextVectorizer`, `redisvl.utils.rerank.base.BaseReranker`, `redisvl.utils.rerank.cohere.CohereReranker`, `redisvl.utils.rerank.voyageai.VoyageAIReranker`
+
+### CLI Tooling
+The CLI Tooling component provides a command-line interface for interacting with RedisVL. It allows users to create, inspect, and delete indexes, as well as view statistics and version information. It serves as the entry point for users to manage their Redis vector indexes from the command line.
+- **Related Classes/Methods**: `redisvl.cli.main.RedisVlCLI`, `redisvl.cli.index.Index`, `redisvl.cli.stats.Stats`, `redisvl.cli.version.Version`, `redisvl.cli.runner.main`
+
+### Redis Connection Management
+This component handles the connection to Redis, providing methods for creating and managing Redis clients, both synchronous and asynchronous. It abstracts the underlying Redis connection details and provides a consistent interface for interacting with Redis, ensuring that the library can connect to Redis instances in a reliable and efficient manner.
+- **Related Classes/Methods**: `redisvl.redis.connection.RedisConnectionFactory`
 
 ### Extension Framework
-The Extension Framework component provides a modular architecture for extending RedisVL with additional features. It includes functionalities for LLM caching, embeddings caching, message history, semantic routing, and session management. This component allows developers to easily add new capabilities to RedisVL without modifying the core codebase.
-- **Related Classes/Methods**: `redisvl.extensions.cache.llm`, `redisvl.extensions.cache.llm.base`, `redisvl.extensions.cache.llm.schema`, `redisvl.extensions.cache.llm.semantic`, `redisvl.extensions.cache.embeddings`, `redisvl.extensions.cache.embeddings.embeddings`, `redisvl.extensions.cache.embeddings.schema`, `redisvl.extensions.message_history`, `redisvl.extensions.message_history.base_history`, `redisvl.extensions.message_history.message_history`, `redisvl.extensions.message_history.schema`, `redisvl.extensions.message_history.semantic_history`, `redisvl.extensions.router`, `redisvl.extensions.router.schema`, `redisvl.extensions.router.semantic`, `redisvl.extensions.session_manager`, `redisvl.extensions.session_manager.base_session`, `redisvl.extensions.session_manager.schema`, `redisvl.extensions.session_manager.semantic_session`, `redisvl.extensions.session_manager.standard_session`
-
-### Utilities
-The Utilities component provides a collection of utility functions and classes used throughout the project. It includes functionalities for logging, token escaping, data serialization, and other common tasks. This component offers reusable tools and functionalities to support other components.
-- **Related Classes/Methods**: `redisvl.utils.utils`, `redisvl.utils.log`, `redisvl.utils.token_escaper`
+This component provides extensions for LLM semantic caching, embeddings caching, semantic routing, and message history management. It leverages vector similarity search to enhance LLM performance, optimize embedding retrieval, route queries to appropriate indexes, and manage message histories effectively. These extensions provide advanced functionalities built on top of the core RedisVL capabilities.
+- **Related Classes/Methods**: `redisvl.extensions.cache.llm.semantic.SemanticCache`, `redisvl.extensions.cache.llm.base.BaseLLMCache`, `redisvl.extensions.cache.llm.schema.CacheEntry`, `redisvl.extensions.cache.llm.schema.SemanticCacheIndexSchema`, `redisvl.extensions.cache.embeddings.embeddings.EmbeddingsCache`, `redisvl.extensions.cache.embeddings.schema.CacheEntry`, `redisvl.extensions.cache.base.BaseCache`, `redisvl.extensions.router.semantic.SemanticRouter`, `redisvl.extensions.router.schema.SemanticRouterIndexSchema`, `redisvl.extensions.router.schema.Route`, `redisvl.extensions.message_history.message_history.MessageHistory`, `redisvl.extensions.message_history.semantic_history.SemanticMessageHistory`, `redisvl.extensions.message_history.base_history.BaseMessageHistory`, `redisvl.extensions.message_history.schema.ChatMessage`, `redisvl.extensions.message_history.schema.MessageHistorySchema`, `redisvl.extensions.message_history.schema.SemanticMessageHistorySchema`
