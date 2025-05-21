@@ -1,44 +1,33 @@
 ```mermaid
 graph LR
-    Data_Analysis_Suite["Data Analysis Suite"]
-    Caching_Infrastructure["Caching Infrastructure"]
-    Web_Crawling_Engine["Web Crawling Engine"]
-    Communication_Platform["Communication Platform"]
-    Core_Data_Structures["Core Data Structures"]
-    Parking_Lot_Simulation["Parking Lot Simulation"]
-    Data_Analysis_Suite -- "uses" --> Caching_Infrastructure
-    Communication_Platform -- "uses" --> Core_Data_Structures
-    Caching_Infrastructure -- "uses" --> Core_Data_Structures
-    click Data_Analysis_Suite href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/Data Analysis Suite.md" "Details"
-    click Caching_Infrastructure href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/Caching Infrastructure.md" "Details"
-    click Web_Crawling_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/Web Crawling Engine.md" "Details"
-    click Communication_Platform href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/Communication Platform.md" "Details"
-    click Core_Data_Structures href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/Core Data Structures.md" "Details"
-    click Parking_Lot_Simulation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/Parking Lot Simulation.md" "Details"
+    Caching_Systems["Caching Systems"]
+    MapReduce_Implementations["MapReduce Implementations"]
+    Web_Crawler["Web Crawler"]
+    Object_Oriented_Design_Examples["Object-Oriented Design Examples"]
+    MapReduce_Implementations -- "Uses" --> Caching_Systems
+    Object_Oriented_Design_Examples -- "Demonstrates" --> Caching_Systems
+    click Caching_Systems href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/Caching Systems.md" "Details"
+    click MapReduce_Implementations href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/MapReduce Implementations.md" "Details"
+    click Web_Crawler href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/Web Crawler.md" "Details"
+    click Object_Oriented_Design_Examples href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/system-design-primer/Object-Oriented Design Examples.md" "Details"
 ```
 
 ## Component Details
 
-### Data Analysis Suite
-This component provides a suite of data analysis tools based on the MapReduce paradigm. It includes functionalities for analyzing spending habits from Mint data, tracking hit counts for Pastebin URLs, and ranking sales data. The component is designed to process large datasets and extract valuable insights for various applications.
-- **Related Classes/Methods**: `repos.system-design-primer.solutions.system_design.mint.mint_mapreduce.SpendingByCategory`, `repos.system-design-primer.solutions.system_design.pastebin.pastebin.HitCounts`, `repos.system-design-primer.solutions.system_design.sales_rank.sales_rank_mapreduce.SalesRanker`
+The system design primer project provides solutions and examples for various system design concepts and object-oriented design principles. It includes implementations of caching systems, MapReduce, web crawlers, and object-oriented design patterns. The project aims to illustrate how to apply these concepts in practical scenarios, offering a hands-on approach to learning system design.
 
-### Caching Infrastructure
-This component offers caching functionalities to improve application performance. It includes a generic LRU Cache and a Query Cache, both utilizing a LinkedList for efficient eviction of old entries. The LRU Cache evicts the least recently used items, while the Query Cache specifically caches query results to reduce database load and improve response times for frequently accessed queries.
-- **Related Classes/Methods**: `repos.system-design-primer.solutions.system_design.query_cache.query_cache_snippets.QueryApi`, `repos.system-design-primer.solutions.system_design.query_cache.query_cache_snippets.Cache`, `repos.system-design-primer.solutions.system_design.query_cache.query_cache_snippets.LinkedList`, `repos.system-design-primer.solutions.system_design.query_cache.query_cache_snippets.Node`, `repos.system-design-primer.solutions.object_oriented_design.lru_cache.lru_cache.Cache`, `repos.system-design-primer.solutions.object_oriented_design.lru_cache.lru_cache.LinkedList`, `repos.system-design-primer.solutions.object_oriented_design.lru_cache.lru_cache.Node`
+### Caching Systems
+This component provides implementations for caching data, including a generic cache and an LRU (Least Recently Used) cache. The generic cache offers basic set and get operations, while the LRU cache evicts the least recently used items when the cache is full, optimizing for frequently accessed data. These caches are used to improve performance by storing frequently accessed data in memory, reducing the need to fetch it from slower storage.
+- **Related Classes/Methods**: `system_design_primer.solutions.system_design.query_cache.query_cache_snippets.Cache`, `system_design_primer.solutions.object_oriented_design.lru_cache.lru_cache.Cache`
 
-### Web Crawling Engine
-This component implements a web crawler that automatically traverses the web, fetching and processing web pages. It creates signatures for crawled pages to avoid duplicate crawling and efficiently explores the web graph. The crawler is designed to be robust and scalable, capable of handling large numbers of web pages and diverse content types.
-- **Related Classes/Methods**: `repos.system-design-primer.solutions.system_design.web_crawler.web_crawler_snippets.Page`, `repos.system-design-primer.solutions.system_design.web_crawler.web_crawler_snippets.Crawler`
+### MapReduce Implementations
+This component offers MapReduce implementations for specific tasks, such as calculating spending by category (Mint), counting hits for Pastebin pastes, and ranking sales. It includes mapper and reducer functions tailored to each use case, demonstrating the MapReduce paradigm for parallel data processing. These implementations showcase how to process large datasets efficiently by dividing the work into smaller, independent tasks.
+- **Related Classes/Methods**: `system_design_primer.solutions.system_design.mint.mint_mapreduce.SpendingByCategory`, `system_design_primer.solutions.system_design.pastebin.pastebin.HitCounts`, `system_design_primer.solutions.system_design.sales_rank.sales_rank_mapreduce.SalesRanker`
 
-### Communication Platform
-This component provides the foundation for building communication systems, including online chat applications and call centers. It defines base classes for chats, private chats, call center employees (operators, supervisors), and call dispatching logic. The component is designed to be extensible and customizable, allowing developers to create a wide range of communication applications.
-- **Related Classes/Methods**: `repos.system-design-primer.solutions.object_oriented_design.online_chat.online_chat.PrivateChat`, `repos.system-design-primer.solutions.object_oriented_design.online_chat.online_chat.Chat`, `repos.system-design-primer.solutions.object_oriented_design.call_center.call_center.Operator`, `repos.system-design-primer.solutions.object_oriented_design.call_center.call_center.Supervisor`, `repos.system-design-primer.solutions.object_oriented_design.call_center.call_center.CallCenter`, `repos.system-design-primer.solutions.object_oriented_design.call_center.call_center.Employee`
+### Web Crawler
+This component implements a basic web crawler that can traverse web pages and extract information. It includes classes for representing pages and the crawler itself. The crawler fetches web pages, extracts information, and follows links to discover new pages, demonstrating the core functionality of a web crawler.
+- **Related Classes/Methods**: `system_design_primer.solutions.system_design.web_crawler.web_crawler_snippets.Page`, `system_design_primer.solutions.system_design.web_crawler.web_crawler_snippets.Crawler`
 
-### Core Data Structures
-This component implements fundamental data structures that are widely used in software development. It includes a hash table with basic operations like set, get, and remove, as well as a deck of cards with Blackjack game logic. These data structures provide reusable building blocks for various applications and algorithms.
-- **Related Classes/Methods**: `repos.system-design-primer.solutions.object_oriented_design.hash_table.hash_map.HashTable`, `repos.system-design-primer.solutions.object_oriented_design.hash_table.hash_map.Item`, `repos.system-design-primer.solutions.object_oriented_design.deck_of_cards.deck_of_cards.BlackJackCard`, `repos.system-design-primer.solutions.object_oriented_design.deck_of_cards.deck_of_cards.BlackJackHand`, `repos.system-design-primer.solutions.object_oriented_design.deck_of_cards.deck_of_cards.Card`, `repos.system-design-primer.solutions.object_oriented_design.deck_of_cards.deck_of_cards.Hand`
-
-### Parking Lot Simulation
-This component simulates a parking lot environment, including different vehicle types and parking spot allocation logic. It models vehicles, parking spots, and parking levels, and manages the allocation and deallocation of parking spots. The simulation can be used to test and optimize parking lot management strategies.
-- **Related Classes/Methods**: `repos.system-design-primer.solutions.object_oriented_design.parking_lot.parking_lot.Motorcycle`, `repos.system-design-primer.solutions.object_oriented_design.parking_lot.parking_lot.Car`, `repos.system-design-primer.solutions.object_oriented_design.parking_lot.parking_lot.Bus`, `repos.system-design-primer.solutions.object_oriented_design.parking_lot.parking_lot.Vehicle`, `repos.system-design-primer.solutions.object_oriented_design.parking_lot.parking_lot.Level`
+### Object-Oriented Design Examples
+This component provides various object-oriented design examples, including online chat, call center, hash table, deck of cards, and parking lot. Each example showcases how to model real-world scenarios using classes, objects, and their interactions, illustrating object-oriented design principles. These examples demonstrate how to apply object-oriented concepts to solve different design problems.
+- **Related Classes/Methods**: `system_design_primer.solutions.object_oriented_design.online_chat.online_chat.PrivateChat`, `system_design_primer.solutions.object_oriented_design.call_center.call_center.Operator`, `system_design_primer.solutions.object_oriented_design.call_center.call_center.Supervisor`, `system_design_primer.solutions.object_oriented_design.call_center.call_center.CallCenter`, `system_design_primer.solutions.object_oriented_design.hash_table.hash_map.HashTable`, `system_design_primer.solutions.object_oriented_design.deck_of_cards.deck_of_cards.BlackJackCard`, `system_design_primer.solutions.object_oriented_design.deck_of_cards.deck_of_cards.BlackJackHand`, `system_design_primer.solutions.object_oriented_design.parking_lot.parking_lot.Motorcycle`, `system_design_primer.solutions.object_oriented_design.parking_lot.parking_lot.Car`, `system_design_primer.solutions.object_oriented_design.parking_lot.parking_lot.Bus`, `system_design_primer.solutions.object_oriented_design.parking_lot.parking_lot.Level`
