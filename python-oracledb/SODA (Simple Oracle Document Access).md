@@ -1,38 +1,43 @@
 ```mermaid
 graph LR
+    Connection["Connection"]
     SodaDatabase["SodaDatabase"]
     SodaCollection["SodaCollection"]
-    SodaDocument["SodaDocument"]
     SodaOperation["SodaOperation"]
     SodaDocCursor["SodaDocCursor"]
-    SodaDatabase -- "creates" --> SodaCollection
-    SodaDatabase -- "creates" --> SodaDocument
-    SodaDatabase -- "opens" --> SodaCollection
-    SodaCollection -- "finds documents using" --> SodaOperation
-    SodaCollection -- "gets data guide using" --> SodaDocument
+    SodaDocument["SodaDocument"]
+    Connection -- "obtains" --> SodaDatabase
+    SodaDatabase -- "creates/opens" --> SodaCollection
+    SodaCollection -- "performs operations on" --> SodaOperation
+    SodaOperation -- "returns" --> SodaDocCursor
     SodaDocCursor -- "iterates over" --> SodaDocument
-    SodaOperation -- "gets cursor" --> SodaDocCursor
-    SodaOperation -- "gets documents using" --> SodaDocCursor
+    SodaCollection -- "contains" --> SodaDocument
 ```
 
 ## Component Details
 
+The SODA (Simple Oracle Document Access) component provides a simplified way to interact with JSON documents stored in Oracle Database. It allows users to create SODA databases and collections, insert, query, and manage JSON documents, and iterate through query results. The main flow involves obtaining a connection, accessing a SODA database, working with collections, and performing CRUD operations on documents within those collections.
+
+### Connection
+Represents a connection to the Oracle database. It serves as the entry point for accessing SODA functionality through the `getSodaDatabase` method, which allows retrieval of a SodaDatabase instance.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.connection.Connection`, `python-oracledb.utils.templates.connection.Connection`
+
 ### SodaDatabase
-Represents a SODA database and serves as the entry point for interacting with SODA. It provides methods for creating and opening collections, as well as creating documents. It manages the connection to the Oracle database and provides the context for SODA operations.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.soda.SodaDatabase`
+Represents a SODA database, providing methods to create and open SODA collections. It acts as a container for collections of JSON documents and is obtained from a Connection object.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.soda.SodaDatabase`
 
 ### SodaCollection
-Represents a SODA collection, which is a group of JSON documents. It provides methods for performing operations on documents within the collection, such as inserting, finding, saving, and retrieving documents. It encapsulates the metadata and operations specific to a collection.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.soda.SodaCollection`
-
-### SodaDocument
-Represents a SODA document, which is a single JSON document. It provides methods for accessing and manipulating the document's content. It encapsulates the JSON data and its associated metadata.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.soda.SodaDocument`
+Represents a SODA collection, which is a set of JSON documents. It provides methods for performing CRUD (Create, Read, Update, Delete) operations on documents within the collection. It is obtained from a SodaDatabase object.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.soda.SodaCollection`
 
 ### SodaOperation
-Represents a SODA operation, which allows to define filters, limits, and other query parameters. It provides methods for executing queries and retrieving documents based on specified criteria. It acts as a builder for constructing SODA queries.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.soda.SodaOperation`
+Represents a SODA operation, providing methods to execute operations on documents. It allows to get one or multiple documents. It is created from a SodaCollection object.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.soda.SodaOperation`
 
 ### SodaDocCursor
-Represents a cursor for iterating over SODA documents retrieved from a query. It provides a way to efficiently access large result sets. It manages the retrieval of documents in batches and provides an iterator interface.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.soda.SodaDocCursor`
+Represents a cursor for iterating over SODA documents retrieved from a query. It allows fetching documents one by one. It is returned by a SodaOperation object.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.soda.SodaDocCursor`
+
+### SodaDocument
+Represents a SODA document, which is a JSON document stored in the database. It provides methods for accessing the document's content and metadata. It is contained within a SodaCollection.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.soda.SodaDocument`

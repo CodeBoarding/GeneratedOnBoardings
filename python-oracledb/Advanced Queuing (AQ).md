@@ -1,63 +1,50 @@
 ```mermaid
 graph LR
-    BaseConnection["BaseConnection"]
     Connection["Connection"]
-    AsyncConnection["AsyncConnection"]
-    BaseQueue["BaseQueue"]
     Queue["Queue"]
-    AsyncQueue["AsyncQueue"]
+    BaseQueue["BaseQueue"]
     MessageProperties["MessageProperties"]
     EnqOptions["EnqOptions"]
     DeqOptions["DeqOptions"]
-    Connection -- "extends" --> BaseConnection
-    AsyncConnection -- "extends" --> BaseConnection
-    Connection -- "creates queue" --> BaseQueue
-    AsyncConnection -- "creates queue" --> BaseQueue
-    Queue -- "extends" --> BaseQueue
-    AsyncQueue -- "extends" --> BaseQueue
-    BaseConnection -- "handles message properties" --> MessageProperties
-    BaseQueue -- "creates dequeue options" --> DeqOptions
-    BaseQueue -- "creates enqueue options" --> EnqOptions
-    Queue -- "verifies message" --> BaseQueue
-    AsyncQueue -- "verifies message" --> BaseQueue
-    Queue -- "handles message properties" --> MessageProperties
-    AsyncQueue -- "handles message properties" --> MessageProperties
+    Samples["Samples"]
+    Connection -- "creates" --> Queue
+    Queue -- "uses" --> BaseQueue
+    Samples -- "demonstrates usage of" --> Queue
+    Samples -- "demonstrates usage of" --> Connection
+    Queue -- "uses" --> MessageProperties
+    Queue -- "uses" --> EnqOptions
+    Queue -- "uses" --> DeqOptions
+    BaseQueue -- "is base for" --> Queue
 ```
 
 ## Component Details
 
-### BaseConnection
-Represents the base class for database connections, providing fundamental functionalities such as connection verification and transaction management. It serves as an abstract layer for both synchronous and asynchronous connections, defining common interfaces and functionalities.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.connection.BaseConnection`
+The Advanced Queuing (AQ) component in python-oracledb provides a mechanism for asynchronous communication with Oracle databases. It allows applications to enqueue and dequeue messages, enabling decoupled interactions between different parts of a system. The core functionality revolves around establishing a connection, creating and managing queues, and sending/receiving messages with customizable properties and options. The samples demonstrate various use cases of the AQ functionality, including bulk operations and handling different data types.
 
 ### Connection
-Represents a synchronous connection to the Oracle database, extending BaseConnection with specific implementations for creating queues, committing, and rolling back transactions. It handles the establishment and management of a standard database session, providing a blocking interface for database interactions.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.connection.Connection`
-
-### AsyncConnection
-Represents an asynchronous connection to the Oracle database, extending BaseConnection to support non-blocking operations. It is designed for use with asyncio, enabling asynchronous queue creation, transaction handling, and other database interactions, providing a non-blocking interface for enhanced concurrency.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.connection.AsyncConnection`
-
-### BaseQueue
-Represents the base class for Oracle AQ queues, defining common methods for enqueueing and dequeueing messages, as well as message verification. It provides a foundation for both synchronous and asynchronous queue implementations, establishing a common interface for queue operations.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.aq.BaseQueue`
+The Connection component is responsible for establishing a connection to the Oracle database. It provides the entry point for creating and accessing queues. It initializes the necessary resources for interacting with the database's AQ functionality.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.connection.Connection`, `python-oracledb.src.oracledb.connection.AsyncConnection`
 
 ### Queue
-Represents a synchronous Oracle AQ queue, extending BaseQueue with methods for enqueueing and dequeueing single and multiple messages. It provides a standard interface for interacting with Oracle AQ in a blocking manner, suitable for traditional synchronous applications.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.aq.Queue`
+The Queue component represents an Oracle Advanced Queuing (AQ) queue. It provides methods for enqueueing (enq) and dequeueing (deq) messages, both individually and in batches. It interacts with the database through the connection to perform these operations, utilizing message properties and options for customization.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.aq.Queue`, `python-oracledb.src.oracledb.aq.AsyncQueue`
 
-### AsyncQueue
-Represents an asynchronous Oracle AQ queue, extending BaseQueue with asynchronous methods for enqueueing and dequeueing messages. It is designed for use with asyncio, enabling non-blocking queue operations, ideal for modern asynchronous applications.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.aq.AsyncQueue`
+### BaseQueue
+The BaseQueue component serves as a base class for Queue and AsyncQueue, providing common functionality and attributes related to queue operations. It encapsulates the shared logic for creating queue objects and managing their basic properties.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.aq.BaseQueue`
 
 ### MessageProperties
-Represents the properties of a message in an Oracle AQ queue, including correlation, delay, expiration, and payload. It encapsulates the metadata associated with a message, facilitating message customization and control, allowing fine-tuning of message delivery and behavior.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.aq.MessageProperties`
+The MessageProperties component encapsulates the properties of a message being enqueued or dequeued, such as correlation ID, delay, expiration, and priority. It allows users to customize message attributes to control message delivery and processing.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.aq.MessageProperties`
 
 ### EnqOptions
-Represents the enqueue options for an Oracle AQ queue, such as delivery mode and transformation. It allows customization of the enqueue operation, influencing message persistence and transformation behavior, enabling control over how messages are added to the queue.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.aq.EnqOptions`
+The EnqOptions component provides options for enqueueing messages, such as visibility and delivery mode. It allows users to control how messages are enqueued into the queue, influencing their immediate availability and persistence.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.aq.EnqOptions`
 
 ### DeqOptions
-Represents the dequeue options for an Oracle AQ queue, including condition, consumer name, and navigation. It enables fine-grained control over the dequeue operation, allowing selective message retrieval based on specific criteria, providing flexibility in how messages are retrieved from the queue.
-- **Related Classes/Methods**: `repos.python-oracledb.src.oracledb.aq.DeqOptions`
+The DeqOptions component provides options for dequeueing messages, such as navigation, wait time, and mode. It allows users to control how messages are dequeued from the queue, influencing the selection and retrieval process.
+- **Related Classes/Methods**: `python-oracledb.src.oracledb.aq.DeqOptions`
+
+### Samples
+The Samples component demonstrates how to use the AQ functionality in different scenarios, including bulk operations, raw data handling, object payloads, and multi-consumer setups. They provide practical examples of how to interact with the Queue and AsyncQueue classes, showcasing the various features and capabilities of the AQ component.
+- **Related Classes/Methods**: `python-oracledb.samples.bulk_aq_async`, `python-oracledb.samples.raw_aq_async`, `python-oracledb.samples.object_aq_async`, `python-oracledb.samples.multi_consumer_aq_async`
