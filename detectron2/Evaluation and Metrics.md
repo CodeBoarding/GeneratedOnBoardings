@@ -1,59 +1,48 @@
 ```mermaid
 graph LR
     DatasetEvaluators["DatasetEvaluators"]
+    inference_on_dataset["inference_on_dataset"]
     COCOEvaluator["COCOEvaluator"]
+    SemSegEvaluator["SemSegEvaluator"]
+    PanopticEvaluator["PanopticEvaluator"]
     LVISEvaluator["LVISEvaluator"]
     PascalVOCDetectionEvaluator["PascalVOCDetectionEvaluator"]
-    SemSegEvaluator["SemSegEvaluator"]
-    CityscapesEvaluator["CityscapesEvaluator"]
-    COCOPanopticEvaluator["COCOPanopticEvaluator"]
-    inference_on_dataset["inference_on_dataset"]
     DatasetEvaluators -- "manages" --> COCOEvaluator
+    DatasetEvaluators -- "manages" --> SemSegEvaluator
+    DatasetEvaluators -- "manages" --> PanopticEvaluator
     DatasetEvaluators -- "manages" --> LVISEvaluator
     DatasetEvaluators -- "manages" --> PascalVOCDetectionEvaluator
-    DatasetEvaluators -- "manages" --> SemSegEvaluator
-    DatasetEvaluators -- "manages" --> CityscapesEvaluator
-    DatasetEvaluators -- "manages" --> COCOPanopticEvaluator
-    COCOEvaluator -- "receives predictions from" --> inference_on_dataset
-    LVISEvaluator -- "receives predictions from" --> inference_on_dataset
-    PascalVOCDetectionEvaluator -- "receives predictions from" --> inference_on_dataset
-    SemSegEvaluator -- "receives predictions from" --> inference_on_dataset
-    CityscapesEvaluator -- "receives predictions from" --> inference_on_dataset
-    COCOPanopticEvaluator -- "receives predictions from" --> inference_on_dataset
+    inference_on_dataset -- "evaluates using" --> DatasetEvaluators
 ```
 
 ## Component Details
 
-The evaluation and metrics component in Detectron2 is responsible for assessing the performance of trained models on various datasets. It provides a suite of evaluators tailored for different tasks such as object detection, segmentation, and pose estimation. The core flow involves feeding model predictions and ground truth data to the appropriate evaluator, which then computes relevant metrics like mAP, mIoU, and PQ. These metrics provide a quantitative measure of the model's accuracy and are crucial for model selection and improvement.
+The evaluation and metrics component in Detectron2 is responsible for assessing the performance of trained models on various tasks such as object detection, segmentation, and pose estimation. It provides a standardized way to compute and report evaluation metrics, enabling users to compare different models and configurations. The core of this component lies in the `DatasetEvaluators` class, which manages a collection of individual evaluators tailored to specific datasets or evaluation protocols. The `inference_on_dataset` function orchestrates the evaluation process by running inference on a dataset and feeding the results to the appropriate evaluator. Individual evaluators, such as `COCOEvaluator`, `SemSegEvaluator`, and `PanopticEvaluator`, implement the evaluation logic for specific tasks and datasets, leveraging APIs like the COCO API to compute standard metrics.
 
 ### DatasetEvaluators
-This component manages a collection of evaluators, each responsible for evaluating a specific dataset or aspect of the model's performance. It orchestrates the evaluation process by iterating through the registered evaluators and calling their `evaluate` methods. This allows for a modular and extensible evaluation pipeline.
+Manages a collection of evaluators, each responsible for evaluating a specific dataset or aspect of the model's performance. It orchestrates the evaluation process by iterating through the evaluators and calling their `evaluate` methods. It aggregates the results from individual evaluators to provide a comprehensive performance summary.
 - **Related Classes/Methods**: `detectron2.evaluation.evaluator.DatasetEvaluators`
 
+### inference_on_dataset
+Executes the model's inference on a given dataset and subsequently evaluates the results using a provided evaluator. It encapsulates the process of feeding data to the model and then passing the model's predictions to the appropriate evaluator. This function serves as the entry point for the evaluation process.
+- **Related Classes/Methods**: `detectron2.evaluation.evaluator:inference_on_dataset`
+
 ### COCOEvaluator
-The COCOEvaluator is designed to evaluate object detection and segmentation results in the COCO format. It takes model predictions, converts them into the COCO JSON format, and then utilizes the COCO API (pycocotools) to calculate standard metrics such as mean Average Precision (mAP) and Average Recall (AR).
+Evaluates object detection and segmentation results in the COCO format. It converts model predictions into the COCO JSON format, leverages the COCO API to compute standard metrics like mAP, and then summarizes the evaluation results. It is a widely used evaluator for object detection tasks.
 - **Related Classes/Methods**: `detectron2.evaluation.coco_evaluation.COCOEvaluator`
 
+### SemSegEvaluator
+Evaluates semantic segmentation results by comparing predicted segmentation maps with ground truth maps. It computes pixel accuracy and Intersection-over-Union (IoU) metrics to quantify the accuracy of the segmentation. It provides detailed statistics on the segmentation performance.
+- **Related Classes/Methods**: `detectron2.evaluation.sem_seg_evaluation.SemSegEvaluator`
+
+### PanopticEvaluator
+Evaluates panoptic segmentation results, which combines semantic and instance segmentation. It compares predicted panoptic segmentation maps with ground truth and computes Panoptic Quality (PQ), Segmentation Quality (SQ), and Recognition Quality (RQ) metrics. It provides a comprehensive evaluation of panoptic segmentation performance.
+- **Related Classes/Methods**: `detectron2.evaluation.panoptic_evaluation.COCOPanopticEvaluator`
+
 ### LVISEvaluator
-The LVISEvaluator is similar to the COCOEvaluator but is specifically adapted for evaluating object detection results on the LVIS dataset. LVIS is characterized by a large vocabulary of object categories with varying frequencies, and this evaluator is designed to handle the challenges posed by this dataset.
+Evaluates object detection and segmentation results in the LVIS format, designed for long-tailed instance segmentation. Similar to COCOEvaluator, it converts predictions, uses the LVIS API for metric computation, and summarizes the results. It is suitable for datasets with imbalanced class distributions.
 - **Related Classes/Methods**: `detectron2.evaluation.lvis_evaluation.LVISEvaluator`
 
 ### PascalVOCDetectionEvaluator
-This evaluator assesses object detection performance in the Pascal VOC format. It calculates precision and recall for each object class and then computes the average precision (AP) as the primary metric. It follows the evaluation protocol established by the Pascal VOC challenge.
-- **Related Classes/Methods**: `detectron2.evaluation.pascal_voc_evaluation.PascalVOCDetectionEvaluator`, `detectron2.evaluation.pascal_voc_evaluation.parse_rec`, `detectron2.evaluation.pascal_voc_evaluation.voc_eval`
-
-### SemSegEvaluator
-The SemSegEvaluator evaluates semantic segmentation results by computing pixel-wise accuracy and Intersection over Union (IoU) for each semantic class. It provides a detailed assessment of the model's ability to accurately classify each pixel in an image.
-- **Related Classes/Methods**: `detectron2.evaluation.sem_seg_evaluation.SemSegEvaluator`
-
-### CityscapesEvaluator
-This component is specialized for evaluating instance and semantic segmentation results on the Cityscapes dataset. It incorporates metrics and tools specifically designed for this dataset, taking into account its unique characteristics and evaluation protocols.
-- **Related Classes/Methods**: `detectron2.evaluation.cityscapes_evaluation.CityscapesEvaluator`, `detectron2.evaluation.cityscapes_evaluation.CityscapesInstanceEvaluator`, `detectron2.evaluation.cityscapes_evaluation.CityscapesSemSegEvaluator`
-
-### COCOPanopticEvaluator
-The COCOPanopticEvaluator evaluates panoptic segmentation results in the COCO format. It computes the Panoptic Quality (PQ) metric, which combines segmentation quality and recognition accuracy into a single measure.
-- **Related Classes/Methods**: `detectron2.evaluation.panoptic_evaluation.COCOPanopticEvaluator`
-
-### inference_on_dataset
-This function is responsible for performing inference on a given dataset using a Detectron2 model. It generates predictions that are then passed to the appropriate evaluators for performance assessment. It serves as the bridge between the model and the evaluation components.
-- **Related Classes/Methods**: `detectron2.evaluation.evaluator.inference_on_dataset`
+Evaluates object detection results following the Pascal VOC evaluation protocol. It parses ground truth annotations, compares them with model predictions, and calculates precision and recall to assess performance. It is a classic evaluator for object detection tasks.
+- **Related Classes/Methods**: `detectron2.evaluation.pascal_voc_evaluation.PascalVOCDetectionEvaluator`
