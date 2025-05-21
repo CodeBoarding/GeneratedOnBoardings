@@ -1,54 +1,49 @@
 ```mermaid
 graph LR
     Camera["Camera"]
-    Light["Light"]
     Shader["Shader"]
+    Light["Light"]
     Screen["Screen"]
-    WindowRunner["WindowRunner"]
     Scene["Scene"]
-    Vector2["Vector2"]
-    Vector3["Vector3"]
-    Camera -- "renders to" --> Screen
-    Light -- "influences" --> Scene
-    Shader -- "manages" --> Scene
-    Screen -- "modifies properties of" --> Screen
-    WindowRunner -- "manages" --> Screen
-    Scene -- "manages" --> Camera
-    Camera -- "uses for resizing" --> Vector2
-    Camera -- "uses for matrix calculations" --> Vector3
-    Scene -- "renders" --> Camera
+    Texture2D["Texture2D"]
+    Skybox["Skybox"]
+    Camera -- "Uses" --> Shader
+    Scene -- "Uses" --> Camera
+    Camera -- "Uses" --> Texture2D
+    Camera -- "Uses" --> Skybox
+    Scene -- "Renders with" --> Shader
+    Scene -- "Illuminates with" --> Light
+    Scene -- "Displays on" --> Screen
 ```
 
 ## Component Details
 
+The Rendering Pipeline is responsible for transforming the 3D scene into a 2D image that is displayed on the screen. It involves several key components working together to handle camera setup, scene rendering, lighting, shading, and visual effects. The pipeline starts with the Camera component, which defines the viewpoint and sets up the necessary transformation matrices. The Scene component then manages the collection of objects and lights to be rendered. Shaders are used to determine the final color of each pixel, taking into account lighting from the Light components and textures from Texture2D components. Finally, the rendered image is displayed on the Screen component.
+
 ### Camera
-The Camera component handles the rendering of the scene from a specific viewpoint. It manages the projection and view matrices, and interacts with the Screen to output the rendered image. It inherits from SingleComponent and interacts with Vector3 for matrix calculations and Scene for rendering.
+The Camera component defines the viewpoint from which the scene is rendered. It handles setting up buffers, resizing the viewport, calculating transformation matrices, and drawing the scene from its perspective. It also manages rendering different passes like depth and 2D elements.
 - **Related Classes/Methods**: `pyunity.render.Camera`
 
-### Light
-The Light component represents a light source in the scene, influencing the appearance of objects. It inherits from SingleComponent.
-- **Related Classes/Methods**: `pyunity.render.Light`
-
 ### Shader
-The Shader component manages the loading, compilation, and caching of shaders, which define how objects are rendered. It interacts with the file system to load shader source code and the logger for logging.
+The Shader component is responsible for compiling, loading, and using shaders for rendering. It manages the shader programs used to draw objects on the screen.
 - **Related Classes/Methods**: `pyunity.render.Shader`
 
+### Light
+The Light component represents a light source in the scene. It stores information about the light's color, intensity, and position, which are used in the shader calculations to determine the final color of the rendered objects.
+- **Related Classes/Methods**: `pyunity.render.Light`
+
 ### Screen
-The Screen component represents the display screen and allows modification of its properties, such as resolution. It interacts with the Camera to display the rendered image and ImmutableStruct to edit the screen.
+The Screen component manages the display window and allows for editing the screen's properties. It provides an interface for interacting with the display.
 - **Related Classes/Methods**: `pyunity.render.Screen`
 
-### WindowRunner
-The WindowRunner manages the main application window and its event loop. It handles setup, rendering, and quitting the application, and interacts with the render module for compiling shaders and skyboxes. It also uses fillScreen to fill the screen with a color.
-- **Related Classes/Methods**: `pyunity.scenes.runner.WindowRunner`
-
 ### Scene
-The Scene class represents a scene in the application. It manages the objects and components in the scene and starts OpenGL. It renders the camera and resizes it.
+The Scene component represents the collection of objects and lights in the environment. It is responsible for rendering all objects within the scene, potentially performing frustum culling to optimize rendering.
 - **Related Classes/Methods**: `pyunity.scenes.scene.Scene`
 
-### Vector2
-The Vector2 class represents a 2D vector, used for camera resizing and 2D matrix calculations. It is used by the Camera and the Screen.
-- **Related Classes/Methods**: `pyunity.values.vector.Vector2`
+### Texture2D
+The Texture2D component represents a 2D image that can be applied to objects in the scene. It provides functionality for using the texture during rendering.
+- **Related Classes/Methods**: `pyunity.files.Texture2D`
 
-### Vector3
-The Vector3 class represents a 3D vector, used for camera matrix and view matrix calculations. It is used by the Camera.
-- **Related Classes/Methods**: `pyunity.values.vector.Vector3`
+### Skybox
+The Skybox component represents the background of the scene, typically a cube map that surrounds the entire environment. It handles compiling and using the skybox texture during rendering.
+- **Related Classes/Methods**: `pyunity.files.Skybox`
