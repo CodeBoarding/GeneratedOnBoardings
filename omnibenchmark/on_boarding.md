@@ -1,40 +1,38 @@
-Okay, I will generate an onboarding document for the `omnibenchmark` project based on the provided information.
-
-**1. Project Description**
-
-Omnibenchmark is a framework designed to streamline and standardize the benchmarking process for computational biology tools and workflows. It provides a structured environment for defining, executing, and evaluating benchmarks, ensuring reproducibility and facilitating comparisons across different tools and methods. The framework leverages a modular architecture, allowing for flexible integration of various workflow engines, remote storage solutions, and data models.
-
-**2. Flow Diagram (Mermaid)**
-
 ```mermaid
 graph LR
-    A[Benchmark Definition] -- defines --> B(Benchmark Object)
-    B -- validates --> C{Validator}
-    C -- returns status --> B
-    B -- uses --> D[Data Model]
-    B -- serializes --> E(Workflow Engine)
-    E -- executes --> F[Remote Storage]
-    F -- stores/retrieves --> G(Files & Archives)
-    G -- manages --> F
-    F -- provides data to --> E
-    E -- generates --> H(Results)
-    H -- stored in --> F
+    Benchmark_Definition_and_Validation["Benchmark Definition and Validation"]
+    Workflow_Management["Workflow Management"]
+    Data_Management["Data Management"]
+    Command_Line_Interface["Command Line Interface"]
+    Benchmark_Definition_and_Validation -- "defines and validates" --> Benchmark_Definition_and_Validation
+    Benchmark_Definition_and_Validation -- "converts to" --> Workflow_Management
+    Workflow_Management -- "executes" --> Benchmark_Definition_and_Validation
+    Data_Management -- "provides storage for" --> Workflow_Management
+    Command_Line_Interface -- "interacts with" --> Benchmark_Definition_and_Validation
+    Command_Line_Interface -- "interacts with" --> Workflow_Management
+    Command_Line_Interface -- "interacts with" --> Data_Management
+    click Benchmark_Definition_and_Validation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/omnibenchmark/Benchmark Definition and Validation.md" "Details"
+    click Workflow_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/omnibenchmark/Workflow Management.md" "Details"
+    click Data_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/omnibenchmark/Data Management.md" "Details"
+    click Command_Line_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/omnibenchmark/Command Line Interface.md" "Details"
 ```
 
-**3. Component Descriptions**
+## Component Details
 
-*   **Benchmark Definition:** This component represents the initial specification of a benchmark, typically defined using a structured format like YAML and adhering to a schema defined using LinkML. It includes metadata, input data specifications, and the workflow to be executed.
+The omnibenchmark framework automates and standardizes the benchmarking of bioinformatics tools and workflows. It defines benchmarks using a structured schema, converts them into executable workflows (Snakemake), manages software environments (Conda, Singularity), and provides a command-line interface for users to run and interact with benchmarks. The framework also supports remote storage for data and results, ensuring reproducibility and accessibility.
 
-*   **Benchmark Object:** This component is the in-memory representation of a benchmark, loaded from the Benchmark Definition. It provides access to the benchmark's metadata, structure, and validation status.
+### Benchmark Definition and Validation
+This component defines the structure of a benchmark using a structured schema (likely LinkML). It handles loading benchmark metadata, validating it against the schema to ensure it is well-formed and meets the required specifications. It provides classes for representing benchmarks, benchmark nodes, and parameters, and includes error handling for validation failures.
+- **Related Classes/Methods**: `omnibenchmark.benchmark.benchmark.Benchmark`, `omnibenchmark.benchmark.benchmark_node.BenchmarkNode`, `omnibenchmark.benchmark.params.Params`, `omnibenchmark.model.module.ModuleMetadata`, `omnibenchmark.benchmark.validation.validator.Validator`, `omnibenchmark.benchmark.validation.error.ValidationError`
 
-*   **Validator:** This component is responsible for validating the Benchmark Object against a set of rules and constraints, ensuring that the benchmark definition is consistent and adheres to the defined schema.
+### Workflow Management
+This component converts the benchmark definition into an executable workflow, builds a directed acyclic graph (DAG) representing the workflow, and executes the workflow using Snakemake. It manages the execution of individual nodes in the workflow, collects results, and handles software environment provisioning (Conda, Singularity) to ensure reproducibility.
+- **Related Classes/Methods**: `omnibenchmark.benchmark.converter.LinkMLConverter`, `omnibenchmark.benchmark.dag`, `omnibenchmark.workflow.snakemake.snakemake.SnakemakeEngine`, `omnibenchmark.workflow.snakemake.scripts.execution`, `omnibenchmark.workflow.snakemake.scripts.parse_performance`, `omnibenchmark.software.common`, `omnibenchmark.software.easybuild_backend`
 
-*   **Data Model:** This component defines the structure and types of data used within the benchmark, including modules, software, and other components. It provides a consistent way to represent and manage benchmark-related information.
+### Data Management
+This component manages the storage of benchmark data and code on remote storage systems like MinIO and S3. It handles tasks such as creating new benchmark versions, downloading files, and archiving results. It provides an abstraction layer for interacting with different storage backends, ensuring data persistence and accessibility.
+- **Related Classes/Methods**: `omnibenchmark.io.RemoteStorage.RemoteStorage`, `omnibenchmark.io.MinIOStorage.MinIOStorage`, `omnibenchmark.io.S3config`, `omnibenchmark.io.archive`, `omnibenchmark.io.files`, `omnibenchmark.io.versioning`
 
-*   **Workflow Engine:** This component is responsible for executing the benchmark workflow, typically using Snakemake. It manages the serialization, execution, and monitoring of workflows at both the benchmark and individual node levels.
-
-*   **Remote Storage:** This component provides an abstraction layer for interacting with remote storage systems like MinIO and S3. It supports versioning, uploading, downloading, and archiving benchmark-related files.
-
-*   **Files & Archives:** This component handles file-related operations such as listing, downloading, checksumming, and archiving benchmark data, code, software, and results. It ensures data integrity and facilitates versioning and reproducibility.
-
-*   **Results:** This component represents the output generated by the execution of the benchmark workflow. These results are then stored in the Remote Storage for later analysis and comparison.
+### Command Line Interface
+This component provides the command-line interface for interacting with the omnibenchmark framework. It handles tasks such as running benchmarks, listing versions, and creating archives. It serves as the entry point for users to interact with the system.
+- **Related Classes/Methods**: `omnibenchmark.cli.run`, `omnibenchmark.cli.io`, `omnibenchmark.cli.benchmark`, `omnibenchmark.cli.soft`
