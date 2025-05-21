@@ -1,34 +1,37 @@
 ```mermaid
 graph LR
-    Inference_Orchestrator["Inference Orchestrator"]
-    RealESRGANer["RealESRGANer"]
-    SRVGGNetCompact["SRVGGNetCompact"]
-    Reader["Reader"]
-    Writer["Writer"]
-    Inference_Orchestrator -- "orchestrates enhancement using" --> RealESRGANer
-    RealESRGANer -- "uses for upscaling" --> SRVGGNetCompact
-    Inference_Orchestrator -- "reads video frames" --> Reader
-    Inference_Orchestrator -- "writes enhanced video frames" --> Writer
+    main_video_["main (video)"]
+    run_video_["run (video)"]
+    Reader_video_["Reader (video)"]
+    get_sub_video_video_["get_sub_video (video)"]
+    inference_video_video_["inference_video (video)"]
+    main_video_ -- "calls" --> run_video_
+    run_video_ -- "uses" --> Reader_video_
+    Reader_video_ -- "reads frames from" --> video_file
+    main_video_ -- "extracts sub-clip" --> get_sub_video_video_
+    run_video_ -- "applies model to frames" --> inference_video_video_
 ```
 
 ## Component Details
 
-### Inference Orchestrator
-The Inference Orchestrator is the central component responsible for managing the image and video enhancement pipeline. It initializes and loads the necessary Real-ESRGAN models, handles input data (images or video frames), delegates the enhancement process to the RealESRGANer, and manages the output, including writing enhanced frames to video files when processing videos. It coordinates the flow of data between the input source, enhancement processor, and output destination.
-- **Related Classes/Methods**: `repos.Real-ESRGAN.inference_realesrgan`, `repos.Real-ESRGAN.inference_realesrgan_video`
+The Inference Orchestrator manages the process of enhancing images and videos using Real-ESRGAN. It handles both single images and videos, loading the Real-ESRGAN Enhancer and managing pre and post-processing steps. For videos, it extracts frames, enhances each frame individually, and reassembles the enhanced frames back into a video. The orchestrator serves as the primary entry point for utilizing Real-ESRGAN enhancement capabilities.
 
-### RealESRGANer
-The RealESRGANer class is a utility that encapsulates the core image enhancement functionality using the Real-ESRGAN model. It handles pre-processing, inference, and post-processing of images. It can process images in tiles to handle large images and manages color space conversions and alpha channels.
-- **Related Classes/Methods**: `realesrgan.utils.RealESRGANer`
+### main (video)
+The main function orchestrates the video enhancement process. It parses command-line arguments, initializes the video reader and writer, and calls the run function to process the video.
+- **Related Classes/Methods**: `inference_realesrgan_video.py:main`
 
-### SRVGGNetCompact
-SRVGGNetCompact defines the neural network architecture used for image upscaling. It consists of convolutional layers, activation functions, and a pixel shuffle operation for upsampling. The network learns the residual between the input and the upscaled output.
-- **Related Classes/Methods**: `realesrgan.archs.srvgg_arch.SRVGGNetCompact`
+### run (video)
+This function contains the core logic for processing the video. It reads frames from the input video using the Reader class, applies the Real-ESRGAN model to each frame using the inference_video function, and writes the enhanced frames to the output video.
+- **Related Classes/Methods**: `inference_realesrgan_video.py:run`
 
-### Reader
-The Reader component is responsible for reading video frames from a video source. It can read from a video stream or a list of image frames, providing a consistent interface for accessing video data.
-- **Related Classes/Methods**: `repos.Real-ESRGAN.inference_realesrgan_video.Reader`
+### Reader (video)
+A class responsible for reading video frames from the input video file. It uses OpenCV (cv2) to decode the video and provide frames. The __init__ method initializes the video capture, and the get_frame method retrieves the next frame.
+- **Related Classes/Methods**: `inference_realesrgan_video.py:Reader:__init__`, `inference_realesrgan_video.py:Reader:get_frame`
 
-### Writer
-The Writer component handles writing enhanced video frames to an output video file. It provides the functionality to encode and save the processed frames into a video.
-- **Related Classes/Methods**: `repos.Real-ESRGAN.inference_realesrgan_video.Writer`
+### get_sub_video (video)
+This function extracts a sub-clip from the input video, based on start and end times provided as arguments. It modifies the video reader to only process frames within the specified time range.
+- **Related Classes/Methods**: `inference_realesrgan_video.py:get_sub_video`
+
+### inference_video (video)
+This function applies the Real-ESRGAN model to each frame of the video. It takes a frame as input and returns the enhanced frame. It encapsulates the core image enhancement logic.
+- **Related Classes/Methods**: `inference_realesrgan_video.py:inference_video`

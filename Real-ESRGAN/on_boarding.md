@@ -1,45 +1,42 @@
 ```mermaid
 graph LR
     Inference_Orchestrator["Inference Orchestrator"]
-    Enhancement_Processor["Enhancement Processor"]
-    SRVGGNet_Model["SRVGGNet Model"]
-    Video_I_O_Manager["Video I/O Manager"]
-    Dataset_Manager["Dataset Manager"]
-    Model_Training_Manager["Model Training Manager"]
-    Inference_Orchestrator -- "orchestrates" --> Enhancement_Processor
-    Inference_Orchestrator -- "uses" --> Video_I_O_Manager
-    Enhancement_Processor -- "uses" --> SRVGGNet_Model
-    Dataset_Manager -- "provides data for" --> Model_Training_Manager
+    RealESRGAN_Enhancer["RealESRGAN Enhancer"]
+    RealESRGAN_Model["RealESRGAN Model"]
+    Network_Architecture["Network Architecture"]
+    RealESRGAN_Dataset["RealESRGAN Dataset"]
+    Inference_Orchestrator -- "orchestrates" --> RealESRGAN_Enhancer
+    RealESRGAN_Enhancer -- "uses" --> RealESRGAN_Model
+    RealESRGAN_Model -- "implements" --> Network_Architecture
+    RealESRGAN_Dataset -- "used for training" --> RealESRGAN_Model
+    Network_Architecture -- "used during training" --> RealESRGAN_Model
     click Inference_Orchestrator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/Inference Orchestrator.md" "Details"
-    click Enhancement_Processor href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/Enhancement Processor.md" "Details"
-    click SRVGGNet_Model href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/SRVGGNet Model.md" "Details"
-    click Video_I_O_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/Video I/O Manager.md" "Details"
-    click Dataset_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/Dataset Manager.md" "Details"
-    click Model_Training_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/Model Training Manager.md" "Details"
+    click RealESRGAN_Enhancer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/RealESRGAN Enhancer.md" "Details"
+    click RealESRGAN_Model href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/RealESRGAN Model.md" "Details"
+    click Network_Architecture href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/Network Architecture.md" "Details"
+    click RealESRGAN_Dataset href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Real-ESRGAN/RealESRGAN Dataset.md" "Details"
 ```
 
 ## Component Details
 
+The Real-ESRGAN project focuses on enhancing images and videos using deep learning techniques. The core functionality revolves around taking low-resolution inputs and generating high-resolution, visually appealing outputs. The process involves orchestrating the enhancement pipeline, utilizing pre-trained models, and employing specific network architectures for optimal performance. The training process leverages datasets of low-resolution and high-resolution image pairs and can incorporate discriminator networks to improve the realism of the generated images.
+
 ### Inference Orchestrator
-This component manages the entire image and video enhancement pipeline. It handles loading the appropriate models, pre-processing input data, delegating the actual enhancement to the Enhancement Processor, and managing the output of the enhanced results. It also coordinates video input and output through the Video I/O Handler.
-- **Related Classes/Methods**: `repos.Real-ESRGAN.inference_realesrgan`, `repos.Real-ESRGAN.inference_realesrgan_video`
+The Inference Orchestrator manages the overall process of enhancing images and videos. It handles input (either a single image or a video), loads the Real-ESRGAN Enhancer, and manages the pre and post processing. For videos, it extracts frames, enhances each frame, and reassembles the enhanced frames into a video. It acts as the entry point for using the Real-ESRGAN enhancement capabilities.
+- **Related Classes/Methods**: `inference_realesrgan.py`, `inference_realesrgan_video.py`
 
-### Enhancement Processor
-This component is the core image enhancement engine. It encapsulates the pre-processing, tile-based processing, enhancement using the SRVGGNetCompact model, and post-processing steps. It provides a high-level interface for enhancing images, abstracting away the complexities of the underlying model and tiling mechanisms.
-- **Related Classes/Methods**: `realesrgan.utils.RealESRGANer`
+### RealESRGAN Enhancer
+The RealESRGAN Enhancer encapsulates the core image enhancement functionality. It preprocesses the input image to be compatible with the model, performs the enhancement using the RealESRGAN Model's forward pass, and post-processes the output image to prepare it for display or saving. It serves as an abstraction layer over the specific RealESRGAN model architecture.
+- **Related Classes/Methods**: `realesrgan/utils.py`
 
-### SRVGGNet Model
-This component represents the SRVGGNetCompact neural network architecture, which is the core model used for image enhancement. It takes low-resolution images as input and outputs high-resolution enhanced images. It is the primary model used by the Enhancement Processor.
-- **Related Classes/Methods**: `realesrgan.archs.srvgg_arch.SRVGGNetCompact`
+### RealESRGAN Model
+The RealESRGAN Model represents the deep learning model responsible for performing the actual image enhancement. It defines the model architecture (e.g., SRVGGNetCompact), handles the forward pass that transforms the low-resolution input into a high-resolution output, and manages the model's internal state (weights, biases, etc.). It is the core computational engine of the system.
+- **Related Classes/Methods**: `realesrgan/models/realesrgan_model.py`, `realesrgan/models/realesrnet_model.py`
 
-### Video I/O Manager
-This component handles all video input and output operations. It provides functionalities for reading video frames from a source and writing enhanced video frames to an output file. It also manages video metadata such as FPS and resolution.
-- **Related Classes/Methods**: `repos.Real-ESRGAN.inference_realesrgan_video.Reader`, `repos.Real-ESRGAN.inference_realesrgan_video.Writer`
+### Network Architecture
+The Network Architecture defines the specific network architectures used within the RealESRGAN model, such as SRVGGNetCompact and UNetDiscriminatorSN. These architectures provide reusable building blocks for constructing the overall enhancement model and discriminator, respectively. They are specific types of networks optimized for image super-resolution and GAN-based training.
+- **Related Classes/Methods**: `realesrgan/archs/srvgg_arch.py`, `realesrgan/archs/discriminator_arch.py`
 
-### Dataset Manager
-This component manages the datasets used for training the Real-ESRGAN models. It handles loading, pre-processing, and providing training image pairs to the model training components.
-- **Related Classes/Methods**: `realesrgan.data.realesrgan_dataset.RealESRGANDataset`
-
-### Model Training Manager
-This component encapsulates the training and evaluation processes for the Real-ESRGAN and RealESRNet models. It includes the network architecture, loss functions, optimization methods, and provides methods for training and evaluating the models.
-- **Related Classes/Methods**: `realesrgan.models.realesrgan_model.RealESRGANModel`, `realesrgan.models.realesrnet_model.RealESRNetModel`
+### RealESRGAN Dataset
+The RealESRGAN Dataset provides a dataset class specifically designed for training and evaluating the Real-ESRGAN model. It handles loading and pre-processing of image pairs (low-resolution and high-resolution) for training the model. It is responsible for providing the training data in a format suitable for the model.
+- **Related Classes/Methods**: `realesrgan/data/realesrgan_dataset.py`
