@@ -1,68 +1,63 @@
 ```mermaid
 graph LR
     Flow_Management["Flow Management"]
-    Graph_Execution["Graph Execution"]
-    Component_Library["Component Library"]
-    Data_Processing_Pipeline["Data Processing Pipeline"]
+    Component_Management["Component Management"]
+    Custom_Component_Handling["Custom Component Handling"]
+    Flow_Execution["Flow Execution"]
+    Data_Handling["Data Handling"]
+    Service_Management["Service Management"]
     External_Resource_Integration["External Resource Integration"]
-    API_and_Service_Management["API and Service Management"]
-    User_Authentication_and_Authorization["User Authentication and Authorization"]
-    Configuration_Management["Configuration Management"]
-    Utilities_and_Support["Utilities and Support"]
-    Flow_Management -- "orchestrates" --> Graph_Execution
-    Graph_Execution -- "builds upon" --> Component_Library
-    Component_Library -- "utilizes" --> Data_Processing_Pipeline
-    Data_Processing_Pipeline -- "processes data with" --> External_Resource_Integration
-    API_and_Service_Management -- "provides access to" --> Flow_Management
-    API_and_Service_Management -- "secures access via" --> User_Authentication_and_Authorization
-    API_and_Service_Management -- "configures via" --> Configuration_Management
-    Graph_Execution -- "supports operations with" --> Utilities_and_Support
-    Component_Library -- "integrates" --> External_Resource_Integration
+    Flow_Management -- "manages" --> Flow_Management
+    Flow_Management -- "stores" --> Flow_Management
+    Flow_Management -- "provides access to" --> Flow_Execution
+    Component_Management -- "manages" --> Component_Management
+    Component_Management -- "registers" --> Custom_Component_Handling
+    Flow_Execution -- "uses" --> Component_Management
+    Flow_Execution -- "executes" --> Component_Management
+    Flow_Execution -- "uses" --> Data_Handling
+    Custom_Component_Handling -- "parses and validates" --> Custom_Component_Handling
+    Flow_Execution -- "uses" --> Flow_Management
+    Service_Management -- "manages" --> Service_Management
+    Flow_Management -- "uses" --> External_Resource_Integration
+    Component_Management -- "uses" --> External_Resource_Integration
+    Component_Management -- "integrates" --> External_Resource_Integration
     click Flow_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Flow Management.md" "Details"
-    click Graph_Execution href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Graph Execution.md" "Details"
-    click Component_Library href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Component Library.md" "Details"
-    click Data_Processing_Pipeline href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Data Processing Pipeline.md" "Details"
+    click Component_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Component Management.md" "Details"
+    click Custom_Component_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Custom Component Handling.md" "Details"
+    click Flow_Execution href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Flow Execution.md" "Details"
+    click Data_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Data Handling.md" "Details"
+    click Service_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Service Management.md" "Details"
     click External_Resource_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/External Resource Integration.md" "Details"
-    click API_and_Service_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/API and Service Management.md" "Details"
-    click User_Authentication_and_Authorization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/User Authentication and Authorization.md" "Details"
-    click Configuration_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Configuration Management.md" "Details"
-    click Utilities_and_Support href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langflow/Utilities and Support.md" "Details"
 ```
 
 ## Component Details
 
+Langflow is a visual programming framework for building applications using language models and other components. It provides a drag-and-drop interface for creating flow graphs, which define the data flow between components. The framework supports both built-in and custom components, allowing users to extend its functionality. Langflow also includes features for managing settings, storing data, and integrating with external resources.
+
 ### Flow Management
-This component is responsible for the creation, reading, updating, and deletion of flows within Langflow. It orchestrates the entire flow lifecycle, from initial design to execution and persistence. It provides the high-level interface for defining and managing the structure of Langflow applications.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.api.v1.flows`, `repos.langflow.src.backend.base.langflow.helpers.flow`, `repos.langflow.src.backend.base.langflow.load.load`, `repos.langflow.src.backend.base.langflow.load.utils`
+This component is responsible for creating, storing, retrieving, and managing flow graphs. It provides the core functionality for defining and persisting the structure of Langflow applications. It interacts with the database to persist and retrieve flow definitions, and it provides an interface for the API endpoints to access and manipulate flows.
+- **Related Classes/Methods**: `langflow.graph.graph.base.Graph`, `langflow.api.v1.flows`, `langflow.services.database.models`
 
-### Graph Execution
-This component manages the execution of the Langflow graph. It takes a flow definition and translates it into an executable graph, handling the state and managing runnable vertices. It serves as the core execution engine, driving the data processing and interactions between components.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.graph.graph.base`, `repos.langflow.src.backend.base.langflow.graph.graph.utils`, `repos.langflow.src.backend.base.langflow.graph.graph.runnable_vertices_manager`, `repos.langflow.src.backend.base.langflow.graph.graph.state_manager`
+### Component Management
+This component manages the available components within Langflow, including both built-in and custom components. It handles loading, registering, and providing access to these components. It also interacts with the Custom Component Handler to manage user-defined components, ensuring they adhere to the Langflow component interface.
+- **Related Classes/Methods**: `langflow.interface.components`, `langflow.components`, `langflow.custom.custom_component.component.Component`
 
-### Component Library
-This component provides a catalog of reusable building blocks for constructing flows. It handles the loading, building, and management of components, including custom components. It also manages the interaction between components and the graph, providing a standardized interface for component integration.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components`, `repos.langflow.src.backend.base.langflow.custom.custom_component.component`, `repos.langflow.src.backend.base.langflow.custom.utils`, `repos.langflow.src.backend.base.langflow.interface.components`
+### Custom Component Handling
+This component enables users to define and integrate their own components into Langflow. It handles code parsing, validation, and compilation of custom components, making them available for use in flow graphs. It ensures that custom components adhere to the Langflow component interface and provides utilities for working with custom code.
+- **Related Classes/Methods**: `langflow.custom.custom_component.component.Component`, `langflow.custom.utils`, `langflow.custom.code_parser.code_parser.CodeParser`
 
-### Data Processing Pipeline
-This component provides functionalities for processing data within Langflow. It includes parsing, splitting, combining, and transforming data, as well as components for handling different data types. It acts as the data pipeline, transforming and routing data between components to achieve the desired outcome.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components.processing`, `repos.langflow.src.backend.base.langflow.base.data`, `repos.langflow.src.backend.base.langflow.processing.process`
+### Flow Execution
+This component is responsible for executing flow graphs. It traverses the graph, executes components in the correct order, and manages the data flow between them. It uses the Data Abstraction Layer to handle data representation and conversion. It also integrates with the Tracing Service to provide debugging and monitoring capabilities.
+- **Related Classes/Methods**: `langflow.services.flow.flow_runner.LangflowRunnerExperimental`, `langflow.processing.process`, `langflow.graph.graph.base.Graph`
+
+### Data Handling
+This component provides a consistent way to represent and manipulate data within Langflow. It includes classes for representing text, dataframes, and other data types, as well as utilities for converting between them. It ensures that data can be seamlessly passed between different components in a flow graph.
+- **Related Classes/Methods**: `langflow.schema.data.Data`, `langflow.schema.dataframe.DataFrame`, `langflow.helpers.data`
+
+### Service Management
+This component manages the various background services required by Langflow, such as settings, database, authentication, telemetry, tracing, and job queue services. It provides a centralized way to access and configure these services, ensuring that they are properly initialized and available to other components.
+- **Related Classes/Methods**: `langflow.services.settings.service.SettingsService`, `langflow.services.database.service.DatabaseService`, `langflow.services.auth.service.AuthService`, `langflow.services.telemetry.service.TelemetryService`, `langflow.services.tracing.service.TracingService`, `langflow.services.job_queue.service.JobQueueService`
 
 ### External Resource Integration
-This component integrates various external services and resources into Langflow, including language models, vector stores, and tools. It handles the building and configuration of these integrations, providing a unified interface for accessing external capabilities. It serves as the bridge to external resources, enabling Langflow to leverage external capabilities.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components.models`, `repos.langflow.src.backend.base.langflow.base.models`, `repos.langflow.src.backend.base.langflow.components.vectorstores`, `repos.langflow.src.backend.base.langflow.base.vectorstores`, `repos.langflow.src.backend.base.langflow.components.tools`, `repos.langflow.src.backend.base.langflow.base.tools`
-
-### API and Service Management
-This component handles the API endpoints for Langflow, including building flows, running flows, and managing users and API keys. It also manages the different services used by Langflow, including the database service, cache service, and settings service. It exposes Langflow's functionality through APIs and manages the underlying services required for its operation.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.api`, `repos.langflow.src.backend.base.langflow.services`
-
-### User Authentication and Authorization
-This component handles user authentication and authorization, including creating users, managing API keys, and verifying passwords. It secures Langflow by managing user access and permissions, ensuring that only authorized users can access sensitive data and functionality.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.services.auth`
-
-### Configuration Management
-This component manages the settings for Langflow, including loading settings from YAML files and providing access to settings values. It configures Langflow's behavior based on user-defined settings, allowing for customization and adaptation to different environments.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.services.settings`
-
-### Utilities and Support
-This component encompasses a range of supporting functionalities, including custom code handling, initial setup, logging, task management, telemetry, interface components, and memory management. It provides essential services that underpin Langflow's operation and enhance its usability.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.custom`, `repos.langflow.src.backend.base.langflow.initial_setup`, `repos.langflow.src.backend.base.langflow.logging`, `repos.langflow.src.backend.base.langflow.services.task`, `repos.langflow.src.backend.base.langflow.services.telemetry`, `repos.langflow.src.backend.base.langflow.interface.components`, `repos.langflow.src.backend.base.langflow.memory`
+This component provides components for interacting with external resources, such as vector stores and language models. It abstracts the interaction with these resources, allowing Langflow applications to perform similarity searches and generate text using different LLMs. It provides a unified interface for different LLMs.
+- **Related Classes/Methods**: `langflow.components.vectorstores`, `langflow.base.vectorstores`, `langflow.base.models`, `langflow.components.models`

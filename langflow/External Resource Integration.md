@@ -1,52 +1,30 @@
 ```mermaid
 graph LR
-    LCModelComponent["LCModelComponent"]
-    Model_Input_Constants["Model Input Constants"]
-    OpenRouterComponent["OpenRouterComponent"]
-    Get_Chat_Result["Get Chat Result"]
-    AIMLModelComponent["AIMLModelComponent"]
-    AimlModels["AimlModels"]
-    HuggingFaceEndpointsComponent["HuggingFaceEndpointsComponent"]
-    Specific_Model_Components["Specific Model Components"]
-    LCModelComponent -- "is base class of" --> OpenRouterComponent
-    LCModelComponent -- "is base class of" --> AIMLModelComponent
-    LCModelComponent -- "is base class of" --> HuggingFaceEndpointsComponent
-    LCModelComponent -- "is base class of" --> Specific_Model_Components
-    LCModelComponent -- "processes inputs with" --> Model_Input_Constants
-    LCModelComponent -- "formats chat result with" --> Get_Chat_Result
-    AIMLModelComponent -- "manages AIML models with" --> AimlModels
+    LCVectorStoreComponent["LCVectorStoreComponent"]
+    VectorStore_Components["VectorStore Components"]
+    Embedding_Components["Embedding Components"]
+    AIMLEmbeddingsImpl["AIMLEmbeddingsImpl"]
+    VectorStore_Components -- "inherits from" --> LCVectorStoreComponent
+    VectorStore_Components -- "uses" --> Embedding_Components
+    AIMLEmbeddingsImpl -- "embeds query" --> Embedding_Components
 ```
 
 ## Component Details
 
-### LCModelComponent
-LCModelComponent serves as the base class for all LangChain model components within Langflow. It provides a standardized interface for building language models, handling results, and managing exceptions. It interacts with various language model providers, offering common logic for different model types and ensuring consistent behavior across integrations.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.base.models.model.LCModelComponent`, `repos.langflow.src.backend.base.langflow.components.models.model.LCModelComponent`
+The External Resource Integration component provides a unified interface for interacting with external resources like vector stores and language models. It abstracts the complexities of connecting to and querying these resources, allowing Langflow applications to easily perform similarity searches and generate text using different LLMs and vector databases. The main flow involves selecting a specific vector store or LLM component, configuring its parameters, and then using it to perform operations like storing data, searching for similar documents, or generating text. This component simplifies the integration of external resources into Langflow applications.
 
-### Model Input Constants
-The `model_input_constants` module provides constants and functions for processing input fields for different language models, including OpenAI, Google, and Azure. It allows LCModelComponent and its subclasses to dynamically adjust the input fields based on the selected model, ensuring that the correct parameters are passed to each language model provider.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components.models.model_input_constants`
+### LCVectorStoreComponent
+LCVectorStoreComponent serves as the abstract base class for all vector store components within Langflow. It defines the common interface and functionalities expected from a vector store, such as adding documents, performing similarity searches, and converting the store to a dataframe. Concrete vector store implementations inherit from this class and provide specific implementations for interacting with different vector store backends.
+- **Related Classes/Methods**: `langflow.src.backend.base.langflow.base.vectorstores.model.LCVectorStoreComponent`
 
-### OpenRouterComponent
-The OpenRouterComponent is responsible for integrating with the OpenRouter API to fetch and build language models. It fetches available models from OpenRouter, allowing users to select and configure them within Langflow. It inherits from LCModelComponent, leveraging its base functionality for building and managing language models.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components.models.openrouter.OpenRouterComponent`
+### VectorStore Components
+VectorStore Components are concrete implementations of LCVectorStoreComponent for specific vector store backends like AstraDB, Pinecone, Elasticsearch, etc. Each component handles the connection, data storage, and search operations specific to its backend. They provide methods for adding documents, performing similarity searches, and retrieving results from the vector store. These components allow Langflow to interact with a variety of vector databases in a consistent manner.
+- **Related Classes/Methods**: `langflow.src.backend.base.langflow.components.vectorstores.astradb.AstraDBVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.pinecone.PineconeVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.elasticsearch.ElasticsearchVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.local_db.LocalDBComponent`, `langflow.src.backend.base.langflow.components.vectorstores.milvus.MilvusVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.opensearch.OpenSearchVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.supabase.SupabaseVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.upstash.UpstashVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.faiss.FaissVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.clickhouse.ClickhouseVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.weaviate.WeaviateVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.chroma.ChromaVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.astradb_graph.AstraDBGraphVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.vectara.VectaraVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.redis.RedisVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.qdrant.QdrantVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.couchbase.CouchbaseVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.cassandra.CassandraVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.pgvector.PGVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.mongodb_atlas.MongoVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.cassandra_graph.CassandraGraphVectorStoreComponent`, `langflow.src.backend.base.langflow.components.vectorstores.hcd.HCDVectorStoreComponent`
 
-### Get Chat Result
-The `get_chat_result` function is used to build messages and runnables for chat models. It takes the model's response and formats it into a Langflow Message object, ensuring a standardized output format for chat models. It is used by LCModelComponent and its subclasses to process and format the output of chat models.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components.models.chat_result:get_chat_result`
+### Embedding Components
+Embedding Components are responsible for generating vector embeddings from text. These embeddings are used to represent documents and queries in a vector space, enabling similarity searches. They provide a common interface for different embedding models, such as those from Google, Hugging Face, and NVIDIA. These components take text as input and output a vector representation that can be used for similarity comparisons.
+- **Related Classes/Methods**: `langflow.src.backend.base.langflow.components.embeddings.google_generative_ai.GoogleGenerativeAIEmbeddingsComponent`, `langflow.src.backend.base.langflow.components.embeddings.huggingface_inference_api.HuggingFaceInferenceAPIEmbeddingsComponent`, `langflow.src.backend.base.langflow.components.embeddings.nvidia.NVIDIAEmbeddingsComponent`, `langflow.src.backend.base.langflow.components.embeddings.lmstudioembeddings.LMStudioEmbeddingsComponent`, `langflow.src.backend.base.langflow.components.embeddings.ollama.OllamaEmbeddingsComponent`, `langflow.src.backend.base.langflow.components.embeddings.watsonx.WatsonxEmbeddingsComponent`, `langflow.src.backend.base.langflow.components.embeddings.cohere.CohereEmbeddingsComponent`, `langflow.src.backend.base.langflow.components.embeddings.aiml.AIMLEmbeddingsComponent`, `langflow.src.backend.base.langflow.components.embeddings.text_embedder.TextEmbedderComponent`, `langflow.src.backend.base.langflow.components.embeddings.similarity.EmbeddingSimilarityComponent`, `langflow.src.backend.base.langflow.components.twelvelabs.video_embeddings.TwelveLabsVideoEmbeddings`, `langflow.src.backend.base.langflow.components.twelvelabs.video_embeddings.TwelveLabsVideoEmbeddingsComponent`, `langflow.src.backend.base.langflow.components.twelvelabs.text_embeddings.TwelveLabsTextEmbeddingsComponent`
 
-### AIMLModelComponent
-The AIMLModelComponent enables the integration of AIML models into Langflow. It allows users to load and interact with AIML models within the Langflow environment. Inheriting from LCModelComponent, it utilizes the base class's functionalities for model management and interaction.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components.models.aiml.AIMLModelComponent`
-
-### AimlModels
-The AimlModels module provides functionalities to retrieve and manage AIML models. It is used by AIMLModelComponent to load and manage AIML models, providing a centralized location for accessing and managing AIML model resources.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components.models.aiml_constants.AimlModels`
-
-### HuggingFaceEndpointsComponent
-The HuggingFaceEndpointsComponent is responsible for creating and managing Hugging Face endpoints within Langflow. It allows users to create and configure endpoints for Hugging Face models, enabling seamless integration with the Hugging Face ecosystem. It inherits from LCModelComponent.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components.models.huggingface.HuggingFaceEndpointsComponent`
-
-### Specific Model Components
-These components (GroqModel, GoogleGenerativeAIComponent, AnthropicModelComponent, ChatOllamaComponent, LMStudioModelComponent, WatsonxAIComponent, NovitaModelComponent, XAIModelComponent, DeepSeekModelComponent, NVIDIAModelComponent) are responsible for interacting with their respective model providers. They allow users to select and configure models from these providers within Langflow. They inherit from LCModelComponent.
-- **Related Classes/Methods**: `repos.langflow.src.backend.base.langflow.components.models.groq.GroqModel`, `repos.langflow.src.backend.base.langflow.components.models.google_generative_ai.GoogleGenerativeAIComponent`, `repos.langflow.src.backend.base.langflow.components.models.anthropic.AnthropicModelComponent`, `repos.langflow.src.backend.base.langflow.components.models.ollama.ChatOllamaComponent`, `repos.langflow.src.backend.base.langflow.components.models.lmstudiomodel.LMStudioModelComponent`, `repos.langflow.src.backend.base.langflow.components.models.watsonx.WatsonxAIComponent`, `repos.langflow.src.backend.base.langflow.components.models.novita.NovitaModelComponent`, `repos.langflow.src.backend.base.langflow.components.models.xai.XAIModelComponent`, `repos.langflow.src.backend.base.langflow.components.models.deepseek.DeepSeekModelComponent`, `repos.langflow.src.backend.base.langflow.components.models.nvidia.NVIDIAModelComponent`
+### AIMLEmbeddingsImpl
+AIMLEmbeddingsImpl is a specific implementation of embeddings using the AIML model. It provides the functionality to generate embeddings from text using the AIML model. This component is used when AIML embeddings are selected for a particular task.
+- **Related Classes/Methods**: `langflow.src.backend.base.langflow.base.embeddings.aiml_embeddings.AIMLEmbeddingsImpl`
