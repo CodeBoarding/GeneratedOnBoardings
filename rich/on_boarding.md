@@ -1,44 +1,69 @@
 ```mermaid
 graph LR
-    Console_Output_Management["Console & Output Management"]
-    Text_Style_Engine["Text & Style Engine"]
-    Layout_Structure["Layout & Structure"]
-    Content_Renderers["Content Renderers"]
-    Progress_Interaction["Progress & Interaction"]
-    Console_Output_Management -- "manages output" --> Text_Style_Engine
-    Console_Output_Management -- "manages output" --> Layout_Structure
-    Console_Output_Management -- "manages output" --> Content_Renderers
-    Console_Output_Management -- "manages output" --> Progress_Interaction
-    Text_Style_Engine -- "styles text" --> Layout_Structure
-    Text_Style_Engine -- "styles text" --> Content_Renderers
-    Text_Style_Engine -- "styles text" --> Progress_Interaction
-    Layout_Structure -- "renders content" --> Content_Renderers
-    Progress_Interaction -- "uses console" --> Console_Output_Management
-    click Console_Output_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Console & Output Management.md" "Details"
-    click Text_Style_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Text & Style Engine.md" "Details"
-    click Layout_Structure href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Layout & Structure.md" "Details"
-    click Content_Renderers href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Content Renderers.md" "Details"
-    click Progress_Interaction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Progress & Interaction.md" "Details"
+    Console_Interface["Console Interface"]
+    Text_and_Style_Engine["Text and Style Engine"]
+    Layout_Management["Layout Management"]
+    Renderables_Library["Renderables Library"]
+    Content_Presentation_Services["Content Presentation Services"]
+    Exception_and_Error_Reporting["Exception and Error Reporting"]
+    Low_Level_Rendering_Engine["Low-Level Rendering Engine"]
+    User_Input_and_Prompting["User Input and Prompting"]
+    Console_Interface -- "uses" --> Text_and_Style_Engine
+    Console_Interface -- "uses" --> Layout_Management
+    Console_Interface -- "uses" --> Renderables_Library
+    Console_Interface -- "uses" --> Content_Presentation_Services
+    Console_Interface -- "uses" --> Exception_and_Error_Reporting
+    Console_Interface -- "uses" --> Low_Level_Rendering_Engine
+    Console_Interface -- "uses" --> User_Input_and_Prompting
+    Layout_Management -- "uses" --> Renderables_Library
+    Renderables_Library -- "uses" --> Text_and_Style_Engine
+    Content_Presentation_Services -- "uses" --> Text_and_Style_Engine
+    Content_Presentation_Services -- "uses" --> Console_Interface
+    Exception_and_Error_Reporting -- "uses" --> Content_Presentation_Services
+    Low_Level_Rendering_Engine -- "uses" --> Text_and_Style_Engine
+    User_Input_and_Prompting -- "uses" --> Text_and_Style_Engine
+    click Console_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Console Interface.md" "Details"
+    click Text_and_Style_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Text and Style Engine.md" "Details"
+    click Layout_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Layout Management.md" "Details"
+    click Renderables_Library href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Renderables Library.md" "Details"
+    click Content_Presentation_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Content Presentation Services.md" "Details"
+    click Exception_and_Error_Reporting href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Exception and Error Reporting.md" "Details"
+    click Low_Level_Rendering_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/Low-Level Rendering Engine.md" "Details"
+    click User_Input_and_Prompting href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/rich/User Input and Prompting.md" "Details"
 ```
 
 ## Component Details
 
-### Console & Output Management
-This component is the central hub for managing all terminal output. It handles rendering rich text, applying styles, and interacting directly with the terminal. It provides functionalities for printing, logging, capturing output, and managing themes, ensuring consistent and visually appealing output across different platforms and terminals. It also includes real-time display capabilities and integration with Python's logging module.
-- **Related Classes/Methods**: `rich.console.Console`, `rich.console.ConsoleOptions`, `rich.console.ConsoleRenderable`, `rich.console.ConsoleThreadLocals`, `rich.live.Live`, `rich.live_render.LiveRender`, `rich.logging.RichHandler`, `rich._log_render.LogRender`
+The Rich library provides a comprehensive toolkit for creating visually appealing and informative terminal output. It encompasses functionalities for text styling, layout management, content presentation, and user interaction, all built around a central console interface. The library leverages a low-level rendering engine to translate high-level components into styled segments, enabling developers to produce rich and dynamic console displays.
 
-### Text & Style Engine
-This component is responsible for the creation, manipulation, and styling of text. It manages the appearance of text, including color, font, and other attributes. It provides methods for parsing style definitions, combining styles, and rendering styles. It is the core of how text is represented and styled within the rich library, enabling developers to easily create visually rich and expressive text-based output.
-- **Related Classes/Methods**: `rich.text.Text`, `rich.text.Span`, `rich.style.Style`, `rich.style.StyleStack`, `rich.style.StyleStackError`, `rich.errors.StyleError`, `rich.errors.MissingStyle`, `rich.errors.StyleSyntaxError`, `rich.color.Color`
+### Console Interface
+The central component responsible for managing the terminal output. It handles rendering, styling, and outputting content to the console, managing themes, capturing output, and interacting with the terminal. It acts as the main entry point for interacting with the Rich library.
+- **Related Classes/Methods**: `rich.console.Console`, `rich.console.ConsoleOptions`, `rich.console.Screen`, `rich.console.Group`
 
-### Layout & Structure
-This component provides tools for structuring and laying out content in the console. It includes tables, panels, trees and alignment features. It allows for the creation of visually appealing and organized displays, making it easier to present complex information in a clear and structured manner. It offers a range of layout options to suit different types of content and display requirements.
-- **Related Classes/Methods**: `rich.table.Table`, `rich.table.Column`, `rich.table.Row`, `rich.panel.Panel`, `rich.tree.Tree`, `rich.align.Align`
+### Text and Style Engine
+This component provides the foundation for creating and manipulating rich text and styles. It supports styling, applying markup, and converting ANSI escape codes to styled text. It is responsible for managing the appearance of text elements within the console.
+- **Related Classes/Methods**: `rich.text.Text`, `rich.style.Style`, `rich.ansi.AnsiDecoder`, `rich.markup`
 
-### Content Renderers
-This component focuses on rendering specific types of content, such as code syntax, markdown, and tracebacks. It converts these formats into rich text that can be displayed in the console. It provides highlighters and formatters for various data types, enabling developers to easily display code, documentation, and error information in a visually appealing and informative way.
-- **Related Classes/Methods**: `rich.syntax.Syntax`, `rich.syntax.SyntaxTheme`, `rich.syntax.PygmentsSyntaxTheme`, `rich.syntax.ANSISyntaxTheme`, `rich.markdown.Markdown`, `rich.markdown.MarkdownElement`, `rich.markdown.TextElement`, `rich.markdown.CodeBlock`, `rich.markdown.Heading`, `rich.markdown.ListElement`, `rich.markdown.ListItem`, `rich.traceback.Traceback`
+### Layout Management
+Handles the arrangement of renderable objects within the console. It allows for creating complex layouts with rows, columns, and flexible sizing, providing the structure for organizing visual elements.
+- **Related Classes/Methods**: `rich.layout.Layout`, `rich.align.Align`, `rich.constrain.Constrain`, `rich.columns.Columns`
 
-### Progress & Interaction
-This component provides tools for displaying progress updates and interacting with the user. It includes progress bars and prompt functionalities. It allows for creating interactive console applications, providing users with feedback on long-running tasks and enabling them to input data and make choices within the console environment.
-- **Related Classes/Methods**: `rich.progress.Progress`, `rich.progress.BarColumn`, `rich.progress.TextColumn`, `rich.progress.TaskProgressColumn`, `rich.progress.TimeRemainingColumn`, `rich.progress.DownloadColumn`, `rich.progress.TransferSpeedColumn`, `rich.progress.Task`, `rich.progress_bar.ProgressBar`, `rich.prompt.PromptBase`, `rich.prompt.Confirm`
+### Renderables Library
+A collection of pre-built classes that can be rendered to the console, including Panel, Table, Tree, Rule, and more. These components provide high-level abstractions for creating visually appealing output, offering ready-made visual elements for constructing the console display.
+- **Related Classes/Methods**: `rich.panel.Panel`, `rich.table.Table`, `rich.tree.Tree`, `rich.rule.Rule`, `rich.bar.Bar`
+
+### Content Presentation Services
+This component focuses on presenting specific types of content in a visually appealing manner. It includes Syntax Highlighting for code snippets, Progress Display for tracking tasks, Pretty Printing for Python objects, Live Display for dynamic updates, Logging Integration for formatted log messages, and Markdown Rendering for formatted documents, enhancing the display of diverse content types.
+- **Related Classes/Methods**: `rich.syntax.Syntax`, `rich.highlighter.Highlighter`, `rich.theme.Theme`, `rich.terminal_theme.TerminalTheme`, `rich.progress.Progress`, `rich.progress.ProgressColumn`, `rich.progress_bar.ProgressBar`, `rich.spinner.Spinner`, `rich.status.Status`, `rich.pretty.Pretty`, `rich.repr`, `rich.live.Live`, `rich.live_render.LiveRender`, `rich.logging.RichHandler`, `rich.markdown.Markdown`, `rich.markdown.MarkdownElement`
+
+### Exception and Error Reporting
+Provides enhanced traceback formatting for exceptions, making it easier to debug errors. It is responsible for presenting error information in a readable and structured format.
+- **Related Classes/Methods**: `rich.traceback.Traceback`
+
+### Low-Level Rendering Engine
+The lowest level of abstraction for renderable content. Segments are strings with associated styles, which are composed to form the final output. It is responsible for the fundamental building blocks of the console display.
+- **Related Classes/Methods**: `rich.segment.Segment`, `rich.segment.Segments`
+
+### User Input and Prompting
+Provides classes for prompting the user for input with rich formatting. It is responsible for gathering input from the user in an interactive and visually enhanced manner.
+- **Related Classes/Methods**: `rich.prompt.PromptBase`, `rich.prompt.Confirm`
