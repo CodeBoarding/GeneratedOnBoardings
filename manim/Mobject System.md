@@ -1,42 +1,43 @@
 ```mermaid
 graph LR
     Mobject["Mobject"]
-    VMobject["VMobject"]
-    PMobject["PMobject"]
     Group["Group"]
     Point["Point"]
-    ImageMobject["ImageMobject"]
-    VMobject -- "inherits from" --> Mobject
-    PMobject -- "inherits from" --> Mobject
+    PMobject["PMobject"]
+    PGroup["PGroup"]
+    VMobject["VMobject"]
     Group -- "inherits from" --> Mobject
     Point -- "inherits from" --> Mobject
-    ImageMobject -- "inherits from" --> Mobject
+    PMobject -- "inherits from" --> Mobject
+    PGroup -- "inherits from" --> PMobject
+    VMobject -- "inherits from" --> Mobject
+    Group -- "contains" --> Mobject
 ```
 
 ## Component Details
 
-The Mobject System in Manim forms the foundation for all visual elements, providing a hierarchical structure and functionalities for creating, manipulating, and displaying mathematical objects. It defines the base class `Mobject` and its subclasses, which handle transformations, styling, and organization of objects within a scene. The system supports various types of Mobjects, including vectorized objects, point clouds, and groups, enabling the construction of complex and dynamic visual representations.
+The Mobject system in Manim forms the foundation for all visual elements. It defines the base class `Mobject` and its subclasses, which are used to create and manipulate mathematical objects. The system handles object transformations, styling, and hierarchical relationships, enabling the creation of complex and dynamic scenes. Key components include `Mobject` (the base class), `VMobject` (for vector-based objects), `PMobject` (for point-cloud-based objects), and `Group` (for grouping multiple Mobjects). These components interact to form a flexible and powerful system for creating mathematical animations.
 
 ### Mobject
-The base class for all visual objects in Manim. It manages the object's points, color, style, and submobjects. It provides methods for adding, removing, and transforming submobjects, as well as applying styles and handling animations. All visual elements in a Manim scene inherit from this class.
+The base class for all visual objects in Manim. It manages core properties like points, colors, style, and transformations. It also handles hierarchical relationships by allowing Mobjects to contain other Mobjects as sub-Mobjects. It provides methods for manipulating these attributes and managing sub-Mobjects.
 - **Related Classes/Methods**: `manim.manimlib.mobject.mobject.Mobject`
 
-### VMobject
-A subclass of `Mobject` that represents vectorized mathematical objects. It uses Bézier curves to define the shape of the object and handles properties like fill, stroke, and style. It is commonly used for creating shapes, curves, and other geometric figures.
-- **Related Classes/Methods**: `manim.manimlib.mobject.types.vectorized_mobject.VMobject`
-
-### PMobject
-A subclass of `Mobject` that deals with point clouds. It provides methods for manipulating and coloring individual points. It is useful for representing objects as a collection of discrete points, such as scatter plots or particle systems.
-- **Related Classes/Methods**: `manim.manimlib.mobject.types.point_cloud_mobject.PMobject`
-
 ### Group
-A subclass of `Mobject` that groups multiple `Mobject` instances together. It allows treating multiple objects as a single entity, applying transformations and styles to the entire group. This simplifies the manipulation of complex scenes with many objects.
+A subclass of Mobject that acts as a container for other Mobjects. It enables treating multiple Mobjects as a single entity for transformations and manipulations, simplifying complex animations.
 - **Related Classes/Methods**: `manim.manimlib.mobject.mobject.Group`
 
 ### Point
-A subclass of `Mobject` representing a single point in space. It has methods for getting and setting its location. It is often used as an anchor or reference point for other objects or animations.
+A simple Mobject representing a single point in space. It is often used as an anchor or reference point for other Mobjects, providing a basic building block for more complex shapes.
 - **Related Classes/Methods**: `manim.manimlib.mobject.mobject.Point`
 
-### ImageMobject
-A subclass of `Mobject` that displays images. It handles image loading and pixel color mapping. It allows for incorporating raster images into Manim scenes, providing a way to include external visual content.
-- **Related Classes/Methods**: `manim.manimlib.mobject.types.image_mobject.ImageMobject`
+### PMobject
+A Mobject defined by a collection of points. It provides methods for adding, setting, and manipulating these points, as well as for applying color gradients, enabling the creation of point-cloud-based visual effects.
+- **Related Classes/Methods**: `manim.manimlib.mobject.types.point_cloud_mobject.PMobject`
+
+### PGroup
+A subclass of PMobject that groups multiple PMobjects together. This allows for treating collections of point clouds as a single entity, simplifying transformations and manipulations of complex point-based structures.
+- **Related Classes/Methods**: `manim.manimlib.mobject.types.point_cloud_mobject.PGroup`
+
+### VMobject
+A Mobject defined by a set of vectorized paths. It provides methods for defining and manipulating these paths, as well as for setting fill and stroke colors, enabling the creation of smooth, scalable vector graphics.
+- **Related Classes/Methods**: `manim.manimlib.mobject.types.vectorized_mobject.VMobject`

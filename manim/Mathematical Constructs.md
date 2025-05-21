@@ -11,6 +11,8 @@ graph LR
     ThreeDAxes -- "inherits from" --> CoordinateSystem
     NumberPlane -- "inherits from" --> Axes
     VectorField -- "uses" --> StreamLines
+    VCube -- "inherits from" --> ThreeDShapes
+    VPrism -- "inherits from" --> ThreeDShapes
 ```
 
 ## Component Details
@@ -18,7 +20,7 @@ graph LR
 The Mathematical Constructs component provides a set of classes for creating and manipulating mathematical objects in 2D and 3D space. It includes coordinate systems, vector fields, and various 3D shapes, enabling users to visualize and animate mathematical concepts. The core of this component lies in the CoordinateSystem class, which serves as the foundation for creating axes and number planes. Vector fields are represented using VectorField and StreamLines, while 3D objects are created using classes like Sphere, Cube, and Cylinder. These components work together to provide a comprehensive toolkit for mathematical visualization.
 
 ### CoordinateSystem
-Represents a base coordinate system, providing methods for converting between coordinates and points, and for creating axes and labels. It serves as the foundation for more specialized coordinate systems.
+Represents a base coordinate system, providing methods for converting between coordinates and points, and for creating axes and labels. It serves as the foundation for more specialized coordinate systems like Axes, ThreeDAxes, and NumberPlane.
 - **Related Classes/Methods**: `manim.manimlib.mobject.coordinate_systems.CoordinateSystem`
 
 ### Axes
@@ -42,5 +44,5 @@ Represents streamlines of a vector field. It draws lines that follow the directi
 - **Related Classes/Methods**: `manim.manimlib.mobject.vector_field.StreamLines`
 
 ### ThreeDShapes
-Represents a collection of 3D shapes like Sphere, Torus, Cylinder, Cone, Line3D, Disk3D, Square3D, Cube, Prism, VGroup3D, VCube, VPrism, Dodecahedron. It provides methods for creating and manipulating 3D objects in space.
+Represents a collection of 3D shapes like Sphere, Torus, Cylinder, Cone, Line3D, Disk3D, Square3D, Cube, Prism, VGroup3D, VCube, VPrism, and Dodecahedron. These classes provide methods for creating and manipulating various 3D objects in space.
 - **Related Classes/Methods**: `manim.manimlib.mobject.three_dimensions.Sphere`, `manim.manimlib.mobject.three_dimensions.Torus`, `manim.manimlib.mobject.three_dimensions.Cylinder`, `manim.manimlib.mobject.three_dimensions.Cone`, `manim.manimlib.mobject.three_dimensions.Line3D`, `manim.manimlib.mobject.three_dimensions.Disk3D`, `manim.manimlib.mobject.three_dimensions.Square3D`, `manim.manimlib.mobject.three_dimensions.Cube`, `manim.manimlib.mobject.three_dimensions.Prism`, `manim.manimlib.mobject.three_dimensions.VGroup3D`, `manim.manimlib.mobject.three_dimensions.VCube`, `manim.manimlib.mobject.three_dimensions.VPrism`, `manim.manimlib.mobject.three_dimensions.Dodecahedron`

@@ -5,47 +5,55 @@ graph LR
     Tex["Tex"]
     Button["Button"]
     LinearNumberSlider["LinearNumberSlider"]
+    Textbox["Textbox"]
     ControlPanel["ControlPanel"]
-    ControlMobject["ControlMobject"]
-    SVGMobject["SVGMobject"]
+    Brace["Brace"]
+    BraceLabel["BraceLabel"]
     MarkupText -- "inherits from" --> Text
-    Button -- "inherits from" --> ControlMobject
-    ControlPanel -- "uses" --> ControlMobject
-    LinearNumberSlider -- "inherits from" --> ControlMobject
+    ControlPanel -- "contains" --> Button
+    ControlPanel -- "contains" --> LinearNumberSlider
+    ControlPanel -- "contains" --> Textbox
+    BraceLabel -- "uses" --> Brace
+    BraceLabel -- "uses" --> Tex
+    BraceLabel -- "uses" --> Text
 ```
 
 ## Component Details
 
-This component focuses on rendering text and providing interactive elements within animations. It includes classes for displaying plain text, formatted text (using markup or LaTeX), and interactive controls like buttons and sliders. These elements enhance the expressiveness and interactivity of animations, allowing for more engaging and informative visualizations.
+This component focuses on rendering text and creating interactive elements within manim scenes. It provides classes for displaying plain text, formatted text using markup, and LaTeX equations. Additionally, it offers interactive components like buttons, sliders, and textboxes, enabling users to create engaging and interactive animations.
 
 ### Text
-The Text class is responsible for displaying plain text on the screen. It handles font selection, text alignment, and basic text formatting, providing a foundation for more complex text rendering.
+The Text class renders plain text within a manim scene. It handles the creation of text mobjects from strings, allowing for customization of font, size, color, and other visual attributes. It serves as the foundation for displaying textual information in animations.
 - **Related Classes/Methods**: `manim.manimlib.mobject.svg.text_mobject.Text`
 
 ### MarkupText
-MarkupText extends the Text class to enable rendering of text with HTML-like markup. This allows for richer text formatting, including bold, italic, color changes, and other styling options within a single text object, enhancing the visual appeal of text in animations.
+The MarkupText class extends the Text class by adding support for custom markup. It enables users to format text with styles like bold, italics, and color changes using a simple markup syntax. This allows for richer text formatting within animations without relying on LaTeX.
 - **Related Classes/Methods**: `manim.manimlib.mobject.svg.text_mobject.MarkupText`
 
 ### Tex
-The Tex class renders mathematical expressions using LaTeX. It supports a wide range of mathematical symbols and notation, allowing for the creation of complex equations and formulas within animations, making it essential for mathematical visualizations.
+The Tex class renders LaTeX equations and expressions within a manim scene. It leverages LaTeX to generate high-quality visual representations of mathematical formulas, symbols, and equations. It is essential for creating animations that involve mathematical content.
 - **Related Classes/Methods**: `manim.manimlib.mobject.svg.tex_mobject.Tex`
 
 ### Button
-The Button class implements a clickable button that can trigger actions when pressed. It inherits from ControlMobject and provides a visual representation of a button with customizable appearance and behavior, enabling user interaction within animations.
+The Button class represents a clickable button that can trigger actions when pressed. It inherits from a more general interactive Mobject class and provides specific functionality for handling button presses, such as executing a callback function. It enables users to create interactive animations with clickable elements.
 - **Related Classes/Methods**: `manim.manimlib.mobject.interactive.Button`
 
 ### LinearNumberSlider
-The LinearNumberSlider class provides a slider that allows users to select a numerical value within a specified range. It provides methods for setting the value, handling mouse drag events, and retrieving the value from a given point, facilitating dynamic control over numerical parameters in animations.
+The LinearNumberSlider class provides a slider for selecting a numerical value within a linear range. It allows users to drag a slider handle to adjust the value and likely provides visual feedback to indicate the current value. It is useful for creating interactive animations where users can control numerical parameters.
 - **Related Classes/Methods**: `manim.manimlib.mobject.interactive.LinearNumberSlider`
 
+### Textbox
+The Textbox class provides a text input field where users can enter and edit text. It handles keyboard input, text rendering, and potentially validation or formatting of the input. It enables users to create interactive animations where users can input text.
+- **Related Classes/Methods**: `manim.manimlib.mobject.interactive.Textbox`
+
 ### ControlPanel
-The ControlPanel class provides a container for interactive controls, allowing users to group and manage multiple interactive elements within a single panel. It handles the addition, removal, and organization of controls, as well as the opening, closing, and dragging of the panel, providing a structured way to manage interactive elements.
+The ControlPanel class provides a container for interactive controls, allowing users to group and manage UI elements within a panel that can be opened and closed. It handles the layout and organization of controls, as well as interactions like moving the panel and scrolling. It helps organize interactive elements in a manim scene.
 - **Related Classes/Methods**: `manim.manimlib.mobject.interactive.ControlPanel`
 
-### ControlMobject
-The ControlMobject class serves as a base class for interactive control elements like buttons and sliders. It provides a common interface for setting and getting values, and handling user interactions, establishing a foundation for interactive components.
-- **Related Classes/Methods**: `manim.manimlib.mobject.interactive.ControlMobject`
+### Brace
+The Brace class creates brace annotations for marking sections of a scene. It allows users to add visual cues to highlight specific elements or regions.
+- **Related Classes/Methods**: `manim.manimlib.mobject.svg.brace.Brace`
 
-### SVGMobject
-The SVGMobject class is a base class for creating Mobjects from SVG files or strings. It provides methods for parsing SVG data and converting it into Manim objects, enabling the integration of vector graphics into animations.
-- **Related Classes/Methods**: `manim.manimlib.mobject.svg.svg_mobject.SVGMobject`
+### BraceLabel
+The BraceLabel class combines a brace with a label, providing a more informative annotation. It allows users to add text descriptions alongside the brace.
+- **Related Classes/Methods**: `manim.manimlib.mobject.svg.brace.BraceLabel`
