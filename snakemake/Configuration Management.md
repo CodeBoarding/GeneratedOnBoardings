@@ -1,42 +1,30 @@
 ```mermaid
 graph LR
-    ConfigSettings["ConfigSettings"]
-    load_configfile["load_configfile"]
-    Workflow_configfile["Workflow.configfile"]
-    _get_overwrite_config["_get_overwrite_config"]
-    _get_config_args["_get_config_args"]
-    __post_init__["__post_init__"]
-    ConfigSettings -- "initializes and manages" --> __post_init__
-    ConfigSettings -- "loads configfile using" --> load_configfile
-    ConfigSettings -- "uses" --> _get_overwrite_config
-    ConfigSettings -- "uses" --> _get_config_args
-    Workflow_configfile -- "associates configfile with" --> ConfigSettings
+    Command_line_Configuration_Parsing["Command-line Configuration Parsing"]
+    Configuration_Settings_Management["Configuration Settings Management"]
+    Configuration_File_Loading["Configuration File Loading"]
+    Workflow_Configuration_Access["Workflow Configuration Access"]
+    Command_line_Configuration_Parsing -- "parses configuration arguments" --> Configuration_Settings_Management
+    Configuration_Settings_Management -- "loads configuration from file" --> Configuration_File_Loading
+    Workflow_Configuration_Access -- "uses config" --> Configuration_Settings_Management
 ```
 
 ## Component Details
 
-The Configuration Management subsystem in Snakemake is responsible for loading, parsing, and managing configuration settings that define the behavior of a workflow. It allows users to customize workflows without directly modifying the Snakefile. The core components include loading configuration files, handling command-line overrides, and providing access to configuration values during workflow execution. The `ConfigSettings` class acts as the central point for managing configuration, interacting with functions to load the initial configuration, handle overwrite configurations, and retrieve config arguments.
+The Configuration Management subsystem in Snakemake is responsible for loading, merging, and providing access to configuration data during workflow execution. It involves parsing command-line arguments, reading configuration files (YAML or JSON), and managing configuration settings within the workflow. The configuration data is used to customize workflow parameters and settings without modifying the Snakefile directly.
 
-### ConfigSettings
-The ConfigSettings class encapsulates all configuration-related settings for a Snakemake workflow. It handles loading configurations from configfiles, managing overwrite configurations specified via the command line, and providing access to these settings during workflow execution. It initializes the configuration by loading the configfile and processing any command-line overrides.
-- **Related Classes/Methods**: `snakemake.src.snakemake.settings.types.ConfigSettings`
+### Command-line Configuration Parsing
+This component parses command-line arguments related to configuration, identifying the configuration file to load and any overrides specified by the user. It extracts and processes these configuration-related parameters, making them available for subsequent configuration loading and merging.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:parse_config`
 
-### load_configfile
-The `load_configfile` function is responsible for reading and parsing the configuration file specified by the user. It loads the configuration data into a Python dictionary, which is then used to update the workflow's configuration settings. It supports various file formats like JSON and YAML.
-- **Related Classes/Methods**: `snakemake.src.snakemake.common.configfile`
+### Configuration Settings Management
+This component manages the configuration settings for Snakemake. It handles the loading, merging, and overriding of configurations from various sources, including the configuration file and command-line arguments. It provides a unified interface for accessing configuration settings during workflow execution.
+- **Related Classes/Methods**: `snakemake.src.snakemake.settings.types.ConfigSettings:__post_init__`, `snakemake.src.snakemake.settings.types.ConfigSettings:_get_overwrite_config`, `snakemake.src.snakemake.settings.types.ConfigSettings:_get_config_args`
 
-### Workflow.configfile
-The `Workflow.configfile` function associates a configfile with the workflow. It allows the workflow to access the configuration settings defined in the configfile. It essentially sets up the config attribute of the workflow object.
-- **Related Classes/Methods**: `snakemake.src.snakemake.workflow.Workflow`
+### Configuration File Loading
+This component loads the configuration from a specified configuration file, parsing its contents (typically YAML or JSON) and making them available to Snakemake. It handles file I/O and parsing errors, ensuring that the configuration data is correctly loaded and accessible.
+- **Related Classes/Methods**: `snakemake.src.snakemake.common.configfile:load_configfile`
 
-### _get_overwrite_config
-The `_get_overwrite_config` function retrieves overwrite configurations specified via the command line. These overwrite configurations take precedence over the settings defined in the configfile, allowing users to dynamically adjust workflow parameters.
-- **Related Classes/Methods**: `snakemake.src.snakemake.settings.types.ConfigSettings`
-
-### _get_config_args
-The `_get_config_args` function retrieves config arguments passed via the command line. These arguments are used to configure the workflow, providing a flexible way to pass configuration values directly.
-- **Related Classes/Methods**: `snakemake.src.snakemake.settings.types.ConfigSettings`
-
-### __post_init__
-The `__post_init__` method is called after the `ConfigSettings` object is initialized. It performs setup tasks related to configuration, such as loading the configfile and handling overwrite configurations. It ensures that the configuration is properly initialized before the workflow starts.
-- **Related Classes/Methods**: `snakemake.src.snakemake.settings.types.ConfigSettings`
+### Workflow Configuration Access
+This component manages the configuration data within the Snakemake workflow. It provides access to the configuration parameters during workflow execution, allowing rules and scripts to use the configured values. It acts as a central repository for configuration data within the workflow.
+- **Related Classes/Methods**: `snakemake.src.snakemake.workflow.Workflow:config`

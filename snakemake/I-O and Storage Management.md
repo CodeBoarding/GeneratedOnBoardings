@@ -2,55 +2,41 @@
 graph LR
     IOFile["IOFile"]
     IOCache["IOCache"]
-    Namedlist["Namedlist"]
     StorageRegistry["StorageRegistry"]
     OutputFileCache["OutputFileCache"]
     PathModifier["PathModifier"]
-    WildcardHandler["WildcardHandler"]
-    I_O_Flags["I/O Flags"]
-    IOCache -- "manages" --> IOFile
-    IOFile -- "uses" --> IOCache
-    Namedlist -- "contains" --> IOFile
-    IOFile -- "interacts with" --> StorageRegistry
-    OutputFileCache -- "caches" --> IOFile
-    PathModifier -- "modifies" --> IOFile
-    WildcardHandler -- "matches" --> IOFile
-    IOFile -- "applies" --> I_O_Flags
-    I_O_Flags -- "annotates" --> IOFile
+    ioutils["ioutils"]
+    ioutils -- "Uses for file representation and operations" --> IOFile
+    IOFile -- "Uses for metadata caching" --> IOCache
+    IOFile -- "Uses for storage backend management" --> StorageRegistry
+    IOFile -- "Uses for path transformations" --> PathModifier
+    IOFile -- "Uses for output file caching" --> OutputFileCache
 ```
 
 ## Component Details
 
-The I/O and Storage Management subsystem in Snakemake is responsible for handling all file-related operations, including input and output file management, caching, and interaction with various storage backends. It ensures data integrity, efficient access, and seamless integration with different storage systems. The core components work together to provide a robust and flexible I/O layer for Snakemake workflows.
+The I/O and Storage Management subsystem in Snakemake is responsible for handling all file-related operations during workflow execution. It manages input and output files, performs file existence checks, expands wildcards, and supports remote files from various sources like S3 and HTTP. The subsystem also provides data integrity verification, caching mechanisms to avoid redundant computations, and storage management for both local and cloud-based solutions. It ensures efficient and reliable access to files throughout the workflow.
 
 ### IOFile
-The IOFile class represents a file within Snakemake, encapsulating its properties and behavior. It handles file existence checks, modification times, checksums, and interactions with storage backends. IOFile also manages wildcards and their application to filenames, providing a unified interface for file operations.
-- **Related Classes/Methods**: `snakemake.src.snakemake.io._IOFile`, `snakemake.src.snakemake.io.IOFile`
+Represents a file (input or output) within a Snakemake workflow. It encapsulates file path information and provides methods for interacting with the file system, including checking file existence, retrieving metadata (modification time, size), and performing file operations (copying, removing). It leverages IOCache for metadata caching, StorageRegistry for handling different storage backends, PathModifier for path transformations, and OutputFileCache for caching output file contents.
+- **Related Classes/Methods**: `snakemake.src.snakemake.io.IOFile`, `snakemake.src.snakemake.io._IOFile`
 
 ### IOCache
-The IOCache class manages caching of file metadata, such as modification times and checksums, to improve performance. It provides methods for saving, loading, and deactivating the cache, reducing the need for repeated file system operations.
+Caches file metadata (e.g., modification time, size) to improve workflow execution speed. By storing this information, Snakemake can quickly determine if a file has changed without needing to access the file system directly. It is used by IOFile to retrieve and store cached metadata.
 - **Related Classes/Methods**: `snakemake.src.snakemake.io.IOCache`
 
-### Namedlist
-The Namedlist class is a list-like object that allows accessing items by name or index. It's used to manage collections of input and output files, providing convenient access and manipulation within Snakemake workflows.
-- **Related Classes/Methods**: `snakemake.src.snakemake.io.Namedlist`
-
 ### StorageRegistry
-The StorageRegistry class manages different storage backends for input and output files, enabling Snakemake to interact with various storage systems (e.g., local file system, cloud storage) in a unified way. It provides a consistent interface for accessing and storing files regardless of the underlying storage technology.
+Manages different storage backends (local disk, cloud storage, remote servers) and provides a unified interface for accessing files regardless of their location. It allows Snakemake to interact with various storage systems in a consistent manner. IOFile uses this registry to handle file access based on the specified storage backend.
 - **Related Classes/Methods**: `snakemake.src.snakemake.storage.StorageRegistry`
 
 ### OutputFileCache
-The OutputFileCache (both local and storage implementations) handles caching of output files to avoid recomputation. It provides methods for storing, fetching, and checking the existence of cached output files, significantly improving workflow efficiency.
-- **Related Classes/Methods**: `snakemake.src.snakemake.caching.local.OutputFileCache`, `snakemake.src.snakemake.caching.storage.OutputFileCache`
+Caches the contents of output files to avoid recomputing them if they are already available. It stores and retrieves output files from a local or remote cache, reducing execution time. IOFile interacts with this component to store and retrieve cached output files.
+- **Related Classes/Methods**: `snakemake.src.snakemake.caching.storage.OutputFileCache`, `snakemake.src.snakemake.caching.local.OutputFileCache`, `snakemake.src.snakemake.caching.AbstractOutputFileCache`
 
 ### PathModifier
-The PathModifier class modifies file paths based on specified rules, such as replacing prefixes or applying default storage locations. It allows for flexible and configurable path manipulation within Snakemake workflows.
+Modifies file paths based on specified rules, such as replacing prefixes or applying default storage locations. This ensures that files are accessed correctly, especially when dealing with different storage configurations. IOFile uses this component to transform file paths before accessing them.
 - **Related Classes/Methods**: `snakemake.src.snakemake.path_modifier.PathModifier`
 
-### WildcardHandler
-The WildcardHandler classes (including WildcardHandlerBase and QueryWildcardHandler) handle wildcard matching in filenames. They provide the functionality to extract values from filenames based on wildcard patterns, enabling dynamic file selection and processing.
-- **Related Classes/Methods**: `snakemake.src.snakemake.ioutils.lookup.WildcardHandlerBase`, `snakemake.src.snakemake.ioutils.lookup.QueryWildcardHandler`
-
-### I/O Flags
-I/O Flags annotate I/O files with properties like 'temp', 'protected', etc., influencing how Snakemake handles them. These flags control file deletion, modification permissions, and other aspects of file management.
-- **Related Classes/Methods**: `snakemake.src.snakemake.io:flag`, `snakemake.src.snakemake.io:temporary`, `snakemake.src.snakemake.io:protected`, `snakemake.src.snakemake.io:ancient`, `snakemake.src.snakemake.io:directory`, `snakemake.src.snakemake.ioflags`
+### ioutils
+Provides utility functions for working with input and output files, including checksum calculation, file list flattening, file existence checking, and wildcard-based file lookup. These functions are used throughout the Snakemake workflow to perform common file-related operations. It uses IOFile to perform various file-related operations.
+- **Related Classes/Methods**: `snakemake.src.snakemake.ioutils`

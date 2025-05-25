@@ -1,31 +1,54 @@
 ```mermaid
 graph LR
-    CLI_Argument_Parser["CLI Argument Parser"]
-    Configuration_Translator["Configuration Translator"]
-    Snakemake_API_Interface["Snakemake API Interface"]
-    Workflow_Executor["Workflow Executor"]
-    CLI_Argument_Parser -- "Parses command-line arguments" --> Configuration_Translator
-    Configuration_Translator -- "Translates arguments to API configuration" --> Snakemake_API_Interface
-    Snakemake_API_Interface -- "Initializes and configures the Snakemake API" --> Workflow_Executor
-    Workflow_Executor -- "Executes the Snakemake workflow" --> Workflow_Executor
+    CLI_Main["CLI Main"]
+    Argument_Parser["Argument Parser"]
+    Argument_Definition["Argument Definition"]
+    Config_Parser["Config Parser"]
+    Argument_Conversion_to_API["Argument Conversion to API"]
+    Group_Parser["Group Parser"]
+    Group_Components_Parser["Group Components Parser"]
+    Resource_Parsers["Resource Parsers"]
+    CLI_Main -- "calls" --> Argument_Parser
+    CLI_Main -- "calls" --> Argument_Conversion_to_API
+    Argument_Parser -- "calls" --> Argument_Definition
+    Argument_Parser -- "calls" --> Config_Parser
+    Argument_Parser -- "calls" --> Group_Parser
+    Argument_Parser -- "calls" --> Group_Components_Parser
+    Argument_Parser -- "calls" --> Resource_Parsers
 ```
 
 ## Component Details
 
-The Snakemake Command Line Interface (CLI) serves as the primary entry point for users to interact with the Snakemake workflow management system. It leverages the `argparse` module to parse command-line arguments, which are then used to configure and execute Snakemake workflows. The CLI translates user-provided arguments into a structured configuration that is consumed by the Snakemake API. This process involves setting up the execution environment, defining resources, specifying configuration files, and initiating the workflow execution. The CLI provides a user-friendly interface for managing and running Snakemake workflows, abstracting away much of the underlying complexity.
+The Command Line Interface (CLI) component of Snakemake provides the entry point for users to interact with the workflow engine. It handles parsing command-line arguments, configuring the Snakemake workflow based on these arguments, and initiating the workflow execution. The CLI component orchestrates the entire process, from argument parsing to API call, ensuring that the workflow is set up correctly before execution.
 
-### CLI Argument Parser
-This component is responsible for parsing command-line arguments using the `argparse` module. It defines the expected arguments, their types, and default values. The parsed arguments are then converted into a dictionary or object that can be used to configure the Snakemake workflow.
-- **Related Classes/Methods**: `snakemake.src.snakemake.cli`
+### CLI Main
+The `main` function serves as the primary entry point for the Snakemake CLI. It orchestrates the entire process, from parsing command-line arguments to initiating the Snakemake workflow execution. It calls other functions to parse arguments, handle specific options, and finally pass the configuration to the Snakemake API.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:main`
 
-### Configuration Translator
-This component takes the parsed command-line arguments and translates them into a configuration suitable for the Snakemake API. It maps argument values to corresponding configuration parameters, handling type conversions and validation as needed. This translation process ensures that the Snakemake API receives the correct configuration for workflow execution.
-- **Related Classes/Methods**: `snakemake.src.snakemake.cli`
+### Argument Parser
+The `parse_args` function is responsible for parsing command-line arguments. It uses the `argparse` module to define the arguments and their types, and then parses the actual arguments provided by the user. It calls other parsing functions to handle specific options like config files, groups, and resource definitions.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:parse_args`
 
-### Snakemake API Interface
-This component acts as an interface to the Snakemake API, specifically the `SnakemakeApi` class. It uses the translated configuration to initialize and configure the Snakemake API, setting up the logger and other global configurations. This interface allows the CLI to interact with the core Snakemake functionality.
-- **Related Classes/Methods**: `snakemake.src.snakemake.api.SnakemakeApi`
+### Argument Definition
+The `get_argument_parser` function defines and returns the `argparse.ArgumentParser` object used for parsing command-line arguments. It specifies all available arguments, their types, help messages, and default values. This parser is then used by `parse_args` to actually parse the arguments.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:get_argument_parser`
 
-### Workflow Executor
-This component is responsible for executing the Snakemake workflow. It takes the configured workflow object and initiates the execution process, managing the execution of rules, handling dependencies, and monitoring the progress of the workflow. This component represents the core Snakemake execution engine.
-- **Related Classes/Methods**: `snakemake.src.snakemake.workflow.Workflow`
+### Config Parser
+The `parse_config` function handles the parsing of configuration options provided via the command line (e.g., `--config` or `--configfiles`). These options are used to configure the Snakemake workflow. It extracts the configuration values from the command-line arguments and makes them available for use by the Snakemake API.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:parse_config`
+
+### Argument Conversion to API
+The `args_to_api` function transforms the parsed command-line arguments (stored in the `argparse.Namespace` object) into a dictionary or object suitable for use by the Snakemake API. It maps argument names to API parameter names and converts values as needed. This ensures that the arguments are in the correct format for the Snakemake workflow execution.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:args_to_api`
+
+### Group Parser
+The `parse_groups` function parses the group definitions provided via the command line. These groups are used for resource grouping and scheduling within the Snakemake workflow. It extracts the group definitions from the command-line arguments and makes them available for use by the Snakemake API.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:parse_groups`
+
+### Group Components Parser
+The `parse_group_components` function parses the group components definitions provided via the command line. It extracts the group components definitions from the command-line arguments and makes them available for use by the Snakemake API.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:parse_group_components`
+
+### Resource Parsers
+The resource parsers (`parse_set_resources`, `parse_set_threads`, `parse_set_ints`, `parse_set_resource_scope`, `parse_set_scatter`) handle parsing of resource-related options provided via the command line. They extract the resource options from the command-line arguments and makes them available for use by the Snakemake API.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:parse_set_resources`, `snakemake.src.snakemake.cli:parse_set_threads`, `snakemake.src.snakemake.cli:parse_set_ints`, `snakemake.src.snakemake.cli:parse_set_resource_scope`, `snakemake.src.snakemake.cli:parse_set_scatter`
