@@ -2,41 +2,71 @@
 graph LR
     IOFile["IOFile"]
     IOCache["IOCache"]
-    StorageRegistry["StorageRegistry"]
+    Namedlist["Namedlist"]
     OutputFileCache["OutputFileCache"]
+    ProvenanceHashMap["ProvenanceHashMap"]
+    StorageRegistry["StorageRegistry"]
     PathModifier["PathModifier"]
-    ioutils["ioutils"]
-    ioutils -- "Uses for file representation and operations" --> IOFile
-    IOFile -- "Uses for metadata caching" --> IOCache
-    IOFile -- "Uses for storage backend management" --> StorageRegistry
-    IOFile -- "Uses for path transformations" --> PathModifier
-    IOFile -- "Uses for output file caching" --> OutputFileCache
+    InputFiles["InputFiles"]
+    DAG["DAG"]
+    IOCache -- "manages mtimes of" --> IOFile
+    IOCache -- "uses to get file information" --> IOFile
+    IOFile -- "caches file metadata" --> IOCache
+    IOFile -- "manages file properties" --> IOFile
+    IOFile -- "interacts with storage backends" --> StorageRegistry
+    Namedlist -- "manages lists of" --> IOFile
+    Namedlist -- "uses to store and retrieve file information" --> IOFile
+    OutputFileCache -- "caches output files" --> IOFile
+    OutputFileCache -- "uses to determine file paths and checksums" --> IOFile
+    ProvenanceHashMap -- "calculates provenance hashes for" --> IOFile
+    ProvenanceHashMap -- "uses to get file contents and metadata" --> IOFile
+    StorageRegistry -- "manages storage providers" --> IOFile
+    StorageRegistry -- "uses to determine if a file is stored remotely" --> IOFile
+    PathModifier -- "modifies file paths" --> IOFile
+    PathModifier -- "uses to modify the file path" --> IOFile
+    InputFiles -- "manages input files" --> IOFile
+    InputFiles -- "uses to get file sizes and other metadata" --> IOFile
+    DAG -- "manages dependencies between rules and files" --> IOFile
+    DAG -- "uses to manage file properties" --> IOFile
+    DAG -- "interacts with storage backends" --> StorageRegistry
 ```
 
 ## Component Details
 
-The I/O and Storage Management subsystem in Snakemake is responsible for handling all file-related operations during workflow execution. It manages input and output files, performs file existence checks, expands wildcards, and supports remote files from various sources like S3 and HTTP. The subsystem also provides data integrity verification, caching mechanisms to avoid redundant computations, and storage management for both local and cloud-based solutions. It ensures efficient and reliable access to files throughout the workflow.
+The I/O and Storage Management component in Snakemake handles all aspects of file input, output, and storage interactions within the workflow. It manages file metadata, caching, and interactions with various storage backends, ensuring data integrity and optimizing performance. The core functionality revolves around representing files as IOFile objects, caching file metadata using IOCache, and managing storage interactions through the StorageRegistry. OutputFileCache is used to cache the output files to avoid recomputation. ProvenanceHashMap calculates and stores provenance hashes for files, which are used to determine if a cached output file is still valid. PathModifier modifies file paths based on specified prefixes and default storage configurations. InputFiles manages input files, including determining their sizes. The DAG component manages the dependencies between rules and their input/output files.
 
 ### IOFile
-Represents a file (input or output) within a Snakemake workflow. It encapsulates file path information and provides methods for interacting with the file system, including checking file existence, retrieving metadata (modification time, size), and performing file operations (copying, removing). It leverages IOCache for metadata caching, StorageRegistry for handling different storage backends, PathModifier for path transformations, and OutputFileCache for caching output file contents.
-- **Related Classes/Methods**: `snakemake.src.snakemake.io.IOFile`, `snakemake.src.snakemake.io._IOFile`
+The IOFile class represents a file within the snakemake workflow. It handles file properties such as existence, modification time, size, and checksum. It also manages interactions with storage backends, including retrieving and preparing files. It interacts with the IOCache to cache file metadata and with storage objects to manage remote storage.
+- **Related Classes/Methods**: `snakemake.src.snakemake.io._IOFile`
 
 ### IOCache
-Caches file metadata (e.g., modification time, size) to improve workflow execution speed. By storing this information, Snakemake can quickly determine if a file has changed without needing to access the file system directly. It is used by IOFile to retrieve and store cached metadata.
+The IOCache manages the modification times (mtimes) of input and output files to determine if a rule needs to be re-executed. It stores and retrieves mtime information, and handles deactivation when necessary. It interacts with IOFile to get file information and persists the mtime inventory.
 - **Related Classes/Methods**: `snakemake.src.snakemake.io.IOCache`
 
-### StorageRegistry
-Manages different storage backends (local disk, cloud storage, remote servers) and provides a unified interface for accessing files regardless of their location. It allows Snakemake to interact with various storage systems in a consistent manner. IOFile uses this registry to handle file access based on the specified storage backend.
-- **Related Classes/Methods**: `snakemake.src.snakemake.storage.StorageRegistry`
+### Namedlist
+The Namedlist class provides a list-like data structure where items can be accessed by name. It is used to manage input and output file lists, allowing access to files by their names within the Snakemake workflow. It interacts with IOFile to store and retrieve file information.
+- **Related Classes/Methods**: `snakemake.src.snakemake.io.Namedlist`
 
 ### OutputFileCache
-Caches the contents of output files to avoid recomputing them if they are already available. It stores and retrieves output files from a local or remote cache, reducing execution time. IOFile interacts with this component to store and retrieve cached output files.
+The OutputFileCache (both local and storage) handles caching output files to avoid recomputation. It provides methods to store, fetch, and check the existence of cached output files. It interacts with IOFile to determine file paths and checksums, and with the storage backend to manage remote storage.
 - **Related Classes/Methods**: `snakemake.src.snakemake.caching.storage.OutputFileCache`, `snakemake.src.snakemake.caching.local.OutputFileCache`, `snakemake.src.snakemake.caching.AbstractOutputFileCache`
 
+### ProvenanceHashMap
+The ProvenanceHashMap calculates and stores provenance hashes for files, which are used to determine if a cached output file is still valid. It interacts with IOFile to get file contents and metadata for hash calculation.
+- **Related Classes/Methods**: `snakemake.src.snakemake.caching.hash.ProvenanceHashMap`
+
+### StorageRegistry
+The StorageRegistry manages the available storage providers and their configurations. It allows Snakemake to interact with different storage backends for input and output files. It interacts with IOFile to determine if a file is stored remotely and to retrieve the appropriate storage object.
+- **Related Classes/Methods**: `snakemake.src.snakemake.storage.StorageRegistry`
+
 ### PathModifier
-Modifies file paths based on specified rules, such as replacing prefixes or applying default storage locations. This ensures that files are accessed correctly, especially when dealing with different storage configurations. IOFile uses this component to transform file paths before accessing them.
+The PathModifier modifies file paths based on specified prefixes and default storage configurations. It is used to adapt file paths to different environments or storage locations. It interacts with IOFile to modify the file path before it is used in the workflow.
 - **Related Classes/Methods**: `snakemake.src.snakemake.path_modifier.PathModifier`
 
-### ioutils
-Provides utility functions for working with input and output files, including checksum calculation, file list flattening, file existence checking, and wildcard-based file lookup. These functions are used throughout the Snakemake workflow to perform common file-related operations. It uses IOFile to perform various file-related operations.
-- **Related Classes/Methods**: `snakemake.src.snakemake.ioutils`
+### InputFiles
+The InputFiles class manages input files, including determining their sizes. It interacts with IOFile to get file sizes and other metadata.
+- **Related Classes/Methods**: `snakemake.src.snakemake.io.InputFiles`
+
+### DAG
+The DAG (Directed Acyclic Graph) component manages the dependencies between rules and their input/output files. It handles the retrieval, updating, and storage of files in storage backends, as well as sanitizing local storage copies. It interacts with IOFile to manage file properties and with the StorageRegistry to interact with storage backends.
+- **Related Classes/Methods**: `snakemake.src.snakemake.dag.DAG`

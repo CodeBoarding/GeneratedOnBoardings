@@ -1,30 +1,37 @@
 ```mermaid
 graph LR
-    Command_line_Configuration_Parsing["Command-line Configuration Parsing"]
-    Configuration_Settings_Management["Configuration Settings Management"]
-    Configuration_File_Loading["Configuration File Loading"]
-    Workflow_Configuration_Access["Workflow Configuration Access"]
-    Command_line_Configuration_Parsing -- "parses configuration arguments" --> Configuration_Settings_Management
-    Configuration_Settings_Management -- "loads configuration from file" --> Configuration_File_Loading
-    Workflow_Configuration_Access -- "uses config" --> Configuration_Settings_Management
+    Config_Argument_Parser["Config Argument Parser"]
+    ConfigSettings_Initializer["ConfigSettings Initializer"]
+    Config_File_Loader["Config File Loader"]
+    Config_Overwriter["Config Overwriter"]
+    Config_Updater["Config Updater"]
+    Config_Argument_Parser -- "parses config arguments" --> ConfigSettings_Initializer
+    ConfigSettings_Initializer -- "loads configfile" --> Config_File_Loader
+    ConfigSettings_Initializer -- "initializes and gets overwrite config" --> Config_Overwriter
+    Config_Overwriter -- "gets config arguments" --> Config_Argument_Parser
+    Config_Overwriter -- "updates config" --> Config_Updater
 ```
 
 ## Component Details
 
-The Configuration Management subsystem in Snakemake is responsible for loading, merging, and providing access to configuration data during workflow execution. It involves parsing command-line arguments, reading configuration files (YAML or JSON), and managing configuration settings within the workflow. The configuration data is used to customize workflow parameters and settings without modifying the Snakefile directly.
+The Configuration Management subsystem in Snakemake is responsible for handling user-defined configurations that customize workflow behavior. It involves parsing command-line arguments related to configuration, loading configuration data from specified files, processing overwrite arguments, and merging these configurations to create a final configuration dictionary accessible to the workflow. This system allows users to modify workflow parameters without directly altering the Snakefile, promoting flexibility and reusability.
 
-### Command-line Configuration Parsing
-This component parses command-line arguments related to configuration, identifying the configuration file to load and any overrides specified by the user. It extracts and processes these configuration-related parameters, making them available for subsequent configuration loading and merging.
-- **Related Classes/Methods**: `snakemake.src.snakemake.cli:parse_config`
+### Config Argument Parser
+This component parses command-line arguments to identify the config file path and any config overwrite arguments. It extracts the relevant information needed for subsequent configuration loading and processing. It uses the `argparse` module to define and parse the expected arguments.
+- **Related Classes/Methods**: `snakemake.src.snakemake.cli:parse_config`, `snakemake.src.snakemake.settings.types.ConfigSettings:_get_config_args`
 
-### Configuration Settings Management
-This component manages the configuration settings for Snakemake. It handles the loading, merging, and overriding of configurations from various sources, including the configuration file and command-line arguments. It provides a unified interface for accessing configuration settings during workflow execution.
-- **Related Classes/Methods**: `snakemake.src.snakemake.settings.types.ConfigSettings:__post_init__`, `snakemake.src.snakemake.settings.types.ConfigSettings:_get_overwrite_config`, `snakemake.src.snakemake.settings.types.ConfigSettings:_get_config_args`
+### ConfigSettings Initializer
+The ConfigSettings Initializer is responsible for initializing the ConfigSettings object. This involves orchestrating the loading of the config file (if specified) and applying any config overwrite arguments provided via the command line. It acts as a central point for managing the configuration loading process.
+- **Related Classes/Methods**: `snakemake.src.snakemake.settings.types.ConfigSettings:__post_init__`
 
-### Configuration File Loading
-This component loads the configuration from a specified configuration file, parsing its contents (typically YAML or JSON) and making them available to Snakemake. It handles file I/O and parsing errors, ensuring that the configuration data is correctly loaded and accessible.
-- **Related Classes/Methods**: `snakemake.src.snakemake.common.configfile:load_configfile`
+### Config File Loader
+This component loads the configuration data from the specified config file (YAML or JSON). It reads the file and parses its contents into a Python dictionary. It uses `common.configfile.load_configfile` to load the config and handles potential errors during file reading and parsing.
+- **Related Classes/Methods**: `snakemake.src.snakemake.common.configfile:load_configfile`, `snakemake.src.snakemake.workflow.Workflow:configfile`
 
-### Workflow Configuration Access
-This component manages the configuration data within the Snakemake workflow. It provides access to the configuration parameters during workflow execution, allowing rules and scripts to use the configured values. It acts as a central repository for configuration data within the workflow.
-- **Related Classes/Methods**: `snakemake.src.snakemake.workflow.Workflow:config`
+### Config Overwriter
+The Config Overwriter extracts and processes config overwrite arguments from the command line. It transforms these arguments into a dictionary that can be used to update the base configuration. It handles the conversion of command-line arguments into a usable configuration format.
+- **Related Classes/Methods**: `snakemake.src.snakemake.settings.types.ConfigSettings:_get_overwrite_config`
+
+### Config Updater
+This component updates the base configuration with values from another configuration dictionary, typically used to apply overwrite config arguments. It merges the overwrite configurations into the base configuration, ensuring that the final configuration reflects the user's desired settings.
+- **Related Classes/Methods**: `snakemake.src.snakemake.utils:update_config`
