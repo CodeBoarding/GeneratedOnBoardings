@@ -4,62 +4,62 @@ graph LR
     MessageManager["MessageManager"]
     Controller["Controller"]
     SystemPrompt["SystemPrompt"]
-    PlannerPrompt["PlannerPrompt"]
-    AgentMessagePrompt["AgentMessagePrompt"]
     BrowserSession["BrowserSession"]
     ProductTelemetry["ProductTelemetry"]
-    Agent -- "initializes" --> MessageManager
+    PlannerPrompt["PlannerPrompt"]
+    AgentMessagePrompt["AgentMessagePrompt"]
     Agent -- "initializes" --> Controller
-    Agent -- "initializes" --> BrowserSession
+    Agent -- "initializes" --> MessageManager
     Agent -- "initializes" --> SystemPrompt
+    Agent -- "initializes" --> BrowserSession
     Agent -- "initializes" --> ProductTelemetry
-    Agent -- "manages messages with" --> MessageManager
-    Agent -- "executes actions using" --> Controller
-    Agent -- "plans using" --> PlannerPrompt
-    Agent -- "validates output using" --> AgentMessagePrompt
-    Agent -- "captures telemetry with" --> ProductTelemetry
+    Agent -- "takes step with" --> MessageManager
+    Agent -- "takes step with" --> Controller
+    Agent -- "plans with" --> PlannerPrompt
+    Agent -- "validates output with" --> AgentMessagePrompt
+    Agent -- "acts with" --> Controller
     click Agent href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Agent.md" "Details"
     click MessageManager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/MessageManager.md" "Details"
     click Controller href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Controller.md" "Details"
     click SystemPrompt href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/SystemPrompt.md" "Details"
-    click PlannerPrompt href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/PlannerPrompt.md" "Details"
-    click AgentMessagePrompt href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/AgentMessagePrompt.md" "Details"
     click BrowserSession href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/BrowserSession.md" "Details"
     click ProductTelemetry href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/ProductTelemetry.md" "Details"
+    click PlannerPrompt href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/PlannerPrompt.md" "Details"
+    click AgentMessagePrompt href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/AgentMessagePrompt.md" "Details"
 ```
 
 ## Component Details
 
-The Agent Service orchestrates the automation process by planning and executing tasks. It interacts with the language model, manages messages, and controls the browser. The Agent initializes and manages the lifecycle of other components, including the MessageManager, Controller, BrowserSession, and telemetry services. It uses prompts to guide planning and message generation, handles signals and exceptions, and processes the history tree to extract relevant information.
+The Agent Service orchestrates the browser automation process. It initializes and manages the agent's state, interacts with the LLM to plan actions, and delegates action execution to the Controller Service. The service also incorporates message management, prompt generation, and telemetry logging to ensure efficient and insightful automation.
 
 ### Agent
-The central component responsible for managing the agent's lifecycle, including initialization, task execution, and interaction with other components. It orchestrates planning, action execution, and observation.
+The Agent is the central component responsible for orchestrating the browsing process. It manages the interaction with the LLM, the browser controller, and the message manager. It takes steps to achieve a goal, handles errors, and logs events.
 - **Related Classes/Methods**: `browser_use.agent.service.Agent`
 
 ### MessageManager
-Manages the conversation history between the agent and the LLM, storing, retrieving, and manipulating messages to provide context for the agent's decision-making process.
-- **Related Classes/Methods**: `browser_use.agent.message_manager.service.MessageManager`, `browser_use.agent.message_manager.service.MessageManagerSettings`
+The MessageManager manages the conversation history between the agent and the LLM. It adds new messages, retrieves existing messages, and cuts messages to stay within token limits.
+- **Related Classes/Methods**: `browser_use.agent.message_manager.service.MessageManager`
 
 ### Controller
-Executes actions in the browser, receiving instructions from the agent and interacting with the browser to perform the desired actions.
+The Controller provides an interface for interacting with the browser. It performs actions such as clicking, typing, and navigating.
 - **Related Classes/Methods**: `browser_use.controller.service.Controller`
 
 ### SystemPrompt
-Provides the initial instructions and context to the agent, defining the agent's role, goals, and constraints.
+The SystemPrompt class generates the system message for the LLM, providing context and instructions for the agent.
 - **Related Classes/Methods**: `browser_use.agent.prompts.SystemPrompt`
 
-### PlannerPrompt
-Generates the prompt used by the agent to plan its actions, providing context and instructions to guide the agent's planning process.
-- **Related Classes/Methods**: `browser_use.agent.prompts.PlannerPrompt`
-
-### AgentMessagePrompt
-Generates the prompt used by the agent to interact with the LLM, providing context and instructions to guide the agent's message generation process.
-- **Related Classes/Methods**: `browser_use.agent.prompts.AgentMessagePrompt`
-
 ### BrowserSession
-Manages the browser instance used by the agent, handling browser initialization, navigation, and interaction.
+The BrowserSession class manages the browser session, including creating and closing the browser.
 - **Related Classes/Methods**: `browser_use.browser.session.BrowserSession`
 
 ### ProductTelemetry
-Collects and reports telemetry data about the agent's usage, used to improve the agent's performance and identify areas for improvement.
-- **Related Classes/Methods**: `browser_use.telemetry.service.ProductTelemetry`, `browser_use.telemetry.views.AgentTelemetryEvent`
+The ProductTelemetry class captures and sends telemetry data about the agent's usage.
+- **Related Classes/Methods**: `browser_use.telemetry.service.ProductTelemetry`
+
+### PlannerPrompt
+The PlannerPrompt class generates the prompt for the LLM to plan the next steps.
+- **Related Classes/Methods**: `browser_use.agent.prompts.PlannerPrompt`
+
+### AgentMessagePrompt
+The AgentMessagePrompt class generates the prompt for the LLM to generate the next action.
+- **Related Classes/Methods**: `browser_use.agent.prompts.AgentMessagePrompt`

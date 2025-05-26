@@ -1,83 +1,69 @@
 ```mermaid
 graph LR
     BrowserSession["BrowserSession"]
-    BrowserProfile["BrowserProfile"]
-    Agent["Agent"]
+    TabInfo["TabInfo"]
     DomService["DomService"]
     ClickableElementProcessor["ClickableElementProcessor"]
-    TabInfo["TabInfo"]
+    CachedClickableElementHashes["CachedClickableElementHashes"]
     BrowserStateSummary["BrowserStateSummary"]
     URLNotAllowedError["URLNotAllowedError"]
     BrowserError["BrowserError"]
-    CachedClickableElementHashes["CachedClickableElementHashes"]
-    cli_textual_interface -- "creates" --> BrowserSession
-    Agent -- "uses" --> BrowserSession
-    BrowserSession -- "configures" --> BrowserProfile
-    BrowserSession -- "uses" --> TabInfo
+    BrowserSession -- "manages tabs" --> TabInfo
+    BrowserSession -- "interacts with DOM" --> DomService
+    BrowserSession -- "processes clickable elements" --> ClickableElementProcessor
+    BrowserSession -- "caches element hashes" --> CachedClickableElementHashes
+    BrowserSession -- "summarizes browser state" --> BrowserStateSummary
+    BrowserSession -- "raises on disallowed URLs" --> URLNotAllowedError
+    BrowserSession -- "raises browser errors" --> BrowserError
     BrowserSession -- "uses" --> DomService
     BrowserSession -- "uses" --> ClickableElementProcessor
-    BrowserSession -- "uses" --> BrowserStateSummary
-    BrowserSession -- "raises" --> URLNotAllowedError
-    BrowserSession -- "raises" --> BrowserError
     BrowserSession -- "uses" --> CachedClickableElementHashes
-    BrowserProfile -- "provides arguments for launch" --> BrowserLaunchArgs
-    BrowserProfile -- "provides arguments for persistent context" --> BrowserLaunchPersistentContextArgs
-    BrowserProfile -- "provides arguments for new context" --> BrowserNewContextArgs
-    BrowserProfile -- "provides arguments for connect" --> BrowserConnectArgs
-    Agent -- "uses" --> DomService
-    Agent -- "uses" --> ClickableElementProcessor
+    BrowserSession -- "uses" --> TabInfo
+    BrowserSession -- "uses" --> BrowserStateSummary
+    BrowserSession -- "uses" --> URLNotAllowedError
+    BrowserSession -- "uses" --> BrowserError
     click BrowserSession href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/BrowserSession.md" "Details"
-    click BrowserProfile href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/BrowserProfile.md" "Details"
-    click Agent href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Agent.md" "Details"
+    click TabInfo href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/TabInfo.md" "Details"
     click DomService href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/DomService.md" "Details"
     click ClickableElementProcessor href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/ClickableElementProcessor.md" "Details"
-    click TabInfo href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/TabInfo.md" "Details"
+    click CachedClickableElementHashes href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/CachedClickableElementHashes.md" "Details"
     click BrowserStateSummary href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/BrowserStateSummary.md" "Details"
     click URLNotAllowedError href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/URLNotAllowedError.md" "Details"
     click BrowserError href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/BrowserError.md" "Details"
-    click CachedClickableElementHashes href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/CachedClickableElementHashes.md" "Details"
 ```
 
 ## Component Details
 
-The browser automation subsystem enables automated interaction with web pages through a browser. It centers around the `BrowserSession`, which manages the browser instance and provides methods for navigation, interaction, and content extraction. The `BrowserProfile` configures the browser's behavior. The `Agent` orchestrates complex tasks using the `BrowserSession`, while the `DomService` and `ClickableElementProcessor` facilitate DOM interaction and clickable element identification, respectively. The `TabInfo` and `BrowserStateSummary` provide information about the browser's state. Error handling is managed through `URLNotAllowedError` and `BrowserError`. Performance is optimized using `CachedClickableElementHashes`.
+The Browser Session component orchestrates the interaction with a web browser using Playwright. It manages the browser lifecycle, including launching and closing, and provides methods for creating new tabs, navigating to URLs, and interacting with web page elements. It retrieves the browser state, including tab information, screenshots, and clickable elements, and handles URL allowlisting to prevent navigation to unauthorized domains. The component leverages caching to optimize performance and provides logging for debugging purposes.
 
 ### BrowserSession
-Manages a single browser session using Playwright. It handles browser startup, shutdown, tab management, navigation, and interaction with web elements. It provides methods for getting page content, executing JavaScript, and taking screenshots.
-- **Related Classes/Methods**: `browser_use.browser.session.BrowserSession`, `browser_use.browser.session.CachedClickableElementHashes`
+Manages the Playwright browser instance, including launching, closing, and creating new pages (tabs). It provides methods for navigating to URLs, interacting with DOM elements, and retrieving the browser state.
+- **Related Classes/Methods**: `browser_use.browser.session.BrowserSession`
 
-### BrowserProfile
-Manages browser launch arguments and settings. It allows users to configure the browser's behavior, such as setting the user agent and viewport size. It provides methods for generating the arguments needed to launch a browser instance with the desired configuration.
-- **Related Classes/Methods**: `browser_use.browser.profile.BrowserProfile`, `browser_use.browser.profile.BrowserLaunchArgs`, `browser_use.browser.profile.BrowserLaunchPersistentContextArgs`, `browser_use.browser.profile.BrowserNewContextArgs`, `browser_use.browser.profile.BrowserConnectArgs`
-
-### Agent
-Orchestrates browser automation tasks using the BrowserSession. It provides a higher-level API for performing complex tasks, such as filling out forms and extracting data from web pages.
-- **Related Classes/Methods**: `browser_use.agent.service.Agent`
+### TabInfo
+A data class that holds information about a browser tab, such as its title and URL. It's used by BrowserSession to provide a summary of the open tabs.
+- **Related Classes/Methods**: `browser_use.browser.views.TabInfo`
 
 ### DomService
-Provides methods for interacting with the Document Object Model (DOM) of a web page. It allows users to extract information about web elements, such as their text content and attributes.
+Provides functionality for interacting with the Document Object Model (DOM) of a web page. It's used by BrowserSession to extract information about the page structure and clickable elements.
 - **Related Classes/Methods**: `browser_use.dom.service.DomService`
 
 ### ClickableElementProcessor
-Identifies clickable elements on a web page using heuristics. It determines which elements are likely to be interactive and provides methods for clicking on those elements.
+Responsible for identifying and processing clickable elements on a web page. It's used by BrowserSession to determine the interactive elements in the current browser state.
 - **Related Classes/Methods**: `browser_use.dom.clickable_element_processor.service.ClickableElementProcessor`
 
-### TabInfo
-Represents information about a browser tab, such as its title and URL. It is used to provide a summary of the current state of the browser.
-- **Related Classes/Methods**: `browser_use.browser.views.TabInfo`
+### CachedClickableElementHashes
+Provides a caching mechanism for clickable element hashes to improve performance when retrieving the browser state.
+- **Related Classes/Methods**: `browser_use.browser.session.CachedClickableElementHashes`
 
 ### BrowserStateSummary
-Represents a summary of the current state of the browser, including information about the current tab, the DOM, and the clickable elements on the page.
+A data class that encapsulates the overall state of the browser, including tab information, screenshots, and clickable elements. It's returned by BrowserSession when retrieving the browser state.
 - **Related Classes/Methods**: `browser_use.browser.views.BrowserStateSummary`
 
 ### URLNotAllowedError
-Exception raised when the browser attempts to navigate to a URL that is not allowed by the current configuration.
+An exception that is raised when navigation to a URL is blocked by the configured URL allowlist.
 - **Related Classes/Methods**: `browser_use.browser.views.URLNotAllowedError`
 
 ### BrowserError
-Base class for all browser-related errors.
+A base exception class for browser-related errors.
 - **Related Classes/Methods**: `browser_use.browser.views.BrowserError`
-
-### CachedClickableElementHashes
-Caches the hashes of clickable elements on a web page to improve performance by avoiding redundant calculations.
-- **Related Classes/Methods**: `browser_use.browser.session.CachedClickableElementHashes`

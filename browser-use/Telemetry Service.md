@@ -1,22 +1,21 @@
 ```mermaid
 graph LR
-    ProductTelemetry["ProductTelemetry"]
     Registry["Registry"]
+    ProductTelemetry["ProductTelemetry"]
     Agent["Agent"]
     ControllerRegisteredFunctionsTelemetryEvent["ControllerRegisteredFunctionsTelemetryEvent"]
     RegisteredFunction["RegisteredFunction"]
     AgentTelemetryEvent["AgentTelemetryEvent"]
-    Registry -- "initializes" --> ProductTelemetry
-    Registry -- "captures telemetry using" --> ProductTelemetry
-    Registry -- "creates" --> ControllerRegisteredFunctionsTelemetryEvent
+    Registry -- "creates and captures" --> ControllerRegisteredFunctionsTelemetryEvent
     Registry -- "creates" --> RegisteredFunction
-    ProductTelemetry -- "captures directly" --> ProductTelemetry
+    ProductTelemetry -- "captures" --> ProductTelemetry
     Agent -- "initializes" --> ProductTelemetry
-    Agent -- "logs events using" --> ProductTelemetry
-    Agent -- "creates" --> AgentTelemetryEvent
-    Agent -- "flushes data using" --> ProductTelemetry
-    click ProductTelemetry href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/ProductTelemetry.md" "Details"
+    Agent -- "logs events to" --> ProductTelemetry
+    Agent -- "logs events to" --> AgentTelemetryEvent
+    Agent -- "flushes" --> ProductTelemetry
+    Registry -- "initializes" --> ProductTelemetry
     click Registry href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Registry.md" "Details"
+    click ProductTelemetry href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/ProductTelemetry.md" "Details"
     click Agent href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Agent.md" "Details"
     click ControllerRegisteredFunctionsTelemetryEvent href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/ControllerRegisteredFunctionsTelemetryEvent.md" "Details"
     click RegisteredFunction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/RegisteredFunction.md" "Details"
@@ -25,28 +24,28 @@ graph LR
 
 ## Component Details
 
-The Telemetry Service collects and reports usage data and errors from various parts of the application, including the agent, controller, and registered functions. It provides a centralized mechanism for capturing events, formatting them into telemetry events, and flushing the data to a backend for analysis and monitoring. The service ensures that valuable insights into application usage and potential issues are captured and made available for further investigation.
-
-### ProductTelemetry
-The ProductTelemetry class is the core of the telemetry service, providing methods for capturing and managing telemetry data. It allows capturing events directly or indirectly, and flushing the collected data to a backend. It interacts with the Registry, Agent, and other components to collect telemetry data.
-- **Related Classes/Methods**: `browser_use.telemetry.service.ProductTelemetry`
+The Telemetry Service captures and transmits usage data to track the performance and behavior of the browser automation system. It records events related to agent actions, controller functions, and other system activities, providing valuable insights for system optimization and improvement. The main flow involves the Agent and Registry components generating telemetry events, which are then captured, stored, and flushed by the ProductTelemetry component to a telemetry backend.
 
 ### Registry
-The Registry class manages the registration of controller actions and their associated metadata. It creates action models and interacts with the ProductTelemetry service to capture telemetry data related to registered functions.
+The Registry component manages and registers controller actions. It creates action models and associates them with telemetry events, allowing the system to track which controller functions are being used. It is responsible for creating `RegisteredFunction` objects and associating them with `ControllerRegisteredFunctionsTelemetryEvent`.
 - **Related Classes/Methods**: `browser_use.controller.registry.service.Registry`
 
+### ProductTelemetry
+The ProductTelemetry component handles the capturing, storing, and flushing of telemetry data. It provides methods for capturing different types of events and sending them to a telemetry backend, ensuring that usage data is collected and transmitted for analysis. It interacts with the Agent and Registry components to receive telemetry events.
+- **Related Classes/Methods**: `browser_use.telemetry.service.ProductTelemetry`
+
 ### Agent
-The Agent class represents an agent that interacts with the browser. It logs agent-related events and uses the ProductTelemetry service to capture and report these events. It also flushes the telemetry data when the agent is run.
+The Agent component is responsible for running tasks and logging agent-related events. It interacts with ProductTelemetry to capture telemetry data during its execution, providing insights into agent behavior and performance. It logs events to `ProductTelemetry` and `AgentTelemetryEvent`.
 - **Related Classes/Methods**: `browser_use.agent.service.Agent`
 
 ### ControllerRegisteredFunctionsTelemetryEvent
-The ControllerRegisteredFunctionsTelemetryEvent class represents a telemetry event specifically for registered controller functions. It's a data structure used to format the telemetry data before being captured by ProductTelemetry.
+The ControllerRegisteredFunctionsTelemetryEvent component represents a telemetry event specifically for registered controller functions. It captures information about the registration of controller functions, allowing the system to track which functions are available and being used. It is created by the Registry component.
 - **Related Classes/Methods**: `browser_use.telemetry.views.ControllerRegisteredFunctionsTelemetryEvent`
 
 ### RegisteredFunction
-The RegisteredFunction class represents the data structure for a registered function, containing information about the function itself. This information is used when creating the ControllerRegisteredFunctionsTelemetryEvent.
+The RegisteredFunction component represents a registered function within the system. It encapsulates the details of a registered function, such as its name and associated metadata, providing a structured way to represent and track functions within the system. It is created by the Registry component.
 - **Related Classes/Methods**: `browser_use.telemetry.views.RegisteredFunction`
 
 ### AgentTelemetryEvent
-The AgentTelemetryEvent class represents a telemetry event specific to the agent. It's a data structure used to format the telemetry data before being captured by ProductTelemetry.
+The AgentTelemetryEvent component represents a telemetry event related to the agent's activities. It captures information about agent actions and events, providing insights into agent behavior and performance. It is logged to by the Agent component.
 - **Related Classes/Methods**: `browser_use.telemetry.views.AgentTelemetryEvent`
