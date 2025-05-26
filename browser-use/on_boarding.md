@@ -1,59 +1,59 @@
 ```mermaid
 graph LR
     User_Interface["User Interface"]
-    Agent_Service["Agent Service"]
-    Controller_Service["Controller Service"]
-    Browser_Session["Browser Session"]
-    DOM_Processor["DOM Processor"]
-    Telemetry_Service["Telemetry Service"]
-    Configuration_Manager["Configuration Manager"]
-    Signal_Handler["Signal Handler"]
-    User_Interface -- "uses" --> Configuration_Manager
-    User_Interface -- "uses" --> Agent_Service
-    User_Interface -- "uses" --> Browser_Session
-    Agent_Service -- "manages" --> Controller_Service
-    Agent_Service -- "plans actions with" --> Controller_Service
-    Controller_Service -- "interacts with" --> Browser_Session
-    DOM_Processor -- "extracts DOM from" --> Browser_Session
-    Telemetry_Service -- "captures data from" --> Agent_Service
-    Telemetry_Service -- "captures data from" --> Controller_Service
-    Signal_Handler -- "handles signals for" --> Agent_Service
-    Browser_Session -- "provides browser state to" --> Agent_Service
-    Browser_Session -- "uses" --> DOM_Processor
+    Agent_Orchestration["Agent Orchestration"]
+    Browser_Management["Browser Management"]
+    Action_Processing["Action Processing"]
+    DOM_Understanding["DOM Understanding"]
+    Language_Model_Interaction["Language Model Interaction"]
+    System_Support["System Support"]
+    User_Interface -- "uses" --> Agent_Orchestration
+    User_Interface -- "uses" --> Browser_Management
+    Agent_Orchestration -- "orchestrates" --> Action_Processing
+    Action_Processing -- "interacts with" --> Browser_Management
+    DOM_Understanding -- "extracts from" --> Browser_Management
+    Agent_Orchestration -- "uses" --> Language_Model_Interaction
+    System_Support -- "captures events from" --> Agent_Orchestration
+    System_Support -- "captures events from" --> Action_Processing
+    User_Interface -- "uses" --> System_Support
+    Agent_Orchestration -- "manages" --> Language_Model_Interaction
+    click User_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/User Interface.md" "Details"
+    click Agent_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Agent Orchestration.md" "Details"
+    click Browser_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Browser Management.md" "Details"
+    click Action_Processing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Action Processing.md" "Details"
+    click DOM_Understanding href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/DOM Understanding.md" "Details"
+    click Language_Model_Interaction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/Language Model Interaction.md" "Details"
+    click System_Support href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/browser-use/System Support.md" "Details"
 ```
 
 ## Component Details
 
-The browser-use project provides an automation framework for web browsers, enabling users to script and execute actions within a browser environment. The core flow involves the Agent Service planning actions based on the current browser state, the Controller Service translating these actions into browser interactions, and the Browser Session managing the browser instance. The DOM Processor extracts and processes the DOM, providing structured information to the Agent. The User Interface allows users to interact with the system, while the Telemetry Service captures usage data. The Configuration Manager handles user settings, and the Signal Handler ensures graceful shutdown.
+The browser-use project automates web browser interactions using a language model. The core flow involves the user providing a task through the CLI, which is then orchestrated by the Agent. The Agent leverages a language model to plan and execute actions within a browser session. The system extracts information from the DOM, manages messages between the agent and the language model, and provides utilities for configuration, telemetry, and signal handling. The system is designed to be extensible and configurable, allowing users to customize the behavior of the agent and the browser.
 
 ### User Interface
-The User Interface component provides the entry point for users to interact with the browser automation system. It encompasses both the command-line interface (CLI) and any potential graphical user interfaces (GUIs). It handles user input, displays information, and manages the execution of tasks, leveraging libraries like Textual and Click for creating interactive and accessible interfaces.
-- **Related Classes/Methods**: `browser-use.browser_use.cli`
+The User Interface component provides the entry point for users to interact with the browser automation system. It handles user input, configuration loading, and orchestrates the execution of tasks. It presents the application to the user and translates user commands into actions within the system.
+- **Related Classes/Methods**: `browser-use.browser_use.cli`, `browser-use.browser_use.cli.BrowserUseApp`
 
-### Agent Service
-The Agent Service is the central orchestrator of the browser automation system. It manages the agent's state, plans actions based on the current browser state and task objectives, and delegates the execution of those actions to the Controller Service. It incorporates message management, prompt generation, and telemetry logging to ensure efficient and insightful automation.
-- **Related Classes/Methods**: `browser_use.agent.service.Agent`, `browser_use.agent.message_manager.service.MessageManager`
+### Agent Orchestration
+The Agent Orchestration component manages the overall browser automation process. It initializes and orchestrates the interaction between the language model, the browser controller, and the message manager. It is responsible for planning, executing, and validating actions, as well as maintaining the agent's history and state.
+- **Related Classes/Methods**: `browser_use.agent.service.Agent`, `browser_use.agent.service.Agent:run`, `browser_use.agent.service.Agent:step`, `browser_use.agent.service.Agent:get_next_action`
 
-### Controller Service
-The Controller Service acts as an intermediary, translating high-level actions from the Agent Service into specific browser interactions. It receives action requests, consults its action registry to determine the appropriate execution strategy, and then interacts with the Browser Session to perform the requested action. It also handles sensitive data replacement to protect user privacy.
-- **Related Classes/Methods**: `browser_use.controller.service.Controller`, `browser_use.controller.registry.service.Registry`
+### Browser Management
+The Browser Management component is responsible for managing the browser instance and enabling interactions with web pages. It handles browser startup, shutdown, navigation, and interaction with web pages. It provides methods for getting the current page, executing JavaScript, and extracting page content, abstracting away the complexities of browser automation.
+- **Related Classes/Methods**: `browser-use.browser_use.browser.session.BrowserSession`, `browser-use.browser_use.browser.session.BrowserSession:start`, `browser-use.browser_use.browser.session.BrowserSession:navigate_to`, `browser-use.browser_use.browser.session.BrowserSession:get_state_summary`
 
-### Browser Session
-The Browser Session component manages the lifecycle of the browser instance and provides a set of methods for interacting with web pages. It handles browser setup, navigation, element selection, and state retrieval, leveraging the Playwright library for robust and reliable browser automation. It serves as the direct interface to the web browser.
-- **Related Classes/Methods**: `browser-use.browser_use.browser.session.BrowserSession`
+### Action Processing
+The Action Processing component acts as an intermediary between the agent and the browser. It receives actions from the agent and executes them in the browser using the Browser Session. It manages action registries and telemetry, translating high-level actions into specific browser commands and monitoring their execution.
+- **Related Classes/Methods**: `browser_use.controller.service.Controller`, `browser_use.controller.service.Controller:act`, `browser_use.controller.registry.service.Registry`, `browser_use.controller.registry.service.Registry:action`, `browser_use.controller.registry.service.Registry:execute_action`
 
-### DOM Processor
-The DOM Processor component is responsible for extracting, processing, and analyzing the Document Object Model (DOM) of web pages. It builds a DOM tree, identifies clickable elements, and provides structured information about the page structure to the Agent Service, enabling intelligent decision-making during automation tasks. It encompasses history tracking and clickable element identification.
-- **Related Classes/Methods**: `browser_use.dom.service.DomService`, `browser_use.dom.history_tree_processor.service.HistoryTreeProcessor`, `browser_use.dom.clickable_element_processor.service.ClickableElementProcessor`
+### DOM Understanding
+The DOM Understanding component provides utilities for extracting and processing the Document Object Model (DOM) of web pages. It is used to build DOM trees, identify clickable elements, and extract text content, enabling the agent to understand the structure and content of web pages.
+- **Related Classes/Methods**: `browser_use.dom.service.DomService`, `browser_use.dom.service.DomService:get_clickable_elements`, `browser_use.dom.service.DomService:_build_dom_tree`, `browser_use.dom.clickable_element_processor.service.ClickableElementProcessor`, `browser_use.dom.clickable_element_processor.service.ClickableElementProcessor:get_clickable_elements_hashes`, `browser_use.dom.clickable_element_processor.service.ClickableElementProcessor:hash_dom_element`
 
-### Telemetry Service
-The Telemetry Service component captures and transmits usage data to track the performance and behavior of the browser automation system. It records events related to agent actions, controller functions, and other system activities, providing valuable insights for system optimization and improvement. It helps in understanding how the system is being used and identifying potential issues.
-- **Related Classes/Methods**: `browser-use.browser_use.telemetry.service.ProductTelemetry`
+### Language Model Interaction
+The Language Model Interaction component encompasses the prompts and message management necessary for effective communication with the language model. It defines and manages the prompts used to communicate with the language model and handles the storage, retrieval, and processing of messages exchanged between the agent and the language model.
+- **Related Classes/Methods**: `browser_use.agent.prompts.SystemPrompt`, `browser_use.agent.prompts.PlannerPrompt`, `browser_use.agent.prompts.AgentMessagePrompt`, `browser_use.agent.message_manager.service.MessageManager`, `browser_use.agent.message_manager.service.MessageManager:add_new_task`, `browser_use.agent.message_manager.service.MessageManager:get_messages`
 
-### Configuration Manager
-The Configuration Manager component is responsible for loading, saving, and updating user configuration settings. It provides default configurations and allows users to customize the behavior of the browser automation system, ensuring flexibility and adaptability to different user needs and environments. It manages the application's settings.
-- **Related Classes/Methods**: `browser-use.browser_use.cli`
-
-### Signal Handler
-The Signal Handler component provides a mechanism for handling system signals such as SIGINT and SIGTERM. It allows the system to gracefully shut down or pause execution when these signals are received, preventing data loss and ensuring a clean exit. It ensures the application responds correctly to system events.
-- **Related Classes/Methods**: `browser-use.browser_use.utils.SignalHandler`
+### System Support
+The System Support component provides utilities for configuration, telemetry, and signal handling. It captures and reports usage data for the browser automation system and manages signals such as SIGINT and SIGTERM, allowing the system to gracefully handle interruptions and shutdowns.
+- **Related Classes/Methods**: `browser_use.telemetry.service.ProductTelemetry`, `browser-use.browser_use.telemetry.service.ProductTelemetry:capture`, `browser_use.utils.SignalHandler`, `browser-use.browser_use.utils.SignalHandler:register`, `browser-use.browser_use.cli:load_user_config`, `browser-use.browser_use.cli:get_default_config`, `browser-use.browser_use.cli:save_user_config`, `browser-use.browser_use.cli:update_config_with_click_args`
