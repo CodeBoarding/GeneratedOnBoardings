@@ -1,55 +1,60 @@
 ```mermaid
 graph LR
-    Target_Configuration["Target Configuration"]
-    Request_Header_Configuration["Request Header Configuration"]
-    Version_Management["Version Management"]
-    Connection_Testing["Connection Testing"]
-    Result_Handling["Result Handling"]
-    Page_Retrieval["Page Retrieval"]
-    Cache_Management["Cache Management"]
-    Random_Data_Generation["Random Data Generation"]
-    Request_Header_Configuration -- "Configures headers for" --> Page_Retrieval
-    Page_Retrieval -- "Retrieves content for" --> Result_Handling
-    Random_Data_Generation -- "Generates data for" --> Page_Retrieval
-    Connection_Testing -- "Uses connection status from" --> Page_Retrieval
-    Cache_Management -- "Checks URL before" --> Page_Retrieval
-    Cache_Management -- "Displays results from" --> Result_Handling
-    Version_Management -- "Checks version of" --> Target_Configuration
-    Connection_Testing -- "Tests connection to" --> Target_Configuration
+    Settings["Settings"]
+    Formatter["Formatter"]
+    get_page["get_page"]
+    configure_request_headers["configure_request_headers"]
+    check_url_against_cached["check_url_against_cached"]
+    produce_results["produce_results"]
+    create_fingerprint["create_fingerprint"]
+    Settings -- "Manages configuration for" --> get_page
+    Settings -- "Manages configuration for" --> configure_request_headers
+    Settings -- "Manages configuration for" --> check_url_against_cached
+    get_page -- "Uses settings from" --> Settings
+    configure_request_headers -- "Uses settings from" --> Settings
+    check_url_against_cached -- "Uses settings from" --> Settings
+    produce_results -- "Formats output using" --> Formatter
+    create_fingerprint -- "Uses settings from" --> Settings
+    get_page -- "Formats output using" --> Formatter
+    create_fingerprint -- "Formats output using" --> Formatter
+    check_url_against_cached -- "Formats output using" --> Formatter
 ```
 
 ## Component Details
 
-The Configuration Manager in WhatWaf is responsible for setting up and managing all aspects of configuration required for running web application firewall detection. It initializes settings, configures request headers, manages target URLs, handles version checking and auto-updating, and prepares the environment for scanning. The main flow involves setting up the environment, configuring the request, fetching the content, and producing the results.
+The Configuration Manager in WhatWaf is responsible for centralizing and managing all configuration settings required by the tool. It encompasses handling target URLs, configuring request headers, managing output formatting, and caching mechanisms. The core components work together to ensure that the tool operates with the correct settings, presents information effectively, and optimizes performance by caching results.
 
-### Target Configuration
-This component handles the configuration of the target URL and request parameters. It sets up the initial target and ensures that the tool knows where to send requests.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
+### Settings
+The Settings class is the central configuration repository for WhatWaf. It stores and manages target URLs, request headers, and other global settings. It provides methods to access and modify these settings, ensuring that all components have access to the necessary configuration parameters.
+- **Related Classes/Methods**: `WhatWaf.lib.settings.Settings`, `WhatWaf.lib.settings.get_page`, `WhatWaf.lib.settings.configure_request_headers`, `WhatWaf.lib.settings.check_url_against_cached`, `WhatWaf.lib.settings.produce_results`, `WhatWaf.lib.settings.create_fingerprint`, `WhatWaf.lib.settings.display_cached`
+- **Source Files**: `WhatWaf/lib/settings.py`
 
-### Request Header Configuration
-This component configures the headers of HTTP requests, including user-agent, cookies, and other relevant headers. It ensures that the requests sent by WhatWaf appear legitimate and can bypass certain WAF configurations.
-- **Related Classes/Methods**: `WhatWaf.lib.settings:configure_request_headers`
+### Formatter
+The Formatter class handles the output formatting for the WhatWaf tool. It provides methods for logging messages of different levels (info, debug, warning, error, etc.) and ensures that the output is presented in a user-friendly and consistent manner.
+- **Related Classes/Methods**: `WhatWaf.lib.formatter.Formatter`, `WhatWaf.lib.formatter.info`, `WhatWaf.lib.formatter.debug`, `WhatWaf.lib.formatter.warn`, `WhatWaf.lib.formatter.error`, `WhatWaf.lib.formatter.fatal`, `WhatWaf.lib.formatter.payload`, `WhatWaf.lib.formatter.success`, `WhatWaf.lib.formatter.discover`
+- **Source Files**: `WhatWaf/lib/formatter.py`
 
-### Version Management
-This component is responsible for checking the current version of WhatWaf and automatically updating it to the latest version. It ensures that the tool has the most up-to-date detection capabilities.
-- **Related Classes/Methods**: `WhatWaf.lib.settings:check_version`, `WhatWaf.lib.settings:auto_update`
+### get_page
+The `get_page` function is responsible for fetching the content of a web page. It makes HTTP requests to the target URL and retrieves the response. It uses the configured request headers from the Settings component.
+- **Related Classes/Methods**: `WhatWaf.lib.settings.get_page`
+- **Source Files**: `WhatWaf/lib/settings.py`
 
-### Connection Testing
-This component tests the connection to the target web server to ensure that the tool can reach the target before starting the scan. It verifies that the target is accessible and responsive.
-- **Related Classes/Methods**: `WhatWaf.lib.settings:test_target_connection`
+### configure_request_headers
+The `configure_request_headers` function configures the HTTP request headers, allowing customization of the User-Agent, cookies, and other headers. It retrieves the settings from the Settings component.
+- **Related Classes/Methods**: `WhatWaf.lib.settings.configure_request_headers`
+- **Source Files**: `WhatWaf/lib/settings.py`
 
-### Result Handling
-This component formats and outputs the results of the web application firewall analysis. It handles different output formats and reporting, providing the user with clear and actionable information.
-- **Related Classes/Methods**: `WhatWaf.lib.settings:produce_results`
+### check_url_against_cached
+The `check_url_against_cached` function checks if the target URL has been previously scanned and if the results are cached. It improves performance by avoiding redundant scans. It uses the Settings component to store and retrieve cached results.
+- **Related Classes/Methods**: `WhatWaf.lib.settings.check_url_against_cached`
+- **Source Files**: `WhatWaf/lib/settings.py`
 
-### Page Retrieval
-This component retrieves the content of a web page. It is responsible for making HTTP requests and handling responses, fetching the HTML content of the target URL.
-- **Related Classes/Methods**: `WhatWaf.lib.settings:get_page`
+### produce_results
+The `produce_results` function formats and displays the final results of the WAF detection process. It takes the identified WAF information and presents it in a user-friendly manner, utilizing the Formatter component for output.
+- **Related Classes/Methods**: `WhatWaf.lib.settings.produce_results`
+- **Source Files**: `WhatWaf/lib/settings.py`
 
-### Cache Management
-This component checks the URL against cached results to avoid redundant requests and displays cached results if available. It improves efficiency by reusing previous scan results.
-- **Related Classes/Methods**: `WhatWaf.lib.settings:check_url_against_cached`, `WhatWaf.lib.settings:display_cached`
-
-### Random Data Generation
-This component generates a random string for use in POST requests. This is used for fuzzing or testing purposes, creating unpredictable data for WAF evasion.
-- **Related Classes/Methods**: `WhatWaf.lib.settings:generate_random_post_string`
+### create_fingerprint
+The `create_fingerprint` function generates a unique fingerprint of the target web server. This fingerprint is used to identify the WAF in use. It sends specific requests and analyzes the responses, using settings from the Settings component.
+- **Related Classes/Methods**: `WhatWaf.lib.settings.create_fingerprint`
+- **Source Files**: `WhatWaf/lib/settings.py`
