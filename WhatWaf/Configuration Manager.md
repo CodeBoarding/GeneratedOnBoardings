@@ -1,64 +1,55 @@
 ```mermaid
 graph LR
-    Configuration_Manager["Configuration Manager"]
-    Get_Page["Get Page"]
-    Configure_Request_Headers["Configure Request Headers"]
-    Produce_Results["Produce Results"]
-    Create_Fingerprint["Create Fingerprint"]
-    Check_Version["Check Version"]
-    Auto_Update["Auto Update"]
-    Test_Target_Connection["Test Target Connection"]
-    Check_URL_Against_Cached["Check URL Against Cached"]
-    Display_Cached["Display Cached"]
-    Auto_Update -- "Retrieves content for" --> Get_Page
-    Produce_Results -- "Uses results from" --> Create_Fingerprint
-    Test_Target_Connection -- "Tests connection for" --> Get_Page
-    Check_Version -- "Checks version before" --> Auto_Update
-    Check_URL_Against_Cached -- "Checks URL before" --> Get_Page
-    Display_Cached -- "Displays cached content from" --> Check_URL_Against_Cached
-    Configure_Request_Headers -- "Configures headers for" --> Get_Page
+    Target_Configuration["Target Configuration"]
+    Request_Header_Configuration["Request Header Configuration"]
+    Version_Management["Version Management"]
+    Connection_Testing["Connection Testing"]
+    Result_Handling["Result Handling"]
+    Page_Retrieval["Page Retrieval"]
+    Cache_Management["Cache Management"]
+    Random_Data_Generation["Random Data Generation"]
+    Request_Header_Configuration -- "Configures headers for" --> Page_Retrieval
+    Page_Retrieval -- "Retrieves content for" --> Result_Handling
+    Random_Data_Generation -- "Generates data for" --> Page_Retrieval
+    Connection_Testing -- "Uses connection status from" --> Page_Retrieval
+    Cache_Management -- "Checks URL before" --> Page_Retrieval
+    Cache_Management -- "Displays results from" --> Result_Handling
+    Version_Management -- "Checks version of" --> Target_Configuration
+    Connection_Testing -- "Tests connection to" --> Target_Configuration
 ```
 
 ## Component Details
 
-The WhatWaf application utilizes a configuration manager to handle settings, target URLs, request headers, timeouts, and auto-update features. The application begins by testing the target connection and checking for cached content. If the content is not cached, it retrieves the content of the web page, configuring request headers before sending the request. The application then creates a fingerprint of the target web server and produces results based on the fingerprint and scan data. The configuration manager also handles auto-updates by checking the current version against the latest available version. Random POST strings are generated for testing purposes.
+The Configuration Manager in WhatWaf is responsible for setting up and managing all aspects of configuration required for running web application firewall detection. It initializes settings, configures request headers, manages target URLs, handles version checking and auto-updating, and prepares the environment for scanning. The main flow involves setting up the environment, configuring the request, fetching the content, and producing the results.
 
-### Configuration Manager
-The Configuration Manager is responsible for handling the application's settings, target URLs, request headers, timeouts, and auto-update features. It ensures that the application is properly configured before running scans and manages updates to keep the tool current.
+### Target Configuration
+This component handles the configuration of the target URL and request parameters. It sets up the initial target and ensures that the tool knows where to send requests.
 - **Related Classes/Methods**: `WhatWaf.lib.settings`
 
-### Get Page
-The Get Page component retrieves the content of a web page. This function is responsible for making HTTP requests and handling responses. It uses configured request headers and handles potential connection errors.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
+### Request Header Configuration
+This component configures the headers of HTTP requests, including user-agent, cookies, and other relevant headers. It ensures that the requests sent by WhatWaf appear legitimate and can bypass certain WAF configurations.
+- **Related Classes/Methods**: `WhatWaf.lib.settings:configure_request_headers`
 
-### Configure Request Headers
-The Configure Request Headers component configures the headers of HTTP requests. This function sets user-agent, cookies, and other relevant headers to mimic a real browser and avoid detection.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
+### Version Management
+This component is responsible for checking the current version of WhatWaf and automatically updating it to the latest version. It ensures that the tool has the most up-to-date detection capabilities.
+- **Related Classes/Methods**: `WhatWaf.lib.settings:check_version`, `WhatWaf.lib.settings:auto_update`
 
-### Produce Results
-The Produce Results component formats and outputs the results of the web application firewall detection process. It takes the fingerprint and other scan data to generate a report.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
+### Connection Testing
+This component tests the connection to the target web server to ensure that the tool can reach the target before starting the scan. It verifies that the target is accessible and responsive.
+- **Related Classes/Methods**: `WhatWaf.lib.settings:test_target_connection`
 
-### Create Fingerprint
-The Create Fingerprint component creates a fingerprint of the target web server, which is used to identify the server and its configuration. This involves sending requests and analyzing the responses to determine the server type and version.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
+### Result Handling
+This component formats and outputs the results of the web application firewall analysis. It handles different output formats and reporting, providing the user with clear and actionable information.
+- **Related Classes/Methods**: `WhatWaf.lib.settings:produce_results`
 
-### Check Version
-The Check Version component checks the current version of WhatWaf against the latest available version. It retrieves version information from a remote source and compares it with the local version.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
+### Page Retrieval
+This component retrieves the content of a web page. It is responsible for making HTTP requests and handling responses, fetching the HTML content of the target URL.
+- **Related Classes/Methods**: `WhatWaf.lib.settings:get_page`
 
-### Auto Update
-The Auto Update component automatically updates the WhatWaf application to the latest version. It checks for a new version and downloads/installs it if available.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
+### Cache Management
+This component checks the URL against cached results to avoid redundant requests and displays cached results if available. It improves efficiency by reusing previous scan results.
+- **Related Classes/Methods**: `WhatWaf.lib.settings:check_url_against_cached`, `WhatWaf.lib.settings:display_cached`
 
-### Test Target Connection
-The Test Target Connection component tests the connection to the target web server to ensure it is reachable. This function sends a simple request to the target and checks for a successful response.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
-
-### Check URL Against Cached
-The Check URL Against Cached component checks if the URL has been cached. This function determines if the content for a given URL is already stored in the cache.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
-
-### Display Cached
-The Display Cached component displays the cached content of the URL. If the URL is cached, this function retrieves and displays the stored content.
-- **Related Classes/Methods**: `WhatWaf.lib.settings`
+### Random Data Generation
+This component generates a random string for use in POST requests. This is used for fuzzing or testing purposes, creating unpredictable data for WAF evasion.
+- **Related Classes/Methods**: `WhatWaf.lib.settings:generate_random_post_string`
