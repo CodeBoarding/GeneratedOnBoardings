@@ -3,55 +3,36 @@ graph LR
     DetectionQueue["DetectionQueue"]
     get_response["get_response"]
     threader["threader"]
-    threaded_get_response_helper["threaded_get_response_helper"]
     threaded_get_response["threaded_get_response"]
-    detection_main["detection_main"]
-    get_page["get_page"]
-    DetectionQueue -- "manages" --> get_response
-    DetectionQueue -- "manages" --> threader
-    DetectionQueue -- "uses" --> threaded_get_response_helper
-    DetectionQueue -- "uses" --> threaded_get_response
-    detection_main -- "orchestrates" --> DetectionQueue
-    get_response -- "fetches content" --> get_page
-    threaded_get_response -- "uses" --> get_page
-    threaded_get_response_helper -- "calls" --> threaded_get_response
+    threaded_get_response_helper["threaded_get_response_helper"]
+    DetectionQueue -- "Manages requests" --> get_response
+    DetectionQueue -- "Initializes threads" --> threader
+    DetectionQueue -- "Executes detection in threads" --> threaded_get_response
+    threaded_get_response -- "Wraps helper function" --> threaded_get_response_helper
+    threader -- "Performs detection" --> threaded_get_response_helper
+    threaded_get_response_helper -- "Retrieves response" --> get_response
 ```
 
 ## Component Details
 
-The Request Handler component orchestrates the WAF detection process by managing a queue of HTTP requests, dispatching them to threads for concurrent execution, and analyzing the responses to identify potential Web Application Firewalls (WAFs). It initializes the detection process, configures requests based on provided payloads, and manages the concurrent execution of these requests to efficiently analyze the target URL. The component aggregates the responses and determines if a WAF is present based on the analysis of the HTTP responses.
+The Request Handler component is responsible for managing and executing HTTP requests to a target server. It utilizes a thread pool to handle concurrent requests, improving efficiency. The core functionality involves retrieving responses from the server, managing a queue of requests, and providing helper functions for interacting with the target. This component is crucial for gathering data used in WAF detection.
 
 ### DetectionQueue
-The DetectionQueue component manages a queue of HTTP requests, distributing them across multiple threads for concurrent processing. It's responsible for creating and managing threads, assigning tasks to them, and collecting the responses. This component enhances efficiency by allowing multiple requests to be processed simultaneously.
-- **Related Classes/Methods**: `WhatWaf.content.DetectionQueue.DetectionQueue`, `WhatWaf.content.DetectionQueue:get_response`, `WhatWaf.content.DetectionQueue:threader`, `WhatWaf.content.DetectionQueue:threaded_get_response_helper`, `WhatWaf.content.DetectionQueue:threaded_get_response`
-- **Source Files**: `WhatWaf/content/DetectionQueue.py`
+The DetectionQueue class manages a queue of URLs to be scanned and uses a thread pool to concurrently retrieve HTTP responses. It orchestrates the process of sending requests, receiving responses, and handling any exceptions that may occur during the process. The queue ensures that requests are processed in an orderly manner, while the thread pool allows for efficient utilization of system resources.
+- **Related Classes/Methods**: `WhatWaf.content.DetectionQueue`
 
 ### get_response
-The `get_response` component is responsible for retrieving the HTTP response for a given request. It utilizes the `get_page` function to fetch the content from the target URL and then processes the response to identify potential WAFs based on the response headers and content.
+The `get_response` method is responsible for sending an HTTP request to a specified URL and retrieving the response. It handles setting up the request, sending it to the server, and processing the response. This method is a fundamental part of the request handling process, as it directly interacts with the target server.
 - **Related Classes/Methods**: `WhatWaf.content.DetectionQueue:get_response`
-- **Source Files**: `WhatWaf/content/DetectionQueue.py`
 
 ### threader
-The `threader` component manages the creation and execution of threads for concurrent HTTP request processing. It initializes a pool of threads and assigns them the task of fetching and processing HTTP responses, enabling parallel execution of requests to improve performance.
+The `threader` method initializes and starts a pool of threads. Each thread is responsible for executing the `threaded_get_response` method, which retrieves HTTP responses and performs detection tasks. This method manages the concurrent execution of requests, improving the overall speed of the scanning process.
 - **Related Classes/Methods**: `WhatWaf.content.DetectionQueue:threader`
-- **Source Files**: `WhatWaf/content/DetectionQueue.py`
-
-### threaded_get_response_helper
-The `threaded_get_response_helper` component serves as a helper function executed by each thread. It calls the `threaded_get_response` function to retrieve the HTTP response within the thread's context and then processes the response to identify potential WAFs.
-- **Related Classes/Methods**: `WhatWaf.content.DetectionQueue:threaded_get_response_helper`
-- **Source Files**: `WhatWaf/content/DetectionQueue.py`
 
 ### threaded_get_response
-The `threaded_get_response` component fetches the HTTP response within a thread. It calls the `get_page` function to retrieve the content from the target URL and handles any exceptions that may occur during the process. This component ensures that each thread can independently fetch and process responses.
+The `threaded_get_response` method serves as a wrapper for the `threaded_get_response_helper` method. It handles any exceptions that may occur during the execution of the helper method. This ensures that the program does not crash if an error occurs during the request handling process.
 - **Related Classes/Methods**: `WhatWaf.content.DetectionQueue:threaded_get_response`
-- **Source Files**: `WhatWaf/content/DetectionQueue.py`
 
-### detection_main
-The `detection_main` component is the main function that orchestrates the entire WAF detection process. It initializes the `DetectionQueue`, configures the requests based on the provided payloads, and starts the detection process. This component serves as the entry point for the WAF detection functionality.
-- **Related Classes/Methods**: `WhatWaf.content:detection_main`
-- **Source Files**: `WhatWaf/content.py`
-
-### get_page
-The `get_page` component is responsible for fetching the content of a given URL. It uses a library like `requests` to send the HTTP request and retrieve the response. This component handles the actual network communication to retrieve the content from the target URL.
-- **Related Classes/Methods**: `WhatWaf.lib.settings:get_page`
-- **Source Files**: `WhatWaf/lib/settings.py`
+### threaded_get_response_helper
+The `threaded_get_response_helper` method is the core function executed by each thread in the thread pool. It retrieves a URL from the queue, sends an HTTP request to the URL, retrieves the response, and performs detection tasks on the response. This method is the workhorse of the request handling process, as it directly interacts with the target server and performs the necessary analysis.
+- **Related Classes/Methods**: `WhatWaf.content.DetectionQueue:threaded_get_response_helper`

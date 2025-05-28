@@ -1,35 +1,25 @@
 ```mermaid
 graph LR
-    FirewallFound["FirewallFound"]
     create_identifier["create_identifier"]
     request_issue_creation["request_issue_creation"]
     request_firewall_issue_creation["request_firewall_issue_creation"]
-    FirewallFound -- "creates" --> create_identifier
-    FirewallFound -- "uses" --> request_issue_creation
-    FirewallFound -- "uses" --> request_firewall_issue_creation
-    create_identifier -- "is used by" --> request_firewall_issue_creation
+    create_identifier -- "Creates an identifier for a firewall" --> request_firewall_issue_creation
+    request_issue_creation -- "Requests the creation of a generic issue" --> request_firewall_issue_creation
+    request_firewall_issue_creation -- "Requests the creation of a firewall-specific issue" --> create_identifier
 ```
 
 ## Component Details
 
-The Firewall Identifier component is responsible for detecting and reporting web application firewalls (WAFs). It involves identifying firewalls, creating unique identifiers for them, and requesting the creation of issues to track and manage the detected firewalls. The core functionality revolves around the `FirewallFound` class, which encapsulates the logic for creating identifiers and requesting issue creation.
-
-### FirewallFound
-Represents a detected firewall. It encapsulates the information about the firewall and provides methods for creating identifiers and requesting issue creation. It serves as a central point for managing firewall detections and reporting them.
-- **Related Classes/Methods**: `WhatWaf.lib.firewall_found.FirewallFound`, `WhatWaf.lib.firewall_found.FirewallFound.create_identifier`, `WhatWaf.lib.firewall_found.FirewallFound.request_issue_creation`, `WhatWaf.lib.firewall_found.FirewallFound.request_firewall_issue_creation`
-- **Source Files**: `WhatWaf/lib/firewall_found.py`
+The Firewall Identifier component is responsible for detecting Web Application Firewalls (WAFs) by analyzing HTTP responses and creating corresponding issues or reports. It encompasses functionalities for generating unique identifiers for detected firewalls, handling requests for creating generic issues, and specifically managing the creation of firewall-related issues. The component aims to streamline the process of identifying and reporting WAF presence, contributing to a more secure web environment.
 
 ### create_identifier
-Generates a unique identifier for a detected firewall. This identifier is used for tracking and managing firewall detections. It ensures that each detected firewall has a unique ID for reporting and analysis.
-- **Related Classes/Methods**: `WhatWaf.lib.firewall_found.FirewallFound.create_identifier`
-- **Source Files**: `WhatWaf/lib/firewall_found.py`
+This function generates a unique identifier for each detected firewall. This identifier is likely used for tracking and managing firewall instances within the system. It ensures that each identified firewall can be uniquely referenced and managed throughout the application's lifecycle.
+- **Related Classes/Methods**: `WhatWaf.lib.firewall_found:create_identifier`
 
 ### request_issue_creation
-Requests the creation of a generic issue. This could be used for reporting various findings or problems detected during the scan. It provides a way to report general issues encountered during the firewall detection process.
-- **Related Classes/Methods**: `WhatWaf.lib.firewall_found.FirewallFound.request_issue_creation`
-- **Source Files**: `WhatWaf/lib/firewall_found.py`
+This function handles requests to create generic issues. It takes issue information as input and triggers the process of creating a new issue in a tracking system or similar platform. This allows for the reporting of general problems or anomalies detected during the firewall identification process.
+- **Related Classes/Methods**: `WhatWaf.lib.firewall_found:request_issue_creation`
 
 ### request_firewall_issue_creation
-Requests the creation of a specific issue related to a detected firewall. This allows for detailed reporting and tracking of firewall-related findings. It enables the reporting of specific issues related to the detected firewall, providing more granular tracking and analysis.
-- **Related Classes/Methods**: `WhatWaf.lib.firewall_found.FirewallFound.request_firewall_issue_creation`
-- **Source Files**: `WhatWaf/lib/firewall_found.py`
+This function is specifically designed to handle requests for creating issues related to firewalls. It may include firewall-specific logic, such as predefined issue types or specialized data formatting. This ensures that firewall-related issues are properly categorized and handled within the issue tracking system.
+- **Related Classes/Methods**: `WhatWaf.lib.firewall_found:request_firewall_issue_creation`
