@@ -4,26 +4,28 @@ graph LR
     CompiledStateGraph["CompiledStateGraph"]
     Graph["Graph"]
     CompiledGraph["CompiledGraph"]
-    StateGraph -- "compiles to" --> CompiledStateGraph
-    Graph -- "compiles to" --> CompiledGraph
+    StateGraph -- "is compiled into" --> CompiledStateGraph
+    Graph -- "is compiled into" --> CompiledGraph
+    StateGraph -- "compiles into" --> CompiledStateGraph
+    Graph -- "compiles into" --> CompiledGraph
 ```
 
 ## Component Details
 
-The Graph Definition and Compilation component provides the core classes and methods for defining and compiling both stateful and stateless graphs. It enables the creation of complex workflows with nodes, edges, and conditional transitions. The compilation process optimizes the graph structure for efficient execution. The main flow involves defining the graph structure using either `StateGraph` or `Graph`, adding nodes and edges to represent the workflow, and then compiling the graph into its executable form (`CompiledStateGraph` or `CompiledGraph`).
+The Graph Definition and Compilation component is responsible for defining and compiling graph structures, including both standard graphs and stateful graphs. It provides the classes and methods necessary to define the nodes, edges, and overall flow of execution for these graphs. The compilation process optimizes the graph for performance and ensures that all dependencies are properly resolved, resulting in a runnable graph.
 
 ### StateGraph
-The `StateGraph` class is a fundamental building block for defining stateful graphs. It allows users to add nodes, edges, and conditional edges, and compile the graph into a `CompiledStateGraph` for execution. It manages the state transitions within the graph, making it suitable for workflows that require maintaining and updating state.
+The `StateGraph` class is responsible for defining the structure of a stateful graph. It allows adding nodes, edges, conditional edges, and sequences of nodes. It also handles the schema definition for the graph's state. It serves as a blueprint for creating stateful graphs with defined states and transitions.
 - **Related Classes/Methods**: `langgraph.libs.langgraph.langgraph.graph.state.StateGraph`
 
 ### CompiledStateGraph
-The `CompiledStateGraph` class represents a compiled stateful graph, ready for execution. It provides methods for attaching nodes, edges, and branches, as well as retrieving input and output schemas. It is the executable form of a `StateGraph`, optimized for efficient traversal and execution of stateful workflows.
+The `CompiledStateGraph` class represents the compiled version of a `StateGraph`. It is responsible for attaching nodes and edges to the compiled graph, as well as providing methods for getting the input and output schemas. It takes the structure defined in `StateGraph` and creates an executable graph, ready for execution.
 - **Related Classes/Methods**: `langgraph.libs.langgraph.langgraph.graph.state.CompiledStateGraph`
 
 ### Graph
-The `Graph` class is used to define stateless graphs. It allows users to add nodes, edges, set entry/conditional/finish points, and compile the graph into a `CompiledGraph` for execution. It represents a stateless graph structure, suitable for workflows that do not require maintaining state across transitions.
+The `Graph` class is responsible for defining the structure of a graph. It allows adding nodes, edges, conditional edges. It also sets entry point, conditional entry point and finish point. It serves as a blueprint for creating graphs with defined nodes and transitions.
 - **Related Classes/Methods**: `langgraph.libs.langgraph.langgraph.graph.graph.Graph`
 
 ### CompiledGraph
-The `CompiledGraph` class represents a compiled graph, ready for execution. It provides methods for attaching nodes, edges, and branches. It is the executable form of a `Graph`, optimized for efficient traversal and execution of stateless workflows.
+The `CompiledGraph` class represents the compiled version of a `Graph`. It is responsible for attaching nodes and edges to the compiled graph. It takes the structure defined in `Graph` and creates an executable graph, ready for execution.
 - **Related Classes/Methods**: `langgraph.libs.langgraph.langgraph.graph.graph.CompiledGraph`
