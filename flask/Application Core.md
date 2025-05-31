@@ -1,60 +1,47 @@
 ```mermaid
 graph LR
-    Flask_App_Instance["Flask App Instance"]
-    WSGI_Application["WSGI Application"]
-    Request_Dispatcher["Request Dispatcher"]
-    Request_Preprocessor["Request Preprocessor"]
-    URL_Dispatcher["URL Dispatcher"]
-    Response_Maker["Response Maker"]
-    Response_Processor["Response Processor"]
-    Request_Finalizer["Request Finalizer"]
-    Exception_Handler["Exception Handler"]
-    WSGI_Application -- "delegates to" --> Request_Dispatcher
-    Request_Dispatcher -- "calls" --> Request_Preprocessor
-    Request_Dispatcher -- "calls" --> URL_Dispatcher
-    Request_Dispatcher -- "calls" --> Response_Maker
-    Request_Dispatcher -- "calls" --> Response_Processor
-    Request_Dispatcher -- "calls" --> Request_Finalizer
-    Request_Dispatcher -- "calls" --> Exception_Handler
-    Flask_App_Instance -- "creates" --> WSGI_Application
+    Flask_Application["Flask Application"]
+    Request_Handling["Request Handling"]
+    Exception_Handling["Exception Handling"]
+    Response_Management["Response Management"]
+    Context_Management["Context Management"]
+    URL_Generation["URL Generation"]
+    Flask_Application -- "handles requests through" --> Request_Handling
+    Flask_Application -- "handles exceptions through" --> Exception_Handling
+    Flask_Application -- "manages responses through" --> Response_Management
+    Flask_Application -- "manages contexts through" --> Context_Management
+    Flask_Application -- "generates URLs through" --> URL_Generation
+    Request_Handling -- "dispatches requests to" --> Flask_Application
+    Exception_Handling -- "handles exceptions in" --> Request_Handling
+    Response_Management -- "creates responses in" --> Request_Handling
+    Context_Management -- "manages contexts for" --> Request_Handling
 ```
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20codeboarding@gmail.com-lightgrey?style=flat-square)](mailto:codeboarding@gmail.com)
 
 ## Component Details
 
-The Flask application core manages the lifecycle of a web request from the moment it's received by the WSGI server until a response is sent back to the client. It initializes the application, sets up the application and request contexts, dispatches the request to the appropriate view function based on the URL, handles any exceptions that occur during processing, and ensures that resources are properly cleaned up after the request is complete. The core orchestrates the interaction between various components like request preprocessors, view functions, response processors, and exception handlers to deliver a complete web application experience.
+The Flask Application Core manages the lifecycle of a Flask application, handling incoming HTTP requests, routing them to appropriate view functions, managing exceptions, and generating responses. It acts as the central point for request processing and response generation, utilizing contexts to store application and request-specific data. The core orchestrates request handling, exception management, response creation, and URL generation to provide a cohesive application experience.
 
-### Flask App Instance
-The central Flask application object. It's responsible for initializing the application, loading configuration, registering extensions, and acting as the central point for request handling. It holds the WSGI application callable and manages the application context.
-- **Related Classes/Methods**: `flask.src.flask.app.Flask`
+### Flask Application
+The core Flask application instance. It initializes the application, sets up the WSGI environment, and serves as the entry point for handling requests. It also holds the configuration and manages the application lifecycle.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:__init__` (226:279), `flask.src.flask.app.Flask:run` (546:667), `flask.src.flask.app.Flask:wsgi_app` (1479:1527), `flask.src.flask.app.Flask:__call__` (1529:1536)
 
-### WSGI Application
-The WSGI application callable that receives requests from the WSGI server. It sets up the request and application contexts and then delegates the actual request handling to the `full_dispatch_request` method.
-- **Related Classes/Methods**: `flask.src.flask.app.Flask:wsgi_app`, `flask.src.flask.app.Flask:__call__`
+### Request Handling
+This component is responsible for managing the lifecycle of an incoming HTTP request. It preprocesses the request, dispatches it to the appropriate view function based on the URL routing, and then finalizes the response before sending it back to the client.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:preprocess_request` (1271:1296), `flask.src.flask.app.Flask:dispatch_request` (879:902), `flask.src.flask.app.Flask:full_dispatch_request` (904:920), `flask.src.flask.app.Flask:finalize_request` (922:951), `flask.src.flask.app.Flask:process_response` (1298:1324)
 
-### Request Dispatcher
-The core of the request handling process. It preprocesses the request, dispatches it to the view function, and finalizes the request by processing the response. It also handles exceptions that occur during request processing.
-- **Related Classes/Methods**: `flask.src.flask.app.Flask:full_dispatch_request`
+### Exception Handling
+This component deals with exceptions that occur during request processing. It provides mechanisms to handle HTTP exceptions, user-defined exceptions, and general exceptions, ensuring that errors are gracefully handled and appropriate responses are returned to the client.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:handle_http_exception` (744:777), `flask.src.flask.app.Flask:handle_user_exception` (779:809), `flask.src.flask.app.Flask:handle_exception` (811:862)
 
-### Request Preprocessor
-Functions that are executed before the request is handled by the view function. They can modify the request or return a response directly, short-circuiting the normal request handling.
-- **Related Classes/Methods**: `flask.src.flask.app.Flask:preprocess_request`
+### Response Management
+This component is responsible for creating and managing HTTP responses. It handles the creation of response objects, including setting headers, content type, and status codes. It also manages default options responses and serving static files.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:make_response` (1129:1269)
 
-### URL Dispatcher
-Matches the URL to an endpoint and calls the associated view function. It handles routing and view function execution.
-- **Related Classes/Methods**: `flask.src.flask.app.Flask:dispatch_request`
+### Context Management
+This component manages the application and request contexts. It provides a way to store and access application-specific and request-specific data during the request processing lifecycle. This includes managing the teardown of these contexts after the request is complete.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:app_context` (1386:1405), `flask.src.flask.app.Flask:request_context` (1407:1421), `flask.src.flask.app.Flask:test_request_context` (1423:1477), `flask.src.flask.app.Flask:do_teardown_request` (1326:1358), `flask.src.flask.app.Flask:do_teardown_appcontext` (1360:1384)
 
-### Response Maker
-Converts the return value of a view function into a Response object. It handles different return types and ensures a consistent response format.
-- **Related Classes/Methods**: `flask.src.flask.app.Flask:make_response`
-
-### Response Processor
-Functions that are executed after the view function has returned a response. They can modify the response before it is sent to the client.
-- **Related Classes/Methods**: `flask.src.flask.app.Flask:process_response`
-
-### Request Finalizer
-Performs actions after the request has been handled, such as closing database connections or cleaning up resources.
-- **Related Classes/Methods**: `flask.src.flask.app.Flask:finalize_request`
-
-### Exception Handler
-Handles exceptions that occur during request processing. It can be customized to provide specific error handling logic for user exceptions and HTTP exceptions.
-- **Related Classes/Methods**: `flask.src.flask.app.Flask:handle_exception`, `flask.src.flask.app.Flask:handle_user_exception`, `flask.src.flask.app.Flask:handle_http_exception`
+### URL Generation
+This component is responsible for generating URLs for routes based on the endpoint and any provided parameters. It allows developers to dynamically create URLs, ensuring that they are correctly formatted and point to the intended resources.
+- **Related Classes/Methods**: `flask.src.flask.app.Flask:url_for` (1003:1127)
