@@ -1,42 +1,18 @@
 ```mermaid
 graph LR
-    pre_process_docx["pre_process_docx"]
-    _pre_process_math["_pre_process_math"]
-    _convert_omath_to_latex["_convert_omath_to_latex"]
-    _replace_equations["_replace_equations"]
-    omml_load_string["omml.load_string"]
-    oMath2Latex["oMath2Latex"]
-    pre_process_docx -- "calls" --> _pre_process_math
-    _pre_process_math -- "calls" --> _convert_omath_to_latex
-    _pre_process_math -- "calls" --> _replace_equations
-    _convert_omath_to_latex -- "uses" --> omml_load_string
-    _convert_omath_to_latex -- "uses" --> oMath2Latex
+    docx_pre_process["docx.pre_process"]
+    docx_math_omml["docx.math.omml"]
+    docx_pre_process -- "calls" --> docx_math_omml
 ```
 
 ## Component Details
 
-The DOCX Preprocessor component focuses on converting mathematical equations from OMML (Office Math Markup Language) to LaTeX format within DOCX files. This ensures accurate representation of mathematical content when converting DOCX files to Markdown. The process involves identifying OMML equations, parsing them, converting them to LaTeX, and replacing the original equations with their LaTeX equivalents in the DOCX content. The core functionality relies on the `omml` module for parsing OMML and the `oMath2Latex` class for the actual conversion to LaTeX.
+The DOCX Preprocessor component focuses on converting mathematical equations from DOCX files into LaTeX format to ensure proper rendering in Markdown. It identifies and replaces OMML equations within the document content, utilizing the `docx.math.omml` module for parsing and converting these equations. The main flow involves loading the DOCX content, identifying OMath tags, converting them to LaTeX, and replacing the original OMath tags with their LaTeX equivalents.
 
-### pre_process_docx
-This function serves as the entry point for preprocessing DOCX files, specifically handling mathematical equations. It orchestrates the process of identifying and converting OMML equations to LaTeX format within the DOCX content.
-- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:pre_process_docx`
+### docx.pre_process
+This module orchestrates the preprocessing of DOCX files, specifically targeting mathematical equations. It encompasses functions for converting OMath to LaTeX and replacing equations within the document's content.
+- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:_convert_omath_to_latex` (33:49), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:_get_omath_tag_replacement` (52:71), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:_replace_equations` (74:96), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:_pre_process_math` (99:115), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:pre_process_docx` (118:156)
 
-### _pre_process_math
-This function preprocesses the mathematical equations within a DOCX file. It converts OMath to LaTeX and replaces the original equations with the converted LaTeX.
-- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:_pre_process_math`
-
-### _convert_omath_to_latex
-This function converts Office Math (OMML) equations to LaTeX format. It uses the `omml.load_string` function to parse the OMML string and then converts it to LaTeX.
-- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:_convert_omath_to_latex`
-
-### _replace_equations
-This function replaces the original equations in the DOCX content with their LaTeX equivalents.
-- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.pre_process:_replace_equations`
-
-### omml.load_string
-This function loads and parses an OMML string.
-- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml:load_string`
-
-### oMath2Latex
-This class converts an OMML object to LaTeX format. It contains methods for handling different OMML tags and converting them to their LaTeX equivalents.
-- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex`
+### docx.math.omml
+This module is responsible for parsing and converting Office Math Markup Language (OMML) equations into LaTeX format. It provides functionalities to load OMML from strings or files, process OMML tags, and convert specific OMML elements to their LaTeX equivalents.
+- **Related Classes/Methods**: `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml:load` (43:46), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml:load_string` (49:52), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.Tag2Method:process_children_list` (86:101), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.Tag2Method:process_children_dict` (103:110), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.Tag2Method:process_children` (112:121), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.Pr:__init__` (136:138), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.Pr:__unicode__` (143:144), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:__init__` (179:180), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:__unicode__` (185:186), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:process_unknow` (188:194), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_acc` (200:208), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_bar` (210:217), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_d` (219:232), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_sub` (240:242), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_sup` (244:246), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_f` (248:255), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_func` (257:263), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_fname` (265:279), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_groupchr` (281:288), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_rad` (290:300), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_eqarr` (302:310), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_limlow` (312:321), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_limupp` (323:328), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_lim` (330:334), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_m` (336:346), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_mr` (348:354), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_nary` (356:367), `markitdown.packages.markitdown.src.markitdown.converter_utils.docx.math.omml.oMath2Latex:do_r` (369:379)
