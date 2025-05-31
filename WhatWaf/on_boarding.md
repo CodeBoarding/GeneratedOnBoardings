@@ -1,39 +1,72 @@
 ```mermaid
 graph LR
-    Core_Configuration_and_Execution["Core Configuration and Execution"]
-    Payload_Injection_and_Tampering["Payload Injection and Tampering"]
-    Detection_and_Response_Analysis["Detection and Response Analysis"]
-    WAF_Identification_and_Reporting["WAF Identification and Reporting"]
-    Core_Configuration_and_Execution -- "uses" --> Core_Configuration_and_Execution
-    Core_Configuration_and_Execution -- "uses" --> Core_Configuration_and_Execution
-    Payload_Injection_and_Tampering -- "uses" --> Core_Configuration_and_Execution
-    Payload_Injection_and_Tampering -- "uses" --> Payload_Injection_and_Tampering
-    Payload_Injection_and_Tampering -- "uses" --> Detection_and_Response_Analysis
-    Detection_and_Response_Analysis -- "uses" --> Detection_and_Response_Analysis
-    WAF_Identification_and_Reporting -- "uses" --> Core_Configuration_and_Execution
-    WAF_Identification_and_Reporting -- "uses" --> WAF_Identification_and_Reporting
-    click Core_Configuration_and_Execution href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Core Configuration and Execution.md" "Details"
-    click Payload_Injection_and_Tampering href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Payload Injection and Tampering.md" "Details"
-    click Detection_and_Response_Analysis href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Detection and Response Analysis.md" "Details"
-    click WAF_Identification_and_Reporting href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/WAF Identification and Reporting.md" "Details"
+    Core_Engine["Core Engine"]
+    Configuration_Manager["Configuration Manager"]
+    Payload_Manager["Payload Manager"]
+    Request_Response_Handler["Request-Response Handler"]
+    Firewall_Analyzer["Firewall Analyzer"]
+    Output_Handler["Output Handler"]
+    Payload_and_URL_Database_Manager["Payload and URL Database Manager"]
+    Resource_Miner["Resource Miner"]
+    Core_Engine -- "Initializes and orchestrates" --> Configuration_Manager
+    Core_Engine -- "Initializes and orchestrates" --> Payload_Manager
+    Core_Engine -- "Initializes and orchestrates" --> Request_Response_Handler
+    Core_Engine -- "Initializes and orchestrates" --> Firewall_Analyzer
+    Core_Engine -- "Initializes and orchestrates" --> Output_Handler
+    Configuration_Manager -- "Provides configuration to" --> Payload_Manager
+    Configuration_Manager -- "Provides configuration to" --> Request_Response_Handler
+    Configuration_Manager -- "Provides configuration to" --> Firewall_Analyzer
+    Configuration_Manager -- "Provides configuration to" --> Resource_Miner
+    Payload_Manager -- "Generates and tampers payloads for" --> Request_Response_Handler
+    Request_Response_Handler -- "Sends requests and receives responses for" --> Firewall_Analyzer
+    Output_Handler -- "Formats output for" --> Core_Engine
+    Output_Handler -- "Formats output for" --> Firewall_Analyzer
+    Output_Handler -- "Formats output for" --> Resource_Miner
+    Payload_and_URL_Database_Manager -- "Persists and retrieves data for" --> Payload_Manager
+    Resource_Miner -- "Utilizes for resource-intensive tasks" --> Core_Engine
+    click Core_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Core Engine.md" "Details"
+    click Configuration_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Configuration Manager.md" "Details"
+    click Payload_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Payload Manager.md" "Details"
+    click Request_Response_Handler href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Request-Response Handler.md" "Details"
+    click Firewall_Analyzer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Firewall Analyzer.md" "Details"
+    click Output_Handler href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Output Handler.md" "Details"
+    click Payload_and_URL_Database_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Payload and URL Database Manager.md" "Details"
+    click Resource_Miner href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/WhatWaf/Resource Miner.md" "Details"
 ```
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20Demo-CodeBoarding-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Demo](https://img.shields.io/badge/Try%20Demo-CodeBoarding-blue?style=flat-square)](https://www.codeboarding.org/demo)
 
 ## Component Details
 
-WhatWaf is a tool designed to detect web application firewalls (WAFs). It operates by sending various payloads to a target URL and analyzing the responses to identify the presence and type of WAF. The tool manages configurations, injects payloads, handles responses, utilizes tampering techniques to bypass WAFs, identifies firewalls, formats output, loads scripts, integrates with a miner module, and provides a main execution trigger.
+WhatWaf is a web application firewall (WAF) detection tool. Its primary function is to identify the presence and type of WAFs protecting a given website. It achieves this by sending a series of crafted HTTP requests, analyzing the responses, and applying various detection techniques. The tool leverages a database of known WAF signatures and employs payload tampering methods to bypass potential firewall rules. The core flow involves configuring the target URL and scan settings, generating and encoding payloads, sending requests, analyzing responses for firewall signatures, and reporting the findings.
 
-### Core Configuration and Execution
-This component manages the application's core settings, including target URLs, request headers, and update mechanisms. It also serves as the main entry point for triggering the WAF detection process, orchestrating the execution of other components and formatting output messages. It acts as a central hub for configuration data and overall control flow.
-- **Related Classes/Methods**: `WhatWaf.lib.settings` (full file reference), `WhatWaf.trigger.main:main` (61:564), `WhatWaf.lib.formatter` (full file reference)
+### Core Engine
+The Core Engine orchestrates the entire WAF detection process. It initializes settings, manages the request/response cycle, and coordinates with other components like the Payload Manager, Firewall Analyzer, and Output Handler. It's the central processing unit that drives the application's functionality.
+- **Related Classes/Methods**: `WhatWaf.trigger.main` (61:564), `WhatWaf.content` (1:1000)
 
-### Payload Injection and Tampering
-This component focuses on generating, modifying, and injecting payloads into the target URL. It utilizes a library of tampering modules to bypass WAFs and orchestrates the main detection logic. It interacts with the Detection and Response Handling component to send requests and analyze responses.
-- **Related Classes/Methods**: `WhatWaf.content` (full file reference), `WhatWaf.content:encode` (220:225), `WhatWaf.content:get_working_tampers` (238:330), `WhatWaf.content:dictify_output` (364:392), `WhatWaf.content:detection_main` (395:729), `WhatWaf.content.tampers` (full file reference)
+### Configuration Manager
+The Configuration Manager handles all aspects of application configuration, including loading settings from files or command-line arguments, managing request headers, handling target URLs, caching configurations, and managing updates. It provides a centralized point of access for all configuration parameters used throughout the application.
+- **Related Classes/Methods**: `WhatWaf.lib.settings` (1:1000), `WhatWaf.lib.cmd` (1:1000)
 
-### Detection and Response Analysis
-This component manages the queue of detections, handles threading for efficient response retrieval, and assists in the detection process. It loads scripts defining payloads and techniques and analyzes responses to identify WAFs. It interacts with the Payload Injection and Tampering component to send requests and the WAF Identification and Reporting component to report findings.
-- **Related Classes/Methods**: `WhatWaf.content.DetectionQueue` (58:217), `WhatWaf.content.DetectionQueue:get_response` (82:142), `WhatWaf.content.DetectionQueue:threader` (144:149), `WhatWaf.content.DetectionQueue:threaded_get_response_helper` (151:190), `WhatWaf.content.DetectionQueue:threaded_get_response` (192:217), `WhatWaf.content.ScriptQueue:load_scripts` (38:55)
+### Payload Manager
+The Payload Manager is responsible for generating, encoding, and tampering with payloads used to probe for WAFs. It integrates with the Script Queue to load and manage scripts for dynamic payload generation and utilizes various tampering techniques to bypass firewall rules. It also interacts with the Payload and URL Database Manager to persist and reuse payloads.
+- **Related Classes/Methods**: `WhatWaf.content.tampers` (1:1000), `WhatWaf.content.ScriptQueue` (23:55)
 
-### WAF Identification and Reporting
-This component is responsible for identifying firewalls based on the analysis of responses and reporting detected issues. It creates identifiers for firewalls and requests the creation of firewall-related issues. It uses the Core Configuration and Execution component to access settings and the Output and Logging component to format output messages.
-- **Related Classes/Methods**: `WhatWaf.lib.firewall_found` (full file reference), `WhatWaf.lib.firewall_found:create_identifier` (18:24), `WhatWaf.lib.firewall_found:request_issue_creation` (101:164), `WhatWaf.lib.firewall_found:request_firewall_issue_creation` (167:235)
+### Request-Response Handler
+The Request/Response Handler manages the sending of HTTP requests and the processing of responses. It handles threading for concurrent requests, manages the detection queue, and passes responses to the Firewall Analyzer for detection. It ensures efficient and reliable communication with the target web server.
+- **Related Classes/Methods**: `WhatWaf.content.DetectionQueue` (58:217)
+
+### Firewall Analyzer
+The Firewall Analyzer is responsible for analyzing HTTP responses to detect the presence and type of WAFs. It uses a database of known WAF signatures and applies various detection techniques to identify firewalls based on response patterns. It also generates issue reports when a firewall is detected.
+- **Related Classes/Methods**: `WhatWaf.lib.firewall_found` (1:1000)
+
+### Output Handler
+The Output Handler is responsible for formatting and presenting the results of the WAF detection process. It handles different output formats (e.g., console, file) and provides a consistent and user-friendly way to view the findings. It formats messages, including info, debug, warnings, errors, payloads, success messages, and discoveries.
+- **Related Classes/Methods**: `WhatWaf.lib.formatter` (1:1000)
+
+### Payload and URL Database Manager
+The Payload and URL Database Manager handles interactions with the database, specifically inserting payloads and URLs. It provides persistence for payloads and target URLs, allowing the application to track and reuse them across multiple scans. This component ensures data is stored and retrieved efficiently.
+- **Related Classes/Methods**: `WhatWaf.lib.database` (1:1000)
+
+### Resource Miner
+The Resource Miner component integrates with external miners for resource-intensive tasks. It handles miner installation and execution, offloading computationally expensive tasks from the main application thread. This allows the application to perform complex operations without impacting performance.
+- **Related Classes/Methods**: `WhatWaf.lib.miner.Miner` (28:147)
