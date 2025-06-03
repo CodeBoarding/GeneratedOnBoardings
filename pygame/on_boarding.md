@@ -1,73 +1,106 @@
 ```mermaid
 graph LR
-    Initialization_Configuration["Initialization & Configuration"]
-    Display_Management["Display Management"]
-    Event_Management["Event Management"]
-    Rendering_Engine["Rendering Engine"]
-    Game_Object_Management["Game Object Management"]
-    Font_Text_Support["Font & Text Support"]
-    Multimedia_Integration["Multimedia Integration"]
-    Input_Device_Handling["Input Device Handling"]
-    Timing_and_Scheduling["Timing and Scheduling"]
-    Display_Management -- "depends on" --> Initialization_Configuration
-    Rendering_Engine -- "uses" --> Display_Management
-    Game_Object_Management -- "uses" --> Rendering_Engine
-    Font_Text_Support -- "uses" --> Rendering_Engine
-    Multimedia_Integration -- "uses" --> Initialization_Configuration
-    Input_Device_Handling -- "uses" --> Initialization_Configuration
-    Event_Management -- "uses" --> Initialization_Configuration
-    Timing_and_Scheduling -- "uses" --> Initialization_Configuration
-    Font_Text_Support -- "uses" --> Display_Management
-    Game_Object_Management -- "uses" --> Display_Management
-    Multimedia_Integration -- "uses" --> Display_Management
-    Input_Device_Handling -- "uses" --> Display_Management
-    click Initialization_Configuration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Initialization & Configuration.md" "Details"
-    click Display_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Display Management.md" "Details"
-    click Event_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Event Management.md" "Details"
-    click Rendering_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Rendering Engine.md" "Details"
-    click Game_Object_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Game Object Management.md" "Details"
-    click Font_Text_Support href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Font & Text Support.md" "Details"
-    click Multimedia_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Multimedia Integration.md" "Details"
-    click Input_Device_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Input Device Handling.md" "Details"
-    click Timing_and_Scheduling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Timing and Scheduling.md" "Details"
+    Build_and_Configuration_Manager["Build and Configuration Manager"]
+    Graphics_and_Display_Manager["Graphics and Display Manager"]
+    Input_Event_Manager["Input Event Manager"]
+    Multimedia_Interface["Multimedia Interface"]
+    Sprite_and_Object_Manager["Sprite and Object Manager"]
+    Threading_Utilities["Threading Utilities"]
+    Module_Management["Module Management"]
+    Build_and_Configuration_Manager -- "uses common definitions" --> Build_and_Configuration_Manager
+    Build_and_Configuration_Manager -- "uses for DLL definition dumping" --> Build_and_Configuration_Manager
+    Build_and_Configuration_Manager -- "installs dependencies" --> Build_and_Configuration_Manager
+    Multimedia_Interface -- "implements camera using" --> Multimedia_Interface
+    Sprite_and_Object_Manager -- "uses for drawing sprites" --> Graphics_and_Display_Manager
+    Graphics_and_Display_Manager -- "can use for font rendering" --> Graphics_and_Display_Manager
+    click Build_and_Configuration_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Build and Configuration Manager.md" "Details"
+    click Graphics_and_Display_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Graphics and Display Manager.md" "Details"
+    click Input_Event_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Input Event Manager.md" "Details"
+    click Multimedia_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Multimedia Interface.md" "Details"
+    click Sprite_and_Object_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Sprite and Object Manager.md" "Details"
+    click Threading_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Threading Utilities.md" "Details"
+    click Module_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pygame/Module Management.md" "Details"
 ```
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20codeboarding@gmail.com-lightgrey?style=flat-square)](mailto:codeboarding@gmail.com)
 
 ## Component Details
 
-Pygame is a 2D game development library that provides a wide range of functionalities for creating games and multimedia applications. The library is structured into several core components that handle different aspects of game development, such as initialization, display management, event handling, drawing, sprite management, font rendering, multimedia support, input devices, and time management. These components work together to provide a comprehensive set of tools for game developers.
+Pygame is a Python library designed for making games and multimedia applications. The architecture revolves around managing various aspects such as build configurations, graphics rendering, input events, multimedia devices, and sprite management. The core flow involves initializing the display, handling user input, updating game state, rendering graphics, and managing audio. The library provides a set of modules that abstract the complexities of low-level programming, allowing developers to focus on game logic and design.
 
-### Initialization & Configuration
-This component is responsible for setting up the Pygame environment. It handles platform-specific configurations, manages dependencies, and ensures that all necessary resources are available before the game starts. It acts as the foundation upon which all other components rely.
-- **Related Classes/Methods**: `pygame.buildconfig.config`, `pygame.buildconfig.config_win`, `pygame.buildconfig.config_msys2`, `pygame.buildconfig.config_unix`, `pygame.buildconfig.config_darwin`, `pygame.buildconfig.download_win_prebuilt`, `pygame.buildconfig.download_msys2_prebuilt`, `pygame.buildconfig.vstools`, `pygame.buildconfig.setup_win_common`
+### Build and Configuration Manager
+This component is responsible for managing the build process of Pygame, including dependency management, platform-specific configurations, and downloading prebuilt binaries. It handles configurations for Windows, macOS, and Unix systems, and integrates with Visual Studio tools for DLL definition dumping. It also manages documentation bundling, ensuring that the library is properly built and configured for different environments.
 
-### Display Management
-This component manages the game window and screen. It handles tasks such as creating the display, setting the display mode, and managing the screen surface. It provides the interface between the game and the user's monitor.
-- **Related Classes/Methods**: `pygame.display`
 
-### Event Management
-This component handles user input and system events. It manages the event queue, processes events such as keyboard presses and mouse movements, and allows the game to respond to user interactions. It is crucial for creating interactive games.
-- **Related Classes/Methods**: `pygame.src_py.fastevent`, `pygame.event`
+**Related Classes/Methods**:
 
-### Rendering Engine
-This component provides the tools for drawing shapes, images, and text on the screen. It includes functionalities for basic drawing, antialiasing, and pixel manipulation. It is responsible for creating the visual elements of the game.
-- **Related Classes/Methods**: `pygame.src_py.draw_py`, `pygame.draw`
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/config.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.config` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/config_win.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.config_win` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/config_darwin.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.config_darwin` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/config_unix.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.config_unix` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/config_msys2.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.config_msys2` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/download_win_prebuilt.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.download_win_prebuilt` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/download_msys2_prebuilt.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.download_msys2_prebuilt` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/bundle_docs.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.bundle_docs` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/setup_win_common.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.setup_win_common` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/vstools.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.vstools` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/buildconfig/macdependencies/install_mac_deps.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`buildconfig.macdependencies.install_mac_deps` (full file reference)</a>
 
-### Game Object Management
-This component provides classes for managing game objects (sprites) and groups of sprites. It includes functionalities for collision detection, layering, and rendering, simplifying the management of game entities. It provides a structured way to organize and interact with game objects.
-- **Related Classes/Methods**: `pygame.src_py.sprite`, `pygame.sprite`
 
-### Font & Text Support
-This component provides classes for rendering text using system fonts and FreeType fonts. It includes functionalities for font loading, glyph rendering, and text surface creation, enabling the display of text in the game. It allows developers to easily add text to their games.
-- **Related Classes/Methods**: `pygame.src_py.sysfont`, `pygame.src_py.ftfont`, `pygame.font`
+### Graphics and Display Manager
+This component manages the graphical aspects of Pygame, including drawing shapes, lines, and images on surfaces. It provides functionalities for antialiasing, clipping, and surface manipulation. It also handles font rendering using FreeType and system fonts, enabling the display of text in various styles and sizes. This component is central to rendering the game or application visuals.
 
-### Multimedia Integration
-This component provides functionalities for handling images, sounds, and music. It includes functions for loading, decoding, and playing multimedia files, enriching the game experience. It allows developers to add audio and visual elements to their games.
-- **Related Classes/Methods**: `pygame.image`, `pygame.mixer`, `pygame.music`
 
-### Input Device Handling
-This component provides classes for capturing images from cameras and interacting with MIDI devices. It supports different camera backends and MIDI message handling, expanding the input possibilities for the game. It allows developers to add alternative input methods to their games.
-- **Related Classes/Methods**: `pygame.src_py.camera`, `pygame.src_py._camera_opencv`, `pygame.src_py._camera_vidcapture`, `pygame.src_py.midi`
+**Related Classes/Methods**:
 
-### Timing and Scheduling
-This component provides functions for managing time, including getting the current time, delaying execution, and setting timers. It allows for controlling the game's pace and timing events. It is essential for creating smooth and consistent gameplay.
-- **Related Classes/Methods**: `pygame.time`
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/draw_py.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py.draw_py` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/ftfont.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py.ftfont` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/sysfont.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py.sysfont` (full file reference)</a>
+
+
+### Input Event Manager
+This component handles user input events, such as keyboard presses, mouse movements, and joystick input. It uses a fast event queue for efficient event processing and manages mouse cursor functionalities. By efficiently capturing and processing input events, this component allows the application to respond to user interactions in real-time.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/fastevent.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py.fastevent` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/cursors.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py.cursors` (full file reference)</a>
+
+
+### Multimedia Interface
+This component provides interfaces for camera devices and MIDI input/output. It includes platform-specific implementations for camera access using OpenCV and VideoCapture, and classes for handling MIDI devices. This allows Pygame applications to integrate multimedia functionalities such as video capture and MIDI control.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/camera.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py.camera` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/_camera_opencv.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py._camera_opencv` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/_camera_vidcapture.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py._camera_vidcapture` (full file reference)</a>
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/midi.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py.midi` (full file reference)</a>
+
+
+### Sprite and Object Manager
+This component manages sprites and sprite groups, providing functionalities for collision detection, layering, and drawing. It relies on the Graphics and Display Manager for drawing sprites. This component simplifies the management of game objects and their interactions, making it easier to create complex game environments.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/sprite.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py.sprite` (full file reference)</a>
+
+
+### Threading Utilities
+This component offers threading utilities for parallel processing, enabling concurrent execution of tasks. This allows developers to improve performance by distributing workload across multiple cores.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/threads/__init__.py#LNone-LNone" target="_blank" rel="noopener noreferrer">`src_py.threads.__init__` (full file reference)</a>
+
+
+### Module Management
+This component handles missing modules, issuing warnings when they are accessed, ensuring that the system gracefully handles optional dependencies. This prevents the application from crashing when optional modules are not available.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pygame/pygame/blob/master/src_py/__init__.py#L53-L84" target="_blank" rel="noopener noreferrer">`src_py.__init__.MissingModule` (53:84)</a>
