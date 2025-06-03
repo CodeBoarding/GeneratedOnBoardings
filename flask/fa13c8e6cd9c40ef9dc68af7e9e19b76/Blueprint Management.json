@@ -1,0 +1,83 @@
+{
+  "description": "The Blueprint Management component in Flask provides a way to organize a Flask application into reusable parts. The core idea is to define blueprints, which are essentially mini-applications that can be registered to a main application. This allows for modularity and separation of concerns, making it easier to manage large applications. The Blueprint class is used to create these blueprints, and the BlueprintSetupState class manages the state during the registration process. URL rules are added to the blueprint, and when the blueprint is registered, these rules are merged into the main application's URL map. This system promotes code reusability and maintainability by allowing developers to define sets of routes, templates, and static files that can be easily reused across different parts of the application or in multiple applications.",
+  "components": [
+    {
+      "name": "Blueprint",
+      "description": "The Blueprint class is a central component for creating reusable sets of views and other components within a Flask application. It allows you to define routes, templates, static files, and other application-related logic in a modular way, which can then be registered with the main application.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "src.flask.sansio.blueprints.Blueprint",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sansio/blueprints.py",
+          "reference_start_line": 119,
+          "reference_end_line": 632
+        },
+        {
+          "qualified_name": "src.flask.sansio.blueprints.Blueprint.register",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sansio/blueprints.py",
+          "reference_start_line": 273,
+          "reference_end_line": 377
+        },
+        {
+          "qualified_name": "src.flask.sansio.blueprints.Blueprint.add_url_rule",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sansio/blueprints.py",
+          "reference_start_line": 413,
+          "reference_end_line": 441
+        },
+        {
+          "qualified_name": "src.flask.sansio.blueprints.Blueprint.record",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sansio/blueprints.py",
+          "reference_start_line": 224,
+          "reference_end_line": 230
+        },
+        {
+          "qualified_name": "src.flask.sansio.blueprints.Blueprint.record_once",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sansio/blueprints.py",
+          "reference_start_line": 233,
+          "reference_end_line": 244
+        },
+        {
+          "qualified_name": "src.flask.sansio.blueprints.Blueprint.make_setup_state",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sansio/blueprints.py",
+          "reference_start_line": 246,
+          "reference_end_line": 253
+        },
+        {
+          "qualified_name": "src.flask.sansio.blueprints.Blueprint._merge_blueprint_funcs",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sansio/blueprints.py",
+          "reference_start_line": 379,
+          "reference_end_line": 410
+        }
+      ]
+    },
+    {
+      "name": "BlueprintSetupState",
+      "description": "The BlueprintSetupState class is responsible for managing the state of a Blueprint during the registration process with a Flask application. It provides methods for adding URL rules and performing other setup tasks.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "src.flask.sansio.blueprints.BlueprintSetupState",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sansio/blueprints.py",
+          "reference_start_line": 34,
+          "reference_end_line": 116
+        },
+        {
+          "qualified_name": "src.flask.sansio.blueprints.BlueprintSetupState.add_url_rule",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sansio/blueprints.py",
+          "reference_start_line": 87,
+          "reference_end_line": 116
+        }
+      ]
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "creates",
+      "src_name": "Blueprint",
+      "dst_name": "BlueprintSetupState"
+    },
+    {
+      "relation": "uses",
+      "src_name": "Blueprint",
+      "dst_name": "BlueprintSetupState"
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "description": "The session management component in Flask provides a mechanism to maintain user-specific data across multiple requests. It revolves around the `SessionInterface` which defines the contract for session implementations. `SecureCookieSessionInterface` is a concrete implementation that uses signed cookies for storing session data securely on the client-side. The `SecureCookieSession` class represents the actual session data stored in the cookie, while `NullSession` is used when sessions are disabled or invalid. The process involves opening a session at the beginning of a request, loading data from the cookie (if it exists), and saving the session data back to the cookie at the end of the request. The `itsdangerous` library is used for cryptographic signing of the cookie to prevent tampering.",
+  "components": [
+    {
+      "name": "SessionInterface",
+      "description": "The SessionInterface defines the interface for implementing session management in Flask. It provides methods for creating null sessions, opening sessions, and saving sessions. It also defines methods for managing cookie parameters such as name, domain, path, and security settings.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 114,
+          "reference_end_line": 284
+        },
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface.get_cookie_name",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 185,
+          "reference_end_line": 187
+        },
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface.get_cookie_domain",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 189,
+          "reference_end_line": 199
+        },
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface.get_cookie_path",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 201,
+          "reference_end_line": 207
+        },
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface.get_cookie_secure",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 216,
+          "reference_end_line": 220
+        },
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface.get_cookie_partitioned",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 229,
+          "reference_end_line": 235
+        },
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface.get_cookie_samesite",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 222,
+          "reference_end_line": 227
+        },
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface.get_cookie_httponly",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 209,
+          "reference_end_line": 214
+        },
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface.should_set_cookie",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 247,
+          "reference_end_line": 261
+        },
+        {
+          "qualified_name": "src.flask.sessions.SessionInterface.get_expiration_time",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 237,
+          "reference_end_line": 245
+        }
+      ]
+    },
+    {
+      "name": "SecureCookieSessionInterface",
+      "description": "The SecureCookieSessionInterface implements session management using secure cookies. It uses a signing serializer to protect the session data from tampering. It interacts with the `SessionInterface` by implementing its methods and uses `itsdangerous` library for secure serialization. It opens and saves sessions using secure cookies.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "src.flask.sessions.SecureCookieSessionInterface",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 298,
+          "reference_end_line": 399
+        },
+        {
+          "qualified_name": "src.flask.sessions.SecureCookieSessionInterface.open_session",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 337,
+          "reference_end_line": 349
+        },
+        {
+          "qualified_name": "src.flask.sessions.SecureCookieSessionInterface.save_session",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 351,
+          "reference_end_line": 399
+        },
+        {
+          "qualified_name": "src.flask.sessions.SecureCookieSessionInterface.get_signing_serializer",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 317,
+          "reference_end_line": 335
+        }
+      ]
+    },
+    {
+      "name": "NullSession",
+      "description": "The NullSession class represents a session that does not store any data. It is used when the session is disabled or when the session data is invalid. It inherits from dict.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "src.flask.sessions.NullSession",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 97,
+          "reference_end_line": 111
+        }
+      ]
+    },
+    {
+      "name": "SecureCookieSession",
+      "description": "The SecureCookieSession class represents a session that is stored in a secure cookie. It inherits from the SessionMixin class and provides methods for accessing and modifying the session data.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "src.flask.sessions.SecureCookieSession",
+          "reference_file": "/mnt/e/StartUp/repos/flask/src/flask/sessions.py",
+          "reference_start_line": 52,
+          "reference_end_line": 94
+        }
+      ]
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "implements",
+      "src_name": "SecureCookieSessionInterface",
+      "dst_name": "SessionInterface"
+    },
+    {
+      "relation": "creates",
+      "src_name": "SecureCookieSessionInterface",
+      "dst_name": "SecureCookieSession"
+    },
+    {
+      "relation": "inherits from",
+      "src_name": "SecureCookieSession",
+      "dst_name": "SessionMixin"
+    },
+    {
+      "relation": "creates",
+      "src_name": "SessionInterface",
+      "dst_name": "NullSession"
+    }
+  ]
+}
