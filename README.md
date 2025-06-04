@@ -205,3 +205,8 @@ Interested in onboarding diagrams for your own project? Try it out at [CodeBoard
     <td></td>
   </tr>
 </table>
+
+
+## FAQ:
+
+N/A
