@@ -1,66 +1,173 @@
 ```mermaid
 graph LR
-    Session_Manager["Session Manager"]
-    Request_Builder["Request Builder"]
-    Transport_Adapter["Transport Adapter"]
-    Response_Handler["Response Handler"]
-    Authentication_Manager["Authentication Manager"]
-    Cookie_Jar["Cookie Jar"]
-    Utilities["Utilities"]
-    High_Level_API["High-Level API"]
-    High_Level_API -- "manages" --> Session_Manager
-    Session_Manager -- "prepares" --> Request_Builder
-    Request_Builder -- "sends via" --> Transport_Adapter
-    Transport_Adapter -- "handles" --> Response_Handler
-    Request_Builder -- "authenticates" --> Authentication_Manager
-    Session_Manager -- "manages" --> Cookie_Jar
-    Request_Builder -- "provides utilities for" --> Utilities
-    Session_Manager -- "provides utilities for" --> Utilities
-    High_Level_API -- "uses" --> Session_Manager
-    Session_Manager -- "uses" --> Transport_Adapter
-    click Session_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Session Manager.md" "Details"
-    click Request_Builder href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Request Builder.md" "Details"
-    click Transport_Adapter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Transport Adapter.md" "Details"
-    click Response_Handler href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Response Handler.md" "Details"
-    click Authentication_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Authentication Manager.md" "Details"
-    click Cookie_Jar href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Cookie Jar.md" "Details"
-    click Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Utilities.md" "Details"
-    click High_Level_API href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/High-Level API.md" "Details"
+    Request_Management["Request Management"]
+    Response_Handling["Response Handling"]
+    Session_Management["Session Management"]
+    Public_API["Public API"]
+    Authentication["Authentication"]
+    HTTP_Transport["HTTP Transport"]
+    Cookie_Management["Cookie Management"]
+    Core_Utilities["Core Utilities"]
+    Error_Handling["Error Handling"]
+    Public_API -- "initiates requests via" --> Session_Management
+    Session_Management -- "prepares requests using" --> Request_Management
+    Session_Management -- "sends requests via" --> HTTP_Transport
+    Session_Management -- "handles redirects using" --> Session_Management
+    Session_Management -- "manages cookies with" --> Cookie_Management
+    Session_Management -- "applies authentication via" --> Authentication
+    Session_Management -- "utilizes" --> Core_Utilities
+    Request_Management -- "prepares data with" --> Core_Utilities
+    Request_Management -- "integrates authentication from" --> Authentication
+    Request_Management -- "integrates cookies from" --> Cookie_Management
+    Response_Handling -- "processes responses from" --> Core_Utilities
+    Response_Handling -- "extracts cookies using" --> Cookie_Management
+    Response_Handling -- "raises" --> Error_Handling
+    HTTP_Transport -- "builds responses for" --> Response_Handling
+    HTTP_Transport -- "utilizes" --> Core_Utilities
+    HTTP_Transport -- "applies authentication via" --> Authentication
+    HTTP_Transport -- "handles cookies with" --> Cookie_Management
+    HTTP_Transport -- "raises" --> Error_Handling
+    Authentication -- "uses" --> Core_Utilities
+    Cookie_Management -- "uses" --> Core_Utilities
+    Cookie_Management -- "raises" --> Error_Handling
+    Request_Management -- "raises" --> Error_Handling
+    Core_Utilities -- "uses" --> Error_Handling
+    Core_Utilities -- "uses" --> Cookie_Management
+    click Request_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Request Management.md" "Details"
+    click Response_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Response Handling.md" "Details"
+    click Session_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Session Management.md" "Details"
+    click Public_API href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Public API.md" "Details"
+    click Authentication href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Authentication.md" "Details"
+    click HTTP_Transport href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/HTTP Transport.md" "Details"
+    click Cookie_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Cookie Management.md" "Details"
+    click Core_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Core Utilities.md" "Details"
+    click Error_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/requests/Error Handling.md" "Details"
 ```
-[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20codeboarding@gmail.com-lightgrey?style=flat-square)](mailto:codeboarding@gmail.com)
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-The Requests library provides a high-level interface for making HTTP requests, abstracting away the complexities of underlying network protocols. It offers a session management system for handling persistent connections and cookies, request preparation for constructing and encoding requests, transport adapters for sending requests over different protocols, and response handling for parsing and processing server responses. The library also includes authentication mechanisms and utility functions to support various aspects of the request-response cycle.
+The `requests` library provides a high-level, user-friendly interface for making HTTP requests. The main flow involves the `Public API` initiating requests, which are then managed by `Session Management` for persistence and pooling. `Session Management` prepares requests using `Request Management`, which handles encoding, headers, authentication, and cookies. The prepared request is then sent via `HTTP Transport`, which performs the low-level communication. The received response is processed by `Response Handling`, which decodes content and extracts information. Various `Core Utilities` support these components, while `Authentication`, `Cookie Management`, and `Error Handling` provide specialized functionalities throughout the request-response lifecycle.
 
-### Session Manager
-The Session Manager component is responsible for creating and managing sessions, which handle connection pooling, cookie persistence, and default configurations for requests. It acts as a central point for configuring and maintaining HTTP sessions, allowing users to make multiple requests with consistent settings. It also manages the lifecycle of adapters.
-- **Related Classes/Methods**: `requests.src.requests.sessions.Session:__init__` (390:449), `requests.src.requests.sessions.Session:__exit__` (454:455), `requests.src.requests.sessions.Session:request` (500:591), `requests.src.requests.sessions.Session:get_adapter` (781:792)
+### Request Management
+Encompasses the creation, preparation, and encoding of HTTP requests, transforming user-defined requests into a `PreparedRequest` for sending, including parameter encoding, file uploads, header setup, and integrating authentication and cookie data. It also manages hooks.
 
-### Request Builder
-The Request Builder component constructs and prepares HTTP requests. It takes parameters like URL, headers, and data, and transforms them into a PreparedRequest object, ready for transmission. It handles URL encoding, header construction, and body serialization, ensuring that the request is properly formatted before being sent.
-- **Related Classes/Methods**: `requests.src.requests.models.Request:__init__` (258:290), `requests.src.requests.models.Request:prepare` (295:310), `requests.src.requests.models.PreparedRequest:__init__` (334:349), `requests.src.requests.models.PreparedRequest:prepare` (351:377)
 
-### Transport Adapter
-The Transport Adapter component is responsible for sending PreparedRequest objects using different transport protocols. It manages connection pooling, proxy settings, and SSL/TLS verification. It adapts the request to the underlying network transport, providing a consistent interface for sending requests regardless of the protocol used.
-- **Related Classes/Methods**: `requests.src.requests.adapters.HTTPAdapter:__init__` (202:222), `requests.src.requests.adapters.HTTPAdapter:send` (613:719), `requests.src.requests.adapters.HTTPAdapter:get_connection` (495:534)
+**Related Classes/Methods**:
 
-### Response Handler
-The Response Handler component processes the HTTP response received from the server. It handles content decoding, error checking, and provides access to the response body, headers, and cookies. It transforms the raw response into a usable Response object, making it easy to access and manipulate the response data.
-- **Related Classes/Methods**: `requests.src.requests.models.Response:__init__` (658:703), `requests.src.requests.models.Response:content` (891:907), `requests.src.requests.models.Response:json` (947:980), `requests.src.requests.models.Response:raise_for_status` (999:1026)
+- <a href="https://github.com/psf/requests/blob/master/src/requests/models.py#L230-L310" target="_blank" rel="noopener noreferrer">`requests.src.requests.models.Request` (230:310)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/models.py#L313-L637" target="_blank" rel="noopener noreferrer">`requests.src.requests.models.PreparedRequest` (313:637)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/models.py#L84-L203" target="_blank" rel="noopener noreferrer">`requests.src.requests.models.RequestEncodingMixin` (84:203)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/models.py#L206-L227" target="_blank" rel="noopener noreferrer">`requests.src.requests.models.RequestHooksMixin` (206:227)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/hooks.py#L15-L16" target="_blank" rel="noopener noreferrer">`requests.src.requests.hooks.default_hooks` (15:16)</a>
 
-### Authentication Manager
-The Authentication Manager component provides authentication mechanisms for requests. It handles different authentication schemes like Basic and Digest authentication, adding the necessary headers to authenticate requests with the server. It ensures that requests are properly authenticated before being sent, providing a secure way to access protected resources.
-- **Related Classes/Methods**: `requests.src.requests.auth.HTTPBasicAuth:__call__` (94:96), `requests.src.requests.auth.HTTPDigestAuth:__call__` (285:303)
 
-### Cookie Jar
-The Cookie Jar component manages cookies for the session. It extracts, stores, and sends cookies with requests, maintaining session state across multiple requests. It provides a RequestsCookieJar to store and manage cookies, ensuring that cookies are properly handled throughout the session.
-- **Related Classes/Methods**: `requests.src.requests.cookies.RequestsCookieJar:set` (206:223), `requests.src.requests.cookies.RequestsCookieJar:get` (194:204), `requests.src.requests.cookies:extract_cookies_to_jar` (124:137)
+### Response Handling
+Manages the processing of HTTP responses received from the server, providing methods to access content (text, bytes, JSON), status codes, headers, and handling content decoding and error checking.
 
-### Utilities
-The Utilities component provides helper functions for various tasks within the library. It includes functions for URL manipulation, header parsing, proxy resolution, and encoding detection. These utilities support the other components in performing their tasks, providing essential functionality for the library as a whole.
-- **Related Classes/Methods**: `requests.src.requests.utils:get_encoding_from_headers` (542:564), `requests.src.requests.utils:requote_uri` (663:682), `requests.src.requests.utils:default_headers` (903:914)
 
-### High-Level API
-The High-Level API component provides a simplified interface for making HTTP requests. It offers convenience functions for common HTTP methods like GET, POST, PUT, and DELETE, abstracting away the complexities of session management and request preparation. It serves as the primary entry point for users of the library, making it easy to send HTTP requests with minimal code.
-- **Related Classes/Methods**: `requests.src.requests.api:request` (14:59), `requests.src.requests.api:get` (62:73), `requests.src.requests.api:post` (103:115)
+**Related Classes/Methods**:
+
+- <a href="https://github.com/psf/requests/blob/master/src/requests/models.py#L640-L1039" target="_blank" rel="noopener noreferrer">`requests.src.requests.models.Response` (640:1039)</a>
+
+
+### Session Management
+Provides persistent HTTP sessions, enabling features like cookie persistence, connection pooling, and redirect handling across multiple requests. It orchestrates the entire request-response lifecycle, preparing requests, sending them via adapters, and resolving redirects.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/psf/requests/blob/master/src/requests/sessions.py#L356-L816" target="_blank" rel="noopener noreferrer">`requests.src.requests.sessions.Session` (356:816)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/sessions.py#L106-L353" target="_blank" rel="noopener noreferrer">`requests.src.requests.sessions.SessionRedirectMixin` (106:353)</a>
+
+
+### Public API
+Offers the high-level, user-friendly functions for making common HTTP requests (GET, POST, PUT, DELETE, etc.), serving as the primary entry point for most users by abstracting away underlying session and request preparation details.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/psf/requests/blob/master/src/requests/api.py#L14-L59" target="_blank" rel="noopener noreferrer">`requests.src.requests.api.request` (14:59)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/api.py#L62-L73" target="_blank" rel="noopener noreferrer">`requests.src.requests.api.get` (62:73)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/api.py#L76-L85" target="_blank" rel="noopener noreferrer">`requests.src.requests.api.options` (76:85)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/api.py#L88-L100" target="_blank" rel="noopener noreferrer">`requests.src.requests.api.head` (88:100)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/api.py#L103-L115" target="_blank" rel="noopener noreferrer">`requests.src.requests.api.post` (103:115)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/api.py#L118-L130" target="_blank" rel="noopener noreferrer">`requests.src.requests.api.put` (118:130)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/api.py#L133-L145" target="_blank" rel="noopener noreferrer">`requests.src.requests.api.patch` (133:145)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/api.py#L148-L157" target="_blank" rel="noopener noreferrer">`requests.src.requests.api.delete` (148:157)</a>
+
+
+### Authentication
+Provides various HTTP authentication schemes (e.g., Basic, Digest, Proxy), containing the logic for generating and applying the necessary authentication headers to outgoing requests.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/psf/requests/blob/master/src/requests/auth.py#L69-L73" target="_blank" rel="noopener noreferrer">`requests.src.requests.auth.AuthBase` (69:73)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/auth.py#L76-L96" target="_blank" rel="noopener noreferrer">`requests.src.requests.auth.HTTPBasicAuth` (76:96)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/auth.py#L99-L104" target="_blank" rel="noopener noreferrer">`requests.src.requests.auth.HTTPProxyAuth` (99:104)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/auth.py#L107-L314" target="_blank" rel="noopener noreferrer">`requests.src.requests.auth.HTTPDigestAuth` (107:314)</a>
+
+
+### HTTP Transport
+Responsible for the actual low-level communication with HTTP servers, managing connection pools, handling proxy settings, verifying SSL certificates, and building the final response object from raw network data.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/psf/requests/blob/master/src/requests/adapters.py#L167-L719" target="_blank" rel="noopener noreferrer">`requests.src.requests.adapters.HTTPAdapter` (167:719)</a>
+
+
+### Cookie Management
+Handles HTTP cookies, including parsing, storing, and attaching them to requests, ensuring cookies are correctly managed across redirects and subsequent requests within a session.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/psf/requests/blob/master/src/requests/cookies.py#L176-L437" target="_blank" rel="noopener noreferrer">`requests.src.requests.cookies.RequestsCookieJar` (176:437)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/cookies.py#L521-L539" target="_blank" rel="noopener noreferrer">`requests.src.requests.cookies.cookiejar_from_dict` (521:539)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/cookies.py#L140-L148" target="_blank" rel="noopener noreferrer">`requests.src.requests.cookies.get_cookie_header` (140:148)</a>
+
+
+### Core Utilities
+Provides a collection of general-purpose utility functions and data structures used across various parts of the requests library, including header parsing, URL manipulation, proxy resolution, case-insensitive dictionaries, and HTTP status code mappings.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/psf/requests/blob/master/src/requests/utils.py#L1-L800" target="_blank" rel="noopener noreferrer">`requests.src.requests.utils` (1:800)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/_internal_utils.py#L1-L20" target="_blank" rel="noopener noreferrer">`requests.src.requests._internal_utils` (1:20)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/structures.py#L13-L80" target="_blank" rel="noopener noreferrer">`requests.src.requests.structures.CaseInsensitiveDict` (13:80)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/status_codes.py#L10-L200" target="_blank" rel="noopener noreferrer">`requests.src.requests.status_codes.codes` (10:200)</a>
+
+
+### Error Handling
+Defines and manages the custom exception types used throughout the requests library, providing specific error information for various network, HTTP, and parsing failures, allowing for robust error management.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L12-L24" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.RequestException` (12:24)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L55-L56" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.HTTPError` (55:56)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L59-L60" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.ConnectionError` (59:60)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L63-L64" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.ProxyError` (63:64)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L67-L68" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.SSLError` (67:68)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L71-L77" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.Timeout` (71:77)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L91-L92" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.URLRequired` (91:92)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L95-L96" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.TooManyRedirects` (95:96)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L99-L100" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.MissingSchema` (99:100)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L103-L104" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.InvalidSchema` (103:104)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L107-L108" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.InvalidURL` (107:108)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L111-L112" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.InvalidHeader` (111:112)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L119-L120" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.ChunkedEncodingError` (119:120)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L123-L124" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.ContentDecodingError` (123:124)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L127-L128" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.StreamConsumedError` (127:128)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L131-L132" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.RetryError` (131:132)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L135-L136" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.UnrewindableBodyError` (135:136)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L27-L28" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.InvalidJSONError` (27:28)</a>
+- <a href="https://github.com/psf/requests/blob/master/src/requests/exceptions.py#L31-L52" target="_blank" rel="noopener noreferrer">`requests.src.requests.exceptions.JSONDecodeError` (31:52)</a>
+
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
