@@ -1,66 +1,184 @@
 ```mermaid
 graph LR
-    Application_Core["Application Core"]
-    Widget_System["Widget System"]
-    Layout_Composition["Layout & Composition"]
-    Styling_Engine["Styling Engine"]
-    Event_Management["Event Management"]
-    Terminal_Driver["Terminal Driver"]
-    Content_Rendering["Content Rendering"]
-    Asynchronous_Operations["Asynchronous Operations"]
-    Application_Core -- "manages" --> Widget_System
-    Widget_System -- "uses" --> Layout_Composition
-    Styling_Engine -- "applies styles to" --> Widget_System
-    Application_Core -- "dispatches" --> Event_Management
-    Application_Core -- "interacts with" --> Terminal_Driver
-    Content_Rendering -- "renders" --> Widget_System
-    Application_Core -- "manages" --> Asynchronous_Operations
-    Application_Core -- "manages" --> Styling_Engine
-    Widget_System -- "uses" --> Content_Rendering
-    Widget_System -- "uses" --> Event_Management
-    Styling_Engine -- "uses" --> Event_Management
-    click Application_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Application Core.md" "Details"
-    click Widget_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Widget System.md" "Details"
-    click Layout_Composition href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Layout & Composition.md" "Details"
-    click Styling_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Styling Engine.md" "Details"
-    click Event_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Event Management.md" "Details"
-    click Terminal_Driver href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Terminal Driver.md" "Details"
-    click Content_Rendering href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Content Rendering.md" "Details"
-    click Asynchronous_Operations href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Asynchronous Operations.md" "Details"
+    Application_Lifecycle["Application Lifecycle"]
+    UI_Base_Elements["UI Base Elements"]
+    Terminal_Interaction["Terminal Interaction"]
+    Event_Handling["Event Handling"]
+    Styling_System["Styling System"]
+    Rendering_Engine["Rendering Engine"]
+    Layout_Engine["Layout Engine"]
+    Core_Utilities["Core Utilities"]
+    Text_Document_Model["Text Document Model"]
+    Widgets["Widgets"]
+    Application_Lifecycle -- "orchestrates" --> UI_Base_Elements
+    Application_Lifecycle -- "interacts with" --> Terminal_Interaction
+    Application_Lifecycle -- "dispatches messages via" --> Event_Handling
+    Application_Lifecycle -- "uses" --> Styling_System
+    Application_Lifecycle -- "uses" --> Core_Utilities
+    UI_Base_Elements -- "extended by" --> Widgets
+    UI_Base_Elements -- "receives events from" --> Event_Handling
+    UI_Base_Elements -- "styled by" --> Styling_System
+    UI_Base_Elements -- "arranged by" --> Layout_Engine
+    UI_Base_Elements -- "uses" --> Core_Utilities
+    Terminal_Interaction -- "generates events for" --> Event_Handling
+    Terminal_Interaction -- "receives output from" --> Rendering_Engine
+    Terminal_Interaction -- "uses" --> Core_Utilities
+    Event_Handling -- "dispatches to" --> UI_Base_Elements
+    Event_Handling -- "uses" --> Core_Utilities
+    Styling_System -- "applies to" --> UI_Base_Elements
+    Styling_System -- "provides styles to" --> Rendering_Engine
+    Styling_System -- "uses" --> Core_Utilities
+    Rendering_Engine -- "uses" --> Styling_System
+    Rendering_Engine -- "uses" --> Layout_Engine
+    Rendering_Engine -- "uses" --> Core_Utilities
+    Layout_Engine -- "arranges" --> UI_Base_Elements
+    Layout_Engine -- "uses" --> Core_Utilities
+    Core_Utilities -- "provides services to" --> Application_Lifecycle
+    Core_Utilities -- "provides services to" --> UI_Base_Elements
+    Core_Utilities -- "provides services to" --> Terminal_Interaction
+    Core_Utilities -- "provides services to" --> Event_Handling
+    Core_Utilities -- "provides services to" --> Styling_System
+    Core_Utilities -- "provides services to" --> Rendering_Engine
+    Core_Utilities -- "provides services to" --> Layout_Engine
+    Core_Utilities -- "provides services to" --> Text_Document_Model
+    Core_Utilities -- "provides services to" --> Widgets
+    Text_Document_Model -- "provides backend for" --> Widgets
+    Text_Document_Model -- "uses" --> Core_Utilities
+    Widgets -- "extends" --> UI_Base_Elements
+    Widgets -- "uses" --> Event_Handling
+    Widgets -- "uses" --> Styling_System
+    Widgets -- "uses" --> Rendering_Engine
+    Widgets -- "uses" --> Layout_Engine
+    Widgets -- "uses" --> Core_Utilities
+    Widgets -- "uses" --> Text_Document_Model
+    click Application_Lifecycle href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Application Lifecycle.md" "Details"
+    click UI_Base_Elements href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/UI Base Elements.md" "Details"
+    click Terminal_Interaction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Terminal Interaction.md" "Details"
+    click Event_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Event Handling.md" "Details"
+    click Styling_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Styling System.md" "Details"
+    click Rendering_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Rendering Engine.md" "Details"
+    click Layout_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Layout Engine.md" "Details"
+    click Core_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Core Utilities.md" "Details"
+    click Text_Document_Model href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Text Document Model.md" "Details"
+    click Widgets href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/textual/Widgets.md" "Details"
 ```
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-The Textual application framework provides a way to build rich terminal user interfaces. It encompasses core application management, a flexible widget system, layout capabilities, styling via CSS, and an event-driven architecture. The framework abstracts terminal interactions through drivers and supports asynchronous operations for responsiveness.
+The Textual framework provides a robust architecture for building rich terminal user interfaces. Its core functionality revolves around an Application Lifecycle that orchestrates UI components, handles events from terminal interactions, and renders visual elements using a sophisticated styling and layout system. Reactive data principles ensure UI updates are efficient, while a comprehensive set of widgets and utilities empower developers to create complex and interactive applications.
 
-### Application Core
-The central component responsible for managing the application lifecycle, including initialization, screen management, and event handling. It orchestrates the interaction between different components and provides the main entry point for the application.
-- **Related Classes/Methods**: `textual.src.textual.app.App`, `textual.src.textual.screen.Screen`, `textual.src.textual.dom.DOMNode`
+### Application Lifecycle
+Manages the overall application startup, shutdown, and core event processing loop, including background task management and message dispatching.
 
-### Widget System
-Provides a base class for creating interactive UI elements. Widgets can handle events, render content, and manage their own layout within a screen. It serves as the building block for creating complex user interfaces.
-- **Related Classes/Methods**: `textual.src.textual.widget.Widget`
 
-### Layout & Composition
-Manages the arrangement of widgets on the screen using different layout strategies. It provides classes for vertical, horizontal, and grid layouts, allowing developers to create flexible and responsive user interfaces. It dictates how widgets are positioned and sized within the application.
-- **Related Classes/Methods**: `textual.src.textual.layout.Layout`, `textual.src.textual.layouts.vertical.VerticalLayout`, `textual.src.textual.layouts.horizontal.HorizontalLayout`, `textual.src.textual.layouts.grid.GridLayout`
+**Related Classes/Methods**:
 
-### Styling Engine
-Handles the parsing and application of CSS styles to widgets. It includes classes for managing stylesheets, selectors, and style properties. It defines the visual appearance of the application and its components.
-- **Related Classes/Methods**: `textual.src.textual.css.stylesheet.Stylesheet`, `textual.src.textual.css.styles.Styles`, `textual.src.textual.css.parse`, `textual.src.textual.css._styles_builder`
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/app.py#L294-L4739" target="_blank" rel="noopener noreferrer">`textual.app.App` (294:4739)</a>
 
-### Event Management
-Defines the event system used for user interactions and internal application events. It includes classes for different event types such as key presses, mouse clicks, and timer events. It enables widgets to respond to user input and application state changes.
-- **Related Classes/Methods**: `textual.src.textual.events.Event`, `textual.src.textual.app.App`, `textual.src.textual.widget.Widget`
 
-### Terminal Driver
-An abstraction layer for interacting with the terminal or other output devices. It handles input and output, and manages the terminal's state. It provides a consistent interface for rendering the application across different terminal environments.
-- **Related Classes/Methods**: `textual.src.textual.driver.Driver`, `textual.src.textual.drivers.linux_driver.LinuxDriver`, `textual.src.textual.drivers.windows_driver.WindowsDriver`, `textual.src.textual.drivers.web_driver.WebDriver`
+### UI Base Elements
+Provides the foundational structure for all interactive and visual elements in the UI, managing their position in the Document Object Model (DOM) tree and basic widget functionality.
 
-### Content Rendering
-Responsible for rendering text and other visual elements on the screen. It includes classes for managing content, styles, and formatting. It translates the application's data into a visual representation on the terminal.
-- **Related Classes/Methods**: `textual.src.textual.content.Content`, `textual.src.textual.strip.Strip`, `textual.src.textual.visual.Visual`
 
-### Asynchronous Operations
-Handles background tasks and asynchronous operations. It includes classes for managing workers and executing tasks in separate threads or processes. It allows the application to perform long-running operations without blocking the main thread.
-- **Related Classes/Methods**: `textual.src.textual.worker.Worker`, `textual.src.textual.worker_manager.WorkerManager`
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/widget.py#L275-L4687" target="_blank" rel="noopener noreferrer">`textual.widget.Widget` (275:4687)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/dom.py#L136-L1844" target="_blank" rel="noopener noreferrer">`textual.dom.DOMNode` (136:1844)</a>
+
+
+### Terminal Interaction
+Manages low-level communication with the terminal, including parsing raw input sequences (keyboard, mouse) and sending control codes for output rendering across different operating systems and web environments.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/driver.py#L17-L301" target="_blank" rel="noopener noreferrer">`textual.driver.Driver` (17:301)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/drivers/windows_driver.py#L16-L137" target="_blank" rel="noopener noreferrer">`textual.drivers.windows_driver.WindowsDriver` (16:137)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/drivers/linux_driver.py#L31-L469" target="_blank" rel="noopener noreferrer">`textual.drivers.linux_driver.LinuxDriver` (31:469)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/drivers/web_driver.py#L41-L354" target="_blank" rel="noopener noreferrer">`textual.drivers.web_driver.WebDriver` (41:354)</a>
+
+
+### Event Handling
+Defines and processes various user and system events (e.g., keyboard presses, mouse clicks, window resizing), dispatching them to relevant components for action.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/message.py#L23-L158" target="_blank" rel="noopener noreferrer">`textual.message.Message` (23:158)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/events.py#L261-L309" target="_blank" rel="noopener noreferrer">`textual.events.Key` (261:309)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/events.py#L324-L561" target="_blank" rel="noopener noreferrer">`textual.events.MouseEvent` (324:561)</a>
+
+
+### Styling System
+Responsible for parsing, applying, and managing CSS rules, computed styles, and color definitions for UI elements, ensuring consistent visual presentation.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/css/stylesheet.py#L142-L731" target="_blank" rel="noopener noreferrer">`textual.css.stylesheet.Stylesheet` (142:731)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/css/styles.py#L858-L1298" target="_blank" rel="noopener noreferrer">`textual.css.styles.Styles` (858:1298)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/color.py#L137-L661" target="_blank" rel="noopener noreferrer">`textual.color.Color` (137:661)</a>
+
+
+### Rendering Engine
+Orchestrates the visual rendering pipeline, converting UI elements and content into displayable character strips and composing them for final output to the terminal.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/_compositor.py#L281-L1240" target="_blank" rel="noopener noreferrer">`textual._compositor.Compositor` (281:1240)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/visual.py#L106-L233" target="_blank" rel="noopener noreferrer">`textual.visual.Visual` (106:233)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/strip.py#L67-L735" target="_blank" rel="noopener noreferrer">`textual.strip.Strip` (67:735)</a>
+
+
+### Layout Engine
+Determines the positioning and sizing of UI elements on the screen based on various layout algorithms (e.g., horizontal, vertical, grid) and CSS properties.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/layout.py#L203-L309" target="_blank" rel="noopener noreferrer">`textual.layout.Layout` (203:309)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/layouts/horizontal.py#L15-L120" target="_blank" rel="noopener noreferrer">`textual.layouts.horizontal.HorizontalLayout` (15:120)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/layouts/vertical.py#L15-L124" target="_blank" rel="noopener noreferrer">`textual.layouts.vertical.VerticalLayout` (15:124)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/layouts/grid.py#L15-L322" target="_blank" rel="noopener noreferrer">`textual.layouts.grid.GridLayout` (15:322)</a>
+
+
+### Core Utilities
+Provides foundational helper classes and functions for common tasks such as geometric calculations, caching, timing, animation, and various internal mechanisms that support the entire framework.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/geometry.py#L317-L1116" target="_blank" rel="noopener noreferrer">`textual.geometry.Region` (317:1116)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/cache.py#L20-L207" target="_blank" rel="noopener noreferrer">`textual.cache.LRUCache` (20:207)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/timer.py#L32-L202" target="_blank" rel="noopener noreferrer">`textual.timer.Timer` (32:202)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/rlock.py#L6-L47" target="_blank" rel="noopener noreferrer">`textual.rlock.RLock` (6:47)</a>
+
+
+### Text Document Model
+The core data structures and logic for managing editable text content, including history (undo/redo), syntax awareness, and navigation within the document.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/document/_document.py#L204-L431" target="_blank" rel="noopener noreferrer">`textual.document._document.Document` (204:431)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/document/_history.py#L18-L183" target="_blank" rel="noopener noreferrer">`textual.document._history.EditHistory` (18:183)</a>
+
+
+### Widgets
+A collection of specialized UI components for displaying and interacting with various types of content, including input fields, text areas, data tables, trees, and general-purpose containers.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/widgets/_input.py#L70-L1092" target="_blank" rel="noopener noreferrer">`textual.widgets._input.Input` (70:1092)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/widgets/_text_area.py#L107-L2381" target="_blank" rel="noopener noreferrer">`textual.widgets._text_area.TextArea` (107:2381)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/widgets/_data_table.py#L259-L2785" target="_blank" rel="noopener noreferrer">`textual.widgets._data_table.DataTable` (259:2785)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/widgets/_tree.py#L516-L1598" target="_blank" rel="noopener noreferrer">`textual.widgets._tree.Tree` (516:1598)</a>
+- <a href="https://github.com/Textualize/textual/blob/master/src/textual/containers.py#L19-L29" target="_blank" rel="noopener noreferrer">`textual.containers.Container` (19:29)</a>
+
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
