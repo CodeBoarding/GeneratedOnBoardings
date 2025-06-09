@@ -1,55 +1,87 @@
 ```mermaid
 graph LR
-    gnomAD_DB["gnomAD_DB"]
-    create_table["create_table"]
-    insert_variants["insert_variants"]
-    _get_info_from_df["_get_info_from_df"]
-    get_info_from_df["get_info_from_df"]
-    query_direct["query_direct"]
-    get_info_for_interval["get_info_for_interval"]
-    get_info_from_str["get_info_from_str"]
-    gnomAD_DB -- "Uses" --> create_table
-    gnomAD_DB -- "Uses" --> insert_variants
-    gnomAD_DB -- "Uses" --> _get_info_from_df
-    gnomAD_DB -- "Uses" --> get_info_from_df
-    gnomAD_DB -- "Uses" --> query_direct
-    gnomAD_DB -- "Uses" --> get_info_for_interval
-    gnomAD_DB -- "Uses" --> get_info_from_str
-    _get_info_from_df -- "Is used by" --> insert_variants
+    DatabaseCoreManager["DatabaseCoreManager"]
+    SchemaConfigurationManager["SchemaConfigurationManager"]
+    VariantDataPreprocessor["VariantDataPreprocessor"]
+    DataIngestionService["DataIngestionService"]
+    DataQueryService["DataQueryService"]
+    ExternalResourceHandler["ExternalResourceHandler"]
+    SchemaConfigurationManager -- "initializes" --> DatabaseCoreManager
+    SchemaConfigurationManager -- "uses" --> VariantDataPreprocessor
+    DataIngestionService -- "inserts data via" --> DatabaseCoreManager
+    DataIngestionService -- "preprocesses data for" --> VariantDataPreprocessor
+    DataQueryService -- "queries data via" --> DatabaseCoreManager
+    DataQueryService -- "prepares queries with" --> VariantDataPreprocessor
 ```
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-The gnomAD database management component provides a structured way to interact with a SQLite database containing variant information. It encapsulates database connection management, schema definition, data insertion, and querying capabilities. The central class, gnomAD_DB, offers methods to create tables, insert data from DataFrames, execute direct SQL queries, and retrieve variant information based on identifiers or genomic intervals. This component streamlines database operations, ensuring data integrity and efficient access to variant data.
+This subsystem provides a comprehensive interface for managing and interacting with a SQLite database storing gnomAD variant data. It handles database initialization, connection management, data ingestion, and various querying functionalities, including data preprocessing and formatting.
 
-### gnomAD_DB
-The gnomAD_DB class is the core component responsible for managing the SQLite database connection. It provides methods for creating the database table, inserting variant data, and querying the database. It initializes the database connection and acts as the central point for all database interactions.
-- **Related Classes/Methods**: `gnomad_db.database.gnomAD_DB`
+### DatabaseCoreManager
+This component is responsible for the fundamental operations of the SQLite database, including establishing and managing connections, creating the necessary table structure, and executing direct SQL queries. It acts as the low-level interface for all database interactions.
 
-### create_table
-This component defines and creates the database table schema. It specifies the column names and data types required to store variant information, ensuring the database is structured correctly.
-- **Related Classes/Methods**: `gnomad_db.database.gnomAD_DB:create_table`
 
-### insert_variants
-This component inserts variant data from a DataFrame into the database table. It handles data type conversions and error handling during the insertion process, ensuring data integrity.
-- **Related Classes/Methods**: `gnomad_db.database.gnomAD_DB:insert_variants`
+**Related Classes/Methods**:
 
-### _get_info_from_df
-This component extracts relevant information from a DataFrame row to be inserted into the database. It parses the DataFrame row and extracts the necessary data fields for each variant, preparing the data for insertion into the database.
-- **Related Classes/Methods**: `gnomad_db.database.gnomAD_DB:_get_info_from_df`
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L42-L43" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:open_dbconn` (42:43)</a>
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L46-L61" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:create_table` (46:61)</a>
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L185-L188" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:query_direct` (185:188)</a>
 
-### get_info_from_df
-This component retrieves variant information from the database based on variant identifiers provided in a DataFrame. It queries the database to retrieve information for specific variants.
-- **Related Classes/Methods**: `gnomad_db.database.gnomAD_DB:get_info_from_df`
 
-### query_direct
-This component allows for executing direct SQL queries against the database. It provides flexibility in querying the database with custom SQL queries.
-- **Related Classes/Methods**: `gnomad_db.database.gnomAD_DB:query_direct`
+### SchemaConfigurationManager
+This component handles the loading and interpretation of the database schema and column definitions from external configuration files (e.g., YAML). It also includes logic for parsing and validating the gnomAD version to ensure compatibility with the defined schema.
 
-### get_info_for_interval
-This component retrieves variant information for a specified genomic interval. It queries the database to retrieve all variants within a given genomic region.
-- **Related Classes/Methods**: `gnomad_db.database.gnomAD_DB:get_info_for_interval`
 
-### get_info_from_str
-This component retrieves variant information based on a variant identifier string. It parses the variant identifier string and queries the database to retrieve information for that specific variant.
-- **Related Classes/Methods**: `gnomad_db.database.gnomAD_DB:get_info_from_str`
+**Related Classes/Methods**:
+
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L14-L38" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:__init__` (14:38)</a>
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L178-L182" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:_parse_gnomad_version` (178:182)</a>
+
+
+### VariantDataPreprocessor
+This component provides a set of utility functions for cleaning, sanitizing, and transforming raw variant data into a format suitable for database insertion or querying. It handles tasks like replacing missing values, converting data types, and parsing variant strings.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L95-L100" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:_sanitize_variants` (95:100)</a>
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L102-L103" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:_pack_var_args` (102:103)</a>
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L170-L176" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:_pack_from_str` (170:176)</a>
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L163-L168" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:_query_columns` (163:168)</a>
+
+
+### DataIngestionService
+This component is dedicated to the efficient and structured insertion of variant data into the gnomAD database. It ensures that incoming data conforms to the expected schema and handles the bulk insertion of records.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L63-L93" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:insert_variants` (63:93)</a>
+
+
+### DataQueryService
+This component provides comprehensive functionalities for querying and retrieving variant information from the gnomAD database. It supports various query methods, including fetching data based on DataFrames, chromosomal intervals, or string representations of variants, with optional parallel processing.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L105-L138" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:_get_info_from_df` (105:138)</a>
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L142-L159" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:get_info_from_df` (142:159)</a>
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L190-L199" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:get_info_for_interval` (190:199)</a>
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L203-L217" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:get_info_from_str` (203:217)</a>
+
+
+### ExternalResourceHandler
+This utility component is responsible for managing external resources, specifically handling the downloading and unzipping of files, which could be used for initial database population or updates.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/KalinNonchev/gnomAD_DB/blob/master/gnomad_db/database.py#L221-L225" target="_blank" rel="noopener noreferrer">`gnomad_db.database.gnomAD_DB:download_and_unzip` (221:225)</a>
+
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
