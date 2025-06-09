@@ -1,50 +1,87 @@
 ```mermaid
 graph LR
-    Client_Interface["Client Interface"]
-    Command_Abstraction["Command Abstraction"]
-    Connection_Management["Connection Management"]
-    Cluster_Support["Cluster Support"]
-    PubSub_Management["PubSub Management"]
-    Data_Handling["Data Handling"]
-    Client_Interface -- "Uses" --> Connection_Management
-    Client_Interface -- "Uses" --> Command_Abstraction
-    Client_Interface -- "Uses" --> Data_Handling
-    Cluster_Support -- "Uses" --> Connection_Management
-    Command_Abstraction -- "Uses" --> Client_Interface
-    PubSub_Management -- "Uses" --> Client_Interface
-    click Client_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/Client Interface.md" "Details"
-    click Command_Abstraction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/Command Abstraction.md" "Details"
-    click Connection_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/Connection Management.md" "Details"
-    click Cluster_Support href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/Cluster Support.md" "Details"
-    click PubSub_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/PubSub Management.md" "Details"
-    click Data_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/Data Handling.md" "Details"
+    Redis_Client_Core["Redis Client Core"]
+    Connection_Protocol_Management["Connection & Protocol Management"]
+    Command_Module_Execution["Command & Module Execution"]
+    High_Availability_Cluster_Management["High Availability & Cluster Management"]
+    Error_Handling["Error Handling"]
+    Redis_Client_Core -- "uses" --> Connection_Protocol_Management
+    Redis_Client_Core -- "executes" --> Command_Module_Execution
+    Redis_Client_Core -- "handles" --> Error_Handling
+    Connection_Protocol_Management -- "provides to" --> Redis_Client_Core
+    Connection_Protocol_Management -- "raises" --> Error_Handling
+    Command_Module_Execution -- "is executed by" --> Redis_Client_Core
+    Command_Module_Execution -- "uses" --> Connection_Protocol_Management
+    High_Availability_Cluster_Management -- "extends" --> Redis_Client_Core
+    High_Availability_Cluster_Management -- "uses" --> Connection_Protocol_Management
+    Error_Handling -- "is raised by" --> Redis_Client_Core
+    Error_Handling -- "is raised by" --> Connection_Protocol_Management
+    click Redis_Client_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/Redis Client Core.md" "Details"
+    click Connection_Protocol_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/Connection & Protocol Management.md" "Details"
+    click Command_Module_Execution href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/Command & Module Execution.md" "Details"
+    click High_Availability_Cluster_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/High Availability & Cluster Management.md" "Details"
+    click Error_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/redis-py/Error Handling.md" "Details"
 ```
-[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20codeboarding@gmail.com-lightgrey?style=flat-square)](mailto:codeboarding@gmail.com)
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-The redis-py library provides a Python interface for interacting with Redis, a popular in-memory data structure store. The library abstracts the complexities of the Redis protocol, offering a user-friendly API for performing various operations, including data manipulation, pub/sub, and cluster management. It supports both synchronous and asynchronous operations, catering to a wide range of application requirements. The library is designed to be efficient and reliable, providing robust connection management and error handling.
+The `redis-py` library provides a Python interface to the Redis key-value store. Its main flow involves establishing connections to Redis servers, executing various Redis commands, handling responses, and managing advanced features like pipelining, transactions, and publish/subscribe. It also supports specialized deployments such as Redis Cluster and Redis Sentinel for high availability and scalability. The architecture is designed to be modular, separating concerns like connection management, command execution, and error handling.
 
-### Client Interface
-The Client Interface serves as the primary entry point for interacting with Redis. It encapsulates connection management, command execution, and response handling. Supporting both synchronous and asynchronous operations, it can be configured to connect to a single Redis instance or a Redis cluster. This component handles the core functionality of sending commands to the Redis server and receiving responses, providing a high-level API for users.
-- **Related Classes/Methods**: `redis.client.Redis` (112:670), `redis.asyncio.client.Redis` (109:715)
+### Redis Client Core
+The primary interface for interacting with Redis, encompassing basic command execution, pipelining, transactions, publish/subscribe, and distributed locking mechanisms. It orchestrates high-level operations.
 
-### Command Abstraction
-The Command Abstraction offers a high-level interface for executing Redis commands, encompassing implementations for various command categories like keys, hashes, lists, sets, and sorted sets. It supports both synchronous and asynchronous execution, providing a consistent API for interacting with Redis regardless of the underlying connection type. This component also manages command encoding and decoding, ensuring seamless communication with the Redis server.
-- **Related Classes/Methods**: `redis.commands.core.BasicKeyCommands` (1557:2510), `redis.commands.core.HashCommands` (4921:5598), `redis.commands.core.ListCommands` (2533:2947), `redis.commands.core.SetCommands` (3287:3462), `redis.commands.core.SortedSetCommands` (4077:4870), `redis.commands.core.StreamCommands` (3468:4071), `redis.commands.core.PubSubCommands` (5720:5784), `redis.commands.core.AsyncBasicKeyCommands` (2513:2530)
 
-### Connection Management
-The Connection Management component is responsible for establishing and maintaining connections to the Redis server. It provides connection pooling, socket management, and authentication functionalities. Supporting various connection types, including TCP, SSL, and Unix domain sockets, it also implements retry mechanisms for handling connection errors. This component ensures reliable and efficient communication with the Redis server.
-- **Related Classes/Methods**: `redis.connection.ConnectionPool` (1309:1654), `redis.asyncio.connection.ConnectionPool` (1031:1253), `redis.connection.Connection` (730:801), `redis.asyncio.connection.Connection` (723:777)
+**Related Classes/Methods**:
 
-### Cluster Support
-The Cluster Support component provides functionalities for managing and interacting with Redis clusters, handling node discovery, slot assignment, and command routing. It supports both synchronous and asynchronous cluster operations, offering a consistent API for interacting with Redis clusters. This component is responsible for distributing commands across the cluster and handling failover scenarios, ensuring high availability and scalability.
-- **Related Classes/Methods**: `redis.cluster.RedisCluster` (456:1360), `redis.asyncio.cluster.RedisCluster` (99:989), `redis.cluster.NodesManager` (1443:1863), `redis.asyncio.cluster.NodesManager` (1211:1518)
+- <a href="https://github.com/redis/redis-py/blob/master/redis/client.py#L112-L670" target="_blank" rel="noopener noreferrer">`redis.client.Redis` (112:670)</a>
+- <a href="https://github.com/redis/redis-py/blob/master/redis/client.py#L1-L1000" target="_blank" rel="noopener noreferrer">`redis.client.Pipeline` (1:1000)</a>
+- <a href="https://github.com/redis/redis-py/blob/master/redis/client.py#L743-L1000" target="_blank" rel="noopener noreferrer">`redis.client.PubSub` (743:1000)</a>
+- <a href="https://github.com/redis/redis-py/blob/master/redis/lock.py#L14-L343" target="_blank" rel="noopener noreferrer">`redis.lock.Lock` (14:343)</a>
 
-### PubSub Management
-The PubSub Management component provides publish/subscribe functionalities for real-time messaging, enabling clients to subscribe to channels and receive messages published to those channels. It supports both synchronous and asynchronous pub/sub operations, managing subscriptions and distributing messages to subscribers efficiently. This component facilitates real-time communication and event-driven architectures.
-- **Related Classes/Methods**: `redis.client.PubSub` (743:1241), `redis.asyncio.client.PubSub` (803:1231), `redis.cluster.ClusterPubSub` (1866:2107)
 
-### Data Handling
-The Data Handling component manages the serialization of commands and parsing of responses between the client and the Redis server. It supports different serialization formats, including RESP2 and RESP3, and includes helper functions for parsing specific data types. This component ensures that data is correctly formatted for transmission to and from the Redis server, maintaining data integrity and compatibility.
-- **Related Classes/Methods**: `redis._parsers.encoders.Encoder` (4:44), `redis._parsers.commands.CommandsParser` (56:170), `redis._parsers.commands.AsyncCommandsParser` (173:281), `redis._parsers.helpers` (full file reference)
+### Connection & Protocol Management
+Manages the lifecycle of connections to Redis servers, including pooling, health checks, and various connection types. It also handles the encoding of commands and parsing of responses, along with authentication and caching.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/redis/redis-py/blob/master/redis/connection.py#L1-L1000" target="_blank" rel="noopener noreferrer">`redis.connection.ConnectionPool` (1:1000)</a>
+- <a href="https://github.com/redis/redis-py/blob/master/redis/_parsers/resp3.py#L15-L131" target="_blank" rel="noopener noreferrer">`redis._parsers.resp3._RESP3Parser` (15:131)</a>
+- <a href="https://github.com/redis/redis-py/blob/master/redis/auth/token_manager.py#L121-L340" target="_blank" rel="noopener noreferrer">`redis.auth.token_manager.TokenManager` (121:340)</a>
+- <a href="https://github.com/redis/redis-py/blob/master/redis/cache.py#L142-L224" target="_blank" rel="noopener noreferrer">`redis.cache.DefaultCache` (142:224)</a>
+- <a href="https://github.com/redis/redis-py/blob/master/redis/ocsp.py#L170-L308" target="_blank" rel="noopener noreferrer">`redis.ocsp.OCSPVerifier` (170:308)</a>
+
+
+### Command & Module Execution
+Implements and executes the full range of standard Redis commands (e.g., key-value, list, set, hash, stream operations) and provides interfaces for interacting with various Redis Modules (e.g., JSON, Search, TimeSeries).
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/redis/redis-py/blob/master/redis/commands/core.py#L1-L1000" target="_blank" rel="noopener noreferrer">`redis.commands.core.BasicKeyCommands` (1:1000)</a>
+- `redis.commands.json.JSON` (1:1000)
+
+
+### High Availability & Cluster Management
+Provides specialized client functionalities for interacting with Redis Cluster and Redis Sentinel setups. It handles node discovery, slot management, command routing in clusters, and master/replica discovery with failover in Sentinel environments.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/redis/redis-py/blob/master/redis/cluster.py#L456-L1000" target="_blank" rel="noopener noreferrer">`redis.cluster.RedisCluster` (456:1000)</a>
+- <a href="https://github.com/redis/redis-py/blob/master/redis/sentinel.py#L198-L410" target="_blank" rel="noopener noreferrer">`redis.sentinel.Sentinel` (198:410)</a>
+
+
+### Error Handling
+Defines and manages custom exception classes for various Redis-related errors, providing a structured and specific way to handle different error scenarios that can occur during client-server interactions.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/redis/redis-py/blob/master/redis/exceptions.py#L4-L5" target="_blank" rel="noopener noreferrer">`redis.exceptions.RedisError` (4:5)</a>
+
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
