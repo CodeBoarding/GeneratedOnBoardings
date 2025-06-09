@@ -307,6 +307,25 @@ Interested in onboarding diagrams for your own project? Try it out at [CodeBoard
 </table>
 
 
-## FAQ:
+## FAQ
 
-N/A
+**Q: What is the purpose of CodeBoarding?**  
+**A:** To help developers onboard to new codebases faster and more effectively.
+
+**Q: Is it compatible with build tools like Sphinx?**  
+**A:** Not yet. If there's enough demand, we’re open to adding support.
+
+**Q: How is the documentation kept up to date?**  
+**A:** Diagrams can be regenerated anytime—such as when new code is written or pulled—so the documentation stays current with the project.
+
+**Q: Who is using CodeBoarding?**  
+**A:** We're currently supporting the open-source community. For example, see how it’s used in this project:  
+[atlassian-python-api onboarding](https://github.com/CodeBoarding/atlassian-python-api/blob/b17b17aa77eb0f5b8494373e5eac7a96dbe95522/.codeboarding/on_boarding.md)
+
+**Q: How can we start using CodeBoarding?**  
+**A:** Just reach out—we’ll help onboard your team for free to get you started. 🙂
+
+**Q: How accurate are the code representations?**  
+**A:** We’ve received positive feedback from developer interviews. That said, some relationships may be misrepresented in certain repos. We're always improving, so please share your feedback here:  
+[Feedback form](https://forms.gle/GAFEgnVr8fAWMduM6)
+
