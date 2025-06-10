@@ -1,162 +1,140 @@
 ```mermaid
 graph LR
-    Server_Application_Management["Server & Application Management"]
+    UI_Element_Management["UI Element Management"]
+    Event_Handling_and_User_Interaction["Event Handling and User Interaction"]
     Client_Server_Communication["Client-Server Communication"]
-    UI_Core_Elements["UI Core & Elements"]
-    Styling_Layout_Engine["Styling & Layout Engine"]
-    Event_System["Event System"]
-    Data_Management_Reactivity["Data Management & Reactivity"]
-    Core_Utilities["Core Utilities"]
-    Documentation_Testing["Documentation & Testing"]
-    Server_Application_Management -- "manages" --> Client_Server_Communication
-    Server_Application_Management -- "renders" --> UI_Core_Elements
-    Client_Server_Communication -- "interacts with" --> UI_Core_Elements
-    Client_Server_Communication -- "dispatches events to" --> Event_System
-    UI_Core_Elements -- "sends updates to" --> Client_Server_Communication
-    UI_Core_Elements -- "is styled by" --> Styling_Layout_Engine
-    UI_Core_Elements -- "generates" --> Event_System
-    UI_Core_Elements -- "is updated by" --> Data_Management_Reactivity
-    Styling_Layout_Engine -- "applies to" --> UI_Core_Elements
-    Event_System -- "receives events from" --> Client_Server_Communication
-    Event_System -- "triggers updates in" --> UI_Core_Elements
-    Data_Management_Reactivity -- "synchronizes with" --> UI_Core_Elements
-    Data_Management_Reactivity -- "persists data for" --> Server_Application_Management
-    Core_Utilities -- "provides services to" --> Server_Application_Management
-    Core_Utilities -- "provides services to" --> UI_Core_Elements
-    Documentation_Testing -- "tests" --> Server_Application_Management
-    Documentation_Testing -- "demonstrates" --> UI_Core_Elements
-    click Server_Application_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Server & Application Management.md" "Details"
+    Data_Binding_and_Synchronization["Data Binding and Synchronization"]
+    Task_Management_and_Scheduling["Task Management and Scheduling"]
+    UI_Component_Library["UI Component Library"]
+    Styling_and_Appearance["Styling and Appearance"]
+    Page_Routing_and_Management["Page Routing and Management"]
+    Data_Persistence["Data Persistence"]
+    Event_Handling_and_User_Interaction -- "uses" --> UI_Element_Management
+    Client_Server_Communication -- "sends updates to" --> UI_Element_Management
+    Data_Binding_and_Synchronization -- "uses" --> UI_Element_Management
+    UI_Component_Library -- "uses" --> UI_Element_Management
+    UI_Component_Library -- "uses" --> Event_Handling_and_User_Interaction
+    UI_Component_Library -- "uses" --> Data_Binding_and_Synchronization
+    UI_Component_Library -- "uses" --> Styling_and_Appearance
+    Page_Routing_and_Management -- "manages" --> UI_Element_Management
+    Data_Persistence -- "uses" --> Page_Routing_and_Management
+    Client_Server_Communication -- "uses" --> Task_Management_and_Scheduling
+    UI_Element_Management -- "uses" --> Client_Server_Communication
+    Styling_and_Appearance -- "uses" --> UI_Element_Management
+    click UI_Element_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/UI Element Management.md" "Details"
+    click Event_Handling_and_User_Interaction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Event Handling and User Interaction.md" "Details"
     click Client_Server_Communication href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Client-Server Communication.md" "Details"
-    click UI_Core_Elements href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/UI Core & Elements.md" "Details"
-    click Styling_Layout_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Styling & Layout Engine.md" "Details"
-    click Event_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Event System.md" "Details"
-    click Data_Management_Reactivity href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Data Management & Reactivity.md" "Details"
-    click Core_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Core Utilities.md" "Details"
-    click Documentation_Testing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Documentation & Testing.md" "Details"
+    click Data_Binding_and_Synchronization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Data Binding and Synchronization.md" "Details"
+    click Task_Management_and_Scheduling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Task Management and Scheduling.md" "Details"
+    click UI_Component_Library href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/UI Component Library.md" "Details"
+    click Styling_and_Appearance href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Styling and Appearance.md" "Details"
+    click Page_Routing_and_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Page Routing and Management.md" "Details"
+    click Data_Persistence href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nicegui/Data Persistence.md" "Details"
 ```
-[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20codeboarding@gmail.com-lightgrey?style=flat-square)](mailto:codeboarding@gmail.com)
 
 ## Component Details
 
-The NiceGUI framework provides a Pythonic way to build web-based graphical user interfaces, abstracting away the complexities of frontend development. Its architecture is centered around a Server & Application Management component that orchestrates client-server communication, UI rendering, event handling, and data management, enabling reactive and interactive web applications with optional native desktop integration.
+NiceGUI is a Python framework for creating web-based user interfaces. The framework is structured around several core components that handle UI element management, event handling, client-server communication, data binding, task management, and styling. These components work together to provide a reactive and efficient way to build interactive web applications.
 
-### Server & Application Management
-Manages the core application lifecycle, server operations, routing, background tasks, favicon serving, global error handling, and native desktop integration.
+### UI Element Management
+This component is responsible for defining, managing, and rendering UI elements. It includes the base `Element` class, mixins for adding functionalities, and layout elements like `Column`, `Row`, and `Grid`. It handles the creation, modification, and deletion of UI elements, as well as their arrangement within the user interface.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/app/app.py#L1-L240" target="_blank" rel="noopener noreferrer">`nicegui.app.app` (1:240)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/nicegui.py#L1-L140" target="_blank" rel="noopener noreferrer">`nicegui.nicegui` (1:140)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/server.py#L1-L27" target="_blank" rel="noopener noreferrer">`nicegui.server` (1:27)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/page.py#L21-L158" target="_blank" rel="noopener noreferrer">`nicegui.page` (21:158)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/api_router.py#L1-L30" target="_blank" rel="noopener noreferrer">`nicegui.api_router` (1:30)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/background_tasks.py#L1-L80" target="_blank" rel="noopener noreferrer">`nicegui.background_tasks` (1:80)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/favicon.py#L1-L90" target="_blank" rel="noopener noreferrer">`nicegui.favicon` (1:90)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/error.py#L1-L29" target="_blank" rel="noopener noreferrer">`nicegui.error` (1:29)</a>
-- `nicegui.ui_run` (full file reference)
-- `nicegui.ui_run_with` (full file reference)
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/native/native.py#L1-L160" target="_blank" rel="noopener noreferrer">`nicegui.native.native` (1:160)</a>
-- `nicegui.native.native_config` (full file reference)
-- `nicegui.native.native_mode` (full file reference)
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/element.py#L40-L562" target="_blank" rel="noopener noreferrer">`nicegui.element.Element` (40:562)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/mixins/visibility.py#L13-L109" target="_blank" rel="noopener noreferrer">`nicegui.elements.mixins.visibility.Visibility` (13:109)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/mixins/content_element.py#L9-L88" target="_blank" rel="noopener noreferrer">`nicegui.elements.mixins.content_element.ContentElement` (9:88)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/mixins/text_element.py#L9-L88" target="_blank" rel="noopener noreferrer">`nicegui.elements.mixins.text_element.TextElement` (9:88)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/column.py#L6-L24" target="_blank" rel="noopener noreferrer">`nicegui.elements.column.Column` (6:24)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/row.py#L6-L25" target="_blank" rel="noopener noreferrer">`nicegui.elements.row.Row` (6:25)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/grid.py#L6-L30" target="_blank" rel="noopener noreferrer">`nicegui.elements.grid.Grid` (6:30)</a>
+
+
+### Event Handling and User Interaction
+This component manages user interactions and events within the UI. It defines event argument classes, handles event dispatching, and provides mechanisms for registering event handlers to UI elements. It acts as the bridge between user actions and the application logic.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/events.py#L410-L453" target="_blank" rel="noopener noreferrer">`nicegui.events.handle_event` (410:453)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/events.py#L46-L48" target="_blank" rel="noopener noreferrer">`nicegui.events.UiEventArguments` (46:48)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/element.py#L344-L401" target="_blank" rel="noopener noreferrer">`nicegui.element.Element.on` (344:401)</a>
 
 
 ### Client-Server Communication
-Handles real-time communication between the server and connected browser clients, managing UI updates and JavaScript execution.
+This component handles the communication between the server and the client (browser). It manages the WebSocket connection, sends updates to the client, and queues messages for efficient delivery. It ensures that the UI in the browser reflects the current state of the application on the server.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/client.py#L1-L240" target="_blank" rel="noopener noreferrer">`nicegui.client` (1:240)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/outbox.py#L1-L110" target="_blank" rel="noopener noreferrer">`nicegui.outbox` (1:110)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/awaitable_response.py#L1-L20" target="_blank" rel="noopener noreferrer">`nicegui.awaitable_response` (1:20)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/javascript_request.py#L1-L30" target="_blank" rel="noopener noreferrer">`nicegui.javascript_request` (1:30)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/client.py#L35-L385" target="_blank" rel="noopener noreferrer">`nicegui.client.Client` (35:385)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/outbox.py#L26-L154" target="_blank" rel="noopener noreferrer">`nicegui.outbox.Outbox` (26:154)</a>
 
 
-### UI Core & Elements
-Provides the foundational structure and a rich set of pre-built interactive user interface elements for building the application's visual interface.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/element.py#L1-L340" target="_blank" rel="noopener noreferrer">`nicegui.element` (1:340)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/button.py#L1-L30" target="_blank" rel="noopener noreferrer">`nicegui.elements.button` (1:30)</a>
-- `nicegui.elements.input` (full file reference)
-- `nicegui.elements.table` (full file reference)
-- `nicegui.elements.image` (full file reference)
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/slot.py#L1-L50" target="_blank" rel="noopener noreferrer">`nicegui.slot` (1:50)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/dependencies.py#L1-L120" target="_blank" rel="noopener noreferrer">`nicegui.dependencies` (1:120)</a>
-
-
-### Styling & Layout Engine
-Manages the visual appearance and arrangement of UI elements, including CSS classes, inline styles, Tailwind CSS integration, and page layouts.
+### Data Binding and Synchronization
+This component provides a mechanism for synchronizing data between UI elements and Python variables. It defines functions for creating bindings and propagating changes, enabling reactive updates to class attributes. It ensures that changes in the UI are reflected in the Python code, and vice versa.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/classes.py#L1-L45" target="_blank" rel="noopener noreferrer">`nicegui.classes` (1:45)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/style.py#L1-L45" target="_blank" rel="noopener noreferrer">`nicegui.style` (1:45)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/tailwind.py#L1-L600" target="_blank" rel="noopener noreferrer">`nicegui.tailwind` (1:600)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/page_layout.py#L1-L240" target="_blank" rel="noopener noreferrer">`nicegui.page_layout` (1:240)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/binding.py#L162-L178" target="_blank" rel="noopener noreferrer">`nicegui.binding.bind` (162:178)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/binding.py#L144-L159" target="_blank" rel="noopener noreferrer">`nicegui.binding.bind_from` (144:159)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/binding.py#L126-L141" target="_blank" rel="noopener noreferrer">`nicegui.binding.bind_to` (126:141)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/binding.py#L181-L204" target="_blank" rel="noopener noreferrer">`nicegui.binding.BindableProperty` (181:204)</a>
 
 
-### Event System
-Manages user interactions and internal application events, providing mechanisms for event handling and dispatching.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/events.py#L1-L380" target="_blank" rel="noopener noreferrer">`nicegui.events` (1:380)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/event_listener.py#L1-L30" target="_blank" rel="noopener noreferrer">`nicegui.event_listener` (1:30)</a>
-
-
-### Data Management & Reactivity
-Facilitates automatic synchronization between Python data and UI elements, and provides mechanisms for persistent data storage across different scopes.
+### Task Management and Scheduling
+This component manages background tasks and asynchronous operations. It provides functions for creating and managing tasks, and allows scheduling functions to be called periodically. It enables the execution of long-running operations without blocking the UI thread.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/binding.py#L1-L200" target="_blank" rel="noopener noreferrer">`nicegui.binding` (1:200)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/observables.py#L1-L200" target="_blank" rel="noopener noreferrer">`nicegui.observables` (1:200)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/storage.py#L1-L170" target="_blank" rel="noopener noreferrer">`nicegui.storage` (1:170)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/persistence/file_persistent_dict.py#L1-L200" target="_blank" rel="noopener noreferrer">`nicegui.persistence.file_persistent_dict` (1:200)</a>
-- `nicegui.persistence.persistent_dict` (full file reference)
-- `nicegui.persistence.read_only_dict` (full file reference)
-- `nicegui.persistence.redis_persistent_dict` (full file reference)
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/functions/refreshable.py#L58-L131" target="_blank" rel="noopener noreferrer">`nicegui.functions.refreshable` (58:131)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/background_tasks.py#L17-L30" target="_blank" rel="noopener noreferrer">`nicegui.background_tasks.create` (17:30)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/timer.py#L11-L116" target="_blank" rel="noopener noreferrer">`nicegui.timer.Timer` (11:116)</a>
 
 
-### Core Utilities
-Offers a collection of general-purpose helper functions for common tasks like clipboard operations, file downloads, JavaScript execution, and notifications.
+### UI Component Library
+This component provides a collection of pre-built UI components, such as buttons, inputs, labels, and charts. These components are built on top of the core UI definition and management component and offer a higher level of abstraction for common UI patterns. It simplifies the creation of complex UIs by providing reusable building blocks.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/functions/clipboard.py#L1-L20" target="_blank" rel="noopener noreferrer">`nicegui.functions.clipboard` (1:20)</a>
-- `nicegui.functions.download` (full file reference)
-- `nicegui.functions.javascript` (full file reference)
-- `nicegui.functions.navigate` (full file reference)
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/functions/notify.py#L12-L53" target="_blank" rel="noopener noreferrer">`nicegui.functions.notify` (12:53)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/functions/update.py#L4-L7" target="_blank" rel="noopener noreferrer">`nicegui.functions.update` (4:7)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/helpers.py#L1-L100" target="_blank" rel="noopener noreferrer">`nicegui.helpers` (1:100)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/button.py#L13-L53" target="_blank" rel="noopener noreferrer">`nicegui.elements.button.Button` (13:53)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/input.py#L10-L76" target="_blank" rel="noopener noreferrer">`nicegui.elements.input.Input` (10:76)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/label.py#L4-L13" target="_blank" rel="noopener noreferrer">`nicegui.elements.label.Label` (4:13)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/aggrid.py#L15-L44" target="_blank" rel="noopener noreferrer">`nicegui.elements.chart.Chart` (15:44)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/table.py#L29-L453" target="_blank" rel="noopener noreferrer">`nicegui.elements.table.Table` (29:453)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/elements/select.py#L12-L169" target="_blank" rel="noopener noreferrer">`nicegui.elements.select.Select` (12:169)</a>
 
 
-### Documentation & Testing
-Contains the code for generating the NiceGUI documentation website and provides utilities for testing NiceGUI applications.
+### Styling and Appearance
+This component provides mechanisms for styling the UI. It includes classes for applying CSS styles and using Tailwind CSS classes. It allows developers to customize the look and feel of the application.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/website/main_page.py#L1-L50" target="_blank" rel="noopener noreferrer">`nicegui.website.main_page` (1:50)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/website/documentation/content/button_documentation.py#L1-L100" target="_blank" rel="noopener noreferrer">`nicegui.website.documentation.content.button_documentation` (1:100)</a>
-- `nicegui.website.documentation.code_extraction` (full file reference)
-- `nicegui.website.example_card` (full file reference)
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/testing/screen.py#L1-L200" target="_blank" rel="noopener noreferrer">`nicegui.testing.screen` (1:200)</a>
-- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/testing/user_interaction.py#L1-L100" target="_blank" rel="noopener noreferrer">`nicegui.testing.user_interaction` (1:100)</a>
-- `nicegui.testing.conftest` (full file reference)
-- `nicegui.testing.plugin` (full file reference)
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/style.py#L9-L47" target="_blank" rel="noopener noreferrer">`nicegui.style.Style` (9:47)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/tailwind.py#L182-L1022" target="_blank" rel="noopener noreferrer">`nicegui.tailwind.Tailwind` (182:1022)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/classes.py#L9-L56" target="_blank" rel="noopener noreferrer">`nicegui.classes.Classes` (9:56)</a>
 
 
+### Page Routing and Management
+This component handles the creation and management of pages within the application. It defines routes and associates them with UI content, and manages page titles and other metadata. It enables the creation of multi-page applications with well-defined navigation.
 
 
-### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
+**Related Classes/Methods**:
+
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/page.py#L21-L158" target="_blank" rel="noopener noreferrer">`nicegui.page.page` (21:158)</a>
+
+
+### Data Persistence
+This component provides mechanisms for storing data, including browser storage, user storage, and session storage. It includes classes for managing access to these different storage types and persisting data using different backends like files or Redis. It allows the application to store and retrieve data across sessions and users.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/storage.py#L50-L217" target="_blank" rel="noopener noreferrer">`nicegui.storage.Storage` (50:217)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/persistence/file_persistent_dict.py#L12-L60" target="_blank" rel="noopener noreferrer">`nicegui.persistence.file_persistent_dict.FilePersistentDict` (12:60)</a>
+- <a href="https://github.com/zauberzeug/nicegui/blob/master/nicegui/persistence/redis_persistent_dict.py#L13-L92" target="_blank" rel="noopener noreferrer">`nicegui.persistence.redis_persistent_dict.RedisPersistentDict` (13:92)</a>
