@@ -18,11 +18,11 @@ graph LR
     Model_Core_Metrics -- "uses" --> Core_Data_Management
     Model_Core_Metrics -- "evaluates" --> Data_Preparation_Annotation
     Model_Core_Metrics -- "integrates with" --> Data_Preparation_Annotation
-    click Core_Data_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CoSpred/Core Data Management.md" "Details"
-    click Data_Preparation_Annotation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CoSpred/Data Preparation & Annotation.md" "Details"
-    click Model_Core_Metrics href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CoSpred/Model Core & Metrics.md" "Details"
-    click Data_Tensorization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CoSpred/Data Tensorization.md" "Details"
-    click Output_Conversion_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CoSpred/Output & Conversion Services.md" "Details"
+    click Core_Data_Management href "./Core Data Management.md" "Details"
+    click Data_Preparation_Annotation href "./Data Preparation & Annotation.md" "Details"
+    click Model_Core_Metrics href "./Model Core & Metrics.md" "Details"
+    click Data_Tensorization href "./Data Tensorization.md" "Details"
+    click Output_Conversion_Services href "./Output & Conversion Services.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
