@@ -1,85 +1,109 @@
 ```mermaid
 graph LR
-    Configuration["Configuration"]
-    Application_Registry["Application Registry"]
-    HTTP_Request_Response_Processing["HTTP Request/Response Processing"]
-    ORM_and_Database_Layer["ORM and Database Layer"]
-    Template_Engine["Template Engine"]
-    Configuration -- "provides settings to" --> Application_Registry
-    Configuration -- "provides settings to" --> HTTP_Request_Response_Processing
-    Configuration -- "provides settings to" --> ORM_and_Database_Layer
-    Configuration -- "provides settings to" --> Template_Engine
-    Application_Registry -- "is initialized based on" --> Configuration
-    Application_Registry -- "registers models for" --> ORM_and_Database_Layer
-    HTTP_Request_Response_Processing -- "uses" --> Configuration
-    HTTP_Request_Response_Processing -- "interacts with" --> ORM_and_Database_Layer
-    HTTP_Request_Response_Processing -- "receives rendered content from" --> Template_Engine
-    ORM_and_Database_Layer -- "registers its models with" --> Application_Registry
-    ORM_and_Database_Layer -- "is configured by" --> Configuration
-    ORM_and_Database_Layer -- "provides and receives data from" --> HTTP_Request_Response_Processing
-    Template_Engine -- "is configured by" --> Configuration
-    Template_Engine -- "generates content that is used by" --> HTTP_Request_Response_Processing
-    Template_Engine -- "can receive data from" --> ORM_and_Database_Layer
-    click Configuration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/Configuration.md" "Details"
-    click Application_Registry href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/Application_Registry.md" "Details"
-    click HTTP_Request_Response_Processing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/HTTP_Request_Response_Processing.md" "Details"
-    click ORM_and_Database_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/ORM_and_Database_Layer.md" "Details"
-    click Template_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/Template_Engine.md" "Details"
+    Web_Request_Response_Core["Web Request-Response Core"]
+    ORM_Database_Layer["ORM & Database Layer"]
+    Template_Forms_System["Template & Forms System"]
+    Authentication_Session_Management["Authentication & Session Management"]
+    Core_Utilities_Management["Core Utilities & Management"]
+    Web_Request_Response_Core -- "interacts with" --> ORM_Database_Layer
+    Web_Request_Response_Core -- "interacts with" --> Template_Forms_System
+    Web_Request_Response_Core -- "integrates with" --> Authentication_Session_Management
+    Web_Request_Response_Core -- "utilizes" --> Core_Utilities_Management
+    ORM_Database_Layer -- "provides data to" --> Web_Request_Response_Core
+    ORM_Database_Layer -- "used by" --> Template_Forms_System
+    ORM_Database_Layer -- "supports" --> Authentication_Session_Management
+    ORM_Database_Layer -- "managed by" --> Core_Utilities_Management
+    Template_Forms_System -- "receives data from" --> Web_Request_Response_Core
+    Template_Forms_System -- "displays data from" --> ORM_Database_Layer
+    Template_Forms_System -- "used by" --> Authentication_Session_Management
+    Template_Forms_System -- "utilizes" --> Core_Utilities_Management
+    Authentication_Session_Management -- "provides context to" --> Web_Request_Response_Core
+    Authentication_Session_Management -- "persists data via" --> ORM_Database_Layer
+    Authentication_Session_Management -- "renders via" --> Template_Forms_System
+    Authentication_Session_Management -- "managed by" --> Core_Utilities_Management
+    Core_Utilities_Management -- "supports" --> Web_Request_Response_Core
+    Core_Utilities_Management -- "operates on" --> ORM_Database_Layer
+    Core_Utilities_Management -- "enhances" --> Template_Forms_System
+    Core_Utilities_Management -- "assists" --> Authentication_Session_Management
+    click Web_Request_Response_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/Web_Request_Response_Core.md" "Details"
+    click ORM_Database_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/ORM_Database_Layer.md" "Details"
+    click Template_Forms_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/Template_Forms_System.md" "Details"
+    click Authentication_Session_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/Authentication_Session_Management.md" "Details"
+    click Core_Utilities_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//django/Core_Utilities_Management.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-The analysis of the Control Flow Graph (CFG) and the subsequent Source Analysis reveal a clear set of core components that form the backbone of the Django framework. These components are fundamental because they collectively manage the entire lifecycle of a web request, from configuration and application loading to data persistence and response generation.
+The architecture of Django can be distilled into five fundamental components, each playing a critical role in the framework's operation and enabling rapid web development. These components are chosen because they represent distinct, high-level responsibilities that are essential for any modern web application, from handling requests to managing data and user interactions.
 
-### Configuration
-This component serves as the central repository for all project-specific settings. It dictates how Django behaves, including database connections, installed applications, middleware, and template configurations. Its lazy-loading mechanism ensures settings are only loaded when first accessed, optimizing startup.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/django/django/blob/master/django/template/backends/django.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.conf.LazySettings` (0:0)</a>
-
-
-### Application Registry
-The Apps registry is crucial for Django's modular design. It manages the lifecycle and configuration of all installed Django applications, acting as a central hub for registering models, signals, and other app-specific metadata. It ensures that applications and their components are properly loaded and discoverable throughout the project.
+### Web Request-Response Core
+This is the central orchestrator of the web request lifecycle. It receives incoming HTTP requests (via WSGI/ASGI handlers), parses them into `HttpRequest` objects, dispatches them through middleware, resolves URLs to the appropriate view functions, executes the view, and finally constructs and sends `HttpResponse` objects back to the client. It also manages the loading and configuration of all installed Django applications and provides access to project-wide settings.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/django/django/blob/master/django/apps/registry.py#L12-L433" target="_blank" rel="noopener noreferrer">`django.apps.registry.Apps` (12:433)</a>
+- <a href="https://github.com/django/django/blob/master/django/core/handlers/base.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.core.handlers.base` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/core/handlers/wsgi.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.core.handlers.wsgi` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/http/request.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.http.request` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/http/response.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.http.response` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/urls/resolvers.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.urls.resolvers` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/apps/registry.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.apps.registry` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/template/backends/django.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.conf` (0:0)</a>
 
 
-### HTTP Request/Response Processing
-This composite component encapsulates the entire web communication flow. It handles receiving an incoming HttpRequest, applies global logic through Middleware, resolves the URL to the appropriate view using URLResolver, and finally generates and sends an HttpResponse back to the client. It is the core of Django's web-serving capabilities.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/django/django/blob/master/django/http/request.py#L52-L469" target="_blank" rel="noopener noreferrer">`django.http.request.HttpRequest` (52:469)</a>
-- <a href="https://github.com/django/django/blob/master/django/http/response.py#L364-L434" target="_blank" rel="noopener noreferrer">`django.http.response.HttpResponse` (364:434)</a>
-- <a href="https://github.com/django/django/blob/master/django/middleware/common.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.middleware.common.Middleware` (0:0)</a>
-- <a href="https://github.com/django/django/blob/master/django/urls/resolvers.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.urls.resolvers.URLResolver` (0:0)</a>
-
-
-### ORM and Database Layer
-This layer provides Django's powerful Object-Relational Mapper (ORM), allowing developers to interact with databases using Python objects rather than raw SQL. It includes the Model base class for defining database schemas, QuerySet for building and executing database queries, and backends for abstracting database-specific interactions (e.g., PostgreSQL, MySQL).
+### ORM & Database Layer
+This component provides Django's powerful Object-Relational Mapper (ORM), allowing developers to interact with database data using Python objects (models) instead of raw SQL. It includes the underlying database backends that handle database-specific communication and SQL generation, as well as the migration system for managing and applying schema changes in a version-controlled manner.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/django/django/blob/master/django/db/models/base.py#L480-L2407" target="_blank" rel="noopener noreferrer">`django.db.models.base.Model` (480:2407)</a>
-- <a href="https://github.com/django/django/blob/master/django/db/models/query.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.db.models.query.QuerySet` (0:0)</a>
-- <a href="https://github.com/django/django/blob/master/django/db/backends/base/base.py#L29-L791" target="_blank" rel="noopener noreferrer">`django.db.backends.base.base.BaseDatabaseWrapper` (29:791)</a>
+- <a href="https://github.com/django/django/blob/master/django/db/models/base.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.db.models.base` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/db/models/query.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.db.models.query` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/db/backends/base/base.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.db.backends.base.base` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/db/migrations/loader.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.db.migrations.loader` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/db/migrations/executor.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.db.migrations.executor` (0:0)</a>
 
 
-### Template Engine
-The Template Engine is responsible for the presentation layer of Django applications. It manages the loading, parsing, and rendering of Django templates, enabling the generation of dynamic HTML content by combining template files with context data provided by views.
+### Template & Forms System
+This component is responsible for the presentation and user input aspects of a web application. The Template Engine allows for the dynamic generation of HTML (or other text-based formats) by combining static templates with dynamic data. The Forms system provides a robust way to define, validate, and render HTML forms, handling user input cleaning and error reporting.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/django/django/blob/master/django/template/engine.py#L12-L213" target="_blank" rel="noopener noreferrer">`django.template.engine.Engine` (12:213)</a>
+- <a href="https://github.com/django/django/blob/master/django/template/engine.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.template.engine` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/template/base.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.template.base` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/forms/forms.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.forms.forms` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/forms/fields.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.forms.fields` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/forms/widgets.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.forms.widgets` (0:0)</a>
+
+
+### Authentication & Session Management
+This component provides a comprehensive system for user authentication (verifying user identity), authorization (managing permissions), and maintaining user-specific state across multiple HTTP requests (sessions). It includes pluggable backends for various authentication methods and session storage mechanisms.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/django/django/blob/master/django/contrib/auth/models.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.contrib.auth.models` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/contrib/auth/backends.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.contrib.auth.backends` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/contrib/sessions/backends/base.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.contrib.sessions.backends.base` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/contrib/sessions/middleware.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.contrib.sessions.middleware` (0:0)</a>
+
+
+### Core Utilities & Management
+This broad component encompasses a collection of essential helper functions, command-line tools, and foundational infrastructure that support the entire Django framework and application development. It includes utilities for common programming tasks, a system for managing static files, a flexible caching framework, a powerful signals (event dispatcher) system for decoupled communication between components, and built-in "contrib" applications like the Admin interface and messaging framework.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/django/django/blob/master/django/core/management/base.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.core.management.base` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/utils/module_loading.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.utils.module_loading` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/contrib/admin/sites.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.contrib.admin.sites` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/contrib/staticfiles/finders.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.contrib.staticfiles.finders` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/template/backends/django.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.core.cache` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/dispatch/dispatcher.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.dispatch.dispatcher` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/contrib/messages/api.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.contrib.messages.api` (0:0)</a>
+- <a href="https://github.com/django/django/blob/master/django/utils/translation/trans_real.py#L0-L0" target="_blank" rel="noopener noreferrer">`django.utils.translation.trans_real` (0:0)</a>
 
 
 
