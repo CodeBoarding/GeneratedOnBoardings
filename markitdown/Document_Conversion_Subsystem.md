@@ -1,119 +1,100 @@
 ```mermaid
 graph LR
-    MarkItDown["MarkItDown"]
-    DocumentConverter_Abstract_Base_Class_["DocumentConverter (Abstract Base Class)"]
-    Document_Conversion_Subsystem_Logical_Grouping_["Document Conversion Subsystem (Logical Grouping)"]
-    StreamInfo["StreamInfo"]
-    HtmlConverter["HtmlConverter"]
-    DocxConverter["DocxConverter"]
-    _CustomMarkdownify["_CustomMarkdownify"]
-    Docx_Pre_processing_Utilities["Docx Pre-processing Utilities"]
-    Exceptions_Module["Exceptions Module"]
-    MarkItDown -- "registers and invokes" --> Document_Conversion_Subsystem_Logical_Grouping_
-    MarkItDown -- "creates and updates" --> StreamInfo
-    MarkItDown -- "raises and handles" --> Exceptions_Module
-    Document_Conversion_Subsystem_Logical_Grouping_ -- "contains" --> HtmlConverter
-    Document_Conversion_Subsystem_Logical_Grouping_ -- "contains" --> DocxConverter
-    Document_Conversion_Subsystem_Logical_Grouping_ -- "depends on" --> DocumentConverter_Abstract_Base_Class_
-    Document_Conversion_Subsystem_Logical_Grouping_ -- "interacts with" --> StreamInfo
-    Document_Conversion_Subsystem_Logical_Grouping_ -- "utilizes" --> _CustomMarkdownify
-    Document_Conversion_Subsystem_Logical_Grouping_ -- "raises and handles" --> Exceptions_Module
-    DocumentConverter_Abstract_Base_Class_ -- "utilizes" --> StreamInfo
-    HtmlConverter -- "inherits from" --> DocumentConverter_Abstract_Base_Class_
-    HtmlConverter -- "utilizes" --> _CustomMarkdownify
-    DocxConverter -- "inherits from" --> HtmlConverter
-    DocxConverter -- "utilizes" --> Docx_Pre_processing_Utilities
-    click MarkItDown href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/MarkItDown.md" "Details"
-    click DocumentConverter_Abstract_Base_Class_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/DocumentConverter_Abstract_Base_Class_.md" "Details"
-    click DocxConverter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/DocxConverter.md" "Details"
-    click _CustomMarkdownify href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/_CustomMarkdownify.md" "Details"
-    click Docx_Pre_processing_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Docx_Pre_processing_Utilities.md" "Details"
+    Base_Converter_Interface["Base Converter Interface"]
+    HTML_to_Markdown_Converter["HTML to Markdown Converter"]
+    Custom_Markdownify_Utility["Custom Markdownify Utility"]
+    DOCX_Converter["DOCX Converter"]
+    DOCX_Pre_processing_Utility["DOCX Pre-processing Utility"]
+    YouTube_Content_Converter["YouTube Content Converter"]
+    RSS_Atom_Feed_Converter["RSS/Atom Feed Converter"]
+    MarkItDown_Core -- "uses" --> Base_Converter_Interface
+    HTML_to_Markdown_Converter -- "uses" --> Custom_Markdownify_Utility
+    DOCX_Converter -- "inherits from" --> HTML_to_Markdown_Converter
+    DOCX_Converter -- "uses" --> DOCX_Pre_processing_Utility
+    RSS_Atom_Feed_Converter -- "uses" --> Custom_Markdownify_Utility
+    Document_Conversion_Subsystem -- "contains" --> Base_Converter_Interface
+    Document_Conversion_Subsystem -- "contains" --> HTML_to_Markdown_Converter
+    Document_Conversion_Subsystem -- "contains" --> Custom_Markdownify_Utility
+    Document_Conversion_Subsystem -- "contains" --> DOCX_Converter
+    Document_Conversion_Subsystem -- "contains" --> DOCX_Pre_processing_Utility
+    Document_Conversion_Subsystem -- "contains" --> YouTube_Content_Converter
+    Document_Conversion_Subsystem -- "contains" --> RSS_Atom_Feed_Converter
+    click Base_Converter_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Base_Converter_Interface.md" "Details"
+    click HTML_to_Markdown_Converter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/HTML_to_Markdown_Converter.md" "Details"
+    click Custom_Markdownify_Utility href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Custom_Markdownify_Utility.md" "Details"
+    click DOCX_Converter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/DOCX_Converter.md" "Details"
+    click DOCX_Pre_processing_Utility href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/DOCX_Pre_processing_Utility.md" "Details"
+    click YouTube_Content_Converter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/YouTube_Content_Converter.md" "Details"
+    click RSS_Atom_Feed_Converter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/RSS_Atom_Feed_Converter.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-The `Document Conversion Subsystem` is the heart of MarkItDown's ability to process diverse document formats. It's designed with a modular and extensible architecture, centered around a common interface for all converters. This subsystem ensures that various input types, from standard documents to web content, can be reliably transformed into a unified Markdown format for further processing, particularly by Language Models.
+Overview of the MarkItDown document conversion subsystem components and their relationships.
 
-### MarkItDown
-The primary orchestrator of the `markitdown` library. It manages the registration and invocation of various document converters. It provides methods to convert content from local paths, URIs (file, data, http/https), and raw binary streams. It also handles the initial identification of stream information (like mimetype and charset) using external libraries. It serves as the main entry point for conversion requests.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown._markitdown` (1:1)</a>
-
-
-### DocumentConverter (Abstract Base Class)
-This is an abstract base class (or interface) that defines the contract for all specific document converters. Each concrete implementation must implement the `accepts` method (to indicate if it can handle a given `StreamInfo`) and the `convert` method (to perform the actual conversion to Markdown). It ensures a consistent and extensible interface for all converters within the `Document Conversion Subsystem`.
+### Base Converter Interface
+This abstract component defines the fundamental interface (`accepts` and `convert` methods) that all document converters must implement. It ensures a consistent contract for how different content types are processed into Markdown, enabling the `MarkItDown Core` to interact with various converters uniformly.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_base_converter.py#L41-L104" target="_blank" rel="noopener noreferrer">`markitdown._base_converter.DocumentConverter` (41:104)</a>
+- `BaseConverterInterface` (1:1)
 
 
-### Document Conversion Subsystem (Logical Grouping)
-This is the overarching package (`markitdown.converters`) that houses all specialized `DocumentConverter` implementations. It serves as the central repository for the diverse conversion logic, enabling MarkItDown to support a wide array of input formats. Its modular design allows for easy addition of new converters.
-
-
-**Related Classes/Methods**:
-
-- `markitdown.converters` (1:1)
-
-
-### StreamInfo
-A data class used to encapsulate metadata about the input stream being processed, such as its mimetype, file extension, filename, local path, URL, and character set. It is crucial for converters to determine if they can handle a given input and for providing necessary context during the conversion process.
+### HTML to Markdown Converter
+This component (`HtmlConverter`) is responsible for converting HTML content into Markdown. It acts as a crucial intermediate step for many other converters that first transform their input into HTML before final Markdown conversion. It relies on the `Custom Markdownify Utility` for the actual conversion logic.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_stream_info.py#L5-L31" target="_blank" rel="noopener noreferrer">`markitdown._stream_info.StreamInfo` (5:31)</a>
+- `HtmlConverter` (1:1)
 
 
-### HtmlConverter
-A concrete implementation of `DocumentConverter` specifically designed to convert HTML content into Markdown. It leverages `_CustomMarkdownify` for the actual conversion and handles pre-processing steps like removing script and style tags.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/converters/_html_converter.py#L19-L89" target="_blank" rel="noopener noreferrer">`markitdown.converters._html_converter.HtmlConverter` (19:89)</a>
-
-
-### DocxConverter
-A concrete implementation of `DocumentConverter` for DOCX files. It extends `HtmlConverter` and utilizes external libraries (like `mammoth`) and internal utilities (`pre_process_docx`) to convert DOCX content into HTML, which is then further converted to Markdown by its parent `HtmlConverter`.
+### Custom Markdownify Utility
+This utility (`_CustomMarkdownify`) extends a third-party Markdown conversion library (`markdownify`) to provide tailored HTML-to-Markdown conversion. It includes custom rules for handling headings, sanitizing hyperlinks (removing JavaScript links), and managing image data URIs, ensuring high-quality Markdown output that aligns with `markitdown`'s specific requirements.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/converters/_docx_converter.py#L27-L79" target="_blank" rel="noopener noreferrer">`markitdown.converters._docx_converter.DocxConverter` (27:79)</a>
+- `_CustomMarkdownify` (1:1)
 
 
-### _CustomMarkdownify
-A specialized Markdown converter, built upon or extending an existing `markdownify` library. It is specifically used by several HTML-based converters within the `Document Conversion Subsystem` (e.g., `HtmlConverter`, `BingSerpConverter`, `WikipediaConverter`, `RssConverter`) to efficiently and consistently convert HTML content into Markdown, with custom handling for headings, links, and images.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/converters/_markdownify.py#L7-L110" target="_blank" rel="noopener noreferrer">`markitdown.converters._markdownify._CustomMarkdownify` (7:110)</a>
-
-
-### Docx Pre-processing Utilities
-This module (`markitdown.converter_utils.docx.pre_process`) contains utility functions specifically designed to pre-process DOCX files before their conversion to HTML. This includes handling complex elements like mathematical equations (OMML to LaTeX conversion).
+### DOCX Converter
+This component (`DocxConverter`) specializes in converting Microsoft Word (DOCX) files to Markdown. It orchestrates the pre-processing of DOCX content (e.g., handling mathematical equations) and then uses an external library (`mammoth`) to convert the DOCX to HTML, finally delegating the HTML-to-Markdown conversion to the `HTML to Markdown Converter`.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/converter_utils/docx/pre_process.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown.converter_utils.docx.pre_process` (1:1)</a>
+- `DocxConverter` (1:1)
 
 
-### Exceptions Module
-This module defines custom exception classes (e.g., `FileConversionException`, `UnsupportedFormatException`, `MissingDependencyException`) that are used throughout the `markitdown` library. These exceptions provide specific error handling and feedback mechanisms, crucial for robust operation during the conversion process.
+### DOCX Pre-processing Utility
+This utility (`pre_process_docx`, `oMath2Latex`) is dedicated to preparing DOCX files before their main conversion. Its primary function is to extract and transform specific XML parts within the DOCX, such as converting Office Math Markup Language (OMML) equations into LaTeX format, ensuring better rendering in Markdown.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_exceptions.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown._exceptions` (1:1)</a>
+- `pre_process_docx` (1:1)
+- `oMath2Latex` (1:1)
+
+
+### YouTube Content Converter
+This component (`YouTubeConverter`) is designed to convert YouTube video pages into Markdown. It parses the HTML of a YouTube page to extract key metadata like title, description, views, and runtime. Additionally, it attempts to fetch and embed the video transcript, providing a comprehensive Markdown representation of the YouTube content.
+
+
+**Related Classes/Methods**:
+
+- `YouTubeConverter` (1:1)
+
+
+### RSS/Atom Feed Converter
+This component (`RssConverter`) processes RSS and Atom feed XML structures, extracting information such as feed titles, descriptions, and individual entry/item details (titles, summaries, content, publication dates). It then formats this information into Markdown, often using the `Custom Markdownify Utility` for any embedded HTML content found within the feed entries.
+
+
+**Related Classes/Methods**:
+
+- `RssConverter` (1:1)
 
 
 

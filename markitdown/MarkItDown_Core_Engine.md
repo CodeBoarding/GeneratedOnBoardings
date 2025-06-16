@@ -2,63 +2,68 @@
 graph LR
     MarkItDown_Core_Engine["MarkItDown Core Engine"]
     Base_Converter["Base Converter"]
-    Converters_Package["Converters Package"]
-    StreamInfo["StreamInfo"]
-    _uri_utils["_uri_utils"]
-    _exceptions["_exceptions"]
-    MarkItDown_Core_Engine -- "orchestrates" --> Converters_Package
-    MarkItDown_Core_Engine -- "manages" --> StreamInfo
-    MarkItDown_Core_Engine -- "utilizes" --> _uri_utils
-    MarkItDown_Core_Engine -- "handles" --> _exceptions
-    MarkItDown_Core_Engine -- "interacts with" --> Base_Converter
-    Converters_Package -- "implements" --> Base_Converter
-    Base_Converter -- "uses" --> StreamInfo
+    Document_Converter_Result["Document Converter Result"]
+    Stream_Information["Stream Information"]
+    URI_Utilities["URI Utilities"]
+    HTML_Converter["HTML Converter"]
+    Custom_Markdownify["Custom Markdownify"]
+    MarkItDown_Core_Engine -- "manages" --> Base_Converter
+    MarkItDown_Core_Engine -- "uses" --> Stream_Information
+    MarkItDown_Core_Engine -- "uses" --> URI_Utilities
+    MarkItDown_Core_Engine -- "produces" --> Document_Converter_Result
+    Base_Converter -- "defines" --> Document_Converter_Result
+    Base_Converter -- "consumes" --> Stream_Information
+    HTML_Converter -- "extends" --> Base_Converter
+    HTML_Converter -- "delegates to" --> Custom_Markdownify
+    HTML_Converter -- "produces" --> Document_Converter_Result
     click MarkItDown_Core_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/MarkItDown_Core_Engine.md" "Details"
+    click Base_Converter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Base_Converter.md" "Details"
+    click Custom_Markdownify href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Custom_Markdownify.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-The MarkItDown Core Engine subsystem is the central nervous system of the markitdown library, responsible for orchestrating the entire document conversion process. It acts as the primary interface for initiating conversions, managing input sources, dispatching tasks to specialized converters, and handling errors.
+The `MarkItDown Core Engine` subsystem is the central processing unit of the `markitdown` library, orchestrating the conversion of various document types into Markdown. It intelligently identifies input types, manages a registry of document converters, and dispatches conversion tasks to the appropriate handlers. This subsystem is designed for extensibility, allowing for both built-in and plugin-based converters.
 
 ### MarkItDown Core Engine
-This is the primary orchestrator of the document conversion process. It initializes the system, registers available document converters (which adhere to the Base Converter interface), identifies the type of input source (local file, URI, stream, HTTP response), and dispatches the conversion request to the appropriate internal method. It also manages the guessing and handling of StreamInfo and oversees the overall flow of conversion attempts and error management using _exceptions.
+This is the primary orchestrator, responsible for managing the conversion process from input to Markdown. It maintains a registry of converters, determines the appropriate converter for a given input, and executes the conversion. It also handles plugin loading for extended functionality.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L0-L0" target="_blank" rel="noopener noreferrer">`markitdown._markitdown` (0:0)</a>
+- `markitdown.MarkItDown` (0:0)
 
 
 ### Base Converter
-Provides the abstract base class (BaseConverter) for all specific content converters. It defines the common interface and methods that all converters must implement, ensuring consistency in how they are registered and invoked by the MarkItDown Core Engine. It also handles basic StreamInfo management, acting as a foundational contract for all conversion logic.
+Defines the abstract interface (`DocumentConverter`) that all concrete document converters must implement. It specifies the `accepts()` method for input type determination and the `convert()` method for performing the actual conversion, ensuring a standardized contract for all converters.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_base_converter.py#L0-L0" target="_blank" rel="noopener noreferrer">`markitdown._base_converter` (0:0)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_base_converter.py#L41-L104" target="_blank" rel="noopener noreferrer">`markitdown._base_converter.DocumentConverter` (41:104)</a>
 
 
-### Converters Package
-A collection of modules, each implementing specific content conversion logic (e.g., PlainTextConverter, HtmlConverter, DocxConverter, PdfConverter, etc.). These converters inherit from Base Converter and are registered with the MarkItDown Core Engine instance. They are invoked based on the input content's type and desired output, performing the actual transformation.
-
-
-**Related Classes/Methods**:
-
-- `markitdown.converters` (0:0)
-
-
-### StreamInfo
-A data class used to encapsulate and manage information about the input stream or content being converted, such as content type, charset, and the stream itself. It provides methods for copying and updating this information, which is crucial for the MarkItDown Core Engine to correctly identify and prepare input for converters, and for converters to understand the input context.
+### Document Converter Result
+A data structure (`DocumentConverterResult`) used to encapsulate the outcome of a document conversion. It primarily holds the converted Markdown string and an optional document title.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_stream_info.py#L0-L0" target="_blank" rel="noopener noreferrer">`markitdown._stream_info` (0:0)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_base_converter.py#L4-L38" target="_blank" rel="noopener noreferrer">`markitdown._base_converter.DocumentConverterResult` (4:38)</a>
 
 
-### _uri_utils
-A utility module providing functions for handling and parsing URIs, including converting file URIs to local paths and parsing data URIs. This is essential for the MarkItDown Core Engine to handle various network and local file inputs, ensuring it can correctly resolve and access the content to be converted.
+### Stream Information
+This component (`StreamInfo`) is a data class that stores and provides crucial metadata about the input stream, such as its MIME type, file extension, character set, filename, and source URL. This information is vital for the `MarkItDown` engine to select the correct converter.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_stream_info.py#L5-L31" target="_blank" rel="noopener noreferrer">`markitdown._stream_info.StreamInfo` (5:31)</a>
+
+
+### URI Utilities
+This module provides utility functions (`file_uri_to_path`, `parse_data_uri`) for handling and parsing various Uniform Resource Identifiers (URIs), including `file://` and `data:` schemes. It ensures that the `MarkItDown` engine can correctly interpret and access content from diverse URI sources.
 
 
 **Related Classes/Methods**:
@@ -66,13 +71,22 @@ A utility module providing functions for handling and parsing URIs, including co
 - <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_uri_utils.py#L0-L0" target="_blank" rel="noopener noreferrer">`markitdown._uri_utils` (0:0)</a>
 
 
-### _exceptions
-Defines custom exception classes specific to the markitdown library, such as FailedConversionAttempt, FileConversionException, and UnsupportedFormatException. These are used to provide specific error handling during the conversion process, allowing for more granular and informative error reporting back to the MarkItDown Core Engine and ultimately to the user.
+### HTML Converter
+A concrete implementation of `DocumentConverter` specifically designed to transform HTML input (from file streams or strings) into Markdown. It parses HTML using BeautifulSoup, performs cleaning (e.g., removing script/style tags), and delegates the core Markdown conversion.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_exceptions.py#L0-L0" target="_blank" rel="noopener noreferrer">`markitdown._exceptions` (0:0)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/converters/_html_converter.py#L19-L89" target="_blank" rel="noopener noreferrer">`markitdown.converters._html_converter.HtmlConverter` (19:89)</a>
+
+
+### Custom Markdownify
+This component (`_CustomMarkdownify`) is a specialized Markdown converter that takes a BeautifulSoup object (representing parsed HTML) and transforms it into a Markdown string. It extends an external library (`markdownify`) and applies custom rules for formatting headings, handling links, and managing image data URIs.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/converters/_markdownify.py#L7-L110" target="_blank" rel="noopener noreferrer">`markitdown.converters._markdownify._CustomMarkdownify` (7:110)</a>
 
 
 
