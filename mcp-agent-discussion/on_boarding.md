@@ -30,14 +30,14 @@ graph LR
     Utility_Services -- "provides data handling for" --> LLM_Embedding_Integration
     Utility_Services -- "handles human input for" --> Agent_Core_Communication
     Utility_Services -- "provides serialization for" --> Workflow_Execution_Engine
-    click Core_Application_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Core Application Management.md" "Details"
-    click Logging_and_Observability href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Logging and Observability.md" "Details"
-    click Agent_Core_Communication href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Agent Core & Communication.md" "Details"
-    click Workflow_Execution_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Workflow Execution Engine.md" "Details"
-    click LLM_Embedding_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Augmented LLM patterns" "Details"
-    click AI_Workflow_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/AI Workflow Orchestration.md" "Details"
-    click Application_Server href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/MCP Agent Server.md" "Details"
-    click Utility_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Utility Services.md" "Details"
+    click Core_Application_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent-discussion/Core Application Management.md" "Details"
+    click Logging_and_Observability href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent-discussion/Logging and Observability.md" "Details"
+    click Agent_Core_Communication href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent-discussion/Agent Core & Communication.md" "Details"
+    click Workflow_Execution_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent-discussion/Workflow Execution Engine.md" "Details"
+    click LLM_Embedding_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent-discussion/Augmented LLM patterns" "Details"
+    click AI_Workflow_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent-discussion/AI Workflow Orchestration.md" "Details"
+    click Application_Server href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent-discussion/MCP Agent Server.md" "Details"
+    click Utility_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent-discussion/Utility Services.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
