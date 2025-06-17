@@ -4,9 +4,9 @@ graph LR
     Logging_and_Observability["Logging and Observability"]
     Agent_Core_Communication["Agent Core & Communication"]
     Workflow_Execution_Engine["Workflow Execution Engine"]
-    LLM_Embedding_Integration["LLM & Embedding Integration"]
+    LLM_Embedding_Integration["Augmented LLM patterns"]
     AI_Workflow_Orchestration["AI Workflow Orchestration"]
-    Application_Server["Application Server"]
+    Application_Server["MCP Agent Server"]
     Utility_Services["Utility Services"]
     Core_Application_Management -- "configures" --> Logging_and_Observability
     Core_Application_Management -- "manages" --> Workflow_Execution_Engine
@@ -34,16 +34,16 @@ graph LR
     click Logging_and_Observability href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Logging and Observability.md" "Details"
     click Agent_Core_Communication href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Agent Core & Communication.md" "Details"
     click Workflow_Execution_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Workflow Execution Engine.md" "Details"
-    click LLM_Embedding_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/LLM & Embedding Integration.md" "Details"
+    click LLM_Embedding_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Augmented LLM patterns" "Details"
     click AI_Workflow_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/AI Workflow Orchestration.md" "Details"
-    click Application_Server href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Application Server.md" "Details"
+    click Application_Server href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/MCP Agent Server.md" "Details"
     click Utility_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Utility Services.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-The `mcp-agent` is a multi-agent system designed to orchestrate complex AI-driven workflows. It manages agent lifecycles, facilitates inter-agent communication, integrates with various Large Language Models and embedding models, and provides a robust workflow execution engine. The system also includes comprehensive logging and observability, an application server for external interaction, and utility services for data handling and human input.
+The `mcp-agent` is a multi-agent system designed to orchestrate complex AI-driven workflows. It manages agent lifecycles, facilitates inter-agent communication, integrates with various Large Language Models and embedding models, and provides a robust workflow execution engine. The system also includes comprehensive logging and observability, an MCP Agent Server for external interaction, and utility services for data handling and human input.
 
 ### Core Application Management
 This component is responsible for the overall lifecycle of the `mcp-agent` application, including its initialization, execution, and graceful shutdown. It also handles loading, managing, and providing access to application settings and sensitive information (secrets).
@@ -249,7 +249,7 @@ This component is the core of the agent's operational logic, responsible for man
 - <a href="https://github.com/lastmile-ai/mcp-agent/blob/master/src/mcp_agent/core/context.py#L136-L150" target="_blank" rel="noopener noreferrer">`src.mcp_agent.core.context:configure_workflow_registry` (136:150)</a>
 
 
-### LLM & Embedding Integration
+### Augmented LLM patterns
 This component provides a unified interface for interacting with various Large Language Models (LLMs) and embedding models from different providers (OpenAI, Anthropic, Azure, Google, Ollama, Bedrock). It handles message conversion, model selection, structured output generation, and augments LLM capabilities with tool calling and tracing. It also provides functionalities for generating vector embeddings from text.
 
 
@@ -427,7 +427,7 @@ This component encompasses various AI-driven workflows, including orchestrating 
 - <a href="https://github.com/lastmile-ai/mcp-agent/blob/master/src/mcp_agent/workflows/evaluator_optimizer/evaluator_optimizer.py#L382-L423" target="_blank" rel="noopener noreferrer">`mcp-agent.src.mcp_agent.workflows.evaluator_optimizer.evaluator_optimizer.EvaluatorOptimizerLLM:generate_structured` (382:423)</a>
 
 
-### Application Server
+### MCP Agent Server
 This component provides the external interface for the `mcp-agent` application, allowing it to receive requests, register workflows, and expose its functionalities as an MCP server.
 
 

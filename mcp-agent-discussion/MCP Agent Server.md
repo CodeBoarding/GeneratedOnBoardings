@@ -15,7 +15,7 @@ graph LR
 
 ## Component Details
 
-The Application Server component serves as the external interface for the `mcp-agent` application. Its primary purpose is to receive requests, facilitate workflow registration, and expose the application's functionalities as an MCP server. It manages the server's lifecycle, registers various workflow-related tools for interaction, and provides utilities for workflow execution and server description generation.
+The MCP Agent Server component serves as the external interface for the `mcp-agent` application. Its primary purpose is to receive requests, facilitate workflow registration, and expose the application's functionalities as an MCP server. It manages the server's lifecycle, registers various workflow-related tools for interaction, and provides utilities for workflow execution and server description generation.
 
 ### ServerContext
 The ServerContext component acts as the central context object for the MCP App server. It manages the FastMCP instance, active agents, and the workflow registry. It is responsible for initializing the appropriate workflow registry (in-memory or Temporal) based on the configured execution engine and provides methods for registering new workflows and accessing registered workflows and the workflow registry.

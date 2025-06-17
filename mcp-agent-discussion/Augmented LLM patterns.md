@@ -1,6 +1,6 @@
 ```mermaid
 graph LR
-    LLM_Embedding_Integration_Core_["LLM & Embedding Integration (Core)"]
+    LLM_Embedding_Integration_Core_["Augmented LLM patterns (Core)"]
     LLM_Provider_Integrations["LLM Provider Integrations"]
     Embedding_Provider_Integrations["Embedding Provider Integrations"]
     Model_Selection_Logic["Model Selection Logic"]
@@ -26,9 +26,9 @@ graph LR
 
 ## Component Details
 
-This graph illustrates the architecture of the LLM & Embedding Integration subsystem, which provides a unified interface for interacting with various Large Language Models and embedding models from different providers, handling message conversion, model selection, structured output generation, and augmenting LLM capabilities with tool calling and tracing, as well as generating vector embeddings from text.
+This graph illustrates the architecture of the Augmented LLM patterns subsystem, which provides a unified interface for interacting with various Large Language Models and embedding models from different providers, handling message conversion, model selection, structured output generation, and augmenting LLM capabilities with tool calling and tracing, as well as generating vector embeddings from text.
 
-### LLM & Embedding Integration (Core)
+### Augmented LLM patterns (Core)
 Provides a unified interface for interacting with various Large Language Models (LLMs) and embedding models. It handles common functionalities like message conversion, structured output generation, tool calling, and tracing.
 
 
