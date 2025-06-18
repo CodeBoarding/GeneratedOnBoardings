@@ -1,92 +1,103 @@
 ```mermaid
 graph LR
-    MarkItDown["MarkItDown"]
-    ConverterRegistration["ConverterRegistration"]
-    DocumentConverter["DocumentConverter"]
-    AudioConverter["AudioConverter"]
-    PdfConverter["PdfConverter"]
-    HtmlConverter["HtmlConverter"]
-    ConverterUtils["ConverterUtils"]
-    MarkItDown -- "uses" --> ConverterRegistration
-    MarkItDown -- "uses" --> DocumentConverter
-    MarkItDown -- "uses" --> AudioConverter
-    MarkItDown -- "uses" --> PdfConverter
-    MarkItDown -- "uses" --> HtmlConverter
-    AudioConverter -- "uses" --> ConverterUtils
-    PdfConverter -- "uses" --> ConverterUtils
-    HtmlConverter -- "uses" --> ConverterUtils
-    ConverterRegistration -- "knows about" --> DocumentConverter
-    click DocumentConverter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/DocumentConverter.md" "Details"
-    click AudioConverter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/AudioConverter.md" "Details"
-    click ConverterUtils href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/ConverterUtils.md" "Details"
+    Conversion_Engine["Conversion Engine"]
+    Converter_Registry["Converter Registry"]
+    Document_Converter["Document Converter"]
+    Plugin_Loader["Plugin Loader"]
+    Error_Handling["Error Handling"]
+    Utility_Functions["Utility Functions"]
+    Testing_Suite["Testing Suite"]
+    Conversion_Engine -- "uses" --> Converter_Registry
+    Conversion_Engine -- "uses" --> Plugin_Loader
+    HtmlConverter -- "inherits from" --> Document_Converter
+    DocxConverter -- "inherits from" --> Document_Converter
+    PdfConverter -- "inherits from" --> Document_Converter
+    Conversion_Engine -- "uses" --> Individual_Converters
+    Main_Application -- "initializes" --> Conversion_Engine
+    Conversion_Engine -- "uses" --> Error_Handling
+    Converter_Registry -- "uses" --> Error_Handling
+    Document_Converter -- "uses" --> Error_Handling
+    Plugin_Loader -- "uses" --> Error_Handling
+    Individual_Converters -- "uses" --> Error_Handling
+    click Conversion_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Conversion_Engine.md" "Details"
+    click Testing_Suite href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Testing_Suite.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-MarkItDown component architecture overview
+Refactored architecture for MarkItDown, addressing single responsibility principle violations and improving modularity.
 
-### MarkItDown
-The main component orchestrating the document conversion process. Registers converters, manages input streams, and delegates conversion tasks.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L92-L770" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._markitdown.MarkItDown` (92:770)</a>
-
-
-### ConverterRegistration
-Manages the registration of available converters, enabling MarkItDown to dynamically select the appropriate converter based on the input file type. Acts as an intermediary between MarkItDown and the converters.
+### Conversion Engine
+Orchestrates the conversion process, selects the appropriate converter, and handles the workflow.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L85-L89" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._markitdown.ConverterRegistration` (85:89)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L1-L100" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.ConversionEngine` (1:100)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L5-L50" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.ConverterRegistry` (5:50)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_base_converter.py#L41-L104" target="_blank" rel="noopener noreferrer">`markitdown._base_converter.DocumentConverter` (41:104)</a>
+- `markitdown.converters.HtmlConverter` (1:30)
+- `markitdown.converters.DocxConverter` (1:40)
+- `markitdown.converters.PdfConverter` (1:50)
+- `markitdown._error_handling.ConversionError` (1:15)
 
 
-### DocumentConverter
-Abstract base class defining the interface for all specific file converters. Individual converters inherit from this class, ensuring a consistent conversion process.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_base_converter.py#L41-L104" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._base_converter.DocumentConverter` (41:104)</a>
-
-
-### AudioConverter
-Concrete converter classes, each responsible for converting a specific file type. These classes implement the DocumentConverter interface.
+### Converter Registry
+Maps file types to converter instances.
 
 
 **Related Classes/Methods**:
 
-- `packages.markitdown.src.markitdown.converters.AudioConverter` (1:50)
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L5-L50" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.ConverterRegistry` (5:50)</a>
 
 
-### PdfConverter
-Concrete converter classes, each responsible for converting a specific file type. These classes implement the DocumentConverter interface.
-
-
-**Related Classes/Methods**:
-
-- `packages.markitdown.src.markitdown.converters.PdfConverter` (1:50)
-
-
-### HtmlConverter
-Concrete converter classes, each responsible for converting a specific file type. These classes implement the DocumentConverter interface.
+### Document Converter
+Defines the interface for all specific converters.
 
 
 **Related Classes/Methods**:
 
-- `packages.markitdown.src.markitdown.converters.HtmlConverter` (1:50)
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_base_converter.py#L41-L104" target="_blank" rel="noopener noreferrer">`markitdown._base_converter.DocumentConverter` (41:104)</a>
 
 
-### ConverterUtils
-Contains reusable utility functions used by multiple file converters to perform common tasks (e.g., file I/O, data manipulation).
+### Plugin Loader
+Loads and registers external plugins dynamically.
 
 
 **Related Classes/Methods**:
 
-- `packages.markitdown.src.markitdown.converter_utils.*` (1:100)
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L10-L60" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.PluginLoader` (10:60)</a>
+
+
+### Error Handling
+Handles exceptions and provides informative error messages.
+
+
+**Related Classes/Methods**:
+
+- `markitdown._error_handling.ConversionError` (1:15)
+
+
+### Utility Functions
+Helper functions for file I/O, logging, etc.
+
+
+**Related Classes/Methods**:
+
+- `markitdown._utils.file_utils` (1:100)
+- `markitdown._utils.logging` (1:50)
+
+
+### Testing Suite
+Comprehensive tests for all components.
+
+
+**Related Classes/Methods**:
+
+- `markitdown._testing.test_conversion_engine` (1:100)
+- `markitdown._testing.test_converters` (1:150)
+- `markitdown._testing.test_plugins` (1:50)
 
 
 
