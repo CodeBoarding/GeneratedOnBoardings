@@ -1,103 +1,89 @@
 ```mermaid
 graph LR
-    Conversion_Engine["Conversion Engine"]
-    Converter_Registry["Converter Registry"]
-    Document_Converter["Document Converter"]
-    Plugin_Loader["Plugin Loader"]
-    Error_Handling["Error Handling"]
-    Utility_Functions["Utility Functions"]
-    Testing_Suite["Testing Suite"]
-    Conversion_Engine -- "uses" --> Converter_Registry
-    Conversion_Engine -- "uses" --> Plugin_Loader
-    HtmlConverter -- "inherits from" --> Document_Converter
-    DocxConverter -- "inherits from" --> Document_Converter
-    PdfConverter -- "inherits from" --> Document_Converter
-    Conversion_Engine -- "uses" --> Individual_Converters
-    Main_Application -- "initializes" --> Conversion_Engine
-    Conversion_Engine -- "uses" --> Error_Handling
-    Converter_Registry -- "uses" --> Error_Handling
-    Document_Converter -- "uses" --> Error_Handling
-    Plugin_Loader -- "uses" --> Error_Handling
-    Individual_Converters -- "uses" --> Error_Handling
-    click Conversion_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Conversion_Engine.md" "Details"
-    click Testing_Suite href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Testing_Suite.md" "Details"
+    Core_Engine["Core Engine"]
+    Composite_Converter["Composite Converter"]
+    Individual_Format_Converters["Individual Format Converters"]
+    Stream_Information_Handler["Stream Information Handler"]
+    Plugin_Manager["Plugin Manager"]
+    Exception_Handler["Exception Handler"]
+    Main_Application["Main Application"]
+    Main_Application -- "initializes" --> Core_Engine
+    Core_Engine -- "uses" --> Composite_Converter
+    Core_Engine -- "uses" --> Stream_Information_Handler
+    Core_Engine -- "uses" --> Plugin_Manager
+    Composite_Converter -- "delegates to" --> Individual_Format_Converters
+    Core_Engine -- "calls on error" --> Exception_Handler
+    click Core_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Core_Engine.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-Refactored architecture for MarkItDown, addressing single responsibility principle violations and improving modularity.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### Conversion Engine
-Orchestrates the conversion process, selects the appropriate converter, and handles the workflow.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L1-L100" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.ConversionEngine` (1:100)</a>
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L5-L50" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.ConverterRegistry` (5:50)</a>
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_base_converter.py#L41-L104" target="_blank" rel="noopener noreferrer">`markitdown._base_converter.DocumentConverter` (41:104)</a>
-- `markitdown.converters.HtmlConverter` (1:30)
-- `markitdown.converters.DocxConverter` (1:40)
-- `markitdown.converters.PdfConverter` (1:50)
-- `markitdown._error_handling.ConversionError` (1:15)
-
-
-### Converter Registry
-Maps file types to converter instances.
+### Core Engine
+Manages the conversion process. Initializes the CompositeConverter and PluginManager, orchestrates the conversion workflow using the convert method.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L5-L50" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.ConverterRegistry` (5:50)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L92-L770" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.MarkItDown` (92:770)</a>
 
 
-### Document Converter
-Defines the interface for all specific converters.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_base_converter.py#L41-L104" target="_blank" rel="noopener noreferrer">`markitdown._base_converter.DocumentConverter` (41:104)</a>
-
-
-### Plugin Loader
-Loads and registers external plugins dynamically.
+### Composite Converter
+Aggregates individual format converters. Its convert method likely iterates through converters, selecting the appropriate one based on the input stream_info.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L10-L60" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.PluginLoader` (10:60)</a>
+- `markitdown.converters.CompositeConverter` (1:10)
 
 
-### Error Handling
-Handles exceptions and provides informative error messages.
-
-
-**Related Classes/Methods**:
-
-- `markitdown._error_handling.ConversionError` (1:15)
-
-
-### Utility Functions
-Helper functions for file I/O, logging, etc.
+### Individual Format Converters
+Handles conversion to a specific format (e.g., DOCX, EPUB, HTML). These would have convert methods specific to their format.
 
 
 **Related Classes/Methods**:
 
-- `markitdown._utils.file_utils` (1:100)
-- `markitdown._utils.logging` (1:50)
+- `markitdown.converters.DocxConverter` (1:10)
+- `markitdown.converters.EpubConverter` (1:10)
+- `markitdown.converters.HtmlConverter` (1:10)
 
 
-### Testing Suite
-Comprehensive tests for all components.
+### Stream Information Handler
+Provides metadata (charset, file type) about the input stream.
 
 
 **Related Classes/Methods**:
 
-- `markitdown._testing.test_conversion_engine` (1:100)
-- `markitdown._testing.test_converters` (1:150)
-- `markitdown._testing.test_plugins` (1:50)
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_stream_info.py#L5-L31" target="_blank" rel="noopener noreferrer">`markitdown._stream_info.StreamInfo` (5:31)</a>
+
+
+### Plugin Manager
+Loads and manages plugins, extending the core functionality.
+
+
+**Related Classes/Methods**:
+
+- `markitdown.plugin_manager.PluginManager` (1:10)
+
+
+### Exception Handler
+Handles errors during the conversion process.
+
+
+**Related Classes/Methods**:
+
+- `markitdown.exception_handler.ExceptionHandler` (1:10)
+
+
+### Main Application
+Application entry point; parses command-line arguments, initializes the Core Engine, and runs the conversion.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/__main__.py#L1-L10" target="_blank" rel="noopener noreferrer">`markitdown.__main__` (1:10)</a>
 
 
 
