@@ -1,67 +1,67 @@
 ```mermaid
 graph LR
-    MarkItDown_Core["MarkItDown Core"]
-    Converter_Registry["Converter Registry"]
-    Converters["Converters"]
+    Main_Application["Main Application"]
+    MarkItDown["MarkItDown"]
+    ConverterRegistry["ConverterRegistry"]
     StreamInfo["StreamInfo"]
-    Plugin_Loader["Plugin Loader"]
-    MarkItDown_Core -- "Uses" --> Converter_Registry
-    MarkItDown_Core -- "Uses" --> Plugin_Loader
-    Converter_Registry -- "Registers" --> Converters
-    Converters -- "Uses" --> StreamInfo
-    click MarkItDown_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/MarkItDown_Core.md" "Details"
-    click Converter_Registry href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Converter_Registry.md" "Details"
-    click Converters href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/Converters.md" "Details"
-    click StreamInfo href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/StreamInfo.md" "Details"
+    File_Converters["File Converters"]
+    Main_Application -- "uses" --> MarkItDown
+    MarkItDown -- "uses" --> ConverterRegistry
+    MarkItDown -- "uses" --> StreamInfo
+    ConverterRegistry -- "registers" --> File_Converters
+    File_Converters -- "uses" --> StreamInfo
+    click MarkItDown href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//markitdown/MarkItDown.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-Simplified architecture of markitdown focusing on core components and interactions.  Numerous individual converters are grouped for brevity.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### MarkItDown Core
-The central orchestrator. Initializes converters, handles plugin loading, and manages the overall conversion process. This includes the core logic for selecting the appropriate converter based on file type and executing the conversion.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L1-L100" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_markitdown.py` (1:100)</a>
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/__main__.py#L1-L50" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/__main__.py` (1:50)</a>
-
-
-### Converter Registry
-Manages the registration and lookup of available converters. This component ensures that the MarkItDown core can easily access and utilize different converters without needing explicit knowledge of each one.
+### Main Application
+The entry point, responsible for initializing the system and triggering the conversion process.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L101-L150" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_markitdown.py` (101:150)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/__main__.py#L1-L10" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown.__main__` (1:10)</a>
 
 
-### Converters
-A collection of modules, each responsible for converting a specific file type (e.g., DOCX, HTML, PDF). Each converter implements a common interface (likely defined by an abstract base class).
+### MarkItDown
+The core orchestrator. Manages converters, input streams, and the overall conversion workflow.
 
 
 **Related Classes/Methods**:
 
-- `packages/markitdown/src/markitdown/converters/*` (1:1000)
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L92-L770" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._markitdown.MarkItDown` (92:770)</a>
+
+
+### ConverterRegistry
+Registers and manages available converters. Provides access to the appropriate converter based on file type or input source.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_markitdown.py#L85-L89" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._markitdown.ConverterRegistration` (85:89)</a>
 
 
 ### StreamInfo
-Handles metadata about input streams (files, URLs). Provides a consistent way for converters to access input data regardless of its source.
+Handles input sources (files, URLs, etc.), providing a consistent interface for converters.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_stream_info.py#L1-L200" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_stream_info.py` (1:200)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/master/packages/markitdown/src/markitdown/_stream_info.py#L5-L31" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._stream_info.StreamInfo` (5:31)</a>
 
 
-### Plugin Loader
-Dynamically loads and registers plugins extending the functionality of markitdown.
+### File Converters
+A group of individual converters (AudioConverter, PDFConverter, etc.). Each handles a specific file type, implementing a common interface. They share utility functions.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- `packages.markitdown.src.markitdown.converters.*` (1:200)
+
 
 
 
