@@ -1,112 +1,107 @@
 ```mermaid
 graph LR
-    Experiment_Orchestrator["Experiment Orchestrator"]
-    AI_Agent["AI Agent"]
-    Code_Execution_Environment["Code Execution Environment"]
-    Language_Model_Interface["Language Model Interface"]
-    Experiment_Journal["Experiment Journal"]
-    User_Interface["User Interface"]
-    Configuration_Utilities["Configuration & Utilities"]
-    Experiment_Orchestrator -- "Drives" --> AI_Agent
-    Experiment_Orchestrator -- "Drives" --> Code_Execution_Environment
-    Experiment_Orchestrator -- "Drives" --> Experiment_Journal
-    Experiment_Orchestrator -- "Sends updates to" --> User_Interface
-    AI_Agent -- "Sends queries to" --> Language_Model_Interface
-    AI_Agent -- "Sends code to" --> Code_Execution_Environment
-    AI_Agent -- "Reports progress to" --> Experiment_Orchestrator
-    AI_Agent -- "Logs actions to" --> Experiment_Journal
-    Code_Execution_Environment -- "Returns results to" --> AI_Agent
-    Code_Execution_Environment -- "Returns results to" --> Experiment_Orchestrator
-    Language_Model_Interface -- "Returns responses to" --> AI_Agent
-    Experiment_Journal -- "Generates reports for" --> Experiment_Orchestrator
-    Experiment_Journal -- "Generates reports for" --> User_Interface
-    User_Interface -- "Initiates and monitors" --> Experiment_Orchestrator
-    User_Interface -- "Receives updates from" --> Experiment_Orchestrator
-    User_Interface -- "Receives reports from" --> Experiment_Journal
-    Experiment_Orchestrator -- "Utilizes" --> Configuration_Utilities
-    AI_Agent -- "Utilizes" --> Configuration_Utilities
-    Code_Execution_Environment -- "Utilizes" --> Configuration_Utilities
-    Language_Model_Interface -- "Utilizes" --> Configuration_Utilities
-    Experiment_Journal -- "Utilizes" --> Configuration_Utilities
-    User_Interface -- "Utilizes" --> Configuration_Utilities
-    click Experiment_Orchestrator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Experiment_Orchestrator.md" "Details"
-    click AI_Agent href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/AI_Agent.md" "Details"
-    click Code_Execution_Environment href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Code_Execution_Environment.md" "Details"
-    click Language_Model_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Language_Model_Interface.md" "Details"
-    click Experiment_Journal href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Experiment_Journal.md" "Details"
-    click User_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/User_Interface.md" "Details"
-    click Configuration_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Configuration_Utilities.md" "Details"
+    Experiment_Orchestration_Agent["Experiment Orchestration & Agent"]
+    Code_Execution_Interpreter["Code Execution Interpreter"]
+    LLM_Interaction_Layer["LLM Interaction Layer"]
+    Configuration_Management["Configuration Management"]
+    Journaling_Reporting["Journaling & Reporting"]
+    Data_Utilities["Data Utilities"]
+    Web_User_Interface["Web User Interface"]
+    Experiment_Orchestration_Agent -- "triggers and manages" --> Code_Execution_Interpreter
+    Experiment_Orchestration_Agent -- "sends prompts to and receives responses from" --> LLM_Interaction_Layer
+    Code_Execution_Interpreter -- "receives code snippets from" --> Experiment_Orchestration_Agent
+    Code_Execution_Interpreter -- "provides execution results to" --> Experiment_Orchestration_Agent
+    LLM_Interaction_Layer -- "receives prompts from" --> Experiment_Orchestration_Agent
+    LLM_Interaction_Layer -- "provides responses to" --> Experiment_Orchestration_Agent
+    Configuration_Management -- "provides settings to" --> Experiment_Orchestration_Agent
+    Configuration_Management -- "provides settings to" --> Web_User_Interface
+    Journaling_Reporting -- "receives logged data from" --> Experiment_Orchestration_Agent
+    Journaling_Reporting -- "provides logged data for visualization and reporting to" --> Web_User_Interface
+    Data_Utilities -- "provides preprocessed input data to" --> Experiment_Orchestration_Agent
+    Data_Utilities -- "used by" --> Web_User_Interface
+    Web_User_Interface -- "initiates and monitors" --> Experiment_Orchestration_Agent
+    Web_User_Interface -- "requests visualizations and data previews from" --> Journaling_Reporting
+    Web_User_Interface -- "requests visualizations and data previews from" --> Data_Utilities
+    click Experiment_Orchestration_Agent href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Experiment_Orchestration_Agent.md" "Details"
+    click Code_Execution_Interpreter href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Code_Execution_Interpreter.md" "Details"
+    click LLM_Interaction_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/LLM_Interaction_Layer.md" "Details"
+    click Configuration_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Configuration_Management.md" "Details"
+    click Journaling_Reporting href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Journaling_Reporting.md" "Details"
+    click Data_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//aideml/Data_Utilities.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-The `aideml` system is designed around a core AI agent that interacts with a code execution environment and language models to perform experiments, all orchestrated by a central experiment manager and presented via a user interface. A dedicated journaling component ensures comprehensive logging and reporting.
+High-level data flow overview for `aideml` project, consolidating insights from Control Flow Graph (CFG) and Source Code analysis.
 
-### Experiment Orchestrator
-The top-level manager responsible for the entire lifecycle of an AI experiment. It initializes the experiment, coordinates the AI Agent, Code Execution Environment, and Experiment Journal, and oversees the overall execution flow.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/WecoAI/aideml/blob/master/aide/__init__.py#L22-L61" target="_blank" rel="noopener noreferrer">`aide.__init__.Experiment` (22:61)</a>
-- <a href="https://github.com/WecoAI/aideml/blob/master/aide/run.py#L55-L143" target="_blank" rel="noopener noreferrer">`aide.run.run` (55:143)</a>
-
-
-### AI Agent
-The intelligent core of the system, responsible for the AI's decision-making process. It plans, generates code, debugs, and refines solutions by interacting with the Language Model Interface and the Code Execution Environment.
+### Experiment Orchestration & Agent
+This central component manages the entire lifecycle of an AIDE experiment, from setup and execution to result collection. It also embodies the intelligent agent's core decision-making process, including planning, iterative problem-solving, and code generation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/WecoAI/aideml/blob/master/aide/agent.py#L46-L338" target="_blank" rel="noopener noreferrer">`aide.agent.Agent` (46:338)</a>
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/run.py#L55-L143" target="_blank" rel="noopener noreferrer">`aide.run` (55:143)</a>
+- `aide.Experiment` (1:1)
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/agent.py#L1-L1" target="_blank" rel="noopener noreferrer">`aide.agent` (1:1)</a>
 
 
-### Code Execution Environment
-Provides a secure and isolated sandbox for executing Python code generated by the AI Agent. It manages the execution process, captures standard output/error, and handles exceptions.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/WecoAI/aideml/blob/master/aide/interpreter.py#L0-L0" target="_blank" rel="noopener noreferrer">`aide.interpreter.Interpreter` (0:0)</a>
-
-
-### Language Model Interface
-Abstracts interactions with various large language model (LLM) providers. It handles prompt compilation, API calls to LLMs, and parsing their responses.
+### Code Execution Interpreter
+Responsible for executing Python code generated by the `Experiment Orchestration & Agent` within a sandboxed environment. It captures execution outputs, errors, and provides them back to the agent for analysis.
 
 
 **Related Classes/Methods**:
 
-- `aide.backend.backend` (0:0)
-- <a href="https://github.com/WecoAI/aideml/blob/master/aide/backend/utils.py#L0-L0" target="_blank" rel="noopener noreferrer">`aide.backend.utils` (0:0)</a>
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/interpreter.py#L1-L1" target="_blank" rel="noopener noreferrer">`aide.interpreter` (1:1)</a>
 
 
-### Experiment Journal
-Responsible for recording the entire interaction history of an experiment, including agent steps, code executions, and model responses. It also provides utilities for converting this journal into rich reports and visualizations.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/WecoAI/aideml/blob/master/aide/journal.py#L0-L0" target="_blank" rel="noopener noreferrer">`aide.journal.Journal` (0:0)</a>
-- <a href="https://github.com/WecoAI/aideml/blob/master/aide/journal.py#L0-L0" target="_blank" rel="noopener noreferrer">`aide.journal.journal_to_rich_tree` (0:0)</a>
-
-
-### User Interface
-A Streamlit-based graphical interface that allows users to interact with the system. Users can configure experiments, upload data, initiate runs, and view live progress and final results and visualizations.
+### LLM Interaction Layer
+Provides a unified interface for interacting with various Large Language Models (LLMs). It handles the compilation of prompts, sending requests to the LLMs, and parsing structured information (like code blocks or JSON objects) from the raw text responses.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/WecoAI/aideml/blob/master/aide/webui/app.py#L27-L607" target="_blank" rel="noopener noreferrer">`aide.webui.app.WebUI` (27:607)</a>
+- `aide.backend` (1:1)
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/utils/response.py#L1-L1" target="_blank" rel="noopener noreferrer">`aide.utils.response` (1:1)</a>
 
 
-### Configuration & Utilities
-A collection of shared helper modules providing common functionalities such as configuration loading and management, data preview, response parsing, data serialization, and tree visualization.
+### Configuration Management
+Manages the loading, parsing, and distribution of application-wide and experiment-specific configurations. It acts as a central source for settings used across various components of the AIDE system.
 
 
 **Related Classes/Methods**:
 
-- `aide.utils` (0:0)
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/utils/config.py#L1-L1" target="_blank" rel="noopener noreferrer">`aide.utils.config` (1:1)</a>
+
+
+### Journaling & Reporting
+This component is responsible for recording detailed logs of the agent's actions, observations, and intermediate results throughout an experiment. It also facilitates the generation of comprehensive reports and creates visual representations from the collected experiment data.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/journal.py#L1-L1" target="_blank" rel="noopener noreferrer">`aide.journal` (1:1)</a>
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/journal2report.py#L5-L30" target="_blank" rel="noopener noreferrer">`aide.journal2report` (5:30)</a>
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/utils/tree_export.py#L1-L1" target="_blank" rel="noopener noreferrer">`aide.utils.tree_export` (1:1)</a>
+
+
+### Data Utilities
+Offers general utilities for data handling, including previewing datasets, serialization (e.g., JSON), and basic data preprocessing. It ensures data is in a usable format for the agent and other components.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/utils/data_preview.py#L1-L1" target="_blank" rel="noopener noreferrer">`aide.utils.data_preview` (1:1)</a>
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/utils/serialize.py#L1-L1" target="_blank" rel="noopener noreferrer">`aide.utils.serialize` (1:1)</a>
+
+
+### Web User Interface
+Provides a web-based graphical interface for users to interact with the AIDE system. Users can configure experiments, upload data, initiate and monitor experiments, and view live results and visualizations.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/WecoAI/aideml/blob/master/aide/webui/app.py#L1-L1" target="_blank" rel="noopener noreferrer">`aide.webui.app` (1:1)</a>
 
 
 
