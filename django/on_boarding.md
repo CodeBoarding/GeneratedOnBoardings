@@ -5,7 +5,7 @@
 
 The `django` framework's architecture can be distilled into four primary, highly interconnected components, each with distinct responsibilities that collectively manage the entire web application lifecycle.
 
-### Core Web Processing
+### Core Web Processing [Expand](./Core_Web_Processing.md)
 This component is the entry and exit point for all web traffic. It's responsible for receiving HTTP requests, parsing them, routing them to the appropriate application logic (views), and then generating and sending back the HTTP responses. It abstracts away the underlying web server integration (WSGI/ASGI).
 
 
@@ -19,7 +19,7 @@ This component is the entry and exit point for all web traffic. It's responsible
 - <a href="https://github.com/django/django/blob/master/django/views/generic/base.py#L36-L180" target="_blank" rel="noopener noreferrer">`django.views.generic.base.View` (36:180)</a>
 
 
-### Data Management
+### Data Management [Expand](./Data_Management.md)
 This component provides Django's powerful Object-Relational Mapper (ORM), allowing developers to interact with databases using Python objects. It also handles database-specific drivers, manages the evolution of the database schema through migrations, and executes queries.
 
 
@@ -32,7 +32,7 @@ This component provides Django's powerful Object-Relational Mapper (ORM), allowi
 - <a href="https://github.com/django/django/blob/master/django/db/migrations/executor.py#L9-L411" target="_blank" rel="noopener noreferrer">`django.db.migrations.executor.MigrationExecutor` (9:411)</a>
 
 
-### Application Infrastructure
+### Application Infrastructure [Expand](./Application_Infrastructure.md)
 This component provides the foundational services and configurations for the entire Django application. It includes centralized settings management, the application registry (managing installed apps), user authentication and authorization, session management, the template rendering system, and caching mechanisms to improve performance.
 
 
@@ -46,7 +46,7 @@ This component provides the foundational services and configurations for the ent
 - <a href="https://github.com/django/django/blob/master/django/core/cache/backends/base.py#L57-L389" target="_blank" rel="noopener noreferrer">`django.core.cache.backends.base.BaseCache` (57:389)</a>
 
 
-### Administrative Tools
+### Administrative Tools [Expand](./Administrative_Tools.md)
 This component offers a suite of utilities for managing the Django project. It includes command-line tools for various tasks (e.g., running the development server, creating and applying migrations) and an automatically generated, customizable web-based interface for site administrators to manage application data.
 
 
