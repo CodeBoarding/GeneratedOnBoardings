@@ -1,96 +1,81 @@
 ```mermaid
 graph LR
-    Core_Data_Models["Core Data Models"]
-    Data_Pipeline["Data Pipeline"]
-    Data_Management_ML_Preparation["Data Management & ML Preparation"]
-    Analysis_Visualization["Analysis & Visualization"]
-    Command_Line_Interface_CLI_["Command Line Interface (CLI)"]
-    Utilities["Utilities"]
-    Data_Pipeline -- "produced by" --> Core_Data_Models
-    Core_Data_Models -- "consumed by" --> Data_Management_ML_Preparation
-    Core_Data_Models -- "consumed by" --> Analysis_Visualization
-    Data_Pipeline -- "produces" --> Core_Data_Models
-    Data_Pipeline -- "triggered by" --> Command_Line_Interface_CLI_
-    Data_Management_ML_Preparation -- "processes" --> Core_Data_Models
-    Data_Management_ML_Preparation -- "triggered by" --> Command_Line_Interface_CLI_
-    Analysis_Visualization -- "consumes" --> Core_Data_Models
-    Analysis_Visualization -- "uses" --> Utilities
-    Command_Line_Interface_CLI_ -- "triggers" --> Data_Pipeline
-    Command_Line_Interface_CLI_ -- "triggers" --> Data_Management_ML_Preparation
-    Utilities -- "supports" --> Analysis_Visualization
-    click Core_Data_Models href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ProteinFlow/Core_Data_Models.md" "Details"
-    click Data_Pipeline href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ProteinFlow/Data_Pipeline.md" "Details"
-    click Data_Management_ML_Preparation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ProteinFlow/Data_Management_ML_Preparation.md" "Details"
-    click Analysis_Visualization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ProteinFlow/Analysis_Visualization.md" "Details"
-    click Command_Line_Interface_CLI_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ProteinFlow/Command_Line_Interface_CLI_.md" "Details"
+    ProteinFlow_Data_Core["ProteinFlow Data Core"]
+    Data_Management["Data Management"]
+    Dataset_Preparation["Dataset Preparation"]
+    Evaluation_Visualization["Evaluation & Visualization"]
+    User_Interface["User Interface"]
+    Data_Management -- "produces" --> ProteinFlow_Data_Core
+    Dataset_Preparation -- "consumes" --> ProteinFlow_Data_Core
+    User_Interface -- "initiates" --> Data_Management
+    Data_Management -- "outputs" --> ProteinFlow_Data_Core
+    User_Interface -- "initiates" --> Dataset_Preparation
+    Dataset_Preparation -- "processes" --> ProteinFlow_Data_Core
+    Evaluation_Visualization -- "analyzes" --> ProteinFlow_Data_Core
+    User_Interface -- "accesses" --> Evaluation_Visualization
+    User_Interface -- "controls" --> Data_Management
+    User_Interface -- "controls" --> Dataset_Preparation
+    click ProteinFlow_Data_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ProteinFlow/ProteinFlow_Data_Core.md" "Details"
+    click Dataset_Preparation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ProteinFlow/Dataset_Preparation.md" "Details"
+    click Evaluation_Visualization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ProteinFlow/Evaluation_Visualization.md" "Details"
+    click User_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ProteinFlow/User_Interface.md" "Details"
 ```
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
-Final Architecture Analysis for `ProteinFlow`
+Final high-level architecture analysis for ProteinFlow
 
-### Core Data Models
-This component defines the fundamental data structures for representing protein information within the library. It includes raw PDB entry parsing, the central `ProteinEntry` object which encapsulates processed protein data (sequences, coordinates, features), and utilities for constructing PDB files from these models.
-
-
-**Related Classes/Methods**:
-
-- `proteinflow.data.ProteinEntry` (0:0)
-- `proteinflow.data.PDBEntry` (0:0)
-- `proteinflow.data.SAbDabEntry` (0:0)
-- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/data/utils.py#L22-L260" target="_blank" rel="noopener noreferrer">`proteinflow.data.utils.PDBBuilder` (22:260)</a>
-
-
-### Data Pipeline
-Responsible for the initial stages of data handling, including downloading raw protein data (PDB and SAbDab files), performing essential parsing and filtering, and transforming this raw information into the structured `Core Data Models`. It also incorporates specialized functions for processing ligand-related data.
+### ProteinFlow Data Core
+This foundational component defines the core data structures for representing protein and PDB entries, including their sequences, coordinates, and associated metadata. It serves as the central data representation for the entire library, ensuring consistent data handling across all modules.
 
 
 **Related Classes/Methods**:
 
-- `proteinflow.download` (0:0)
-- `proteinflow.processing` (0:0)
-- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/ligand.py#L0-L0" target="_blank" rel="noopener noreferrer">`proteinflow.ligand` (0:0)</a>
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/data/__init__.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.data.__init__` (1:1)</a>
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/data/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.data.utils` (1:1)</a>
 
 
-### Data Management & ML Preparation
-This component manages the organization of processed protein data. It handles the splitting of data into distinct training, validation, and test sets, and provides PyTorch-compatible mechanisms (`ProteinLoader`, `ProteinDataset`) for efficient loading, batching, and preparing `Core Data Models` for machine learning model training and inference.
-
-
-**Related Classes/Methods**:
-
-- `proteinflow.split` (0:0)
-- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/data/torch.py#L67-L239" target="_blank" rel="noopener noreferrer">`proteinflow.data.torch.ProteinLoader` (67:239)</a>
-- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/data/torch.py#L242-L1131" target="_blank" rel="noopener noreferrer">`proteinflow.data.torch.ProteinDataset` (242:1131)</a>
-
-
-### Analysis & Visualization
-Focuses on the evaluation and visual representation of protein data. It implements various quantitative metrics for assessing the quality and characteristics of protein sequences and structures, and offers functionalities for generating visual representations and animations of protein structures.
+### Data Management
+Handles the entire lifecycle of raw protein data, from downloading and acquisition from external databases (PDB, SAbDab) to comprehensive processing, filtering, error handling, redundancy removal, and specialized ligand processing. It ensures data quality and readiness for subsequent steps.
 
 
 **Related Classes/Methods**:
 
-- `proteinflow.metrics` (0:0)
-- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/visualize.py#L0-L0" target="_blank" rel="noopener noreferrer">`proteinflow.visualize` (0:0)</a>
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/download/__init__.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.download.__init__` (1:1)</a>
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/download/boto.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.download.boto` (1:1)</a>
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/processing/__init__.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.processing.__init__` (1:1)</a>
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/ligand.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.ligand` (1:1)</a>
 
 
-### Command Line Interface (CLI)
-Serves as the primary user-facing component, providing a command-line interface for users to initiate and control various operations within the ProteinFlow library, such as data download, generation, splitting, and other processing tasks.
+### Dataset Preparation
+Manages the organization of processed protein data into machine learning-ready datasets. This includes splitting data into training, validation, and test sets using clustering algorithms (e.g., MMseqs2, Foldseek, Tanimoto) to ensure diversity and prevent data leakage, and providing PyTorch-compatible data loaders for efficient model training.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/split/__init__.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.split.__init__` (1:1)</a>
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/split/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.split.utils` (1:1)</a>
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/data/torch.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.data.torch` (1:1)</a>
+
+
+### Evaluation & Visualization
+Provides tools for evaluating protein structures and sequences using various metrics (e.g., BLOSUM62, TM-score, ESMFold) and for visualizing protein structures and animations from PDB files or ProteinEntry objects. It supports analysis and interpretation of protein data.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/metrics/__init__.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.metrics.__init__` (1:1)</a>
+- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/visualize.py#L1-L1" target="_blank" rel="noopener noreferrer">`proteinflow.visualize` (1:1)</a>
+
+
+### User Interface
+Serves as the primary command-line interface for users to interact with the ProteinFlow library. It enables users to trigger core operations such as data downloading, processing, generation, splitting, and to retrieve summaries and initiate evaluation/visualization tasks.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/cli.py#L18-L20" target="_blank" rel="noopener noreferrer">`proteinflow.cli` (18:20)</a>
-
-
-### Utilities
-A collection of supporting modules that centralize project-wide constants (e.g., S3 bucket information, amino acid mappings) and provide general utility functions, including those that might depend on optional external libraries.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/constants.py#L0-L0" target="_blank" rel="noopener noreferrer">`proteinflow.constants` (0:0)</a>
-- <a href="https://github.com/adaptyvbio/ProteinFlow/blob/master/proteinflow/extra.py#L0-L0" target="_blank" rel="noopener noreferrer">`proteinflow.extra` (0:0)</a>
 
 
 
