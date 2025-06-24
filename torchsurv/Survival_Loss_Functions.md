@@ -1,60 +1,57 @@
 ```mermaid
 graph LR
+    Survival_Loss_Functions_Module["Survival Loss Functions Module"]
     Cox_Loss_Function["Cox Loss Function"]
+    Momentum_Loss_Function["Momentum Loss Function"]
     Weibull_Loss_Function["Weibull Loss Function"]
-    Momentum_Loss_Module["Momentum Loss Module"]
-    Momentum_Loss_Module -- "uses" --> Cox_Loss_Function
-    Momentum_Loss_Module -- "uses" --> Weibull_Loss_Function
+    Survival_Loss_Functions_Module -- "contains" --> Cox_Loss_Function
+    Survival_Loss_Functions_Module -- "contains" --> Momentum_Loss_Function
+    Survival_Loss_Functions_Module -- "contains" --> Weibull_Loss_Function
+    click Survival_Loss_Functions_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Survival_Loss_Functions_Module.md" "Details"
     click Cox_Loss_Function href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Cox_Loss_Function.md" "Details"
-    click Momentum_Loss_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Momentum_Loss_Module.md" "Details"
+    click Momentum_Loss_Function href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Momentum_Loss_Function.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `Survival Loss Functions` module in `torchsurv` provides a dedicated collection of loss functions essential for training survival models. Its primary purpose is to enable models to learn effectively from survival data, which often includes censored observations. The module is structured around three core components, each addressing a specific aspect of survival analysis loss calculation: the Cox Proportional Hazards loss, the Weibull Accelerated Failure Time (AFT) loss, and a Momentum-based loss mechanism for advanced training strategies. The module's design emphasizes modularity, with each loss function residing in its own dedicated file, promoting clear separation of concerns and ease of maintenance. While `getClassHierarchy` indicates no explicit class inheritance within the `torchsurv.loss` package, the components interact by allowing the `Momentum Loss Module` to wrap and utilize the other loss functions, demonstrating a composition-based relationship.
+These components were chosen because they directly correspond to the distinct loss functions identified in the initial problem description and confirmed by the file structure. They are fundamental because they represent the core mathematical objectives that enable survival models to learn from data. Without these specific loss functions, the models would lack the necessary mechanisms to quantify prediction errors and optimize their parameters for survival outcomes. Each loss function addresses different modeling assumptions and provides unique benefits for various survival analysis scenarios. The `Survival Loss Functions Module` acts as the logical container, making these individual loss functions accessible and organized. The `getClassHierarchy` tool did not reveal any internal class inheritance within the `torchsurv.loss` package, suggesting that these loss functions are likely implemented as standalone functions or classes that inherit from external libraries (e.g., PyTorch's `nn.Module`) rather than from a common base class defined within this specific package.
 
-### Cox Loss Function [[Expand]](./Cox_Loss_Function.md)
-This component is responsible for calculating the negative partial log-likelihood, a standard objective for Cox proportional hazards models. It offers robust handling of tied event times through Cox, Efron, and Breslow approximation methods, making it versatile for various datasets. It includes internal helper functions for these calculations and input validation to ensure data integrity.
+### Survival Loss Functions Module [[Expand]](./Survival_Loss_Functions_Module.md)
+This module serves as a collection point for various loss functions tailored for survival analysis. It provides a unified interface for accessing specialized loss functions like Cox, Momentum, and Weibull, which are crucial for training survival models by quantifying prediction errors against censored and uncensored survival data.
 
 
 **Related Classes/Methods**:
 
-- `neg_partial_log_likelihood` (0:0)
-- `_partial_likelihood_cox` (0:0)
-- `_partial_likelihood_efron` (0:0)
-- `_partial_likelihood_breslow` (0:0)
-- `_check_inputs` (0:0)
+- `torchsurv.loss` (1:1)
+
+
+### Cox Loss Function [[Expand]](./Cox_Loss_Function.md)
+Implements the negative log-partial likelihood loss, which is the cornerstone objective function for Cox proportional hazards models. This loss function is particularly effective for survival data as it focuses on the relative ordering of event times and inherently handles censored observations without requiring assumptions about the baseline hazard function.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/cox.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.loss.cox` (1:1)</a>
+
+
+### Momentum Loss Function [[Expand]](./Momentum_Loss_Function.md)
+Provides a specialized loss function that likely incorporates a momentum-like term to potentially enhance the stability and convergence speed of training for survival models. The exact mathematical formulation and its benefits would be detailed within its source code, aiming to improve optimization dynamics.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/momentum.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.loss.momentum` (1:1)</a>
 
 
 ### Weibull Loss Function
-This component computes the negative log-likelihood for models that assume a Weibull distribution within an Accelerated Failure Time (AFT) framework. It provides helper functions for calculating survival probability, log hazard, and cumulative hazard, along with internal validation checks to ensure correct input shapes for the logarithmic operations.
+Implements a loss function derived from the Weibull distribution, a common parametric model used to describe time-to-event data. This loss typically involves fitting the parameters of a Weibull distribution to the observed survival times, making it suitable for models that assume a specific underlying distribution for survival.
 
 
 **Related Classes/Methods**:
 
-- `neg_log_likelihood` (0:0)
-- `survival_function` (0:0)
-- `log_hazard` (0:0)
-- `cumulative_hazard` (0:0)
-- `_check_log_shape` (0:0)
-- `_check_inputs` (0:0)
-
-
-### Momentum Loss Module [[Expand]](./Momentum_Loss_Module.md)
-This component implements a specialized loss mechanism, encapsulated within the `Momentum` class, designed to decouple batch size during model training using a momentum-based encoder and a memory bank. It orchestrates the initialization of "online" and "target" networks, computes a combined loss from current and memory bank data, and updates the target network using an Exponential Moving Average (EMA). It acts as a wrapper, accepting other survival loss functions (like Cox or Weibull) as callable arguments to integrate them into its momentum-based training loop.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/momentum.py#L9-L212" target="_blank" rel="noopener noreferrer">`Momentum` (9:212)</a>
-- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/__init__.py#L0-L0" target="_blank" rel="noopener noreferrer">`__init__` (0:0)</a>
-- `forward` (0:0)
-- `_init_encoder_k` (0:0)
-- `_bank_loss` (0:0)
-- `_update_momentum_encoder` (0:0)
-- `infer` (0:0)
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/weibull.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.loss.weibull` (1:1)</a>
 
 
 

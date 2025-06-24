@@ -1,62 +1,66 @@
 ```mermaid
 graph LR
-    Cox_Loss_Function["Cox Loss Function"]
-    AUC_Metric_Component["AUC Metric Component"]
-    Kaplan_Meier_Estimator_Component["Kaplan-Meier Estimator Component"]
-    Input_Validation_Component["Input Validation Component"]
-    Cox_Loss_Function -- "utilizes" --> Input_Validation_Component
-    AUC_Metric_Component -- "depends on" --> Input_Validation_Component
-    AUC_Metric_Component -- "utilizes" --> Kaplan_Meier_Estimator_Component
-    click Cox_Loss_Function href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Cox_Loss_Function.md" "Details"
-    click AUC_Metric_Component href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/AUC_Metric_Component.md" "Details"
+    CoxLossFunction["CoxLossFunction"]
+    InputValidator["InputValidator"]
+    CoxPartialLikelihood["CoxPartialLikelihood"]
+    EfronPartialLikelihood["EfronPartialLikelihood"]
+    BreslowPartialLikelihood["BreslowPartialLikelihood"]
+    CoxLossFunction -- "uses" --> InputValidator
+    CoxLossFunction -- "delegates_to" --> CoxPartialLikelihood
+    CoxLossFunction -- "delegates_to" --> EfronPartialLikelihood
+    CoxLossFunction -- "delegates_to" --> BreslowPartialLikelihood
+    click InputValidator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/InputValidator.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-This document describes key components of the `torchsurv` library, including the `Cox Loss Function`, `AUC Metric Component`, `Kaplan-Meier Estimator Component`, and `Input Validation Component`, highlighting their functionalities and interdependencies within the survival analysis framework.
+This subsystem is dedicated to computing the negative log-partial likelihood, which is the core objective function for training Cox proportional hazards models. It is specifically designed for survival data, focusing on the relative ordering of event times and effectively handling censored observations without making assumptions about the baseline hazard function.
 
-### Cox Loss Function [[Expand]](./Cox_Loss_Function.md)
-This component calculates the negative partial log-likelihood, the primary objective function for Cox proportional hazards models. It supports Cox, Efron, and Breslow approximation methods for handling tied event times, ensuring robust and accurate loss computation.
-
-
-**Related Classes/Methods**:
-
-- `neg_partial_log_likelihood` (0:0)
-- `_partial_likelihood_cox` (0:0)
-- `_partial_likelihood_efron` (0:0)
-- `_partial_likelihood_breslow` (0:0)
-- `_check_inputs` (0:0)
-
-
-### AUC Metric Component [[Expand]](./AUC_Metric_Component.md)
-This component is responsible for the comprehensive calculation, validation, and statistical analysis of the Area Under the Curve (AUC) for survival data. It handles input validation, updates AUC estimates over time, calculates integrals, determines confidence intervals, computes p-values, and facilitates AUC comparisons.
+### CoxLossFunction
+This is the primary entry point and orchestrator of the Cox loss calculation. Implemented by `torchsurv.loss.cox.neg_partial_log_likelihood`, it handles initial input processing, including validation and data sorting, and then dispatches the core partial likelihood calculation to the appropriate tie-handling method based on the specified `ties_method`. It is fundamental as it serves as the public API and coordinates the entire loss computation flow.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/auc.py#L12-L1283" target="_blank" rel="noopener noreferrer">`Auc` (12:1283)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/cox.py#L9-L167" target="_blank" rel="noopener noreferrer">`torchsurv.loss.cox.neg_partial_log_likelihood` (9:167)</a>
 
 
-### Kaplan-Meier Estimator Component
-This component provides functionalities for estimating survival probabilities using the Kaplan-Meier method. It is crucial for calculating baseline survival curves, which are often required as inputs or for intermediate calculations in survival analysis metrics like AUC (e.g., for IPCW).
-
-
-**Related Classes/Methods**:
-
-- `KaplanMeierEstimator` (0:0)
-
-
-### Input Validation Component
-This component provides utility functions to validate the format and content of input data, specifically for survival data, evaluation times, and estimates. It ensures that the data conforms to expected structures and types before being processed by other components, preventing errors and ensuring the reliability of calculations.
+### InputValidator [[Expand]](./InputValidator.md)
+This component, implemented by `torchsurv.loss.cox._check_inputs`, is solely responsible for validating the input tensors (`log_hz`, `event`, and `time`). It ensures that these inputs meet the necessary criteria (e.g., correct dimensions, data types, and non-empty event counts) for accurate and stable loss calculation. It is fundamental because robust input validation prevents common errors and ensures the stability and correctness of the loss computation.
 
 
 **Related Classes/Methods**:
 
-- `validate_survival_data` (0:0)
-- `validate_evaluation_time` (0:0)
-- `validate_estimate` (0:0)
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/cox.py#L279-L305" target="_blank" rel="noopener noreferrer">`torchsurv.loss.cox._check_inputs` (279:305)</a>
+
+
+### CoxPartialLikelihood
+This component, implemented by `torchsurv.loss.cox._partial_likelihood_cox`, calculates the partial likelihood specifically when no ties are present in the event times. It represents the most straightforward calculation of the Cox partial likelihood. It is fundamental as it serves as the base case for the partial likelihood calculation, forming the foundation upon which tie-handling methods are built.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/cox.py#L170-L198" target="_blank" rel="noopener noreferrer">`torchsurv.loss.cox._partial_likelihood_cox` (170:198)</a>
+
+
+### EfronPartialLikelihood
+This component, implemented by `torchsurv.loss.cox._partial_likelihood_efron`, calculates the partial likelihood using Efron's approximation for handling tied event times. Efron's method is a widely accepted and generally more accurate approximation for ties compared to Breslow's. It is fundamental because it provides a robust and commonly used method to accurately handle tied events, which are frequent in real-world survival data.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/cox.py#L201-L246" target="_blank" rel="noopener noreferrer">`torchsurv.loss.cox._partial_likelihood_efron` (201:246)</a>
+
+
+### BreslowPartialLikelihood
+This component, implemented by `torchsurv.loss.cox._partial_likelihood_breslow`, calculates the partial likelihood using Breslow's approximation for handling tied event times. While simpler than Efron's, it offers an alternative approach to tie handling. It is fundamental as it provides another valid, often computationally less intensive, method for addressing tied events, offering flexibility in implementation choices.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/cox.py#L249-L276" target="_blank" rel="noopener noreferrer">`torchsurv.loss.cox._partial_likelihood_breslow` (249:276)</a>
 
 
 

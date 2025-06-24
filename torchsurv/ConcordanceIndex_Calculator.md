@@ -1,46 +1,77 @@
 ```mermaid
 graph LR
     ConcordanceIndex_Calculator["ConcordanceIndex Calculator"]
-    Metrics["Metrics"]
-    Tools["Tools"]
-    Statistics["Statistics"]
-    ConcordanceIndex_Calculator -- "belongs to" --> Metrics
-    ConcordanceIndex_Calculator -- "utilizes" --> Tools
-    ConcordanceIndex_Calculator -- "leverages" --> Statistics
+    Input_Validator["Input Validator"]
+    Data_Preprocessor["Data Preprocessor"]
+    Comparable_Pair_Tied_Time_Identifier["Comparable Pair & Tied Time Identifier"]
+    Statistical_Analysis_Module["Statistical Analysis Module"]
+    ConcordanceIndex_Calculator -- "uses" --> Input_Validator
+    ConcordanceIndex_Calculator -- "uses" --> Data_Preprocessor
+    ConcordanceIndex_Calculator -- "uses" --> Comparable_Pair_Tied_Time_Identifier
+    ConcordanceIndex_Calculator -- "delegates to" --> Statistical_Analysis_Module
+    Statistical_Analysis_Module -- "uses" --> ConcordanceIndex_Calculator
     click ConcordanceIndex_Calculator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/ConcordanceIndex_Calculator.md" "Details"
-    click Metrics href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Metrics.md" "Details"
-    click Statistics href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Statistics.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `ConcordanceIndex Calculator` component is fundamental because it encapsulates the entire logic for computing the Concordance Index (C-index), a critical metric in survival analysis. Its importance stems from its comprehensive functionality, which includes not only the core C-index calculation but also advanced statistical features like confidence interval estimation, p-value calculation, and comparative analysis. This makes it a self-contained and robust unit for evaluating survival models.
+This analysis describes the components and their relationships within a Concordance Index (C-index) calculation subsystem. The core `ConcordanceIndex Calculator` orchestrates data validation, preprocessing, pair identification, and delegates statistical analysis to a dedicated module. The components are chosen to ensure clear separation of concerns, promoting maintainability, testability, and extensibility.
 
 ### ConcordanceIndex Calculator [[Expand]](./ConcordanceIndex_Calculator.md)
-This component is the core implementation for computing the Concordance Index (C-index), a key metric for evaluating survival models. It manages the intricate logic for identifying comparable pairs, handling tied event times and risk scores, and calculating the C-index estimate. Beyond the primary calculation, it provides robust statistical functionalities, including methods for estimating confidence intervals (using Noether, Bootstrap, and Conservative approaches), calculating p-values, and performing statistical comparisons between two C-index values. It maintains internal state related to the C-index calculation (e.g., `concordant`, `discordant`, `tied_risk`, `weight`).
+This is the central component responsible for computing the Concordance Index (C-index). It encapsulates the core logic for calculating concordance, discordance, and tied pairs, with support for Inverse Probability of Censoring Weighting (IPCW). Beyond basic C-index computation, it provides robust statistical functionalities, including the calculation of confidence intervals (using Noether, Conservative, or Bootstrap methods), p-values for hypothesis testing (against a null of 0.5), and comparative analysis between two C-index values.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
 
-### Metrics [[Expand]](./Metrics.md)
-
-
-
-**Related Classes/Methods**: _None_
-
-### Tools
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex` (0:0)</a>
 
 
-
-**Related Classes/Methods**: _None_
-
-### Statistics [[Expand]](./Statistics.md)
+### Input Validator
+This component provides essential utility functions for validating the format and correctness of input data, specifically survival data (time and event status) and model estimates. Its primary role is to ensure that data conforms to expected types and structures before being processed by the `ConcordanceIndex Calculator`, thereby preventing errors and ensuring the reliability of computations.
 
 
+**Related Classes/Methods**:
 
-**Related Classes/Methods**: _None_
+- `torchsurv.metrics.validate_inputs` (0:0)
+
+
+### Data Preprocessor
+This component is responsible for preparing and formatting the input data for C-index calculation. This includes ensuring that risk estimates are in the correct tensor shape and applying or generating appropriate sample weights, such as those derived from Inverse Probability of Censoring Weighting (IPCW).
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_update_cindex_estimate` (0:0)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_update_weight` (0:0)</a>
+
+
+### Comparable Pair & Tied Time Identifier
+This component's purpose is to accurately identify comparable pairs of samples within the survival data and to account for instances where event times are tied. This identification is a critical prerequisite for the correct calculation of concordant, discordant, and tied risk pairs in the C-index formula.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_get_comparable_and_tied_time` (0:0)</a>
+
+
+### Statistical Analysis Module
+This module provides a comprehensive suite of statistical methods for analyzing the computed Concordance Index. It includes functionalities for calculating confidence intervals using various statistical approaches (Noether, Conservative, Bootstrap), determining p-values for hypothesis testing against a null C-index of 0.5, and performing comparative analyses between two C-index values. It also handles the computation of the standard error for the C-index.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_confidence_interval_noether` (0:0)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_confidence_interval_conservative` (0:0)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_confidence_interval_bootstrap` (0:0)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_p_value_noether` (0:0)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_p_value_bootstrap` (0:0)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_compare_noether` (0:0)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_compare_bootstrap` (0:0)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_concordance_index_se` (0:0)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L0-L0" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex:_bootstrap_cindex` (0:0)</a>
+
 
 
 

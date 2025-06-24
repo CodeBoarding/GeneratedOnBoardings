@@ -1,20 +1,12 @@
 ```mermaid
 graph LR
-    CountAggregator["CountAggregator"]
     Loss_Functions["Loss Functions"]
     Metrics["Metrics"]
     Statistics["Statistics"]
     Tools["Tools"]
-    CountAggregator -- "produces data for" --> Statistics
-    Loss_Functions -- "utilize" --> Tools
-    Metrics -- "rely on" --> Tools
-    Metrics -- "leverage" --> Statistics
-    Statistics -- "utilizes" --> Tools
-    Statistics -- "contains" --> CountAggregator
-    Tools -- "supports" --> Loss_Functions
-    Tools -- "supports" --> Metrics
-    Tools -- "supports" --> Statistics
-    click CountAggregator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/CountAggregator.md" "Details"
+    Metrics -- "leverages" --> Statistics
+    Metrics -- "utilizes" --> Tools
+    Loss_Functions -- "utilizes" --> Tools
     click Loss_Functions href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Loss_Functions.md" "Details"
     click Metrics href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Metrics.md" "Details"
     click Statistics href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Statistics.md" "Details"
@@ -24,19 +16,10 @@ graph LR
 
 ## Details
 
-The `getClassHierarchy` tool did not return any explicit class hierarchy for the `torchsurv` package. This suggests that the library might be structured more around functions and modules rather than a deep object-oriented inheritance model, or that the classes present do not form a complex inheritance tree detectable by the tool at the package level.
-
-### CountAggregator [[Expand]](./CountAggregator.md)
-An internal component of the `KaplanMeierEstimator`, implemented as the `_compute_counts` method. Its responsibility is to process the raw survival data to derive the fundamental counts required for the Kaplan-Meier formula, including unique time points, the number of individuals at risk, events, and censored observations. This component is crucial for preparing the data for the Kaplan-Meier estimation.
-
-
-**Related Classes/Methods**:
-
-- `KaplanMeierEstimator:_compute_counts` (1:1)
-
+The torchsurv library is structured around four fundamental components (Loss Functions, Metrics, Statistics, and Tools) that collectively enable the training, evaluation, and statistical handling of survival models. The Brier Score Metric is a specialized part of the Metrics component, dedicated to evaluating the prediction accuracy of survival models.
 
 ### Loss Functions [[Expand]](./Loss_Functions.md)
-This component provides various loss functions essential for training survival models. These functions quantify the discrepancy between predicted and actual survival outcomes, guiding the model's learning process.
+This component provides various loss functions (e.g., Cox, Momentum, Weibull) essential for training survival models. These functions quantify the discrepancy between predicted and actual survival outcomes, guiding the model's learning process.
 
 
 **Related Classes/Methods**:
@@ -47,7 +30,7 @@ This component provides various loss functions essential for training survival m
 
 
 ### Metrics [[Expand]](./Metrics.md)
-This component offers a suite of evaluation metrics specifically tailored for survival analysis. These metrics are used to assess the performance and accuracy of survival models.
+This component offers a suite of evaluation metrics specifically tailored for survival analysis, including AUC, C-index, and the Brier Score. These metrics are used to assess the performance and accuracy of survival models. The Brier Score Metric is a key part of this component, dedicated to calculating the Brier Score for prediction accuracy, handling survival data, event times, and predictions, often with considerations for censoring and time-dependency.
 
 
 **Related Classes/Methods**:
@@ -58,7 +41,7 @@ This component offers a suite of evaluation metrics specifically tailored for su
 
 
 ### Statistics [[Expand]](./Statistics.md)
-This component provides statistical utilities relevant to survival analysis, such as methods for Kaplan-Meier estimation and Inverse Probability of Censoring Weighting (IPCW). These are often used for data preparation, analysis, or in conjunction with model evaluation.
+This component provides statistical utilities relevant to survival analysis, such as methods for Inverse Probability of Censoring Weighting (IPCW) and Kaplan-Meier estimation. These are often used for data preparation, analysis, or in conjunction with model evaluation, particularly for metrics like the Brier Score, which may require handling censored data.
 
 
 **Related Classes/Methods**:
@@ -68,7 +51,7 @@ This component provides statistical utilities relevant to survival analysis, suc
 
 
 ### Tools
-This component contains utility functions that support other parts of the `torchsurv` library. Specifically, it includes input validation routines to ensure that data passed to other components meets the expected format and constraints.
+This component contains utility functions that support other parts of the torchsurv library. Specifically, it includes input validation routines to ensure that data passed to other components meets the expected format and constraints, promoting robust data handling across the library.
 
 
 **Related Classes/Methods**:
