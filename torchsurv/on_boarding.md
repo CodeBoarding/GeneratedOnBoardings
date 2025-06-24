@@ -1,83 +1,62 @@
 ```mermaid
 graph LR
-    ModelTraining["ModelTraining"]
-    SurvivalLossFunctions["SurvivalLossFunctions"]
-    MomentumTrainingStrategy["MomentumTrainingStrategy"]
-    SurvivalMetricsAndStats["SurvivalMetricsAndStats"]
-    InputValidationUtilities["InputValidationUtilities"]
-    ModelTraining -- "uses" --> SurvivalLossFunctions
-    ModelTraining -- "evaluates with" --> SurvivalMetricsAndStats
-    ModelTraining -- "employs" --> MomentumTrainingStrategy
-    SurvivalLossFunctions -- "provides losses for" --> ModelTraining
-    SurvivalLossFunctions -- "supports" --> MomentumTrainingStrategy
-    MomentumTrainingStrategy -- "is used by" --> ModelTraining
-    MomentumTrainingStrategy -- "leverages" --> SurvivalLossFunctions
-    SurvivalMetricsAndStats -- "provides evaluation for" --> ModelTraining
-    SurvivalMetricsAndStats -- "validates inputs with" --> InputValidationUtilities
-    InputValidationUtilities -- "is used by" --> SurvivalMetricsAndStats
-    click ModelTraining href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/ModelTraining.md" "Details"
-    click SurvivalLossFunctions href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/SurvivalLossFunctions.md" "Details"
-    click MomentumTrainingStrategy href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/MomentumTrainingStrategy.md" "Details"
-    click SurvivalMetricsAndStats href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/SurvivalMetricsAndStats.md" "Details"
-    click InputValidationUtilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/InputValidationUtilities.md" "Details"
+    Survival_Loss_Functions["Survival Loss Functions"]
+    Survival_Metrics["Survival Metrics"]
+    Survival_Statistics["Survival Statistics"]
+    Input_Validation_Utilities["Input Validation Utilities"]
+    Survival_Metrics -- "relies on" --> Input_Validation_Utilities
+    Survival_Metrics -- "utilizes" --> Survival_Statistics
+    Survival_Statistics -- "uses" --> Input_Validation_Utilities
+    click Survival_Loss_Functions href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Survival_Loss_Functions.md" "Details"
+    click Survival_Metrics href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Survival_Metrics.md" "Details"
+    click Survival_Statistics href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/torchsurv/Survival_Statistics.md" "Details"
 ```
+
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
-## Component Details
+## Details
 
-This graph represents the core architecture of `torchsurv`, focusing on the training, evaluation, and statistical analysis of survival models. The main flow involves `ModelTraining` orchestrating the learning process, utilizing `SurvivalLossFunctions` for optimization, `MomentumTrainingStrategy` for advanced training techniques, and `SurvivalMetricsAndStats` for performance evaluation and statistical insights. `InputValidationUtilities` serves as a foundational component, ensuring data integrity across various modules.
+Final architecture analysis for `torchsurv`, focusing on its core components and their interactions. This analysis identifies the central modules and their responsibilities within the `torchsurv` project, outlining their relationships to provide a high-level data flow overview.
 
-### ModelTraining
-Orchestrates the training and evaluation of survival models, integrating data handling, optimization, and performance monitoring.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/Novartis/torchsurv/blob/master/docs/notebooks/helpers_momentum.py#L10-L73" target="_blank" rel="noopener noreferrer">`torchsurv.docs.notebooks.helpers_momentum.LitMNIST` (10:73)</a>
-- <a href="https://github.com/Novartis/torchsurv/blob/master/docs/notebooks/helpers_momentum.py#L76-L127" target="_blank" rel="noopener noreferrer">`torchsurv.docs.notebooks.helpers_momentum.LitMomentum` (76:127)</a>
-- <a href="https://github.com/Novartis/torchsurv/blob/master/docs/notebooks/helpers_momentum.py#L130-L183" target="_blank" rel="noopener noreferrer">`torchsurv.docs.notebooks.helpers_momentum.MNISTDataModule` (130:183)</a>
-
-
-### SurvivalLossFunctions
-Implements various loss functions critical for optimizing survival models, including Weibull, Cox, and Momentum-based losses.
+### Survival Loss Functions [[Expand]](./Survival_Loss_Functions.md)
+This module provides a collection of loss functions specifically designed for training survival models. It includes implementations for common survival analysis objectives such as Cox proportional hazards, Weibull, and Momentum-based losses, enabling models to learn from censored and uncensored survival data.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/loss/weibull.py#L5-L309" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.loss.weibull` (5:309)</a>
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/loss/cox.py#L6-L269" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.loss.cox` (6:269)</a>
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/loss/momentum.py#L8-L209" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.loss.momentum` (8:209)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/cox.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.loss.cox` (1:1)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/momentum.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.loss.momentum` (1:1)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/loss/weibull.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.loss.weibull` (1:1)</a>
 
 
-### MomentumTrainingStrategy
-Provides a momentum-based training approach for survival models, utilizing online/target networks and a memory bank for efficient batch processing.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/loss/momentum.py#L8-L209" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.loss.momentum` (8:209)</a>
-
-
-### SurvivalMetricsAndStats
-Offers statistical methods and performance metrics for survival analysis, such as Kaplan-Meier, IPCW, C-index, AUC, and Brier Score.
+### Survival Metrics [[Expand]](./Survival_Metrics.md)
+This module offers a comprehensive suite of metrics to evaluate the performance and predictive accuracy of survival models. It includes key evaluation criteria such as the Concordance Index (C-index), Area Under the Curve (AUC), and Brier Score, providing robust tools for model assessment.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/stats/kaplan_meier.py#L7-L249" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.stats.kaplan_meier` (7:249)</a>
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/stats/ipcw.py#L8-L100" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.stats.ipcw` (8:100)</a>
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/metrics/cindex.py#L9-L579" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.metrics.cindex` (9:579)</a>
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/metrics/auc.py#L4-L209" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.metrics.auc` (4:209)</a>
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/metrics/brier_score.py#L8-L509" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.metrics.brier_score` (8:509)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/auc.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.auc` (1:1)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/brier_score.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.brier_score` (1:1)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/metrics/cindex.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.metrics.cindex` (1:1)</a>
 
 
-### InputValidationUtilities
-Contains utility functions for validating input data across the library, ensuring data integrity for survival analysis computations.
+### Survival Statistics [[Expand]](./Survival_Statistics.md)
+This module provides fundamental statistical tools and estimators crucial for survival analysis. It includes implementations like the Kaplan-Meier Estimator for non-parametric survival curve estimation and Inverse Probability of Censoring Weighting (IPCW) for handling censored data in various statistical contexts.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/Novartis/torchsurv/blob/master/src/torchsurv/tools/validate_inputs.py#L4-L109" target="_blank" rel="noopener noreferrer">`torchsurv.src.torchsurv.tools.validate_inputs` (4:109)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/stats/ipcw.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.stats.ipcw` (1:1)</a>
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/stats/kaplan_meier.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.stats.kaplan_meier` (1:1)</a>
+
+
+### Input Validation Utilities
+This module contains a set of utility functions specifically designed to validate the format, consistency, and integrity of input data used across various `torchsurv` components. It ensures that survival data, model estimates, and evaluation times conform to expected structures and types, preventing common data-related errors.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/Novartis/torchsurv/src/torchsurv/tools/validate_inputs.py#L1-L1" target="_blank" rel="noopener noreferrer">`torchsurv.tools.validate_inputs` (1:1)</a>
 
 
 
