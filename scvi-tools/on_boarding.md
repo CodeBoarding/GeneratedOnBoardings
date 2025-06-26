@@ -1,60 +1,82 @@
 ```mermaid
 graph LR
     Data_Management_Loading["Data Management & Loading"]
-    Probabilistic_Models["Probabilistic Models"]
-    Neural_Network_Architecture["Neural Network Architecture"]
-    Training_Evaluation_System["Training & Evaluation System"]
-    Ecosystem_Integration_Utilities["Ecosystem Integration & Utilities"]
-    Data_Management_Loading -- "prepares data for" --> Probabilistic_Models
-    Data_Management_Loading -- "provides data to" --> Training_Evaluation_System
-    Probabilistic_Models -- "utilizes" --> Neural_Network_Architecture
-    Probabilistic_Models -- "trained by" --> Training_Evaluation_System
-    Neural_Network_Architecture -- "provides components to" --> Probabilistic_Models
-    Neural_Network_Architecture -- "defines core computations for" --> Probabilistic_Models
-    Training_Evaluation_System -- "trains" --> Probabilistic_Models
-    Training_Evaluation_System -- "consumes data from" --> Data_Management_Loading
-    Ecosystem_Integration_Utilities -- "supports" --> Probabilistic_Models
-    Ecosystem_Integration_Utilities -- "supports" --> Data_Management_Loading
+    Core_Model_Architecture["Core Model Architecture"]
+    Model_Training_Execution["Model Training & Execution"]
+    Model_Analysis_Deployment["Model Analysis & Deployment"]
+    Utilities["Utilities"]
+    Data_Management_Loading -- "Provides prepared data to" --> Model_Training_Execution
+    Data_Management_Loading -- "Registers data requirements with" --> Core_Model_Architecture
+    Core_Model_Architecture -- "Defines and provides models to" --> Model_Training_Execution
+    Core_Model_Architecture -- "Provides trained models/outputs to" --> Model_Analysis_Deployment
+    Model_Training_Execution -- "Receives data from" --> Data_Management_Loading
+    Model_Training_Execution -- "Trains and interacts with" --> Core_Model_Architecture
+    Model_Analysis_Deployment -- "Evaluates outputs from" --> Core_Model_Architecture
+    Model_Analysis_Deployment -- "Manages persistence of" --> Core_Model_Architecture
+    Utilities -- "Provides common functionalities to" --> Data_Management_Loading
+    Utilities -- "Provides common functionalities to" --> Model_Training_Execution
     click Data_Management_Loading href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/scvi-tools/Data_Management_Loading.md" "Details"
-    click Probabilistic_Models href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/scvi-tools/Probabilistic_Models.md" "Details"
-    click Neural_Network_Architecture href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/scvi-tools/Neural_Network_Architecture.md" "Details"
+    click Model_Training_Execution href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/scvi-tools/Model_Training_Execution.md" "Details"
+    click Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/scvi-tools/Utilities.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-Final Architecture Analysis for `scvi-tools`
+This high-level architecture analysis of `scvi-tools` identifies five core components, detailing their responsibilities, key source files, and interrelationships.
 
 ### Data Management & Loading [[Expand]](./Data_Management_Loading.md)
-This component is responsible for all aspects of single-cell data handling. It manages the registration, validation, and preprocessing of `AnnData` objects, ensuring data integrity and consistency. Furthermore, it provides efficient mechanisms for loading and splitting data into mini-batches, which are essential for model training and inference.
+This component is responsible for handling the loading, preprocessing, validation, and registration of single-cell data, primarily using AnnData objects. It ensures data integrity and provides a standardized interface for models to access data. It also manages the creation of PyTorch DataLoaders for efficient batching and splitting data into training, validation, and test sets.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
 
-### Probabilistic Models [[Expand]](./Probabilistic_Models.md)
-This central component implements the diverse range of probabilistic models for single-cell data analysis. It encompasses both foundational models (e.g., SCVI, TOTALVI) and specialized or external contributions (e.g., CellAssign, MethylVI). These models define the overall statistical frameworks and computational graphs used for biological inference.
-
-
-**Related Classes/Methods**: _None_
-
-### Neural Network Architecture [[Expand]](./Neural_Network_Architecture.md)
-This component provides the fundamental neural network building blocks, modules, and probabilistic distributions that form the computational backbone of all probabilistic models. It defines reusable layers, encoders, decoders, and complete Variational Autoencoder (VAE)-like structures, along with the statistical distributions crucial for generative modeling.
+- `scvi.data` (0:0)
+- `scvi.dataloaders` (0:0)
 
 
-**Related Classes/Methods**: _None_
-
-### Training & Evaluation System
-This component orchestrates the entire lifecycle of model training, validation, and evaluation. It defines and manages various training plans, optimizers, callbacks (e.g., early stopping), and logging mechanisms, ensuring robust and reproducible model development and performance assessment.
+### Core Model Architecture
+This is the foundational layer for all scvi-tools models, defining their structure and probabilistic nature. It encompasses the base model framework, specific probabilistic modules (e.g., VAEs, TOTALVAE), neural network building blocks (e.g., encoders, decoders, fully connected layers), and statistical distributions (e.g., Negative Binomial, Normal) used for defining likelihoods and priors.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
 
-### Ecosystem Integration & Utilities
-This component comprises general-purpose helper functions, cross-cutting utilities (e.g., dependency checks, progress tracking), and functionalities for interacting with external model repositories like Hugging Face Hub. It facilitates model sharing, retrieval, and provides foundational support across the library.
+- `scvi.model.base` (0:0)
+- `scvi.module` (0:0)
+- `scvi.nn` (0:0)
+- `scvi.distributions` (0:0)
 
 
-**Related Classes/Methods**: _None_
+### Model Training & Execution [[Expand]](./Model_Training_Execution.md)
+This component orchestrates the entire training process for scvi-tools models. It manages the training loop, optimizers, learning rate schedulers, callbacks for monitoring and early stopping, and logging of metrics. It efficiently feeds data batches to the models for forward and backward passes.
+
+
+**Related Classes/Methods**:
+
+- `scvi.train` (0:0)
+
+
+### Model Analysis & Deployment
+This component provides tools for evaluating the performance and diagnosing potential issues of trained models, including functionalities for posterior predictive checks and differential analysis. It also facilitates the saving, loading, and sharing of pre-trained models with external repositories like Hugging Face Hub or S3, handling metadata management and model serialization/deserialization.
+
+
+**Related Classes/Methods**:
+
+- `scvi.hub` (0:0)
+- `scvi.criticism` (0:0)
+- <a href="https://github.com/scverse/scvi-tools/src/scvi/model/base/_de_core.py#L105-L204" target="_blank" rel="noopener noreferrer">`scvi.model.base._de_core` (105:204)</a>
+- <a href="https://github.com/scverse/scvi-tools/src/scvi/model/base/_differential.py#L0-L0" target="_blank" rel="noopener noreferrer">`scvi.model.base._differential` (0:0)</a>
+
+
+### Utilities [[Expand]](./Utilities.md)
+A collection of general-purpose helper functions and modules used across the scvi-tools library. These utilities support various tasks such as dependency checking, progress tracking, and data structure manipulation, providing foundational support for other components.
+
+
+**Related Classes/Methods**:
+
+- `scvi.utils` (0:0)
+
 
 
 
