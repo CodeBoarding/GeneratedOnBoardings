@@ -1,99 +1,55 @@
 ```mermaid
 graph LR
-    Application_Core["Application Core"]
+    FastAPI_Application["FastAPI Application"]
     Routing["Routing"]
-    Dependency_Injection["Dependency Injection"]
-    Parameter_Handling["Parameter Handling"]
-    Request_Response_Handling["Request/Response Handling"]
-    Data_Models["Data Models"]
-    OpenAPI_Generation["OpenAPI Generation"]
-    Application_Core -- "Uses" --> Routing
-    Application_Core -- "Uses" --> OpenAPI_Generation
-    Routing -- "Uses" --> Dependency_Injection
-    Routing -- "Uses" --> Parameter_Handling
-    Request_Response_Handling -- "Relies on" --> Data_Models
-    Data_Models -- "Provides schemas to" --> Parameter_Handling
-    OpenAPI_Generation -- "Used by" --> Application_Core
-    click Routing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Routing.md" "Details"
-    click Dependency_Injection href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Dependency_Injection.md" "Details"
-    click Parameter_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Parameter_Handling.md" "Details"
-    click Request_Response_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Request_Response_Handling.md" "Details"
-    click Data_Models href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Data_Models.md" "Details"
-    click OpenAPI_Generation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/OpenAPI_Generation.md" "Details"
+    Request_Handling_Dependency_Injection["Request Handling & Dependency Injection"]
+    Endpoint_Handlers["Endpoint Handlers"]
+    Response_Handling["Response Handling"]
+    FastAPI_Application -- "uses" --> Routing
+    Routing -- "uses" --> Request_Handling_Dependency_Injection
+    Routing -- "directs requests to" --> Endpoint_Handlers
+    Endpoint_Handlers -- "uses" --> Request_Handling_Dependency_Injection
+    Endpoint_Handlers -- "return data to" --> Response_Handling
+    FastAPI_Application -- "uses" --> Response_Handling
+    click Endpoint_Handlers href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Endpoint_Handlers.md" "Details"
+    click Response_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Response_Handling.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+This simplified model focuses on the core request/response flow and dependency management within FastAPI.
 
-### Application Core
-The central component responsible for initializing and configuring the FastAPI application. It manages the application lifecycle, including startup and shutdown events, and integrates other components.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/applications.py" target="_blank" rel="noopener noreferrer">`fastapi.applications` (0:0)</a>
+### FastAPI Application
+The central application instance, responsible for coordinating all other components, handling requests, and managing the application lifecycle.
 
 
-### Routing [[Expand]](./Routing.md)
-Maps incoming HTTP requests to the appropriate handler functions (path operations). It manages route definitions, including methods (GET, POST, etc.), paths, and dependencies.
+**Related Classes/Methods**: _None_
+
+### Routing
+Maps incoming HTTP requests to the appropriate endpoint handler functions.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/routing.py" target="_blank" rel="noopener noreferrer">`fastapi.routing` (0:0)</a>
-
-
-### Dependency Injection [[Expand]](./Dependency_Injection.md)
-Manages dependencies for path operation functions, providing a way to inject required resources into handlers.
+### Request Handling & Dependency Injection
+Parses and validates incoming request data, manages dependencies, and injects them into endpoint handlers.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/dependencies/utils.py" target="_blank" rel="noopener noreferrer">`fastapi.dependencies.utils` (0:0)</a>
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/dependencies/models.py" target="_blank" rel="noopener noreferrer">`fastapi.dependencies.models` (0:0)</a>
-
-
-### Parameter Handling [[Expand]](./Parameter_Handling.md)
-Extracts, validates, and converts parameters from various sources (path, query, headers, cookies, body).
+### Endpoint Handlers [[Expand]](./Endpoint_Handlers.md)
+The functions that handle the actual business logic of the application.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/params.py" target="_blank" rel="noopener noreferrer">`fastapi.params` (0:0)</a>
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/param_functions.py" target="_blank" rel="noopener noreferrer">`fastapi.param_functions` (0:0)</a>
-
-
-### Request/Response Handling [[Expand]](./Request_Response_Handling.md)
-Encapsulates the processing of incoming HTTP requests and the creation of outgoing HTTP responses.
+### Response Handling [[Expand]](./Response_Handling.md)
+Serializes the data returned by endpoint handlers into HTTP responses (JSON, etc.).
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/requests.py" target="_blank" rel="noopener noreferrer">`fastapi.requests` (0:0)</a>
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/responses.py" target="_blank" rel="noopener noreferrer">`fastapi.responses` (0:0)</a>
-
-
-### Data Models [[Expand]](./Data_Models.md)
-Defines the structure and validation rules for request and response data using Pydantic.
-
-
-**Related Classes/Methods**:
-
-- `pydantic` (0:0)
-
-
-### OpenAPI Generation [[Expand]](./OpenAPI_Generation.md)
-Generates the OpenAPI schema for the API, providing documentation and interactive API exploration tools.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/openapi/utils.py" target="_blank" rel="noopener noreferrer">`fastapi.openapi.utils` (0:0)</a>
-- <a href="https://github.com/fastapi/fastapi/blob/master/temp/fastapi/openapi/docs.py" target="_blank" rel="noopener noreferrer">`fastapi.openapi.docs` (0:0)</a>
-
+**Related Classes/Methods**: _None_
 
 
 
