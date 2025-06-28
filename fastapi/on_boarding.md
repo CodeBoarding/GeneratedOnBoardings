@@ -1,51 +1,52 @@
 ```mermaid
 graph LR
-    Core_Application_FastAPI_["Core Application (FastAPI)"]
-    Routing_APIRouter_["Routing (APIRouter)"]
+    Application_Core["Application Core"]
+    Routing["Routing"]
     Dependency_Injection["Dependency Injection"]
-    Request_and_Response_Handling["Request and Response Handling"]
-    OpenAPI_and_Documentation["OpenAPI and Documentation"]
-    Core_Application_FastAPI_ -- "Uses" --> Routing_APIRouter_
-    Core_Application_FastAPI_ -- "Uses" --> OpenAPI_and_Documentation
-    Routing_APIRouter_ -- "Uses" --> Dependency_Injection
-    Dependency_Injection -- "Uses" --> Request_and_Response_Handling
+    Request_Response_Handling["Request/Response Handling"]
+    OpenAPI_Documentation["OpenAPI Documentation"]
+    Application_Core -- "uses" --> Routing
+    Application_Core -- "interacts with" --> OpenAPI_Documentation
+    Routing -- "uses" --> Dependency_Injection
+    Routing -- "uses" --> Request_Response_Handling
+    click Application_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Application_Core.md" "Details"
+    click Routing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Routing.md" "Details"
     click Dependency_Injection href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Dependency_Injection.md" "Details"
-    click Request_and_Response_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Request_and_Response_Handling.md" "Details"
-    click OpenAPI_and_Documentation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/OpenAPI_and_Documentation.md" "Details"
+    click OpenAPI_Documentation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/OpenAPI_Documentation.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-Simplified architecture of core components and their interactions within a FastAPI application.
+Final Architecture Analysis for `fastapi` Based on the provided information, here's a refined component breakdown for FastAPI, aiming for simplicity and clarity: 1. Application Core * Description: The central component responsible for application lifecycle management (startup, shutdown), configuration, and overall orchestration. It serves as the entry point for the FastAPI application. * Source Files: `fastapi.applications.FastAPI` * Responsibilities:     * Initialization of the FastAPI application.     * Configuration management.     * Event handling (startup, shutdown).     * Integration with the routing and OpenAPI components. 2. Routing * Description: Handles the mapping of incoming HTTP requests to the appropriate handler functions (path operations). * Source Files: `fastapi.routing.APIRouter`, `fastapi.routing.APIRoute` * Responsibilities:     * Defining API endpoints (routes).     * Associating routes with handler functions.     * Dispatching requests to the correct handler.     * Managing request methods (GET, POST, etc.). 3. Dependency Injection * Description: Manages the resolution and injection of dependencies required by path operation functions. * Source Files: `fastapi.dependencies.utils` * Responsibilities:     * Resolving dependencies for handler functions.     * Managing dependency scopes and lifecycles.     * Injecting dependencies into handler functions. 4. Request/Response Handling * Description: Handles the parsing of incoming HTTP requests and the serialization/formatting of responses. * Source Files: `fastapi.requests`, `fastapi.responses`, `fastapi.encoders`, `fastapi.params` * Responsibilities:     * Parsing request data (path, query parameters, headers, body).     * Validating request data.     * Serializing response data.     * Setting HTTP status codes and headers. 5. OpenAPI Documentation * Description: Generates the OpenAPI schema for the API, enabling documentation and client generation. * Source Files: `fastapi.openapi.utils`, `fastapi.openapi.docs` * Responsibilities:     * Generating the OpenAPI schema.     * Providing documentation endpoints (Swagger UI, ReDoc). Relationships: * Application Core uses Routing to map requests to handlers. * Application Core interacts with OpenAPI Documentation to generate API documentation. * Routing uses Dependency Injection to resolve dependencies for handlers. * Routing uses Request/Response Handling to parse requests and format responses. This simplified architecture highlights the core components and their interactions within FastAPI.
 
-### Core Application (FastAPI)
-The central entry point for the FastAPI application. It initializes the application, configures middleware, exception handlers, and integrates routers.
+### Application Core [[Expand]](./Application_Core.md)
+The central component responsible for application lifecycle management (startup, shutdown), configuration, and overall orchestration. It serves as the entry point for the FastAPI application.
 
 
 **Related Classes/Methods**: _None_
 
-### Routing (APIRouter)
-Manages the mapping of incoming HTTP requests to specific endpoint functions. Defines API routes, including paths, HTTP methods, and associated handlers.
+### Routing [[Expand]](./Routing.md)
+Handles the mapping of incoming HTTP requests to the appropriate handler functions (path operations).
 
 
 **Related Classes/Methods**: _None_
 
 ### Dependency Injection [[Expand]](./Dependency_Injection.md)
-Resolves and injects dependencies into endpoint functions. This includes path parameters, query parameters, headers, cookies, and request bodies.
+Manages the resolution and injection of dependencies required by path operation functions.
 
 
 **Related Classes/Methods**: _None_
 
-### Request and Response Handling [[Expand]](./Request_and_Response_Handling.md)
-Parses incoming requests, validates data, serializes responses, and sets HTTP status codes and headers.
+### Request/Response Handling
+Handles the parsing of incoming HTTP requests and the serialization/formatting of responses.
 
 
 **Related Classes/Methods**: _None_
 
-### OpenAPI and Documentation [[Expand]](./OpenAPI_and_Documentation.md)
-Generates the OpenAPI schema for the API and serves interactive API documentation (Swagger UI, ReDoc).
+### OpenAPI Documentation [[Expand]](./OpenAPI_Documentation.md)
+Generates the OpenAPI schema for the API, enabling documentation and client generation.
 
 
 **Related Classes/Methods**: _None_

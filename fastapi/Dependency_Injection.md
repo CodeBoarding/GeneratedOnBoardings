@@ -1,74 +1,48 @@
 ```mermaid
 graph LR
-    FastAPI["FastAPI"]
-    APIRouter["APIRouter"]
-    Depends["Depends"]
-    Request["Request"]
-    Params["Params"]
-    Security["Security"]
-    ExceptionHandlers["ExceptionHandlers"]
-    openapi["openapi"]
-    FastAPI -- "Uses" --> Depends
-    FastAPI -- "Uses" --> APIRouter
-    APIRouter -- "Uses" --> Depends
-    APIRouter -- "Uses" --> Request
-    Depends -- "Related to" --> Security
-    Request -- "Uses" --> Params
-    Params -- "Reflects" --> OpenAPI
-    OpenAPI -- "Reflects" --> Security
-    ExceptionHandlers -- "Uses" --> FastAPI
+    fastapi_Depends["fastapi.Depends"]
+    fastapi_dependencies_models_Dependant["fastapi.dependencies.models.Dependant"]
+    fastapi_params_Param["fastapi.params.Param"]
+    fastapi_routing_APIRoute["fastapi.routing.APIRoute"]
+    fastapi_applications_FastAPI["fastapi.applications.FastAPI"]
+    fastapi_routing_APIRoute -- "uses" --> fastapi_dependencies_models_Dependant
+    fastapi_applications_FastAPI -- "contains and manages" --> fastapi_routing_APIRoute
+    fastapi_dependencies_models_Dependant -- "uses" --> fastapi_params_Param
+    fastapi_routing_APIRoute -- "are processed by" --> fastapi_Depends
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-Dependency Injection in FastAPI
+Component overview for Dependency Injection in FastAPI
 
-### FastAPI
-The core application class. It's responsible for initializing the application and handling incoming requests. It uses the `Depends` class to resolve dependencies for route handlers.
-
-
-**Related Classes/Methods**: _None_
-
-### APIRouter
-A class for creating modular sets of API routes. It allows grouping related endpoints and applying common configurations, including dependency injection.
+### fastapi.Depends
+This is the core dependency injection mechanism. It's a callable that FastAPI uses to resolve dependencies for path operation functions. It handles the execution of dependency functions and the caching of results based on scope.
 
 
 **Related Classes/Methods**: _None_
 
-### Depends
-A central class/function used for declaring dependencies. It specifies a callable (function, class, or other) that will be executed to provide a value to a route handler.
+### fastapi.dependencies.models.Dependant
+Represents a collection of dependencies for a specific path operation. It stores information about the dependency functions, their parameters, and how they should be resolved.
 
 
 **Related Classes/Methods**: _None_
 
-### Request
-Represents an incoming HTTP request. Provides access to request data, headers, and other relevant information that can be used as dependencies.
+### fastapi.params.Param
+While primarily for defining request parameters, these classes also play a role in dependency injection. They can be used as type hints in dependency functions, allowing FastAPI to automatically extract and validate request data and inject it into the dependency.
 
 
 **Related Classes/Methods**: _None_
 
-### Params
-Defines classes for declaring request parameters (query, path, header, cookie, body, form, file). These are injected as dependencies.
+### fastapi.routing.APIRoute
+Represents a single route in the API. It uses the Dependant model to resolve dependencies for the route's path operation function.
 
 
 **Related Classes/Methods**: _None_
 
-### Security
-Provides various security schemes for authentication and authorization, often used as dependencies.
-
-
-**Related Classes/Methods**: _None_
-
-### ExceptionHandlers
-Handles exceptions raised during request processing, including validation errors related to dependency injection.
-
-
-**Related Classes/Methods**: _None_
-
-### openapi
-Generates OpenAPI schema, reflecting dependencies and security requirements.
+### fastapi.applications.FastAPI
+The main application class. It inherits from APIRouter and is responsible for configuring and managing the API, including setting up the dependency injection system.
 
 
 **Related Classes/Methods**: _None_
