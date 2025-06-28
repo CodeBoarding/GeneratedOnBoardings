@@ -1,52 +1,51 @@
 ```mermaid
 graph LR
-    FastAPI_Application["FastAPI Application"]
-    Routing["Routing"]
-    Request_Handling_Dependency_Injection["Request Handling & Dependency Injection"]
-    Endpoint_Handlers["Endpoint Handlers"]
-    Response_Handling["Response Handling"]
-    FastAPI_Application -- "uses" --> Routing
-    Routing -- "uses" --> Request_Handling_Dependency_Injection
-    Routing -- "directs requests to" --> Endpoint_Handlers
-    Endpoint_Handlers -- "uses" --> Request_Handling_Dependency_Injection
-    Endpoint_Handlers -- "return data to" --> Response_Handling
-    FastAPI_Application -- "uses" --> Response_Handling
-    click Endpoint_Handlers href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Endpoint_Handlers.md" "Details"
-    click Response_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Response_Handling.md" "Details"
+    Core_Application_FastAPI_["Core Application (FastAPI)"]
+    Routing_APIRouter_["Routing (APIRouter)"]
+    Dependency_Injection["Dependency Injection"]
+    Request_and_Response_Handling["Request and Response Handling"]
+    OpenAPI_and_Documentation["OpenAPI and Documentation"]
+    Core_Application_FastAPI_ -- "Uses" --> Routing_APIRouter_
+    Core_Application_FastAPI_ -- "Uses" --> OpenAPI_and_Documentation
+    Routing_APIRouter_ -- "Uses" --> Dependency_Injection
+    Dependency_Injection -- "Uses" --> Request_and_Response_Handling
+    click Dependency_Injection href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Dependency_Injection.md" "Details"
+    click Request_and_Response_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Request_and_Response_Handling.md" "Details"
+    click OpenAPI_and_Documentation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/OpenAPI_and_Documentation.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-This simplified model focuses on the core request/response flow and dependency management within FastAPI.
+Simplified architecture of core components and their interactions within a FastAPI application.
 
-### FastAPI Application
-The central application instance, responsible for coordinating all other components, handling requests, and managing the application lifecycle.
-
-
-**Related Classes/Methods**: _None_
-
-### Routing
-Maps incoming HTTP requests to the appropriate endpoint handler functions.
+### Core Application (FastAPI)
+The central entry point for the FastAPI application. It initializes the application, configures middleware, exception handlers, and integrates routers.
 
 
 **Related Classes/Methods**: _None_
 
-### Request Handling & Dependency Injection
-Parses and validates incoming request data, manages dependencies, and injects them into endpoint handlers.
+### Routing (APIRouter)
+Manages the mapping of incoming HTTP requests to specific endpoint functions. Defines API routes, including paths, HTTP methods, and associated handlers.
 
 
 **Related Classes/Methods**: _None_
 
-### Endpoint Handlers [[Expand]](./Endpoint_Handlers.md)
-The functions that handle the actual business logic of the application.
+### Dependency Injection [[Expand]](./Dependency_Injection.md)
+Resolves and injects dependencies into endpoint functions. This includes path parameters, query parameters, headers, cookies, and request bodies.
 
 
 **Related Classes/Methods**: _None_
 
-### Response Handling [[Expand]](./Response_Handling.md)
-Serializes the data returned by endpoint handlers into HTTP responses (JSON, etc.).
+### Request and Response Handling [[Expand]](./Request_and_Response_Handling.md)
+Parses incoming requests, validates data, serializes responses, and sets HTTP status codes and headers.
+
+
+**Related Classes/Methods**: _None_
+
+### OpenAPI and Documentation [[Expand]](./OpenAPI_and_Documentation.md)
+Generates the OpenAPI schema for the API and serves interactive API documentation (Swagger UI, ReDoc).
 
 
 **Related Classes/Methods**: _None_
