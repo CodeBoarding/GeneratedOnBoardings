@@ -15,8 +15,8 @@ graph LR
     Security_Authentication -- "Informs" --> API_Documentation_Schema_Generation
     API_Documentation_Schema_Generation -- "Consumed by" --> Core_Application_Routing
     API_Documentation_Schema_Generation -- "Receives data from" --> Request_Response_Handling
+    click Core_Application_Routing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Core_Application_Routing.md" "Details"
     click Request_Response_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Request_Response_Handling.md" "Details"
-    click Dependency_Injection href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Dependency_Injection.md" "Details"
     click Security_Authentication href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Security_Authentication.md" "Details"
     click API_Documentation_Schema_Generation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/API_Documentation_Schema_Generation.md" "Details"
 ```
@@ -33,7 +33,7 @@ The `fastapi` framework operates by having the **Core Application & Routing** co
 
 Finally, **API Documentation & Schema Generation** leverages information from **Request/Response Handling** and **Security & Authentication** to build a comprehensive OpenAPI schema. This schema is then exposed and served by the **Core Application & Routing** component, providing interactive documentation for developers. This interconnected flow ensures a robust, well-documented, and secure API development experience.
 
-### Core Application & Routing
+### Core Application & Routing [[Expand]](./Core_Application_Routing.md)
 The central orchestrator of the FastAPI application, responsible for initializing the application, defining and managing API endpoints, and dispatching incoming requests to the appropriate handlers. It forms the backbone of the web framework.
 
 
@@ -55,7 +55,7 @@ Manages the parsing, validation, and serialization of data for both incoming req
 - <a href="https://github.com/fastapi/fastapi/fastapi/exception_handlers.py#L0-L0" target="_blank" rel="noopener noreferrer">`fastapi.exception_handlers` (0:0)</a>
 
 
-### Dependency Injection [[Expand]](./Dependency_Injection.md)
+### Dependency Injection
 A powerful mechanism that automatically resolves and injects required components (dependencies) into API route functions. This promotes modularity, testability, and reusability across the application.
 
 

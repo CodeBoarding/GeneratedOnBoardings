@@ -22,11 +22,11 @@ graph LR
     OpenAPI_Specification_Generator -- "uses" --> OpenAPI_Models
     OpenAPI_Specification_Generator -- "consumes" --> Security_Authentication
     OpenAPI_Models -- "defines schema for" --> OpenAPI_Specification_Generator
-    OpenAPI_Models -- "is used by" --> Security_Authentication
     Data_Encoding -- "is used by" --> Application
     Data_Encoding -- "is used by" --> Exception_Handlers
     Exception_Handlers -- "is used by" --> Application
     Exception_Handlers -- "uses" --> Data_Encoding
+    click Routing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Routing.md" "Details"
     click Security_Authentication href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Security_Authentication.md" "Details"
 ```
 
@@ -34,7 +34,7 @@ graph LR
 
 ## Details
 
-Overview of FastAPI's fundamental components and their interactions, with a focus on Security & Authentication.
+Abstract Components Overview of a FastAPI application
 
 ### Application
 The central orchestrator of a FastAPI application, responsible for initializing the web server, registering routes, and integrating all other components to form a functional API. It's the entry point for defining and running the API.
@@ -42,16 +42,16 @@ The central orchestrator of a FastAPI application, responsible for initializing 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/fastapi/fastapi/fastapi/applications.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/applications.py` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/applications.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.applications` (1:1)</a>
 
 
-### Routing
+### Routing [[Expand]](./Routing.md)
 Manages the mapping of incoming HTTP requests (based on URL paths and HTTP methods) to specific handler functions (path operations). It forms the backbone of how an API responds to different client requests.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/fastapi/fastapi/fastapi/routing.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/routing.py` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/routing.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.routing` (1:1)</a>
 
 
 ### Parameters
@@ -60,8 +60,8 @@ Provides mechanisms for declaring and validating various types of input paramete
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/fastapi/fastapi/fastapi/params.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/params.py` (1:1)</a>
-- <a href="https://github.com/fastapi/fastapi/fastapi/param_functions.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/param_functions.py` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/params.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.params` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/param_functions.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.param_functions` (1:1)</a>
 
 
 ### Dependency Resolution
@@ -70,8 +70,8 @@ Implements FastAPI's powerful dependency injection system, allowing functions an
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/fastapi/fastapi/fastapi/dependencies/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/dependencies/utils.py` (1:1)</a>
-- <a href="https://github.com/fastapi/fastapi/fastapi/dependencies/models.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/dependencies/models.py` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/dependencies/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.dependencies.utils` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/dependencies/models.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.dependencies.models` (1:1)</a>
 
 
 ### Security & Authentication [[Expand]](./Security_Authentication.md)
@@ -80,12 +80,12 @@ The `Security & Authentication` component in FastAPI provides a robust and exten
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/fastapi/fastapi/fastapi/security/api_key.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/security/api_key.py` (1:1)</a>
-- <a href="https://github.com/fastapi/fastapi/fastapi/security/base.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/security/base.py` (1:1)</a>
-- <a href="https://github.com/fastapi/fastapi/fastapi/security/http.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/security/http.py` (1:1)</a>
-- <a href="https://github.com/fastapi/fastapi/fastapi/security/oauth2.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/security/oauth2.py` (1:1)</a>
-- <a href="https://github.com/fastapi/fastapi/fastapi/security/open_id_connect_url.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/security/open_id_connect_url.py` (1:1)</a>
-- <a href="https://github.com/fastapi/fastapi/fastapi/security/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/security/utils.py` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/security/api_key.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.security.api_key` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/security/base.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.security.base` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/security/http.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.security.http` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/security/oauth2.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.security.oauth2` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/security/open_id_connect_url.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.security.open_id_connect_url` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/security/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.security.utils` (1:1)</a>
 
 
 ### OpenAPI Specification Generator
@@ -94,8 +94,8 @@ Automatically generates the OpenAPI (Swagger) specification for the API, providi
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/fastapi/fastapi/fastapi/openapi/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/openapi/utils.py` (1:1)</a>
-- <a href="https://github.com/fastapi/fastapi/fastapi/openapi/constants.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/openapi/constants.py` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/openapi/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.openapi.utils` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/openapi/constants.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.openapi.constants` (1:1)</a>
 
 
 ### OpenAPI Models
@@ -104,7 +104,7 @@ Defines the Pydantic models that represent the structure of the OpenAPI specific
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/fastapi/fastapi/fastapi/openapi/models.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/openapi/models.py` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/openapi/models.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.openapi.models` (1:1)</a>
 
 
 ### Data Encoding
@@ -113,7 +113,7 @@ Handles the serialization of Python data structures (especially Pydantic models)
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/fastapi/fastapi/fastapi/encoders.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/encoders.py` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/encoders.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.encoders` (1:1)</a>
 
 
 ### Exception Handlers
@@ -122,7 +122,7 @@ Provides mechanisms for catching and handling exceptions that occur during reque
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/fastapi/fastapi/fastapi/exception_handlers.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi/exception_handlers.py` (1:1)</a>
+- <a href="https://github.com/fastapi/fastapi/fastapi/exception_handlers.py#L1-L1" target="_blank" rel="noopener noreferrer">`fastapi.exception_handlers` (1:1)</a>
 
 
 
