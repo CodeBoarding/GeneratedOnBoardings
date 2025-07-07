@@ -1,76 +1,101 @@
 ```mermaid
 graph LR
-    Configuration_Manager["Configuration Manager"]
-    MCP_Aggregator["MCP Aggregator"]
-    Agent["Agent"]
-    Augmented_LLM["Augmented LLM"]
-    Executor["Executor"]
-    MCPApp -- "uses" --> Configuration_Manager
-    Agent -- "uses" --> Augmented_LLM
-    Agent -- "uses" --> MCP_Aggregator
-    Executor -- "uses" --> Agent
-    click Configuration_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Configuration_Manager.md" "Details"
-    click MCP_Aggregator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/MCP_Aggregator.md" "Details"
-    click Agent href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Agent.md" "Details"
-    click Augmented_LLM href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Augmented_LLM.md" "Details"
-    click Executor href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Executor.md" "Details"
+    Core_Application_Setup["Core Application & Setup"]
+    Agent_Execution_Workflow_Engine["Agent Execution & Workflow Engine"]
+    Agent_Core_LLM_Integration["Agent Core & LLM Integration"]
+    MCP_Service_Integration["MCP Service Integration"]
+    Agent_Workflow_Patterns["Agent Workflow Patterns"]
+    Human_Interaction_Layer["Human Interaction Layer"]
+    Core_Application_Setup -- "Configures" --> Agent_Execution_Workflow_Engine
+    Core_Application_Setup -- "Configures" --> MCP_Service_Integration
+    Agent_Execution_Workflow_Engine -- "Manages" --> Agent_Workflow_Patterns
+    Agent_Execution_Workflow_Engine -- "Requests input from" --> Human_Interaction_Layer
+    Agent_Core_LLM_Integration -- "Utilizes" --> MCP_Service_Integration
+    Agent_Core_LLM_Integration -- "Provides capabilities to" --> Agent_Workflow_Patterns
+    MCP_Service_Integration -- "Provides capabilities to" --> Agent_Core_LLM_Integration
+    Agent_Workflow_Patterns -- "Orchestrates" --> Agent_Core_LLM_Integration
+    Agent_Workflow_Patterns -- "Leverages" --> MCP_Service_Integration
+    Human_Interaction_Layer -- "Provides input to" --> Agent_Execution_Workflow_Engine
+    click Core_Application_Setup href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Core_Application_Setup.md" "Details"
+    click Agent_Execution_Workflow_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Agent_Execution_Workflow_Engine.md" "Details"
+    click Agent_Core_LLM_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Agent_Core_LLM_Integration.md" "Details"
+    click MCP_Service_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/MCP_Service_Integration.md" "Details"
+    click Agent_Workflow_Patterns href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Agent_Workflow_Patterns.md" "Details"
+    click Human_Interaction_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/mcp-agent/Human_Interaction_Layer.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The mcp-agent is an AI agent framework designed for modularity and extensibility. It begins by loading configurations using the Configuration Manager. The MCP Aggregator discovers and connects to various MCP servers, aggregating their capabilities. Agents, built upon a base class, leverage an Augmented LLM interface to interact with different LLM providers. The Executor then manages and executes workflows involving these agents, orchestrating tasks to achieve specific goals.
+The `mcp-agent` project provides a robust framework for developing AI agents. At its core, the **Core Application & Setup** component initializes the entire system and manages configurations. The **Agent Execution & Workflow Engine** then takes over, orchestrating the execution of various **Agent Workflow Patterns** (like orchestration, routing, or parallel processing) which define the agent's high-level behaviors. These workflows, in turn, leverage the **Agent Core & LLM Integration** component to interact with Large Language Models and perform agent-specific actions. The **MCP Service Integration** component is crucial for discovering and connecting to external Model Context Protocol (MCP) servers, providing the necessary tools and resources to the agents. Finally, the **Human Interaction Layer** enables human-in-the-loop capabilities, allowing agents to request and receive input from users, which is then processed by the Execution Engine.
 
-### Configuration Manager [[Expand]](./Configuration_Manager.md)
-Loads and manages application settings, secrets, and provider-specific configurations from YAML files.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/config.py" target="_blank" rel="noopener noreferrer">`mcp_agent.config`</a>
-
-
-### MCP Aggregator [[Expand]](./MCP_Aggregator.md)
-Discovers, connects to, and aggregates capabilities from multiple MCP servers. Manages server connections and registries.
+### Core Application & Setup [[Expand]](./Core_Application_Setup.md)
+Initializes the entire agent framework, establishes the global application context, and manages the loading, parsing, and provision of application settings and sensitive information. It acts as the central orchestrator for the agent's environment and ensures all components operate with correct parameters.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/mcp/mcp_aggregator.py" target="_blank" rel="noopener noreferrer">`mcp_agent.mcp.mcp_aggregator`</a>
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/mcp/mcp_server_registry.py" target="_blank" rel="noopener noreferrer">`mcp_agent.mcp.mcp_server_registry`</a>
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/mcp/mcp_connection_manager.py" target="_blank" rel="noopener noreferrer">`mcp_agent.mcp.mcp_connection_manager`</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/app.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/app.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/config.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/config.py` (1:1)</a>
 
 
-### Agent [[Expand]](./Agent.md)
-The base class for all agents. Manages tools, resources, prompts, and interacts with the Augmented LLM.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/agents/agent.py" target="_blank" rel="noopener noreferrer">`mcp_agent.agents.agent`</a>
-
-
-### Augmented LLM [[Expand]](./Augmented_LLM.md)
-Abstract interface for interacting with different LLM providers (OpenAI, Anthropic, Azure, Google, Bedrock, Ollama). Handles prompt formatting, model selection, and tool execution.
+### Agent Execution & Workflow Engine [[Expand]](./Agent_Execution_Workflow_Engine.md)
+Manages the lifecycle and execution of tasks, activities, and complex workflows. It provides mechanisms for registering executable units and handling their state, supporting both immediate asynchronous execution and durable, long-running workflows.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/llm/augmented_llm.py" target="_blank" rel="noopener noreferrer">`mcp_agent.workflows.llm.augmented_llm`</a>
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/llm/augmented_llm_openai.py" target="_blank" rel="noopener noreferrer">`mcp_agent.workflows.llm.augmented_llm_openai`</a>
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/llm/augmented_llm_anthropic.py" target="_blank" rel="noopener noreferrer">`mcp_agent.workflows.llm.augmented_llm_anthropic`</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/executor/executor.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/executor/executor.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/executor/task_registry.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/executor/task_registry.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/executor/signal_registry.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/executor/signal_registry.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/executor/decorator_registry.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/executor/decorator_registry.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/executor/workflow.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/executor/workflow.py` (1:1)</a>
 
 
-### Executor [[Expand]](./Executor.md)
-Executes workflows, manages tasks, and handles signals.
+### Agent Core & LLM Integration [[Expand]](./Agent_Core_LLM_Integration.md)
+Defines the fundamental interface and capabilities of an AI agent. It encapsulates interactions with Large Language Models (LLMs), external tools, prompts, and resources, providing a consistent and extensible model for agent behavior. It also offers a standardized and augmented interface for interacting with various LLM providers.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/executor/executor.py" target="_blank" rel="noopener noreferrer">`mcp_agent.executor.executor`</a>
-- `mcp_agent.executor.temporal.TemporalExecutor`
-- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/executor/workflow.py" target="_blank" rel="noopener noreferrer">`mcp_agent.executor.workflow`</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/agents/agent.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/agents/agent.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/llm/augmented_llm.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/workflows/llm/augmented_llm.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/llm/llm_selector.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/workflows/llm/llm_selector.py` (1:1)</a>
+
+
+### MCP Service Integration [[Expand]](./MCP_Service_Integration.md)
+Serves as a central point for discovering, collecting, and managing capabilities (tools, prompts, resources) exposed by various Model Context Protocol (MCP) servers. It also manages the underlying network connections and communication sessions with these external services.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/mcp/mcp_aggregator.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/mcp/mcp_aggregator.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/mcp/mcp_connection_manager.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/mcp/mcp_connection_manager.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/mcp/mcp_server_registry.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/mcp/mcp_server_registry.py` (1:1)</a>
+
+
+### Agent Workflow Patterns [[Expand]](./Agent_Workflow_Patterns.md)
+Implements various complex, multi-step agent behaviors and patterns. This includes orchestrating sequences of actions, routing requests, classifying user intents, parallelizing LLM calls, and facilitating collaborative problem-solving among multiple agents.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/orchestrator/orchestrator.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/workflows/orchestrator/orchestrator.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/router/router_base.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/workflows/router/router_base.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/intent_classifier/intent_classifier_base.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/workflows/intent_classifier/intent_classifier_base.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/parallel/parallel_llm.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/workflows/parallel/parallel_llm.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/workflows/swarm/swarm.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/workflows/swarm/swarm.py` (1:1)</a>
+
+
+### Human Interaction Layer [[Expand]](./Human_Interaction_Layer.md)
+Handles all interactions requiring human input or feedback. It provides mechanisms for agents to request information from users and process their responses, enabling human-in-the-loop workflows.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/human_input/handler.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/human_input/handler.py` (1:1)</a>
+- <a href="https://github.com/lastmile-ai/mcp-agent/blob/main/src/mcp_agent/human_input/types.py#L1-L1" target="_blank" rel="noopener noreferrer">`mcp_agent/human_input/types.py` (1:1)</a>
 
 
 
