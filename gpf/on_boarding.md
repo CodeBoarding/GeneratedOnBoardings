@@ -1,85 +1,112 @@
 ```mermaid
 graph LR
-    Web_Application_WDAE_["Web Application (WDAE)"]
-    GPF_Core_Engine_DAE_["GPF Core Engine (DAE)"]
-    ETL_Pipeline["ETL Pipeline"]
-    Pluggable_Storage_Backend["Pluggable Storage Backend"]
-    Federation_Module["Federation Module"]
-    Command_Line_Interface_CLI_["Command Line Interface (CLI)"]
-    Web_Application_WDAE_ -- "forwards user requests to" --> GPF_Core_Engine_DAE_
-    Command_Line_Interface_CLI_ -- "executes commands on" --> GPF_Core_Engine_DAE_
-    GPF_Core_Engine_DAE_ -- "initiates" --> ETL_Pipeline
-    GPF_Core_Engine_DAE_ -- "queries data from" --> Pluggable_Storage_Backend
-    ETL_Pipeline -- "writes processed data to" --> Pluggable_Storage_Backend
-    GPF_Core_Engine_DAE_ -- "delegates queries to" --> Federation_Module
-    click Web_Application_WDAE_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Web_Application_WDAE_.md" "Details"
-    click GPF_Core_Engine_DAE_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/GPF_Core_Engine_DAE_.md" "Details"
-    click ETL_Pipeline href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/ETL_Pipeline.md" "Details"
-    click Federation_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Federation_Module.md" "Details"
+    Core_Data_Engine_DAE_["Core Data Engine (DAE)"]
+    Storage_Abstraction_Layer["Storage Abstraction Layer"]
+    Query_Analysis_System["Query & Analysis System"]
+    Web_Data_Access_Engine_WDAE_["Web Data Access Engine (WDAE)"]
+    Federation_Distribution_System["Federation & Distribution System"]
+    Data_Management_System["Data Management System"]
+    Core_Data_Engine_DAE_ -- "provides data models to" --> Query_Analysis_System
+    Core_Data_Engine_DAE_ -- "integrates with" --> Query_Analysis_System
+    Storage_Abstraction_Layer -- "provides storage services to" --> Core_Data_Engine_DAE_
+    Storage_Abstraction_Layer -- "receives data from" --> Data_Management_System
+    Query_Analysis_System -- "consumes data models from" --> Core_Data_Engine_DAE_
+    Query_Analysis_System -- "interfaces with" --> Storage_Abstraction_Layer
+    Query_Analysis_System -- "exposes functionality through" --> Web_Data_Access_Engine_WDAE_
+    Web_Data_Access_Engine_WDAE_ -- "exposes" --> Query_Analysis_System
+    Federation_Distribution_System -- "extends" --> Query_Analysis_System
+    Federation_Distribution_System -- "interfaces with" --> Web_Data_Access_Engine_WDAE_
+    Data_Management_System -- "populates" --> Storage_Abstraction_Layer
+    Data_Management_System -- "provides phenotypic data to" --> Query_Analysis_System
+    Data_Management_System -- "coordinates initialization of" --> Core_Data_Engine_DAE_
+    click Storage_Abstraction_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Storage_Abstraction_Layer.md" "Details"
+    click Query_Analysis_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Query_Analysis_System.md" "Details"
+    click Web_Data_Access_Engine_WDAE_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Web_Data_Access_Engine_WDAE_.md" "Details"
+    click Federation_Distribution_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpf/Federation_Distribution_System.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+The GPF (Genotype and Phenotype in Families) platform is a comprehensive bioinformatics system designed for managing, analyzing, and interpreting genomic and phenotypic data. The architecture follows a modular design with six core components that work together to provide a complete genomic research solution. The Data Management System handles data import and configuration, feeding genomic data into the Storage Abstraction Layer which supports multiple backends (Impala, BigQuery, DuckDB). The Core Data Engine provides fundamental data models for genomic variants and family structures, which are utilized by the Query & Analysis System to perform specialized genomic analyses. The Web Data Access Engine exposes these capabilities through HTTP endpoints, while the Federation & Distribution System enables distributed queries across multiple GPF instances. This architecture enables flexible, scalable genomic research with support for various deployment scenarios and research requirements.
 
-### Web Application (WDAE) [[Expand]](./Web_Application_WDAE_.md)
-The primary user-facing entry point, built on Django. It serves the web interface and exposes a complete REST API for programmatic access. This component is responsible for handling all web-specific concerns, including user authentication, request routing, and presenting data to the client.
-
-
-**Related Classes/Methods**:
-
-- `gpf/wdae/`
-- `gpf/wdae/wdae/datasets_api/`
-- `gpf/wdae/wdae/users_api/`
-
-
-### GPF Core Engine (DAE) [[Expand]](./GPF_Core_Engine_DAE_.md)
-The central, web-agnostic brain of the platform. It provides a unified, programmatic interface for accessing and querying genotype and phenotype data. It orchestrates all major functionalities, including data querying, annotation, and federation, without any knowledge of web-specific concepts.
+### Core Data Engine (DAE)
+Provides the foundational data model and processing capabilities for genomic variants, family structures, and study data.
 
 
 **Related Classes/Methods**:
 
-- `gpf/dae/dae/gpf_instance/gpf_instance.py`
+- `dae.variants.variant`
+- `dae.variants.family_variant`
+- `dae.pedigrees.families_data`
+- `dae.studies.study`
+- `dae.effect_annotation.annotator`
+- `dae.effect_annotation.effect`
 
 
-### ETL Pipeline [[Expand]](./ETL_Pipeline.md)
-A consolidated pipeline responsible for all data ingestion and processing. It handles the extraction of data from various formats (e.g., VCF, DAE), followed by a multi-step annotation process that enriches the data with functional scores, gene information, and effect types before it is loaded into storage.
-
-
-**Related Classes/Methods**:
-
-- `gpf/dae/dae/variants_loaders/`
-- `gpf/dae/dae/annotation/annotation_pipeline.py`
-- `gpf/dae/tools/`
-
-
-### Pluggable Storage Backend
-A storage abstraction layer that provides a uniform API for storing and retrieving genotype data. Its plugin-based design allows the platform to support multiple, interchangeable storage backends (e.g., Impala, Filesystem, In-Memory), providing flexibility for different deployment environments.
+### Storage Abstraction Layer [[Expand]](./Storage_Abstraction_Layer.md)
+Abstracts storage implementation details, enabling the platform to work with multiple backend technologies through a unified interface.
 
 
 **Related Classes/Methods**:
 
-- `gpf/dae/dae/genotype_storage/`
+- `dae.genotype_storage.genotype_storage`
+- `gpf.impala_storage.impala_storage`
+- `gpf.gcp_storage.gcp_storage`
+- `gpf.duckdb_storage.duckdb_genotype_storage`
+- `dae.inmemory_storage.inmemory_genotype_storage`
 
 
-### Federation Module [[Expand]](./Federation_Module.md)
-Enables the platform to act as a data federation hub. This component allows the Core Engine to query and analyze data from multiple remote GPF instances as if they were a single, unified dataset, abstracting the complexity of distributed queries.
-
-
-**Related Classes/Methods**:
-
-- `gpf/federation/`
-
-
-### Command Line Interface (CLI)
-A set of command-line tools for direct, script-based interaction with the GPF Core Engine. It is primarily used by data administrators and bioinformaticians for offline tasks like data import, annotation, and other system management functions.
+### Query & Analysis System [[Expand]](./Query_Analysis_System.md)
+Translates high-level queries into storage-specific operations and provides specialized analysis tools for genomic data.
 
 
 **Related Classes/Methods**:
 
-- `gpf/dae/tools/`
+- `dae.query_variants.base_query_variants`
+- `dae.enrichment_tool`
+- `dae.pheno_tool.tool`
+- `dae.gene_profile`
+- `dae.annotation.annotation_pipeline`
+
+
+### Web Data Access Engine (WDAE) [[Expand]](./Web_Data_Access_Engine_WDAE_.md)
+Provides HTTP endpoints and web interfaces for accessing genomic data and analysis tools.
+
+
+**Related Classes/Methods**:
+
+- `gpf.wdae.wdae.gene_view.views`
+- `gpf.wdae.wdae.genotype_browser.views`
+- `gpf.wdae.wdae.datasets_api.views`
+- `gpf.wdae.wdae.users_api.models`
+- `gpf.wdae.wdae.pheno_browser_api.views`
+
+
+### Federation & Distribution System [[Expand]](./Federation_Distribution_System.md)
+Enables distributed queries across multiple GPF instances, allowing the platform to operate in a federated manner.
+
+
+**Related Classes/Methods**:
+
+- `gpf.federation.federation.rest_api_client`
+- `gpf.federation.federation.remote_study`
+- `gpf.federation.federation.remote_variant`
+- `gpf.federation.federation.remote_enrichment_tool`
+
+
+### Data Management System
+Handles data import, phenotype management, and instance configuration.
+
+
+**Related Classes/Methods**:
+
+- `dae.import_tools.import_tools`
+- `dae.variants_loaders`
+- `dae.pheno.pheno_data`
+- `dae.gpf_instance.gpf_instance`
+- `dae.configuration.gpf_config_parser`
 
 
 
