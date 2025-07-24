@@ -1,79 +1,75 @@
 ```mermaid
 graph LR
-    API_Gateway["API Gateway"]
-    Data_Ingestion_Preprocessing["Data Ingestion & Preprocessing"]
-    Knowledge_Graph_Construction["Knowledge Graph Construction"]
-    Knowledge_Graph_Management["Knowledge Graph Management"]
-    Conversational_AI_RAG["Conversational AI & RAG"]
-    API_Gateway -- "triggers" --> Data_Ingestion_Preprocessing
-    API_Gateway -- "routes user queries to" --> Conversational_AI_RAG
-    Data_Ingestion_Preprocessing -- "feeds processed data to" --> Knowledge_Graph_Construction
-    Knowledge_Graph_Construction -- "receives processed data from" --> Data_Ingestion_Preprocessing
-    Knowledge_Graph_Construction -- "persists constructed graph data via" --> Knowledge_Graph_Management
-    Knowledge_Graph_Management -- "receives graph data from" --> Knowledge_Graph_Construction
-    Knowledge_Graph_Management -- "provides queried information to" --> Conversational_AI_RAG
-    Conversational_AI_RAG -- "receives user queries from" --> API_Gateway
-    Conversational_AI_RAG -- "queries and retrieves information from" --> Knowledge_Graph_Management
-    click API_Gateway href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/API_Gateway.md" "Details"
-    click Data_Ingestion_Preprocessing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/Data_Ingestion_Preprocessing.md" "Details"
-    click Knowledge_Graph_Construction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/Knowledge_Graph_Construction.md" "Details"
-    click Knowledge_Graph_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/Knowledge_Graph_Management.md" "Details"
-    click Conversational_AI_RAG href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/Conversational_AI_RAG.md" "Details"
+    API_Orchestration_Layer["API & Orchestration Layer"]
+    Data_Source_Connectors["Data Source Connectors"]
+    Graph_Generation_Core["Graph Generation Core"]
+    Graph_Database_Access_Layer_DAL_["Graph Database Access Layer (DAL)"]
+    RAG_Query_Engine["RAG & Query Engine"]
+    API_Orchestration_Layer -- "Initiate Extraction" --> Data_Source_Connectors
+    API_Orchestration_Layer -- "Trigger Transformation" --> Graph_Generation_Core
+    Graph_Generation_Core -- "Write Graph Data" --> Graph_Database_Access_Layer_DAL_
+    API_Orchestration_Layer -- "Forward Query" --> RAG_Query_Engine
+    RAG_Query_Engine -- "Retrieve Context" --> Graph_Database_Access_Layer_DAL_
+    RAG_Query_Engine -- "Return Answer" --> API_Orchestration_Layer
+    click API_Orchestration_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/API_Orchestration_Layer.md" "Details"
+    click Data_Source_Connectors href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/Data_Source_Connectors.md" "Details"
+    click Graph_Generation_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/Graph_Generation_Core.md" "Details"
+    click Graph_Database_Access_Layer_DAL_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/Graph_Database_Access_Layer_DAL_.md" "Details"
+    click RAG_Query_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/llm-graph-builder/RAG_Query_Engine.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-Abstract Components Overview
+This project, `llm-graph-builder`, is an AI-driven data pipeline that transforms unstructured data from various sources into a structured Neo4j knowledge graph. It leverages Large Language Models (LLMs) for the core transformation logic, including entity and relationship extraction. The system is orchestrated via a FastAPI backend, which manages both the data ingestion pipeline (ETL) and a Retrieval-Augmented Generation (RAG) engine, allowing users to interact with and query the generated knowledge graph through a chat-based interface.
 
-### API Gateway [[Expand]](./API_Gateway.md)
-Serves as the primary entry point for all external interactions, exposing RESTful API endpoints for data ingestion, knowledge graph querying, and conversational AI. It acts as the interface for the frontend and other external systems.
-
-
-**Related Classes/Methods**:
-
-- `backend.src.main`
-
-
-### Data Ingestion & Preprocessing [[Expand]](./Data_Ingestion_Preprocessing.md)
-Handles the extraction of unstructured data from diverse sources (web pages, local files, cloud storage, Wikipedia, YouTube). It performs initial cleaning, chunking, and transformation (e.g., using Diffbot) to prepare the data for subsequent knowledge graph construction.
+### API & Orchestration Layer [[Expand]](./API_Orchestration_Layer.md)
+The central entry point of the backend, built with FastAPI. It handles all incoming HTTP requests, validates them, and orchestrates the two primary workflows: data ingestion and user queries. It directs traffic to the appropriate downstream components.
 
 
 **Related Classes/Methods**:
 
-- `backend.src.document_sources.web_pages`
-- `backend.src.diffbot_transformer`
+- `backend/src/main.py`
 
 
-### Knowledge Graph Construction [[Expand]](./Knowledge_Graph_Construction.md)
-Processes preprocessed data, leveraging integrated LLM capabilities for tasks like entity extraction and relationship identification. It then constructs and refines the knowledge graph structure based on these extractions.
-
-
-**Related Classes/Methods**:
-
-- `backend.src.make_relationships`
-- `backend.src.chunkid_entities`
-
-
-### Knowledge Graph Management [[Expand]](./Knowledge_Graph_Management.md)
-Provides an abstraction layer for interacting with the Neo4j graph database. It handles the persistence, retrieval, updates, and complex querying of the knowledge graph, ensuring data integrity and efficient access.
+### Data Source Connectors [[Expand]](./Data_Source_Connectors.md)
+The "Extract" phase of the ETL pipeline. This component contains a collection of modules, each designed to connect to a specific data source (e.g., web pages, documents), fetch raw, unstructured data, and standardize it for processing.
 
 
 **Related Classes/Methods**:
 
-- `backend.src.graphDB_dataAccess`
-- `backend.src.graph_query`
+- `backend/document_sources/`
 
 
-### Conversational AI & RAG [[Expand]](./Conversational_AI_RAG.md)
-Manages the conversational flow, retrieves relevant information from the knowledge graph based on user queries (leveraging Retrieval Augmented Generation - RAG principles), and generates natural language responses using integrated LLM capabilities. It also maintains chat history and context.
+### Graph Generation Core [[Expand]](./Graph_Generation_Core.md)
+The "Transform" heart of the pipeline. It takes raw data from the connectors and uses LLMs to perform complex processing, including splitting data into chunks, extracting entities and schemas, and structuring the output into a graph format of nodes and relationships.
 
 
 **Related Classes/Methods**:
 
-- `backend.src.QA_integration`
-- `backend.src.llm`
+- `create_chunks.py`
+- `llm.py`
+- `make_relationships.py`
+
+
+### Graph Database Access Layer (DAL) [[Expand]](./Graph_Database_Access_Layer_DAL_.md)
+The "Load" phase of the ETL pipeline and the retrieval engine for the RAG system. This component abstracts all interactions with the Neo4j database, providing a clean, centralized interface for writing graph data and executing complex read queries.
+
+
+**Related Classes/Methods**:
+
+- `graphDB_dataAccess.py`
+
+
+### RAG & Query Engine [[Expand]](./RAG_Query_Engine.md)
+Powers the user-facing question-answering functionality. It translates natural language user queries into formal graph database queries (Cypher), retrieves relevant sub-graphs via the DAL, and uses an LLM to synthesize the retrieved context into a coherent, human-readable answer.
+
+
+**Related Classes/Methods**:
+
+- `QA_integration.py`
+- `graph_query.py`
 
 
 
