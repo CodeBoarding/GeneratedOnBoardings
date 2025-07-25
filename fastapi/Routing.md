@@ -2,46 +2,35 @@
 graph LR
     APIRouter["APIRouter"]
     APIRoute["APIRoute"]
-    Request_Handler["Request Handler"]
-    Dependencies["Dependencies"]
-    Routing -- "uses" --> APIRouter
-    APIRouter -- "contains instances of" --> APIRoute
-    APIRoute -- "invokes" --> Request_Handler
-    APIRouter -- "managed by" --> APIRoute
-    Request_Handler -- "can use" --> Dependencies
-    Dependencies -- "used by" --> APIRoute
-    Dependencies -- "provides data or performs actions that the handler needs" --> Request_Handler
+    APIRouter -- "Creation and Registration" --> APIRoute
+    APIRouter -- "Inclusion and Delegation" --> APIRouter
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `Routing` component is responsible for mapping incoming HTTP requests to the appropriate handler functions within the application. It defines the API's URL structure, supported HTTP methods, and any associated dependencies or middleware. It uses FastAPI's `APIRouter` and related classes to organize and manage API endpoints.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
 ### APIRouter
-A class from `fastapi` used to create modular sets of API routes. It groups related endpoints under a common prefix and allows for applying shared dependencies or middleware.
+Acts as a high-level route orchestrator and factory. It provides the primary interface for developers to define, group, and organize path operations using decorators (e.g., @router.get). It manages shared configurations like prefixes, tags, and dependencies for a set of routes and can embed other APIRouter instances to create a modular application structure.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- <a href="https://github.com/fastapi/fastapi/blob/master/fastapi/routing.py#L1366-L1741" target="_blank" rel="noopener noreferrer">`fastapi.routing.APIRouter.get` (1366:1741)</a>
+- <a href="https://github.com/fastapi/fastapi/blob/master/fastapi/routing.py#L881-L961" target="_blank" rel="noopener noreferrer">`fastapi.routing.APIRouter.add_api_route` (881:961)</a>
+- <a href="https://github.com/fastapi/fastapi/blob/master/fastapi/routing.py#L1122-L1364" target="_blank" rel="noopener noreferrer">`fastapi.routing.APIRouter.include_router` (1122:1364)</a>
+
 
 ### APIRoute
-Represents a single API endpoint, defining the path, HTTP methods (GET, POST, etc.), the handler function (the code to execute when the endpoint is called), and any dependencies.
+Represents a single, executable API endpoint. It encapsulates all metadata for a path operation, including the URL path, HTTP method, the endpoint handler function, dependencies, and response models. This class is responsible for handling the request, managing dependency injection for the endpoint function, and processing the response. It is the fundamental unit managed by APIRouter.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
 
-### Request Handler
-A function that processes an incoming HTTP request and returns a response. It's the actual code that gets executed when an endpoint is called.
+- <a href="https://github.com/fastapi/fastapi/blob/master/fastapi/routing.py#L428-L592" target="_blank" rel="noopener noreferrer">`fastapi.routing.APIRoute` (428:592)</a>
 
-
-**Related Classes/Methods**: _None_
-
-### Dependencies
-Functions that are executed before the request handler. They can be used for authentication, authorization, data validation, or other pre-processing tasks.
-
-
-**Related Classes/Methods**: _None_
 
 
 
