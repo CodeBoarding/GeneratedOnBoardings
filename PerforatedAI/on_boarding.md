@@ -1,60 +1,94 @@
 ```mermaid
 graph LR
-    Core_Library["Core Library"]
-    Examples_Demos["Examples/Demos"]
-    Documentation["Documentation"]
-    Tests["Tests"]
-    Configuration_Setup["Configuration/Setup"]
-    Examples_Demos -- "consumes" --> Core_Library
-    Documentation -- "describes" --> Core_Library
-    Tests -- "validates" --> Core_Library
-    Configuration_Setup -- "defines dependencies for" --> Core_Library
-    click Core_Library href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/PerforatedAI/Core_Library.md" "Details"
+    Model_Architectures["Model Architectures"]
+    Perforated_Bottleneck_Components["Perforated Bottleneck Components"]
+    Training_Evaluation_Engine["Training & Evaluation Engine"]
+    Data_Management["Data Management"]
+    Public_API_Configuration["Public API & Configuration"]
+    Experiment_Tracking["Experiment Tracking"]
+    Application_Examples["Application Examples"]
+    Model_Architectures -- "utilizes" --> Perforated_Bottleneck_Components
+    Model_Architectures -- "consumed by" --> Training_Evaluation_Engine
+    Perforated_Bottleneck_Components -- "provides services to" --> Model_Architectures
+    Perforated_Bottleneck_Components -- "exposed via" --> Public_API_Configuration
+    Training_Evaluation_Engine -- "receives data from" --> Data_Management
+    Training_Evaluation_Engine -- "outputs metrics to" --> Experiment_Tracking
+    Data_Management -- "supplies data to" --> Training_Evaluation_Engine
+    Data_Management -- "orchestrated by" --> Application_Examples
+    Public_API_Configuration -- "configures" --> Model_Architectures
+    Public_API_Configuration -- "configures" --> Training_Evaluation_Engine
+    Experiment_Tracking -- "receives data from" --> Training_Evaluation_Engine
+    Application_Examples -- "orchestrates" --> Training_Evaluation_Engine
+    Application_Examples -- "directly uses" --> Model_Architectures
+    click Model_Architectures href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/PerforatedAI/Model_Architectures.md" "Details"
+    click Perforated_Bottleneck_Components href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/PerforatedAI/Perforated_Bottleneck_Components.md" "Details"
+    click Training_Evaluation_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/PerforatedAI/Training_Evaluation_Engine.md" "Details"
+    click Data_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/PerforatedAI/Data_Management.md" "Details"
+    click Public_API_Configuration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/PerforatedAI/Public_API_Configuration.md" "Details"
+    click Experiment_Tracking href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/PerforatedAI/Experiment_Tracking.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The feedback indicates that the identified components lack specific source code references. However, the components in the analysis (Core Library, Examples/Demos, Documentation, Tests, Configuration/Setup) are defined as high-level logical groupings of functionality, not as individual Python modules, classes, or files that can be directly referenced by `getPythonSourceCode` or `readFile`.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-For instance, "Core Library" encompasses multiple modules like `pb_layer`, `pb_models`, `pb_utils`, etc., rather than being a single, retrievable source code entity. Similarly, "Examples/Demos," "Documentation," "Tests," and "Configuration/Setup" represent categories of files or directories within the project structure, not singular Python source files.
-
-The `getPythonSourceCode` tool requires a fully qualified import path to a specific module, class, or function, and `readFile` requires a specific file path. Applying these tools to high-level architectural components would necessitate listing numerous individual files or modules, which deviates from the intended high-level architectural overview.
-
-Therefore, the feedback, while valid in its observation of missing direct source code references, is not actionable at the current level of architectural abstraction. The analysis aims to describe the system's logical components and their interactions, not to provide an exhaustive list of every file or module that constitutes them.
-
-The original analysis remains relevant and accurate for a high-level architectural overview.
-
-### Core Library [[Expand]](./Core_Library.md)
-This is the central component, providing the fundamental building blocks for dendritic layers (`pb_layer`), higher-level model wrappers to inject dendritic components into existing PyTorch models (`pb_models`), essential utility functions (`pb_utils`), global configurations (`pb_globals`), and mechanisms to manage dendritic layer states (`pb_neuron_layer_tracker`). It encapsulates the core computational logic and API for dendritic intelligence.
+### Model Architectures [[Expand]](./Model_Architectures.md)
+Defines and implements the core neural network architectures, including specialized Perforated Bottleneck (PB) models.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
 
-### Examples/Demos
-Showcases practical applications and integration of the `Core Library` with various PyTorch models. These are runnable scripts demonstrating how to apply the library in different scenarios.
-
-
-**Related Classes/Methods**: _None_
-
-### Documentation
-Provides comprehensive guides, API references, and conceptual explanations for users and developers. It details the usage of functions and classes, and the underlying principles of dendritic intelligence.
+- `perforatedai.pb_models`
 
 
-**Related Classes/Methods**: _None_
+### Perforated Bottleneck Components [[Expand]](./Perforated_Bottleneck_Components.md)
+Provides the fundamental building blocks, custom layers, and utility functions specific to the Perforated Bottleneck methodology.
 
-### Tests
-Ensures the correctness, reliability, and expected behavior of the `Core Library` components through unit and integration tests, validating the library's functionality and stability.
+
+**Related Classes/Methods**:
+
+- `perforatedai.pb_layer`
+- `perforatedai.pb_utils`
+
+
+### Training & Evaluation Engine [[Expand]](./Training_Evaluation_Engine.md)
+Orchestrates the entire lifecycle of model training and evaluation, managing optimizers, loss functions, and performance assessment.
 
 
 **Related Classes/Methods**: _None_
 
-### Configuration/Setup
-Manages the project's packaging, distribution, and external dependencies (e.g., PyTorch). It defines how the library is installed and its required environment, ensuring proper setup for development and deployment.
+### Data Management [[Expand]](./Data_Management.md)
+Handles the loading, transformation, augmentation, and batching of datasets, preparing data for training and inference.
 
 
 **Related Classes/Methods**: _None_
+
+### Public API & Configuration [[Expand]](./Public_API_Configuration.md)
+Serves as the primary interface for users to interact with the library, exposing core functionalities and managing global settings and hyperparameters.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/PerforatedAI/PerforatedAI/blob/main/perforatedai/pb_globals.py#L1-L1000" target="_blank" rel="noopener noreferrer">`perforatedai.pb_globals` (1:1000)</a>
+- `perforatedai` (1:1000)
+
+
+### Experiment Tracking [[Expand]](./Experiment_Tracking.md)
+Collects, logs, and potentially visualizes training metrics and internal model states for research and analysis.
+
+
+**Related Classes/Methods**: _None_
+
+### Application Examples
+Provides concrete, runnable examples demonstrating how to effectively use the PerforatedAI library for specific deep learning tasks.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/PerforatedAI/PerforatedAI/blob/main/mnist_perforatedai.py#L1-L1000" target="_blank" rel="noopener noreferrer">`mnist_perforatedai` (1:1000)</a>
+
 
 
 
