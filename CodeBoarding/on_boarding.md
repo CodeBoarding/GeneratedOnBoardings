@@ -1,25 +1,27 @@
 ```mermaid
 graph LR
-    Application_Entry_Points["Application Entry Points"]
-    Static_Analysis_Engine["Static Analysis Engine"]
-    Agentic_AI_Core["Agentic AI Core"]
-    Code_Intelligence_Tools["Code Intelligence Tools"]
-    Output_Generation["Output Generation"]
-    Application_Entry_Points -- "initiates the analysis by invoking" --> Static_Analysis_Engine
-    Static_Analysis_Engine -- "provides analysis graphs to" --> Agentic_AI_Core
-    Agentic_AI_Core -- "queries for code details using" --> Code_Intelligence_Tools
-    Agentic_AI_Core -- "sends final analysis to" --> Output_Generation
-    click Agentic_AI_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Agentic_AI_Core.md" "Details"
+    Request_Orchestrator["Request Orchestrator"]
+    VCS_Integration_Service["VCS Integration Service"]
+    Static_Analysis_Service["Static Analysis Service"]
+    AI_Powered_Reasoning_Engine["AI-Powered Reasoning Engine"]
+    Diagram_Generation_Service["Diagram Generation Service"]
+    Request_Orchestrator -- "Initiates and Manages" --> AI_Powered_Reasoning_Engine
+    AI_Powered_Reasoning_Engine -- "Uses" --> VCS_Integration_Service
+    AI_Powered_Reasoning_Engine -- "Uses" --> Static_Analysis_Service
+    AI_Powered_Reasoning_Engine -- "Sends Model to" --> Diagram_Generation_Service
+    Diagram_Generation_Service -- "Provides Final Output to" --> Request_Orchestrator
+    click Request_Orchestrator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Request_Orchestrator.md" "Details"
+    click AI_Powered_Reasoning_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/AI_Powered_Reasoning_Engine.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-I have reviewed the feedback and the project's file structure. The original analysis correctly identified the high-level components, but it lacked specific source code references as pointed out. I will now update the analysis to include these references, based on my examination of the file structure and key files.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### Application Entry Points
-Provides multiple interfaces (e.g., local script, GitHub Action) to initiate a code analysis task, acting as the trigger for the entire pipeline.
+### Request Orchestrator [[Expand]](./Request_Orchestrator.md)
+Serves as the primary entry point and orchestrator for the entire system. It exposes a RESTful API to accept analysis jobs, manages a job queue, and orchestrates the pipeline of services required to generate the final diagram. It is responsible for initiating the analysis and returning the final result upon completion.
 
 
 **Related Classes/Methods**:
@@ -28,45 +30,45 @@ Provides multiple interfaces (e.g., local script, GitHub Action) to initiate a c
 - `github_action.py`
 
 
-### Static Analysis Engine
-Parses the target source code using static analysis techniques to build foundational graph-based representations (e.g., call graphs) of the code's structure.
+### VCS Integration Service
+Handles all interactions with the version control system (Git). Its responsibilities include cloning the target repository, checking out specific branches, and providing tools to read file contents and compute differences (`git diff`) between commits. This service provides the raw source code and change history to the reasoning engine.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py#L23-L211" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.DiagramGenerator` (23:211)</a>
+- `repo_utils.py`
+- `agents/tools/read_git_diff.py`
 
 
-### Agentic AI Core [[Expand]](./Agentic_AI_Core.md)
-The cognitive center of the system; it uses a team of specialized AI agents to collaboratively analyze and interpret the data from the Static Analysis Engine to build a high-level understanding of the software architecture.
-
-
-**Related Classes/Methods**:
-
-- `agents`
-- `agents.agent.Agent`
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/meta_agent.py#L9-L40" target="_blank" rel="noopener noreferrer">`agents.meta_agent.MetaAgent` (9:40)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/planner_agent.py#L9-L27" target="_blank" rel="noopener noreferrer">`agents.planner_agent.PlannerAgent` (9:27)</a>
-
-
-### Code Intelligence Tools
-A collection of functions provided to the Agentic AI Core, enabling agents to perform "read" operations on the codebase (e.g., access files, analyze dependencies) to gather evidence and enrich their analysis.
+### Static Analysis Service
+This service is responsible for low-level static code analysis. It takes source code provided by the VCS Integration Service and generates detailed structural representations, such as Control Flow Graphs (CFGs) and module dependencies. These graphs are the primary input for the AI engine.
 
 
 **Related Classes/Methods**:
 
-- `agents.tools`
+- `agents/tools/read_cfg.py`
+- `agents/tools/read_structure.py`
 
 
-### Output Generation
-The final stage of the pipeline that takes the conceptual analysis from the AI Core and renders it into various user-friendly formats, such as diagrams, HTML reports, and Markdown files.
+### AI-Powered Reasoning Engine [[Expand]](./AI_Powered_Reasoning_Engine.md)
+The intelligent core of the system. It uses a lead agent (`MetaAgent`) to coordinate a team of specialized AI agents (`Planner`, `Abstraction`). This engine consumes the structural graphs from the Static Analysis Service to reason about the software's architecture, identify key components, and build a high-level conceptual model.
 
 
 **Related Classes/Methods**:
 
-- `output_generators`
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/html.py#L124-L134" target="_blank" rel="noopener noreferrer">`output_generators.html.generate_html_file` (124:134)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/markdown.py#L94-L101" target="_blank" rel="noopener noreferrer">`output_generators.markdown.generate_markdown_file` (94:101)</a>
+- `agents/meta_agent.py`
+- `agents/planner_agent.py`
+- `agents/abstraction_agent.py`
+
+
+### Diagram Generation Service
+The final stage in the pipeline. It receives the high-level conceptual model from the AI-Powered Reasoning Engine and translates it into a concrete visual representation. It generates the DOT graph file and any accompanying documentation (e.g., Markdown).
+
+
+**Related Classes/Methods**:
+
+- `diagram_analysis/diagram_generator.py`
+- `output_generators/`
 
 
 
