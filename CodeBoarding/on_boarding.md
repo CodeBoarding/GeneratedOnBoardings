@@ -1,20 +1,20 @@
 ```mermaid
 graph LR
-    API_Job_Management["API & Job Management"]
-    Core_Analysis_Engine["Core Analysis Engine"]
-    Git_Integration_Service["Git Integration Service"]
-    Agentic_Core["Agentic Core"]
-    Output_Generation_Service["Output Generation Service"]
-    API_Job_Management -- "Initiates" --> Core_Analysis_Engine
-    Core_Analysis_Engine -- "Uses" --> Git_Integration_Service
-    Core_Analysis_Engine -- "Invokes" --> Agentic_Core
-    Core_Analysis_Engine -- "Provides data to" --> Output_Generation_Service
-    Agentic_Core -- "Returns analysis to" --> Core_Analysis_Engine
-    Agentic_Core -- "Uses" --> Git_Integration_Service
-    click API_Job_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/API_Job_Management.md" "Details"
-    click Core_Analysis_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Core_Analysis_Engine.md" "Details"
-    click Agentic_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Agentic_Core.md" "Details"
-    click Output_Generation_Service href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Output_Generation_Service.md" "Details"
+    Orchestration_Workflow["Orchestration & Workflow"]
+    Static_Code_Analyzer["Static Code Analyzer"]
+    AI_Analysis_Engine["AI Analysis Engine"]
+    Analysis_Persistence["Analysis Persistence"]
+    Output_Generator["Output Generator"]
+    Orchestration_Workflow -- "invokes analysis on" --> Static_Code_Analyzer
+    Static_Code_Analyzer -- "returns raw graph data to" --> Orchestration_Workflow
+    Orchestration_Workflow -- "consults and saves analysis to" --> Analysis_Persistence
+    Analysis_Persistence -- "provides cached analysis to" --> Orchestration_Workflow
+    Orchestration_Workflow -- "invokes with graph data" --> AI_Analysis_Engine
+    AI_Analysis_Engine -- "returns high-level model to" --> Orchestration_Workflow
+    Orchestration_Workflow -- "sends model for rendering to" --> Output_Generator
+    click Orchestration_Workflow href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Orchestration_Workflow.md" "Details"
+    click Static_Code_Analyzer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Static_Code_Analyzer.md" "Details"
+    click AI_Analysis_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/AI_Analysis_Engine.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
@@ -23,57 +23,56 @@ graph LR
 
 One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### API & Job Management [[Expand]](./API_Job_Management.md)
-The user-facing entry point for the system, built on FastAPI for serverless compatibility. It is responsible for handling incoming HTTP requests to initiate analysis, creating and managing job states via a lightweight DuckDB database, and returning job identifiers to the client.
+### Orchestration & Workflow [[Expand]](./Orchestration_Workflow.md)
+The central coordinator that manages the end-to-end analysis pipeline. It initiates static analysis, triggers the AI engine, coordinates with the persistence layer for caching and differential checks, and sends the final, validated results to the output generator.
 
 
 **Related Classes/Methods**:
 
 - `local_app.py`
-- `duckdb_crud.py`
 - `github_action.py`
 
 
-### Core Analysis Engine [[Expand]](./Core_Analysis_Engine.md)
-The central orchestrator that manages the end-to-end analysis workflow. It is triggered by the API and coordinates the other components, starting with fetching the repository, invoking the AI agents for analysis, and finally passing the resulting data to the output generators.
+### Static Code Analyzer [[Expand]](./Static_Code_Analyzer.md)
+Responsible for the initial, non-AI parsing of the source code. It uses AST-based techniques to build foundational data structures like call graphs and structure graphs, transforming raw code into a structured format that the AI engine can interpret.
 
 
 **Related Classes/Methods**:
 
-- `diagram_analysis/diagram_generator.py`
+- `static_analyzer/pylint_analyze/call_graph_builder.py`
+- `static_analyzer/pylint_analyze/structure_graph_builder.py`
+- `static_analyzer/pylint_graph_transform.py`
 
 
-### Git Integration Service
-A dedicated service that encapsulates all interactions with Git repositories. It provides a clean interface for cloning repositories, checking out specific commits or branches, and calculating code diffs, supplying the rest of the system with access to the source code and its history.
-
-
-**Related Classes/Methods**:
-
-- `repo_utils.py`
-- `agents/tools/read_git_diff.py`
-
-
-### Agentic Core [[Expand]](./Agentic_Core.md)
-The intelligent heart of the application, built with LangGraph. It is a multi-agent system where specialized AI agents (e.g., Planner, Validator) collaborate to understand the codebase. This component is equipped with a suite of tools to perform static analysis, read files, and query the Git service for contextual information.
+### AI Analysis Engine [[Expand]](./AI_Analysis_Engine.md)
+The cognitive core of the system. It is a multi-agent framework that interprets the data from the static analyzer. It uses a collection of specialized agents (e.g., Planner, Abstraction, Diff Analyzer) to collaboratively identify architectural patterns, understand component roles, and build a comprehensive model of the codebase.
 
 
 **Related Classes/Methods**:
 
 - `agents/agent.py`
 - `agents/planner_agent.py`
-- `agents/validator_agent.py`
 - `agents/abstraction_agent.py`
-- `agents/details_agent.py`
+- `agents/diff_analyzer.py`
 
 
-### Output Generation Service [[Expand]](./Output_Generation_Service.md)
-A modular service responsible for transforming the final, structured analysis data from the Core Analysis Engine into various human-readable formats. It contains separate generators for outputs like HTML, Markdown, and Sphinx documentation, making the system easily extensible.
+### Analysis Persistence
+Handles the serialization and deserialization of the analysis model to a storable format (JSON). This enables the caching of results, which is critical for performance and for supporting efficient incremental analysis by providing a baseline for comparison.
 
 
 **Related Classes/Methods**:
 
-- `output_generators/html.py`
+- `diagram_analysis/analysis_json.py`
+
+
+### Output Generator
+The final stage in the pipeline. It consumes the rich, structured analysis model produced by the AI Engine and renders it into various human-readable formats, such as Markdown, HTML, and Sphinx documentation. This decouples the core analysis logic from its presentation.
+
+
+**Related Classes/Methods**:
+
 - `output_generators/markdown.py`
+- `output_generators/html.py`
 - `output_generators/sphinx.py`
 
 
