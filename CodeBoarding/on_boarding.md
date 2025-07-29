@@ -1,17 +1,20 @@
 ```mermaid
 graph LR
-    Request_Orchestrator["Request Orchestrator"]
-    VCS_Integration_Service["VCS Integration Service"]
-    Static_Analysis_Service["Static Analysis Service"]
-    AI_Powered_Reasoning_Engine["AI-Powered Reasoning Engine"]
-    Diagram_Generation_Service["Diagram Generation Service"]
-    Request_Orchestrator -- "Initiates and Manages" --> AI_Powered_Reasoning_Engine
-    AI_Powered_Reasoning_Engine -- "Uses" --> VCS_Integration_Service
-    AI_Powered_Reasoning_Engine -- "Uses" --> Static_Analysis_Service
-    AI_Powered_Reasoning_Engine -- "Sends Model to" --> Diagram_Generation_Service
-    Diagram_Generation_Service -- "Provides Final Output to" --> Request_Orchestrator
-    click Request_Orchestrator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Request_Orchestrator.md" "Details"
-    click AI_Powered_Reasoning_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/AI_Powered_Reasoning_Engine.md" "Details"
+    API_Job_Management["API & Job Management"]
+    Core_Analysis_Engine["Core Analysis Engine"]
+    Git_Integration_Service["Git Integration Service"]
+    Agentic_Core["Agentic Core"]
+    Output_Generation_Service["Output Generation Service"]
+    API_Job_Management -- "Initiates" --> Core_Analysis_Engine
+    Core_Analysis_Engine -- "Uses" --> Git_Integration_Service
+    Core_Analysis_Engine -- "Invokes" --> Agentic_Core
+    Core_Analysis_Engine -- "Provides data to" --> Output_Generation_Service
+    Agentic_Core -- "Returns analysis to" --> Core_Analysis_Engine
+    Agentic_Core -- "Uses" --> Git_Integration_Service
+    click API_Job_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/API_Job_Management.md" "Details"
+    click Core_Analysis_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Core_Analysis_Engine.md" "Details"
+    click Agentic_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Agentic_Core.md" "Details"
+    click Output_Generation_Service href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Output_Generation_Service.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
@@ -20,18 +23,28 @@ graph LR
 
 One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### Request Orchestrator [[Expand]](./Request_Orchestrator.md)
-Serves as the primary entry point and orchestrator for the entire system. It exposes a RESTful API to accept analysis jobs, manages a job queue, and orchestrates the pipeline of services required to generate the final diagram. It is responsible for initiating the analysis and returning the final result upon completion.
+### API & Job Management [[Expand]](./API_Job_Management.md)
+The user-facing entry point for the system, built on FastAPI for serverless compatibility. It is responsible for handling incoming HTTP requests to initiate analysis, creating and managing job states via a lightweight DuckDB database, and returning job identifiers to the client.
 
 
 **Related Classes/Methods**:
 
 - `local_app.py`
+- `duckdb_crud.py`
 - `github_action.py`
 
 
-### VCS Integration Service
-Handles all interactions with the version control system (Git). Its responsibilities include cloning the target repository, checking out specific branches, and providing tools to read file contents and compute differences (`git diff`) between commits. This service provides the raw source code and change history to the reasoning engine.
+### Core Analysis Engine [[Expand]](./Core_Analysis_Engine.md)
+The central orchestrator that manages the end-to-end analysis workflow. It is triggered by the API and coordinates the other components, starting with fetching the repository, invoking the AI agents for analysis, and finally passing the resulting data to the output generators.
+
+
+**Related Classes/Methods**:
+
+- `diagram_analysis/diagram_generator.py`
+
+
+### Git Integration Service
+A dedicated service that encapsulates all interactions with Git repositories. It provides a clean interface for cloning repositories, checking out specific commits or branches, and calculating code diffs, supplying the rest of the system with access to the source code and its history.
 
 
 **Related Classes/Methods**:
@@ -40,35 +53,28 @@ Handles all interactions with the version control system (Git). Its responsibili
 - `agents/tools/read_git_diff.py`
 
 
-### Static Analysis Service
-This service is responsible for low-level static code analysis. It takes source code provided by the VCS Integration Service and generates detailed structural representations, such as Control Flow Graphs (CFGs) and module dependencies. These graphs are the primary input for the AI engine.
+### Agentic Core [[Expand]](./Agentic_Core.md)
+The intelligent heart of the application, built with LangGraph. It is a multi-agent system where specialized AI agents (e.g., Planner, Validator) collaborate to understand the codebase. This component is equipped with a suite of tools to perform static analysis, read files, and query the Git service for contextual information.
 
 
 **Related Classes/Methods**:
 
-- `agents/tools/read_cfg.py`
-- `agents/tools/read_structure.py`
-
-
-### AI-Powered Reasoning Engine [[Expand]](./AI_Powered_Reasoning_Engine.md)
-The intelligent core of the system. It uses a lead agent (`MetaAgent`) to coordinate a team of specialized AI agents (`Planner`, `Abstraction`). This engine consumes the structural graphs from the Static Analysis Service to reason about the software's architecture, identify key components, and build a high-level conceptual model.
-
-
-**Related Classes/Methods**:
-
-- `agents/meta_agent.py`
+- `agents/agent.py`
 - `agents/planner_agent.py`
+- `agents/validator_agent.py`
 - `agents/abstraction_agent.py`
+- `agents/details_agent.py`
 
 
-### Diagram Generation Service
-The final stage in the pipeline. It receives the high-level conceptual model from the AI-Powered Reasoning Engine and translates it into a concrete visual representation. It generates the DOT graph file and any accompanying documentation (e.g., Markdown).
+### Output Generation Service [[Expand]](./Output_Generation_Service.md)
+A modular service responsible for transforming the final, structured analysis data from the Core Analysis Engine into various human-readable formats. It contains separate generators for outputs like HTML, Markdown, and Sphinx documentation, making the system easily extensible.
 
 
 **Related Classes/Methods**:
 
-- `diagram_analysis/diagram_generator.py`
-- `output_generators/`
+- `output_generators/html.py`
+- `output_generators/markdown.py`
+- `output_generators/sphinx.py`
 
 
 
