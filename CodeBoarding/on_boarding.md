@@ -1,89 +1,92 @@
 ```mermaid
 graph LR
-    Static_Analysis_Core["Static Analysis Core"]
-    Agent_Framework["Agent Framework"]
-    Details_Agent["Details Agent"]
-    Abstraction_Agent["Abstraction Agent"]
-    Code_Exploration_Tools["Code Exploration Tools"]
-    Outreach_Utilities["Outreach Utilities"]
-    Agent_Framework -- "provides base for" --> Details_Agent
-    Agent_Framework -- "provides base for" --> Abstraction_Agent
-    Agent_Framework -- "utilizes" --> Code_Exploration_Tools
-    Details_Agent -- "orchestrates analysis with" --> Static_Analysis_Core
-    Abstraction_Agent -- "orchestrates analysis with" --> Static_Analysis_Core
-    Code_Exploration_Tools -- "accesses data from" --> Static_Analysis_Core
-    Static_Analysis_Core -- "generates artifacts for" --> Code_Exploration_Tools
-    click Static_Analysis_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Static Analysis Core.md" "Details"
-    click Agent_Framework href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Agent Framework.md" "Details"
-    click Details_Agent href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Details Agent.md" "Details"
-    click Abstraction_Agent href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Abstraction Agent.md" "Details"
-    click Code_Exploration_Tools href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Code Exploration Tools.md" "Details"
-    click Outreach_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Outreach Utilities.md" "Details"
+    API_User_Interface_Layer["API & User Interface Layer"]
+    Agent_Orchestration_Workflow_Management["Agent Orchestration & Workflow Management"]
+    AI_Agent_Core_Specialized_Agents["AI Agent Core & Specialized Agents"]
+    Agent_Tooling_External_Interaction["Agent Tooling & External Interaction"]
+    Static_Code_Analysis_Engine["Static Code Analysis Engine"]
+    Diagram_Visualization_Generation["Diagram & Visualization Generation"]
+    Data_Management_Persistence["Data Management & Persistence"]
+    LLM_Interaction_Core_Services["LLM Interaction & Core Services"]
+    API_User_Interface_Layer -- "Initiates workflows" --> Agent_Orchestration_Workflow_Management
+    API_User_Interface_Layer -- "Receives results" --> Agent_Orchestration_Workflow_Management
+    Agent_Orchestration_Workflow_Management -- "Coordinates/Invokes" --> AI_Agent_Core_Specialized_Agents
+    Agent_Orchestration_Workflow_Management -- "Interacts with" --> LLM_Interaction_Core_Services
+    Agent_Orchestration_Workflow_Management -- "Stores/Retrieves data" --> Data_Management_Persistence
+    Agent_Orchestration_Workflow_Management -- "Triggers" --> Static_Code_Analysis_Engine
+    Agent_Orchestration_Workflow_Management -- "Triggers" --> Diagram_Visualization_Generation
+    AI_Agent_Core_Specialized_Agents -- "Utilizes" --> Agent_Tooling_External_Interaction
+    AI_Agent_Core_Specialized_Agents -- "Interacts with" --> LLM_Interaction_Core_Services
+    AI_Agent_Core_Specialized_Agents -- "Consumes data from" --> Static_Code_Analysis_Engine
+    AI_Agent_Core_Specialized_Agents -- "Stores outputs in" --> Data_Management_Persistence
+    Agent_Tooling_External_Interaction -- "Provides capabilities to" --> AI_Agent_Core_Specialized_Agents
+    Agent_Tooling_External_Interaction -- "Provides input to" --> Static_Code_Analysis_Engine
+    Static_Code_Analysis_Engine -- "Provides data to" --> AI_Agent_Core_Specialized_Agents
+    Static_Code_Analysis_Engine -- "Feeds data to" --> Diagram_Visualization_Generation
+    Diagram_Visualization_Generation -- "Consumes input from" --> Static_Code_Analysis_Engine
+    Diagram_Visualization_Generation -- "Stores diagrams in" --> Data_Management_Persistence
+    Data_Management_Persistence -- "Provides data to" --> API_User_Interface_Layer
+    Data_Management_Persistence -- "Accessed by" --> Agent_Orchestration_Workflow_Management
+    Data_Management_Persistence -- "Accessed by" --> AI_Agent_Core_Specialized_Agents
+    Data_Management_Persistence -- "Accessed by" --> Diagram_Visualization_Generation
+    Data_Management_Persistence -- "Accessed by" --> LLM_Interaction_Core_Services
+    LLM_Interaction_Core_Services -- "Accessed by" --> Agent_Orchestration_Workflow_Management
+    LLM_Interaction_Core_Services -- "Accessed by" --> AI_Agent_Core_Specialized_Agents
 ```
+
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
-## Component Details
+## Details
 
-The CodeBoarding project provides an intelligent agent-based system for comprehensive code analysis and understanding. It leverages static analysis techniques to build detailed representations of the codebase, which are then utilized by specialized agents (Details Agent and Abstraction Agent) to generate in-depth or high-level insights. The system also includes tools for code exploration and utilities for automating the outreach process by integrating analysis results into Git repositories.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### Static Analysis Core
-This component is responsible for performing static analysis of the codebase, including building call graphs, structure graphs, and locating fully qualified names. It leverages Pylint for its analysis capabilities and generates artifacts consumed by other components.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/static_analyzer/reference_lines.py#L4-L52" target="_blank" rel="noopener noreferrer">`CodeBoarding.static_analyzer.reference_lines:find_fqn_location` (4:52)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/static_analyzer/pylint_graph_transform.py#L9-L65" target="_blank" rel="noopener noreferrer">`CodeBoarding.static_analyzer.pylint_graph_transform.DotGraphTransformer` (9:65)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/static_analyzer/pylint_analyze/call_graph_builder.py#L90-L245" target="_blank" rel="noopener noreferrer">`CodeBoarding.static_analyzer.pylint_analyze.call_graph_builder.CallGraphBuilder` (90:245)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/static_analyzer/pylint_analyze/structure_graph_builder.py#L10-L51" target="_blank" rel="noopener noreferrer">`CodeBoarding.static_analyzer.pylint_analyze.structure_graph_builder.StructureGraphBuilder` (10:51)</a>
+### API & User Interface Layer
+Serves as the primary interface for external interaction, handling incoming requests and defining public API endpoints, and presenting analysis results and diagrams to the user.
 
 
-### Agent Framework
-This component provides the foundational structure for all intelligent agents within CodeBoarding. It defines common functionalities such as environment variable setup, language model (LLM) initialization, and mechanisms for invoking and parsing results from various tools. It also includes functionality to fix source code reference lines.
+**Related Classes/Methods**: _None_
+
+### Agent Orchestration & Workflow Management
+Manages the overall flow of operations, coordinates multiple AI agents, and orchestrates complex analysis workflows, ensuring agents are invoked in the correct sequence and their outputs are handled.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/agents/agent.py#L19-L89" target="_blank" rel="noopener noreferrer">`CodeBoarding.agents.agent.CodeBoardingAgent` (19:89)</a>
-
-
-### Details Agent
-The Details Agent specializes in performing in-depth analysis of the codebase. It focuses on generating detailed control flow graphs (CFG), sub-CFGs, enhancing structural understanding, and conducting comprehensive code analysis by orchestrating specific prompts and parsers.
+### AI Agent Core & Specialized Agents
+Provides the foundational structure for all AI agents and houses distinct AI agents, each designed for specific code analysis or understanding tasks (e.g., details extraction, planning, validation, abstraction, diff analysis).
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/agents/details_agent.py#L12-L76" target="_blank" rel="noopener noreferrer">`CodeBoarding.agents.details_agent.DetailsAgent` (12:76)</a>
-
-
-### Abstraction Agent
-The Abstraction Agent is designed to provide a higher-level view of the codebase. Its primary responsibilities include generating abstract control flow graphs and analyzing source code to derive abstract representations and insights, using specific prompts and parsers for this purpose.
+### Agent Tooling & External Interaction
+Offers a suite of specialized tools that AI agents can use to interact with the codebase, file system, documentation, and other external resources (e.g., Git repositories), acting as the interface for agents to retrieve specific information.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/agents/abstraction_agent.py#L11-L72" target="_blank" rel="noopener noreferrer">`CodeBoarding.agents.abstraction_agent.AbstractionAgent` (11:72)</a>
-
-
-### Code Exploration Tools
-This component provides a set of utility tools for agents to interact with the codebase. It includes functionalities for reading source code files, exploring package relationships, and understanding the overall code structure, acting as an interface to the underlying codebase and static analysis artifacts.
+### Static Code Analysis Engine
+Performs static code analysis to generate various structural and relational graphs of the codebase, such as call graphs and structure graphs, and includes components for building and transforming these graphs into standard formats.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/agents/tools/read_packages.py#L25-L74" target="_blank" rel="noopener noreferrer">`CodeBoarding.agents.tools.read_packages.PackageRelationsTool` (25:74)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/agents/tools/read_source.py#L19-L137" target="_blank" rel="noopener noreferrer">`CodeBoarding.agents.tools.read_source.CodeExplorerTool` (19:137)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/master/agents/tools/read_structure.py#L12-L58" target="_blank" rel="noopener noreferrer">`CodeBoarding.agents.tools.read_structure.CodeStructureTool` (12:58)</a>
-
-
-### Outreach Utilities
-This component contains utility functions primarily used for external interactions with Git repositories. It automates tasks such as cloning repositories, copying generated analysis reports (markdown files) into a designated .codeboarding directory within the cloned repository, and then committing and pushing these changes.
+### Diagram & Visualization Generation
+Focuses on creating visual representations (diagrams) from the analyzed code data, taking structured information, often in graph format from the Static Code Analysis Engine, and rendering it into human-readable diagrams.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- `CodeBoarding.outreach_utils.pr_util` (full file reference)
+### Data Management & Persistence
+Manages data storage, retrieval, and persistence for analysis results, configurations, and potentially cached information, including database models, connections (e.g., DuckDB), and repositories.
 
+
+**Related Classes/Methods**: _None_
+
+### LLM Interaction & Core Services
+Provides shared services, primarily handling interactions with Large Language Models (LLMs) for AI-driven tasks, abstracting the LLM API calls, and potentially including caching mechanisms and other general utilities.
+
+
+**Related Classes/Methods**: _None_
 
 
 
