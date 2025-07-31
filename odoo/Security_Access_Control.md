@@ -1,36 +1,82 @@
 ```mermaid
 graph LR
-    Security_Access_Control["Security & Access Control"]
-    Web_Server_HTTP_Layer["Web Server/HTTP Layer"]
-    ORM_Object_Relational_Mapper_["ORM (Object-Relational Mapper)"]
-    Security_Access_Control -- "interacts with" --> Web_Server_HTTP_Layer
-    Security_Access_Control -- "enforces data access rules on" --> ORM_Object_Relational_Mapper_
-    click Security_Access_Control href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/odoo/Security_Access_Control.md" "Details"
+    Authentication_Manager["Authentication Manager"]
+    Core_Security_Service["Core Security Service"]
+    Authorization_Rule_Engine_IrRule_["Authorization Rule Engine (IrRule)"]
+    Rule_Context_Retrieval["Rule Context & Retrieval"]
+    Access_Domain_Computation["Access Domain Computation"]
+    Access_Violation_Handler["Access Violation Handler"]
+    Authentication_Manager -- "provides authenticated user identity to" --> Core_Security_Service
+    Core_Security_Service -- "invokes" --> Authorization_Rule_Engine_IrRule_
+    Authorization_Rule_Engine_IrRule_ -- "relies on" --> Rule_Context_Retrieval
+    Authorization_Rule_Engine_IrRule_ -- "utilizes" --> Access_Domain_Computation
+    Authorization_Rule_Engine_IrRule_ -- "communicates with" --> Access_Violation_Handler
+    Access_Domain_Computation -- "depends on" --> Rule_Context_Retrieval
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+The `Security & Access Control` subsystem is critical for an ERP system, ensuring data integrity and user permissions. It is fundamentally composed of distinct yet interconnected components handling user identity, policy enforcement, and granular data access.
 
-### Security & Access Control [[Expand]](./Security_Access_Control.md)
-This critical, cross-cutting component enforces system-wide security policies. It manages user authentication, authorization, defines record-level access rules, and handles API key authentication to ensure data integrity and authorized access to the ERP system's resources and data.
-
-
-**Related Classes/Methods**: _None_
-
-### Web Server/HTTP Layer
-This component is responsible for handling incoming HTTP requests, routing them to the appropriate handlers, and serving HTTP responses. It acts as the primary interface between external clients and the ERP system's backend, managing the communication protocol and initial request processing.
+### Authentication Manager
+Manages user login, session creation, and validation. It integrates various authentication mechanisms, including standard password-based login and external providers like OAuth and Passkey, establishing the user's identity within the system.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
 
-### ORM (Object-Relational Mapper)
-This component provides an abstraction layer over the database, allowing the ERP system to interact with relational databases using object-oriented paradigms. It maps database tables to objects, handles data persistence, retrieval, and updates, and simplifies database operations for other components.
+- `odoo.service.security`
+- `odoo.addons.auth_oauth`
+- `odoo.addons.auth_passkey`
 
 
-**Related Classes/Methods**: _None_
+### Core Security Service
+Acts as the central orchestrator for security operations. It receives authenticated user identities and coordinates with the Authorization Rule Engine to enforce security policies across the application, ensuring all operations adhere to defined access rules.
+
+
+**Related Classes/Methods**:
+
+- `odoo.service.security`
+
+
+### Authorization Rule Engine (IrRule)
+The core authorization component responsible for defining, storing, and orchestrating the evaluation of all data access rules (ir.rule records). It is the central authority for determining what data a user can access or modify based on configured policies.
+
+
+**Related Classes/Methods**:
+
+- `odoo.addons.base.models.ir_rule`
+
+
+### Rule Context & Retrieval
+Provides the dynamic operational context (e.g., current user, environment variables, specific record data) required for rule evaluation and efficiently retrieves all relevant access rules that apply to a specific model or operation.
+
+
+**Related Classes/Methods**:
+
+- `odoo.addons.base.models.ir_rule._eval_context`
+- `odoo.addons.base.models.ir_rule._get_rules`
+
+
+### Access Domain Computation
+Computes and validates the final, effective data filtering domain that applies to a user's access request. It combines multiple ir.rule definitions to form the actual data visibility criteria and checks if a proposed data operation is permissible.
+
+
+**Related Classes/Methods**:
+
+- `odoo.addons.base.models.ir_rule._compute_domain`
+- `odoo.addons.base.models.ir_rule._check_domain`
+
+
+### Access Violation Handler
+Generates and formats appropriate error messages when an access violation occurs. It provides clear feedback about the denied operation and potentially the reason for denial, crucial for user experience and debugging.
+
+
+**Related Classes/Methods**:
+
+- `odoo.addons.base.models.ir_rule._make_access_error`
+
 
 
 
