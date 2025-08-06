@@ -1,84 +1,97 @@
 ```mermaid
 graph LR
     Core_Conversion_Engine["Core Conversion Engine"]
-    Specialized_Converters["Specialized Converters"]
-    Command_Line_Interface_CLI_Layer["Command-Line Interface (CLI) Layer"]
+    Converter_System["Converter System"]
+    External_Service_Integrations["External Service Integrations"]
+    Document_Utility_Processors["Document Utility Processors"]
     Plugin_System["Plugin System"]
+    Command_Line_Interface_CLI_Layer["Command-Line Interface (CLI) Layer"]
     Model_Context_Protocol_MCP_Server["Model Context Protocol (MCP) Server"]
-    External_Service_Integration_Modules["External Service Integration Modules"]
-    Core_Conversion_Engine -- "uses" --> Specialized_Converters
-    Core_Conversion_Engine -- "interacts with" --> Plugin_System
-    Specialized_Converters -- "implements interface from" --> Core_Conversion_Engine
-    Specialized_Converters -- "uses" --> External_Service_Integration_Modules
-    Command_Line_Interface_CLI_Layer -- "uses" --> Core_Conversion_Engine
-    Model_Context_Protocol_MCP_Server -- "uses" --> Core_Conversion_Engine
-    Model_Context_Protocol_MCP_Server -- "exposes functionality of" --> Core_Conversion_Engine
-    Plugin_System -- "extends" --> Core_Conversion_Engine
+    Command_Line_Interface_CLI_Layer -- "calls" --> Core_Conversion_Engine
+    Model_Context_Protocol_MCP_Server -- "utilizes" --> Core_Conversion_Engine
+    Core_Conversion_Engine -- "registers and invokes" --> Converter_System
+    Core_Conversion_Engine -- "delegates conversion tasks to" --> Converter_System
+    Converter_System -- "utilizes" --> Document_Utility_Processors
+    Converter_System -- "interacts with" --> External_Service_Integrations
+    Plugin_System -- "registers new converters with" --> Core_Conversion_Engine
+    click Core_Conversion_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Core_Conversion_Engine.md" "Details"
+    click Converter_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Converter_System.md" "Details"
+    click External_Service_Integrations href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/External_Service_Integrations.md" "Details"
+    click Document_Utility_Processors href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Document_Utility_Processors.md" "Details"
+    click Plugin_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Plugin_System.md" "Details"
+    click Command_Line_Interface_CLI_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Command_Line_Interface_CLI_Layer.md" "Details"
+    click Model_Context_Protocol_MCP_Server href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Model_Context_Protocol_MCP_Server.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `markitdown` architecture is designed as a modular and extensible document processing framework. The `Core Conversion Engine` serves as the central facade, orchestrating the conversion of various document types into markdown. It leverages a diverse set of `Specialized Converters`, each tailored for a specific format and adhering to a common interface. For enhanced capabilities, these converters integrate with `External Service Integration Modules` to utilize third-party services like OCR or LLMs. The system offers multiple interaction points: a `Command-Line Interface (CLI) Layer` for direct user access and a `Model Context Protocol (MCP) Server` that exposes conversion functionalities via a web API, primarily for integration with LLMs. Furthermore, a robust `Plugin System` allows for dynamic extension of the core functionalities with custom converters, ensuring the framework's adaptability and future-proofing.
+The `markitdown` architecture is designed for flexible document processing, with the `Core Conversion Engine` serving as the central control point. This engine orchestrates conversions by leveraging a `Converter System` that defines a common interface and provides specialized implementations for various document types. To enhance conversion quality, these specialized converters can utilize `Document Utility Processors` for pre-processing and integrate with `External Service Integrations` for advanced functionalities like AI-driven analysis. The system's extensibility is a key feature, enabled by a `Plugin System` that allows new converters to be dynamically registered with the core engine. Users can interact with `markitdown` through a `Command-Line Interface (CLI) Layer` for direct operations or via the `Model Context Protocol (MCP) Server`, which exposes the conversion capabilities as a web service, facilitating integration with other AI/ML applications.
 
-### Core Conversion Engine
-Central orchestrator and facade for all document conversion processes, managing converter registration and dispatch.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown._markitdown` (1:1)</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown._base_converter` (1:1)</a>
-
-
-### Specialized Converters
-Modules dedicated to converting specific document formats (e.g., PDF, DOCX, HTML) into standardized markdown output.
+### Core Conversion Engine [[Expand]](./Core_Conversion_Engine.md)
+The central orchestrator for all document conversion operations, managing converter registration and dispatching requests.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_pptx_converter.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown.converters._pptx_converter` (1:1)</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_pdf_converter.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown.converters._pdf_converter` (1:1)</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_docx_converter.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown.converters._docx_converter` (1:1)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._markitdown`</a>
 
 
-### Command-Line Interface (CLI) Layer
-Provides the primary interface for users to interact with the `markitdown` library directly from the terminal.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown.__main__` (1:1)</a>
-
-
-### Plugin System
-Enables dynamic discovery, loading, and integration of external, custom converters or functionalities, extending the core capabilities.
+### Converter System [[Expand]](./Converter_System.md)
+Defines the contract for all document converters and includes concrete implementations for various formats.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown-sample-plugin/src/markitdown_sample_plugin/_plugin.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown_sample_plugin._plugin` (1:1)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._base_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/__init__.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown.converters`</a>
 
 
-### Model Context Protocol (MCP) Server
-A standalone application that exposes the `markitdown` conversion capabilities via a web API, primarily for integration with LLMs and other services.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/src/markitdown_mcp/__main__.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown_mcp.__main__` (1:1)</a>
-
-
-### External Service Integration Modules
-Facilitates communication and interaction with various third-party services (e.g., Azure Document Intelligence for OCR, LLMs for content description) to enhance the conversion process.
+### External Service Integrations [[Expand]](./External_Service_Integrations.md)
+Modules dedicated to interacting with external APIs like Azure Document Intelligence and Large Language Models (LLMs).
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_doc_intel_converter.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter` (1:1)</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_image_converter.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown.converters._image_converter` (1:1)</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_audio_converter.py#L1-L1" target="_blank" rel="noopener noreferrer">`markitdown.converters._audio_converter` (1:1)</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown.converters._doc_intel_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_image_converter.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown.converters._image_converter`</a>
+
+
+### Document Utility Processors [[Expand]](./Document_Utility_Processors.md)
+Provides helper functions and pre-processing capabilities for specific document types.
+
+
+**Related Classes/Methods**:
+
+- `packages.markitdown.src.markitdown.converter_utils.docx`
+
+
+### Plugin System [[Expand]](./Plugin_System.md)
+Enables the extensibility of the framework by allowing external modules to register new converters.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown-sample-plugin/src/markitdown_sample_plugin/_plugin.py" target="_blank" rel="noopener noreferrer">`packages.markitdown-sample-plugin.src.markitdown_sample_plugin._plugin`</a>
+
+
+### Command-Line Interface (CLI) Layer [[Expand]](./Command_Line_Interface_CLI_Layer.md)
+The user-facing interface for interacting with the library via command-line commands.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown.__main__`</a>
+
+
+### Model Context Protocol (MCP) Server [[Expand]](./Model_Context_Protocol_MCP_Server.md)
+A separate application exposing markitdown's capabilities as a web service for integration with AI/ML systems.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/src/markitdown_mcp/__main__.py" target="_blank" rel="noopener noreferrer">`packages.markitdown-mcp.src.markitdown_mcp.__main__`</a>
 
 
 
