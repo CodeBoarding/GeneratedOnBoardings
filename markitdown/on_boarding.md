@@ -1,60 +1,64 @@
 ```mermaid
 graph LR
-    User_Interfaces_CLI_API_["User Interfaces (CLI & API)"]
-    Core_Conversion_Engine_Facade_["Core Conversion Engine (Facade)"]
-    Converter_Suite["Converter Suite"]
-    External_Service_Integrations["External Service Integrations"]
-    User_Interfaces_CLI_API_ -- "Initiates Conversion" --> Core_Conversion_Engine_Facade_
-    Core_Conversion_Engine_Facade_ -- "Discovers & Registers" --> Converter_Suite
-    Core_Conversion_Engine_Facade_ -- "Executes" --> Converter_Suite
-    Converter_Suite -- "Delegates to" --> External_Service_Integrations
+    Core_Conversion_Engine["Core Conversion Engine"]
+    Conversion_Modules["Conversion Modules"]
+    Plugin_System["Plugin System"]
+    Command_Line_Interface_CLI_["Command-Line Interface (CLI)"]
+    API_Layer_MCP_["API Layer (MCP)"]
+    Core_Conversion_Engine -- "uses" --> Conversion_Modules
+    Core_Conversion_Engine -- "uses" --> Plugin_System
+    Command_Line_Interface_CLI_ -- "uses" --> Core_Conversion_Engine
+    API_Layer_MCP_ -- "uses" --> Core_Conversion_Engine
+    Plugin_System -- "registers" --> Conversion_Modules
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The analysis has been updated to merge the `Converter Registry & Plugin Loader` into the `Core Conversion Engine (Facade)`, simplifying the model and more accurately representing the system's architecture.
+Abstract Components Overview
 
-### User Interfaces (CLI & API)
-Provides the primary entry points for end-users and other systems. This component is responsible for parsing user input and invoking the core conversion functionality.
-
-
-**Related Classes/Methods**:
-
-- `markitdown.__main__`
-- `markitdown-mcp.__main__`
-
-
-### Core Conversion Engine (Facade)
-The central orchestration component, embodied by the `MarkItDown` class. It acts as a facade, simplifying the conversion process by managing the workflow, discovering and loading converter plugins, and selecting the appropriate converter for a given task.
+### Core Conversion Engine
+The central orchestrator (microkernel) responsible for managing the entire document conversion lifecycle. It dispatches conversion requests, handles input/output streams, and integrates with the Plugin System to dynamically load and utilize appropriate Conversion Modules.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py#L92-L770" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.MarkItDown` (92:770)</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py#L64-L81" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.MarkItDown._load_plugins` (64:81)</a>
+- `markitdown._markitdown.CoreConversionEngine`
 
 
-### Converter Suite
-A collection of individual modules, each implementing the specific logic to convert a single file format (e.g., DOCX, PDF, XLSX) to Markdown. These are the workhorses of the system and contain the core transformation logic. They are designed to be pluggable.
+### Conversion Modules
+A collection of specialized modules, each encapsulating the logic for parsing, content extraction, and transformation of a specific document format (e.g., PDF, DOCX, HTML) into Markdown. These modules adhere to a common interface defined by the system.
 
 
 **Related Classes/Methods**:
 
 - `markitdown.converters`
-- `markitdown-sample-plugin._plugin`
 
 
-### External Service Integrations
-A component that encapsulates connections to third-party AI/LLM services like Azure Document Intelligence or OpenAI. It is used by specific converters to offload complex tasks such as OCR, image captioning, or audio transcription.
+### Plugin System
+Facilitates the dynamic discovery, loading, and registration of both built-in and third-party plugins. This system extends MarkItDown's capabilities by enabling new document types or custom processing steps, primarily by registering new Conversion Modules.
 
 
 **Related Classes/Methods**:
 
-- `markitdown.converters._doc_intel_converter`
-- `markitdown.converters._image_converter`
+- `markitdown._markitdown.PluginSystem`
 
+
+### Command-Line Interface (CLI)
+Provides a command-line interface for users to interact with the MarkItDown conversion engine. It handles argument parsing, input validation, and invokes the Core Conversion Engine.
+
+
+**Related Classes/Methods**:
+
+- `markitdown.__main__`
+
+
+### API Layer (MCP)
+A separate application built on top of the core MarkItDown library, exposing a programmatic HTTP API for external applications to interact with the conversion capabilities. It handles API requests and orchestrates conversions via the Core Conversion Engine.
+
+
+**Related Classes/Methods**: _None_
 
 
 
