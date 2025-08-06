@@ -1,16 +1,10 @@
 ```mermaid
 graph LR
-    Global_State_API["Global State API"]
-    DefaultStore["DefaultStore"]
-    DtaleBaseStore["DtaleBaseStore"]
-    DtaleInstance["DtaleInstance"]
-    DtaleRedis["DtaleRedis"]
-    DtaleShelf["DtaleShelf"]
-    Global_State_API -- "Delegates To" --> DtaleBaseStore
-    DtaleBaseStore -- "Inherits From" --> DefaultStore
-    DtaleRedis -- "Implements" --> DtaleBaseStore
-    DtaleShelf -- "Implements" --> DtaleBaseStore
-    DtaleBaseStore -- "Manages" --> DtaleInstance
+    Global_State_Manager["Global State Manager"]
+    Data_Instance_Controller_DtaleInstance_["Data Instance Controller (DtaleInstance)"]
+    View_Layer_Flask_Views_["View Layer (Flask Views)"]
+    Data_Instance_Controller_DtaleInstance_ -- "Registers with" --> Global_State_Manager
+    View_Layer_Flask_Views_ -- "Fetches instance from" --> Global_State_Manager
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
@@ -19,58 +13,31 @@ graph LR
 
 One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### Global State API
-A set of global functions that act as a facade, providing a simplified, high-level interface to the active data store. It decouples the application from the storage implementation details, allowing components to request or update data without knowing how it's stored.
+### Global State Manager
+This component implements the singleton pattern to act as a central, in-memory registry for all active data instances. It is responsible for the entire lifecycle of the data, including storage, retrieval, and cleanup. Its global nature ensures that any part of the application can access any dataset if it has the correct identifier.
 
 
 **Related Classes/Methods**:
 
-- `dtale/global_state.py`
+- `dtale.global_state`
 
 
-### DefaultStore
-The foundational, dictionary-based, in-memory storage implementation. It provides the baseline functionality for storing `DtaleInstance` objects in a simple dictionary, making it fast and ideal for standard, single-process use cases.
-
-
-**Related Classes/Methods**:
-
-- `dtale/global_state.py`
-
-
-### DtaleBaseStore
-The primary store class that inherits from `DefaultStore`. It serves as the extensible base for all alternative storage backends, defining a common interface for creating, retrieving, and managing `DtaleInstance` objects. It represents the default strategy but is designed to be overridden.
+### Data Instance Controller (DtaleInstance)
+This class acts as a wrapper or controller for a single pandas DataFrame. Each DtaleInstance object encapsulates one dataset and its associated metadata. Upon instantiation, it registers itself with the Global State Manager to make the dataset available to the rest of the application. It is the primary object that other components interact with to perform data-specific operations.
 
 
 **Related Classes/Methods**:
 
-- `dtale/global_state.py`
+- <a href="https://github.com/man-group/dtale/blob/master/dtale/global_state.py#L44-L145" target="_blank" rel="noopener noreferrer">`dtale.global_state.DtaleInstance` (44:145)</a>
 
 
-### DtaleInstance
-The core data model representing a single pandas DataFrame and all its associated metadata. This includes UI settings, column filters, and other state, encapsulating everything needed for a user's analysis session with one dataset.
-
-
-**Related Classes/Methods**:
-
-- `dtale/global_state.py`
-
-
-### DtaleRedis
-An alternative storage strategy that inherits from `DtaleBaseStore` to use a Redis backend. This implementation is designed for persistence and scalability, allowing `DtaleInstance` state to be shared across multiple workers or survive application restarts.
+### View Layer (Flask Views)
+The View Layer consists of Flask view functions that serve as the HTTP endpoints for the frontend. These functions handle incoming web requests, which typically include a data instance ID. They use this ID to query the Global State Manager, retrieve the appropriate DtaleInstance, and then perform actions or serve data based on the request.
 
 
 **Related Classes/Methods**:
 
-- `dtale/global_state/use_redis_store.py`
-
-
-### DtaleShelf
-An alternative storage strategy inheriting from `DtaleBaseStore` that uses Python's `shelve` module. It provides a simple, file-based persistence mechanism, suitable for saving state between sessions in a non-distributed environment.
-
-
-**Related Classes/Methods**:
-
-- `dtale/global_state/use_shelve_store.py`
+- `dtale.views`
 
 
 
