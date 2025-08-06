@@ -1,104 +1,68 @@
 ```mermaid
 graph LR
     LSP_Communication_Layer["LSP Communication Layer"]
-    LSP_Client["LSP Client"]
+    TypeScript_Language_Service_Adapter["TypeScript Language Service Adapter"]
     Document_Management["Document Management"]
-    TypeScript_Language_Service_Integration["TypeScript Language Service Integration"]
     Language_Features["Language Features"]
-    Configuration_Management["Configuration Management"]
     Diagnostic_Management["Diagnostic Management"]
-    Protocol_Translation_Utility["Protocol Translation Utility"]
-    LSP_Communication_Layer -- "communicates with" --> LSP_Client
-    LSP_Communication_Layer -- "orchestrates" --> Document_Management
-    LSP_Communication_Layer -- "orchestrates" --> Language_Features
-    LSP_Communication_Layer -- "applies settings from" --> Configuration_Management
-    LSP_Communication_Layer -- "interacts with" --> TypeScript_Language_Service_Integration
-    Document_Management -- "updates" --> TypeScript_Language_Service_Integration
-    Language_Features -- "queries" --> TypeScript_Language_Service_Integration
-    Configuration_Management -- "configures" --> TypeScript_Language_Service_Integration
-    TypeScript_Language_Service_Integration -- "sends to" --> Diagnostic_Management
-    TypeScript_Language_Service_Integration -- "uses" --> Protocol_Translation_Utility
-    Diagnostic_Management -- "publishes to" --> LSP_Client
-    Protocol_Translation_Utility -- "is used by" --> TypeScript_Language_Service_Integration
+    Configuration_Management["Configuration Management"]
+    LSP_Communication_Layer -- "sends requests to" --> TypeScript_Language_Service_Adapter
+    TypeScript_Language_Service_Adapter -- "sends results to" --> LSP_Communication_Layer
+    LSP_Communication_Layer -- "dispatches requests to" --> Language_Features
+    Language_Features -- "returns results to" --> LSP_Communication_Layer
+    LSP_Communication_Layer -- "informs about events to" --> Document_Management
+    LSP_Communication_Layer -- "retrieves content from" --> Document_Management
+    TypeScript_Language_Service_Adapter -- "sends updates to" --> Document_Management
+    TypeScript_Language_Service_Adapter -- "queries" --> Document_Management
+    Language_Features -- "sends commands to" --> TypeScript_Language_Service_Adapter
+    TypeScript_Language_Service_Adapter -- "sends responses to" --> Language_Features
+    Language_Features -- "retrieves content from" --> Document_Management
+    Language_Features -- "queries" --> Configuration_Management
+    TypeScript_Language_Service_Adapter -- "forwards events to" --> Diagnostic_Management
+    Diagnostic_Management -- "publishes diagnostics to" --> LSP_Communication_Layer
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-Abstract Components Overview
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
 ### LSP Communication Layer
-Manages all incoming LSP requests and outgoing responses/notifications, acting as the server's primary interface.
+Primary interface, receives LSP requests and dispatches them to internal components.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/typescript-language-server/typescript-language-server/blob/master/src/lsp-server.ts#L1-L1" target="_blank" rel="noopener noreferrer">`lsp-server.ts` (1:1)</a>
-
-
-### LSP Client
-Represents the integrated development environment (IDE) or editor, receiving notifications and responses from the language server.
+### TypeScript Language Service Adapter
+Translates LSP requests into tsserver commands, manages tsserver process, and converts tsserver responses.
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/typescript-language-server/typescript-language-server/blob/master/src/lsp-client.ts#L1-L1" target="_blank" rel="noopener noreferrer">`lsp-client.ts` (1:1)</a>
-
+**Related Classes/Methods**: _None_
 
 ### Document Management
-Responsible for maintaining the state and content of all open text documents, tracking changes and versions.
+Maintains in-memory state of open files, provides content.
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/typescript-language-server/typescript-language-server/blob/master/src/document.ts#L1-L1" target="_blank" rel="noopener noreferrer">`document.ts` (1:1)</a>
-
-
-### TypeScript Language Service Integration
-Serves as the adapter and communication layer for the external TypeScript Language Service (`tsserver`) process, handling protocol translation.
-
-
-**Related Classes/Methods**:
-
-- `typescript-service.ts` (1:1)
-
+**Related Classes/Methods**: _None_
 
 ### Language Features
-A collection of modules implementing specific LSP functionalities such as code completion, hover information, and refactoring.
+Processes LSP requests and interacts with the TypeScript Language Service Adapter.
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/typescript-language-server/typescript-language-server/blob/master/src/commands.ts#L1-L1" target="_blank" rel="noopener noreferrer">`commands.ts` (1:1)</a>
-
-
-### Configuration Management
-Handles workspace and file-specific configuration options, ensuring `tsserver` operates with correct settings.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/typescript-language-server/typescript-language-server/blob/master/src/features/fileConfigurationManager.ts#L1-L1" target="_blank" rel="noopener noreferrer">`fileConfigurationManager.ts` (1:1)</a>
-
+**Related Classes/Methods**: _None_
 
 ### Diagnostic Management
-Processes, filters, and publishes diagnostics received from `tsserver` to the LSP client.
+Handles flow of errors and warnings from tsserver to LSP client.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/typescript-language-server/typescript-language-server/blob/master/src/diagnostic-queue.ts#L1-L1" target="_blank" rel="noopener noreferrer">`diagnostic-queue.ts` (1:1)</a>
-
-
-### Protocol Translation Utility
-A utility component dedicated to converting data structures between the Language Server Protocol (LSP) and TypeScript Server Protocol (TSServer) formats.
+### Configuration Management
+Ensures language service operates with correct settings.
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/typescript-language-server/typescript-language-server/blob/master/src/commands/tsserverRequests.ts#L1-L1" target="_blank" rel="noopener noreferrer">`tsserverRequests.ts` (1:1)</a>
-
+**Related Classes/Methods**: _None_
 
 
 
