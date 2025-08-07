@@ -1,83 +1,71 @@
 ```mermaid
 graph LR
-    CLI_Interface["CLI Interface"]
+    CLI_API_Interface["CLI/API Interface"]
     Core_Conversion_Engine["Core Conversion Engine"]
-    Converter_Interface_Registry["Converter Interface & Registry"]
-    Plugin_Management_System["Plugin Management System"]
-    Format_Specific_Converters["Format-Specific Converters"]
-    Microservice_Conversion_Platform_MCP_Server["Microservice Conversion Platform (MCP) Server"]
-    CLI_Interface -- "invokes" --> Core_Conversion_Engine
-    Microservice_Conversion_Platform_MCP_Server -- "calls" --> Core_Conversion_Engine
-    Core_Conversion_Engine -- "queries and orchestrates" --> Converter_Interface_Registry
-    Core_Conversion_Engine -- "interacts with" --> Plugin_Management_System
-    Converter_Interface_Registry -- "manages and provides access to" --> Format_Specific_Converters
-    Plugin_Management_System -- "extends capabilities for" --> Core_Conversion_Engine
-    Format_Specific_Converters -- "implement the interface of" --> Converter_Interface_Registry
+    Converter_Plugins["Converter Plugins"]
+    Input_Output_Management["Input/Output Management"]
+    External_Service_Connectors["External Service Connectors"]
+    MCP_Server["MCP Server"]
+    CLI_API_Interface -- "invokes" --> Core_Conversion_Engine
+    Core_Conversion_Engine -- "orchestrates" --> Converter_Plugins
+    Core_Conversion_Engine -- "interacts with" --> Input_Output_Management
+    Converter_Plugins -- "utilize" --> External_Service_Connectors
+    Converter_Plugins -- "process data from" --> Input_Output_Management
+    MCP_Server -- "utilizes" --> Core_Conversion_Engine
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `markitdown` architecture is centered around a `Core Conversion Engine` that acts as the primary orchestrator for document transformations. Users can interact with this engine either directly via the `CLI Interface` or programmatically through the `Microservice Conversion Platform (MCP) Server`. The `Core Conversion Engine` leverages a `Converter Interface & Registry` to dynamically discover and select appropriate `Format-Specific Converters` based on the input type. The system's extensibility is a core design principle, supported by a `Plugin Management System` that allows for the seamless integration of new or custom converters, enhancing the utility's adaptability to diverse document formats. This modular design ensures a clear separation of concerns and promotes maintainability and future expansion.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### CLI Interface
-Provides the command-line entry point for user interaction, parsing arguments, and orchestrating conversion tasks.
+### CLI/API Interface
+Provides the command-line and programmatic entry points for users to interact with the markitdown library, handling argument parsing and initiating conversion workflows.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown.__main__.main`</a>
 
 
 ### Core Conversion Engine
-The central orchestrator of the document conversion process, managing input streams, dynamically selecting converters, and executing conversion logic.
+The central orchestrator for document conversion. It manages the lifecycle of converters (including plugin loading and registration), dispatches conversion requests to appropriate converters, and handles the overall input/output flow.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._markitdown.__init__`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._markitdown.convert`</a>
 
 
-### Converter Interface & Registry
-Defines the standard `accepts` and `convert` interface for all document converters and manages their registration and lookup.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._base_converter.accepts`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._markitdown.register_converter`</a>
-
-
-### Plugin Management System
-Facilitates the discovery, loading, and integration of external, format-specific converter plugins, extending the utility's capabilities.
+### Converter Plugins
+A collection of specialized plugins, each responsible for converting a specific document type (e.g., PDF, DOCX, HTML, Images) into a standardized markdown format. These components encapsulate the logic for handling different file formats and implement the Base Converter Interface.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown._markitdown._load_plugins`</a>
 
 
-### Format-Specific Converters
-A collection of specialized modules, each implementing the `Converter Interface` to handle the conversion of a particular document or data format into markdown.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_image_converter.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown.converters._image_converter.convert`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown.converters._doc_intel_converter.convert`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_rss_converter.py" target="_blank" rel="noopener noreferrer">`packages.markitdown.src.markitdown.converters._rss_converter.convert`</a>
-
-
-### Microservice Conversion Platform (MCP) Server
-Exposes the `markitdown` conversion capabilities as a web service, allowing other applications to integrate and utilize the conversion engine via HTTP requests.
+### Input/Output Management
+Manages the abstraction of input sources (files, URIs, streams) and output destinations, providing a unified way for the Core Conversion Engine to access and store data regardless of its origin or final destination.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/src/markitdown_mcp/__main__.py" target="_blank" rel="noopener noreferrer">`packages.markitdown-mcp.src.markitdown_mcp.__main__.main`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/src/markitdown_mcp/__main__.py" target="_blank" rel="noopener noreferrer">`packages.markitdown-mcp.src.markitdown_mcp.__main__.convert_to_markdown`</a>
+
+
+### External Service Connectors
+Encapsulates interactions with third-party services, such as Azure Document Intelligence for advanced document analysis or OpenAI for LLM-based content generation.
+
+
+**Related Classes/Methods**:
+
+
+
+### MCP Server
+Acts as a backend service, exposing an HTTP API to provide document conversion capabilities over a network, enabling remote access to the markitdown functionality.
+
+
+**Related Classes/Methods**:
+
 
 
 
