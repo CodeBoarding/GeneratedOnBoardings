@@ -1,77 +1,57 @@
 ```mermaid
 graph LR
-    CLI["CLI"]
-    Core_Conversion_Engine_Orchestrator["Core Conversion Engine/Orchestrator"]
-    Converter_Interface["Converter Interface"]
-    File_Type_Converters["File Type Converters"]
-    Input_Output_Handlers["Input/Output Handlers"]
-    Plugin_System["Plugin System"]
-    MCP_Server_Component["MCP Server Component"]
-    CLI -- "initiates requests to" --> Core_Conversion_Engine_Orchestrator
-    Core_Conversion_Engine_Orchestrator -- "utilizes" --> File_Type_Converters
-    File_Type_Converters -- "adheres to" --> Converter_Interface
-    Core_Conversion_Engine_Orchestrator -- "relies on" --> Input_Output_Handlers
-    Plugin_System -- "extends" --> Core_Conversion_Engine_Orchestrator
-    Plugin_System -- "provides" --> File_Type_Converters
-    MCP_Server_Component -- "invokes" --> Core_Conversion_Engine_Orchestrator
+    Core_Conversion_Engine["Core Conversion Engine"]
+    Converter_Abstraction_Layer["Converter Abstraction Layer"]
+    Converter_Modules["Converter Modules"]
+    Access_Layers_CLI_API_["Access Layers (CLI & API)"]
+    External_Service_Integrations["External Service Integrations"]
+    Access_Layers_CLI_API_ -- "initiates conversion requests to" --> Core_Conversion_Engine
+    Core_Conversion_Engine -- "utilizes the" --> Converter_Abstraction_Layer
+    Core_Conversion_Engine -- "dispatches conversion tasks to" --> Converter_Modules
+    Converter_Modules -- "implement the" --> Converter_Abstraction_Layer
+    Converter_Modules -- "interact with" --> External_Service_Integrations
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The feedback provided states that several references are incorrect. However, after reviewing the file structure using the `getFileStructure` tool, all the mentioned references (`markitdown.__main__`, `markitdown._markitdown`, `markitdown._base_converter`, `markitdown.converters`, `markitdown._stream_info`, `markitdown._uri_utils`, `markitdown_sample_plugin._plugin`, and `markitdown_mcp.__main__`) appear to be valid and correctly point to existing modules or packages within the project. Therefore, the feedback does not require architectural changes, and the original analysis remains valid.
+The feedback is valid and requires architectural changes to correct the incorrect references. The file structure output confirms that the modules are nested under `src/markitdown` for the `markitdown` package. I will update the references accordingly.
 
-### CLI
-The primary user interface for `markitdown`, responsible for parsing command-line arguments, orchestrating conversion requests, and managing output display and error reporting.
-
-
-**Related Classes/Methods**:
-
-
-
-### Core Conversion Engine/Orchestrator
-The central hub for all document conversion operations. It manages the lifecycle of converters, including discovery, registration (both built-in and plugin-based), selection of the appropriate converter for a given input, and execution of the conversion process.
+### Core Conversion Engine
+The central orchestrator for all document conversions. It manages the lifecycle of converters, dispatches conversion requests, and integrates with the plugin system.
 
 
 **Related Classes/Methods**:
 
 
 
-### Converter Interface
-Defines the contract (`accepts`, `convert` methods) that all document converters must adhere to. This ensures a standardized approach for integrating new conversion capabilities and promotes modularity and extensibility within the system.
+### Converter Abstraction Layer
+Defines the standard contract (`accepts`, `convert`) that all specific document converters must adhere to, embodying the Strategy Pattern for consistent conversion.
 
 
 **Related Classes/Methods**:
 
 
 
-### File Type Converters
-A collection of specialized modules, each dedicated to converting a specific document format (e.g., images, PDFs, HTML, DOCX, XLSX, RSS feeds, YouTube transcripts) into Markdown. Some converters integrate with external services like Azure Document Intelligence and OpenAI for advanced processing.
+### Converter Modules
+A collection of specialized modules, including built-in converters and dynamically loaded plugin converters, each responsible for transforming a particular document type into Markdown, adhering to the `Converter Abstraction Layer`.
 
 
 **Related Classes/Methods**:
 
 
 
-### Input/Output Handlers
-Manages the abstraction and processing of various input sources, including file URIs, data URIs, and input streams. This component ensures that input data is correctly parsed and prepared for the `Core Conversion Engine`.
+### Access Layers (CLI & API)
+Provides the primary user and programmatic interfaces for interacting with the `markitdown` system, allowing initiation of conversion requests. The API acts as a Facade for the core conversion logic.
 
 
 **Related Classes/Methods**:
 
 
 
-### Plugin System
-Enables the dynamic discovery and loading of external converter plugins. This architecture allows developers to extend `markitdown`'s capabilities without modifying the core library, fostering a highly extensible and modular system.
-
-
-**Related Classes/Methods**:
-
-
-
-### MCP Server Component
-Acts as a backend service, likely exposing an API, to provide `markitdown`'s document conversion capabilities over a network. This component enables other applications or services to leverage `markitdown` remotely.
+### External Service Integrations
+Manages interactions with various external APIs and services (e.g., Azure Document Intelligence, OpenAI's GPT-4o, YouTube API, Bing Search API, ExifTool) that are leveraged by `Converter Modules` for content extraction and processing.
 
 
 **Related Classes/Methods**:
