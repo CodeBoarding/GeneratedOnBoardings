@@ -1,78 +1,77 @@
 ```mermaid
 graph LR
-    User_Interface_CLI_Python_API_["User Interface (CLI & Python API)"]
-    Core_Conversion_Engine["Core Conversion Engine"]
-    Converter_Plugin_System["Converter Plugin System"]
-    Data_Handling_Utilities["Data Handling & Utilities"]
-    External_Service_Integrations["External Service Integrations"]
-    MCP_Server["MCP Server"]
-    User_Interface_CLI_Python_API_ -- "Initiates conversion" --> Core_Conversion_Engine
-    Core_Conversion_Engine -- "Selects and dispatches to" --> Converter_Plugin_System
-    Converter_Plugin_System -- "Registers converters with" --> Core_Conversion_Engine
-    Core_Conversion_Engine -- "Utilizes for input/output" --> Data_Handling_Utilities
-    Converter_Plugin_System -- "Relies on for data access and pre-processing" --> Data_Handling_Utilities
-    Converter_Plugin_System -- "Integrates for specialized tasks" --> External_Service_Integrations
-    MCP_Server -- "Exposes core functionalities of" --> Core_Conversion_Engine
+    CLI["CLI"]
+    Core_Conversion_Engine_Orchestrator["Core Conversion Engine/Orchestrator"]
+    Converter_Interface["Converter Interface"]
+    File_Type_Converters["File Type Converters"]
+    Input_Output_Handlers["Input/Output Handlers"]
+    Plugin_System["Plugin System"]
+    MCP_Server_Component["MCP Server Component"]
+    CLI -- "initiates requests to" --> Core_Conversion_Engine_Orchestrator
+    Core_Conversion_Engine_Orchestrator -- "utilizes" --> File_Type_Converters
+    File_Type_Converters -- "adheres to" --> Converter_Interface
+    Core_Conversion_Engine_Orchestrator -- "relies on" --> Input_Output_Handlers
+    Plugin_System -- "extends" --> Core_Conversion_Engine_Orchestrator
+    Plugin_System -- "provides" --> File_Type_Converters
+    MCP_Server_Component -- "invokes" --> Core_Conversion_Engine_Orchestrator
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The feedback is valid and requires architectural changes to include source code references for each component. The previous analysis lacked these crucial details, making it difficult to validate the mapping of abstract components to their actual implementation. I will update the analysis by identifying and adding relevant source file or code references for each component.
+The feedback provided states that several references are incorrect. However, after reviewing the file structure using the `getFileStructure` tool, all the mentioned references (`markitdown.__main__`, `markitdown._markitdown`, `markitdown._base_converter`, `markitdown.converters`, `markitdown._stream_info`, `markitdown._uri_utils`, `markitdown_sample_plugin._plugin`, and `markitdown_mcp.__main__`) appear to be valid and correctly point to existing modules or packages within the project. Therefore, the feedback does not require architectural changes, and the original analysis remains valid.
 
-### User Interface (CLI & Python API)
-Provides the command-line and programmatic interfaces for users to interact with the `markitdown` library, initiating conversion requests.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/__main__.py`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_markitdown.py`</a>
-
-
-### Core Conversion Engine
-The central orchestrator that manages converter registration, selects the appropriate converter based on input, and dispatches conversion tasks. It acts as a facade for the conversion process.
+### CLI
+The primary user interface for `markitdown`, responsible for parsing command-line arguments, orchestrating conversion requests, and managing output display and error reporting.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_markitdown.py`</a>
 
 
-### Converter Plugin System
-Defines the abstract interface for all converters and encompasses the concrete implementations (built-in converters) for various document and media types, performing the actual content extraction and markdown transformation.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_base_converter.py`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/converters/`</a>
-
-
-### Data Handling & Utilities
-Provides foundational utilities for managing diverse input sources (URIs, streams) and specific pre-processing tasks (e.g., DOCX math conversion), ensuring uniform content access for the conversion process.
+### Core Conversion Engine/Orchestrator
+The central hub for all document conversion operations. It manages the lifecycle of converters, including discovery, registration (both built-in and plugin-based), selection of the appropriate converter for a given input, and execution of the conversion process.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_stream_info.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_stream_info.py`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_uri_utils.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_uri_utils.py`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converter_utils/docx/math/" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/converter_utils/docx/math/`</a>
 
 
-### External Service Integrations
-Encapsulates the logic for interacting with external APIs and services, such as Azure Document Intelligence and OpenAI, which are leveraged by specific converters for advanced document parsing or content analysis.
+### Converter Interface
+Defines the contract (`accepts`, `convert` methods) that all document converters must adhere to. This ensures a standardized approach for integrating new conversion capabilities and promotes modularity and extensibility within the system.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/converters/_doc_intel_converter.py`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_llm_caption.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/converters/_llm_caption.py`</a>
 
 
-### MCP Server
-A separate service component that exposes the `markitdown` conversion capabilities via a server API, enabling remote access and handling potentially complex or long-running conversion tasks.
+### File Type Converters
+A collection of specialized modules, each dedicated to converting a specific document format (e.g., images, PDFs, HTML, DOCX, XLSX, RSS feeds, YouTube transcripts) into Markdown. Some converters integrate with external services like Azure Document Intelligence and OpenAI for advanced processing.
+
+
+**Related Classes/Methods**:
+
+
+
+### Input/Output Handlers
+Manages the abstraction and processing of various input sources, including file URIs, data URIs, and input streams. This component ensures that input data is correctly parsed and prepared for the `Core Conversion Engine`.
+
+
+**Related Classes/Methods**:
+
+
+
+### Plugin System
+Enables the dynamic discovery and loading of external converter plugins. This architecture allows developers to extend `markitdown`'s capabilities without modifying the core library, fostering a highly extensible and modular system.
+
+
+**Related Classes/Methods**:
+
+
+
+### MCP Server Component
+Acts as a backend service, likely exposing an API, to provide `markitdown`'s document conversion capabilities over a network. This component enables other applications or services to leverage `markitdown` remotely.
 
 
 **Related Classes/Methods**:
