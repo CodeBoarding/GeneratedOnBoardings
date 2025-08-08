@@ -1,117 +1,130 @@
 ```mermaid
 graph LR
-    Core_Application["Core Application"]
-    Authentication_Authorization["Authentication & Authorization"]
-    Data_Access_Layer["Data Access Layer"]
-    Application_State_Management["Application State Management"]
-    Dataset_Management["Dataset Management"]
-    Genotype_Browser["Genotype Browser"]
-    Gene_Analysis["Gene Analysis"]
-    Phenotype_Variant_Analysis["Phenotype & Variant Analysis"]
-    Core_Application -- "configures and initializes" --> Authentication_Authorization
-    Core_Application -- "configures and initializes" --> Data_Access_Layer
-    Core_Application -- "configures and initializes" --> Application_State_Management
-    Authentication_Authorization -- "manages access to" --> Data_Access_Layer
-    Authentication_Authorization -- "manages access to" --> Dataset_Management
-    Data_Access_Layer -- "returns data to" --> Genotype_Browser
-    Data_Access_Layer -- "returns data to" --> Gene_Analysis
-    Data_Access_Layer -- "returns data to" --> Phenotype_Variant_Analysis
-    Application_State_Management -- "provides consistent state to and receives updates from" --> Genotype_Browser
-    Application_State_Management -- "provides consistent state to and receives updates from" --> Gene_Analysis
-    Application_State_Management -- "provides consistent state to and receives updates from" --> Phenotype_Variant_Analysis
-    Dataset_Management -- "provides dataset context to" --> Genotype_Browser
-    Dataset_Management -- "provides dataset context to" --> Gene_Analysis
-    Dataset_Management -- "provides dataset context to" --> Phenotype_Variant_Analysis
-    Genotype_Browser -- "sends queries to" --> Data_Access_Layer
-    Genotype_Browser -- "navigates to" --> Gene_Analysis
-    Gene_Analysis -- "sends queries to" --> Data_Access_Layer
-    Phenotype_Variant_Analysis -- "sends queries to" --> Data_Access_Layer
+    Core_Module["Core Module"]
+    Authentication_Authorization_Module["Authentication & Authorization Module"]
+    Data_Access_API_Layer["Data Access & API Layer"]
+    Dataset_Management_Module["Dataset Management Module"]
+    User_Administration_Module["User & Administration Module"]
+    Shared_UI_Utility_Module["Shared UI & Utility Module"]
+    Feature_Modules["Feature Modules"]
+    User_Preferences_Saved_State_Module["User Preferences & Saved State Module"]
+    Core_Module -- "interacts with" --> Authentication_Authorization_Module
+    Data_Access_API_Layer -- "uses" --> Authentication_Authorization_Module
+    Data_Access_API_Layer -- "provides data to" --> Feature_Modules
+    Data_Access_API_Layer -- "consumes context from" --> Dataset_Management_Module
+    Dataset_Management_Module -- "interacts with" --> User_Administration_Module
+    User_Administration_Module -- "uses" --> Authentication_Authorization_Module
+    Feature_Modules -- "consume reusable UI components from" --> Shared_UI_Utility_Module
+    User_Preferences_Saved_State_Module -- "uses" --> Data_Access_API_Layer
+    click Core_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpfjs/Core_Module.md" "Details"
+    click User_Administration_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpfjs/User_Administration_Module.md" "Details"
+    click Feature_Modules href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpfjs/Feature_Modules.md" "Details"
+    click User_Preferences_Saved_State_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/gpfjs/User_Preferences_Saved_State_Module.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The feedback is valid and requires architectural changes to include source code references for each component. The original analysis provided abstract components without concrete links to the codebase, which is a crucial aspect of a comprehensive architectural overview.
+The GPF (Genotypes and Phenotypes in Families) project is an Angular-based web application designed for exploring and analyzing genomic and phenotypic data.
 
-### Core Application
-Initializes the application, handles global routing, and provides foundational services.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/app.component.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/app.component.ts` (1:1)</a>
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/app.module.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/app.module.ts` (1:1)</a>
-
-
-### Authentication & Authorization
-Manages user login, logout, session, and access control to application features and datasets.
+### Core Module [[Expand]](./Core_Module.md)
+The foundational layer responsible for application bootstrapping, global configuration, and managing application-wide concerns like loading states.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/auth.service.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/auth.service.ts` (1:1)</a>
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/auth-interceptor.service.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/auth-interceptor.service.ts` (1:1)</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/app.component.ts" target="_blank" rel="noopener noreferrer">`app.app.component.AppComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/app.module.ts" target="_blank" rel="noopener noreferrer">`app.app.module.AppModule`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/instance.service.ts" target="_blank" rel="noopener noreferrer">`app.instance.service.InstanceService`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/config/config.service.ts" target="_blank" rel="noopener noreferrer">`app.config.config.service.ConfigService`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/fullscreen-loading/fullscreen-loading.service.ts" target="_blank" rel="noopener noreferrer">`app.fullscreen_loading.fullscreen_loading.service.FullscreenLoadingService`</a>
 
 
-### Data Access Layer
-Centralized service for all backend data retrieval, query management, and data streaming.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/query/query.service.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/query/query.service.ts` (1:1)</a>
-- `src/app/api/api.service.ts` (1:1)
-
-
-### Application State Management
-Centralized state management system (e.g., NgRx) for consistent application state across components.
+### Authentication & Authorization Module
+Manages user login, session management, token handling, and secures application routes and API calls.
 
 
 **Related Classes/Methods**:
 
-- `src/app/store/` (1:1)
-- `src/app/common/common.state.ts` (1:1)
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/auth.service.ts" target="_blank" rel="noopener noreferrer">`app.auth.service.AuthService`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/auth-interceptor.service.ts" target="_blank" rel="noopener noreferrer">`app.auth_interceptor.service.AuthInterceptorService`</a>
 
 
-### Dataset Management
-Provides structured access to available datasets, their hierarchy, and associated tools.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/datasets/datasets.component.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/datasets/datasets.component.ts` (1:1)</a>
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/datasets/datasets.service.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/datasets/datasets.service.ts` (1:1)</a>
-
-
-### Genotype Browser
-Enables filtering, querying, and previewing genotype variants.
+### Data Access & API Layer
+Centralizes all communication with the backend API, handling data requests, responses, and potentially caching. Acts as the single source of truth for data retrieval.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/genotype-browser/genotype-browser.component.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/genotype-browser/genotype-browser.component.ts` (1:1)</a>
-- `src/app/genotype-browser/genotype-browser.module.ts` (1:1)
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/query/query.service.ts" target="_blank" rel="noopener noreferrer">`app.query.query.service.QueryService`</a>
 
 
-### Gene Analysis
-Consolidates functionalities for gene structure visualization, summary variant data, gene profiles, and enrichment analysis.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/gene-browser/gene-browser.component.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/gene-browser/gene-browser.component.ts` (1:1)</a>
-- `src/app/gene-browser/gene-browser.module.ts` (1:1)
-
-
-### Phenotype & Variant Analysis
-Provides interfaces for browsing phenotype measures, performing statistical analyses, and generating detailed variant reports.
+### Dataset Management Module
+Handles the retrieval, caching, and provision of dataset-specific information, including hierarchical structures and metadata, and manages dataset permissions.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/pheno-browser/pheno-browser.component.ts#L1-L1" target="_blank" rel="noopener noreferrer">`src/app/pheno-browser/pheno-browser.component.ts` (1:1)</a>
-- `src/app/pheno-browser/pheno-browser.module.ts` (1:1)
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/datasets/datasets.service.ts" target="_blank" rel="noopener noreferrer">`app.datasets.datasets.service.DatasetsService`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/datasets/datasets-tree.service.ts" target="_blank" rel="noopener noreferrer">`app.datasets.datasets_tree.service.DatasetsTreeService`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/datasets/datasets.component.ts" target="_blank" rel="noopener noreferrer">`app.datasets.datasets.component.DatasetsComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/dataset-node/dataset-node.component.ts" target="_blank" rel="noopener noreferrer">`app.dataset_node.dataset_node.component.DatasetNodeComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/dataset-description/dataset-description.component.ts" target="_blank" rel="noopener noreferrer">`app.dataset_description.dataset_description.component.DatasetDescriptionComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/datasets-table/datasets-table.component.ts" target="_blank" rel="noopener noreferrer">`app.datasets_table.datasets_table.component.DatasetsTableComponent`</a>
+
+
+### User & Administration Module [[Expand]](./User_Administration_Module.md)
+Manages user accounts, groups, permissions, and related administrative functionalities.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/users/users.service.ts" target="_blank" rel="noopener noreferrer">`app.users.users.service.UsersService`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/user-management/user-management.component.ts" target="_blank" rel="noopener noreferrer">`app.user_management.user_management.component.UserManagementComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/groups-table/groups-table.component.ts" target="_blank" rel="noopener noreferrer">`app.groups_table.groups_table.component.GroupsTableComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/federation-credentials/federation-credentials.component.ts" target="_blank" rel="noopener noreferrer">`app.federation_credentials.federation_credentials.component.FederationCredentialsComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/users-groups/users-groups.service.ts" target="_blank" rel="noopener noreferrer">`app.users_groups.users_groups.service.UsersGroupsService`</a>
+
+
+### Shared UI & Utility Module
+Contains reusable UI components (e.g., filters, buttons, data visualizations) and common utility services that are used across multiple feature modules.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/person-filters/person-filters.component.ts" target="_blank" rel="noopener noreferrer">`app.person_filters.person_filters.component.PersonFiltersComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/regions-block/regions-block.component.ts" target="_blank" rel="noopener noreferrer">`app.regions_block.regions_block.component.RegionsBlockComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/gene-plot/gene-plot.component.ts" target="_blank" rel="noopener noreferrer">`app.gene_plot.gene_plot.component.GenePlotComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/histogram/histogram.component.ts" target="_blank" rel="noopener noreferrer">`app.histogram.histogram.component.HistogramComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/pedigree-chart/pedigree-chart.component.ts" target="_blank" rel="noopener noreferrer">`app.pedigree_chart.pedigree_chart.component.PedigreeChartComponent`</a>
+
+
+### Feature Modules [[Expand]](./Feature_Modules.md)
+A collection of specialized modules providing core application functionalities for exploring and analyzing genomic and phenotypic data (e.g., Genotype Browser, Gene Browser, Phenotype Tool, Enrichment Tool, Gene Profiles, Variant Reports).
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/genotype-browser/genotype-browser.component.ts" target="_blank" rel="noopener noreferrer">`app.genotype_browser.genotype_browser.component.GenotypeBrowserComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/gene-browser/gene-browser.component.ts" target="_blank" rel="noopener noreferrer">`app.gene_browser.gene_browser.component.GeneBrowserComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/pheno-browser/pheno-browser.component.ts" target="_blank" rel="noopener noreferrer">`app.pheno_browser.pheno_browser.component.PhenoBrowserComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/pheno-tool/pheno-tool.component.ts" target="_blank" rel="noopener noreferrer">`app.pheno_tool.pheno_tool.component.PhenoToolComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/enrichment-tool/enrichment-tool.component.ts" target="_blank" rel="noopener noreferrer">`app.enrichment_tool.enrichment_tool.component.EnrichmentToolComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/gene-profiles-block/gene-profiles-block.component.ts" target="_blank" rel="noopener noreferrer">`app.gene_profiles_block.gene_profiles_block.component.GeneProfilesBlockComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/variant-reports/variant-reports.component.ts" target="_blank" rel="noopener noreferrer">`app.variant_reports.variant_reports.component.VariantReportsComponent`</a>
+
+
+### User Preferences & Saved State Module [[Expand]](./User_Preferences_Saved_State_Module.md)
+Manages the persistence and retrieval of user-defined query configurations and user profile settings.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/save-query/save-query.component.ts" target="_blank" rel="noopener noreferrer">`app.save_query.save_query.component.SaveQueryComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/load-query/load-query.component.ts" target="_blank" rel="noopener noreferrer">`app.load_query.load_query.component.LoadQueryComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/saved-queries-table/saved-queries-table.component.ts" target="_blank" rel="noopener noreferrer">`app.saved_queries_table.saved_queries_table.component.SavedQueriesTableComponent`</a>
+- <a href="https://github.com/iossifovlab/gpfjs/blob/master/src/app/user-profile/user-profile.component.ts" target="_blank" rel="noopener noreferrer">`app.user_profile.user_profile.component.UserProfileComponent`</a>
 
 
 
