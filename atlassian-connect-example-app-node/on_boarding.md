@@ -1,98 +1,64 @@
 ```mermaid
 graph LR
-    Application_Core_Server_Management["Application Core & Server Management"]
-    Data_Access_Layer["Data Access Layer"]
-    Authentication_Authorization["Authentication & Authorization"]
-    Routing_API_Gateway["Routing & API Gateway"]
-    Atlassian_Connect_Event_Webhook_Handlers["Atlassian Connect Event & Webhook Handlers"]
-    Internal_API_Endpoints["Internal API Endpoints"]
-    Dynamic_Page_Rendering["Dynamic Page Rendering"]
-    Application_Core_Server_Management -- "registers routes with" --> Routing_API_Gateway
-    Routing_API_Gateway -- "directs requests to" --> Atlassian_Connect_Event_Webhook_Handlers
-    Routing_API_Gateway -- "directs requests to" --> Internal_API_Endpoints
-    Routing_API_Gateway -- "directs requests to" --> Dynamic_Page_Rendering
-    Routing_API_Gateway -- "utilizes for securing routes" --> Authentication_Authorization
-    Atlassian_Connect_Event_Webhook_Handlers -- "interacts with" --> Data_Access_Layer
-    Internal_API_Endpoints -- "interacts with" --> Data_Access_Layer
-    Internal_API_Endpoints -- "relies on for securing API calls" --> Authentication_Authorization
-    Dynamic_Page_Rendering -- "interacts with" --> Data_Access_Layer
-    Dynamic_Page_Rendering -- "utilizes for securing page access" --> Authentication_Authorization
-    Authentication_Authorization -- "utilizes to retrieve shared secrets from" --> Data_Access_Layer
+    Application_Server["Application Server"]
+    Atlassian_Connect_Layer["Atlassian Connect Layer"]
+    Security_Middleware["Security Middleware"]
+    Database_Service["Database Service"]
+    SPA_Frontend["SPA Frontend"]
+    Application_Server -- "mounts" --> Atlassian_Connect_Layer
+    Security_Middleware -- "is secured by" --> Atlassian_Connect_Layer
+    Atlassian_Connect_Layer -- "serves" --> SPA_Frontend
+    Security_Middleware -- "relies on" --> Database_Service
+    Atlassian_Connect_Layer -- "uses" --> Database_Service
+    click Application_Server href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/atlassian-connect-example-app-node/Application_Server.md" "Details"
+    click Atlassian_Connect_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/atlassian-connect-example-app-node/Atlassian_Connect_Layer.md" "Details"
+    click SPA_Frontend href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/atlassian-connect-example-app-node/SPA_Frontend.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `atlassian-connect-example-app-node` project operates as a Node.js web application backend, leveraging Express.js for its core functionality and integrating deeply with Jira through the Atlassian Connect framework. The `Application Core & Server Management` component serves as the foundational entry point, initializing the Express application, configuring global middleware, and managing environment variables. All incoming requests are first processed by the `Routing & API Gateway`, which acts as a central dispatcher, directing requests to specialized handlers. These handlers include the `Atlassian Connect Event & Webhook Handlers` for managing Jira lifecycle events (e.g., installation, uninstallation) and processing incoming webhooks, `Internal API Endpoints` for exposing the application's own RESTful services, and `Dynamic Page Rendering` for generating and serving dynamic HTML content. Security is enforced by the `Authentication & Authorization` component, which validates JWTs issued by Jira, often retrieving necessary shared secrets from the `Data Access Layer`. The `Data Access Layer` is a critical component responsible for persisting and retrieving all application data, including Jira tenant information and logs, and is extensively utilized by the event handlers, internal API endpoints, and dynamic page renderers. This design ensures a clear separation of concerns, promoting maintainability and scalability for the Atlassian Connect application.
+This project is a monolithic web application designed as a Jira Cloud plugin, following the architecture prescribed by the `atlassian-connect-express` (ACE) framework. The system is centered around an **Application Server** (`index.js`) that bootstraps an Express application. The core logic is encapsulated within the **Atlassian Connect Layer** (`routes/index.js`), which handles all Jira-specific interactions, such as lifecycle callbacks and serving the app descriptor (`atlassian-connect.json`). A crucial **Security Middleware**, provided by ACE, protects all endpoints by validating JWT tokens, ensuring secure communication with Jira. This middleware relies on a **Database Service** (configured in `config.json`) to retrieve tenant-specific secrets for token verification. Finally, the application serves a **SPA Frontend** (composed of `.hbs` views and static assets), which is rendered in an iframe within the Jira product, providing the user interface for the plugin.
 
-### Application Core & Server Management
-Initializes the Express application, sets up global middleware, and manages environment configurations. It's the primary entry point for the backend.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/server.ts" target="_blank" rel="noopener noreferrer">`src/server.ts`</a>
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/env.ts" target="_blank" rel="noopener noreferrer">`src/env.ts`</a>
-
-
-### Data Access Layer
-Provides a robust interface for persisting and retrieving application data, specifically managing Jira tenant information and application logs.
+### Application Server [[Expand]](./Application_Server.md)
+The core Express.js web server. It initializes middleware, sets up routing, and serves all incoming HTTP requests. It acts as the primary entry point for the entire application.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/db.ts" target="_blank" rel="noopener noreferrer">`src/db.ts`</a>
 
 
-### Authentication & Authorization
-Secures application routes and API endpoints by validating JSON Web Tokens (JWTs) issued by Jira, supporting both symmetric and asymmetric verification mechanisms.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/utils/jwt.ts" target="_blank" rel="noopener noreferrer">`src/utils/jwt.ts`</a>
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/middlewares/auth-header-jwt-middleware.ts" target="_blank" rel="noopener noreferrer">`src/middlewares/auth-header-jwt-middleware.ts`</a>
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/middlewares/querystring-jwt-middleware.ts" target="_blank" rel="noopener noreferrer">`src/middlewares/querystring-jwt-middleware.ts`</a>
-
-
-### Routing & API Gateway
-Defines and manages all application routes, acting as the central dispatcher that directs incoming requests to the appropriate handlers.
+### Atlassian Connect Layer [[Expand]](./Atlassian_Connect_Layer.md)
+A logical grouping of all modules that handle direct communication and integration with Jira. This includes serving the app descriptor, managing lifecycle webhooks, processing product webhooks, and routing for UI pages.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/routes/router.ts" target="_blank" rel="noopener noreferrer">`src/routes/router.ts`</a>
 
 
-### Atlassian Connect Event & Webhook Handlers
-Processes specific lifecycle events sent by Jira (e.g., installation, uninstallation, enabling, disabling) and handles incoming Jira webhook events, updating the database and logging as required.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/routes/events.ts" target="_blank" rel="noopener noreferrer">`src/routes/events.ts`</a>
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/routes/webhooks.ts" target="_blank" rel="noopener noreferrer">`src/routes/webhooks.ts`</a>
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/routes/atlassian-connect.ts" target="_blank" rel="noopener noreferrer">`src/routes/atlassian-connect.ts`</a>
-
-
-### Internal API Endpoints
-Exposes internal RESTful API endpoints for the frontend application and other internal services, handling data operations and implementing core business logic.
+### Security Middleware
+Responsible for securing application endpoints by verifying JWT tokens on incoming requests from Jira. It ensures all communication is authentic and authorized.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/routes/api.ts" target="_blank" rel="noopener noreferrer">`src/routes/api.ts`</a>
 
 
-### Dynamic Page Rendering
-Generates and serves dynamic HTML content for various application pages (e.g., configuration views, log displays) and provides utilities for markup conversion.
+### Database Service
+The persistence layer for the application. It manages storing and retrieving tenant information, such as client keys and shared secrets, which are essential for JWT validation and multi-tenancy.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/routes/pages.ts" target="_blank" rel="noopener noreferrer">`src/routes/pages.ts`</a>
-- <a href="https://github.com/atlassian/atlassian-connect-example-app-node/blob/main/src/utils/markup.ts" target="_blank" rel="noopener noreferrer">`src/utils/markup.ts`</a>
+
+
+### SPA Frontend [[Expand]](./SPA_Frontend.md)
+The client-side user interface, built as a Single Page Application. It is served by the backend and rendered within an iframe inside the Jira product, providing a rich user experience.
+
+
+**Related Classes/Methods**:
+
 
 
 
