@@ -2,85 +2,79 @@
 graph LR
     Core_Conversion_Engine["Core Conversion Engine"]
     Converter_Framework["Converter Framework"]
-    Format_Specific_Converters["Format-Specific Converters"]
-    Input_Output_Stream_Handlers["Input/Output Stream Handlers"]
-    User_Interfaces_CLI_MCP_Server_["User Interfaces (CLI & MCP Server)"]
-    Plugin_System["Plugin System"]
-    Document_Pre_processing_Utilities["Document Pre-processing Utilities"]
-    Core_Conversion_Engine -- "orchestrates" --> Format_Specific_Converters
-    Core_Conversion_Engine -- "utilizes" --> Input_Output_Stream_Handlers
-    Core_Conversion_Engine -- "integrates" --> Plugin_System
-    Core_Conversion_Engine -- "serves" --> User_Interfaces_CLI_MCP_Server_
-    Core_Conversion_Engine -- "relies on" --> Converter_Framework
-    Converter_Framework -- "defines interface for" --> Format_Specific_Converters
-    Format_Specific_Converters -- "implements" --> Converter_Framework
-    Format_Specific_Converters -- "leverages" --> Document_Pre_processing_Utilities
-    Input_Output_Stream_Handlers -- "provides data to" --> Core_Conversion_Engine
-    User_Interfaces_CLI_MCP_Server_ -- "invokes" --> Core_Conversion_Engine
-    Plugin_System -- "extends" --> Core_Conversion_Engine
-    Document_Pre_processing_Utilities -- "supports" --> Format_Specific_Converters
+    Document_Converters["Document Converters"]
+    CLI_Interface["CLI Interface"]
+    Microservice_Conversion_Platform_MCP_Server["Microservice Conversion Platform (MCP) Server"]
+    Core_Conversion_Engine -- "utilizes" --> Converter_Framework
+    Core_Conversion_Engine -- "orchestrates" --> Document_Converters
+    Converter_Framework -- "provides blueprint for" --> Document_Converters
+    CLI_Interface -- "initiates requests on" --> Core_Conversion_Engine
+    Microservice_Conversion_Platform_MCP_Server -- "delegates tasks to" --> Core_Conversion_Engine
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `markitdown` project is designed as a modular document conversion system. Its core functionality revolves around the `Core Conversion Engine`, which orchestrates the conversion process by utilizing a flexible `Converter Framework`. This framework defines a standard interface that `Format-Specific Converters` implement to handle various document types. Input and output operations are managed by `Input/Output Stream Handlers`, ensuring data is correctly ingested and emitted. Users interact with the system through `User Interfaces`, which can be a Command-Line Interface or a server. The system's extensibility is facilitated by a `Plugin System`, allowing dynamic addition of new conversion capabilities. Additionally, `Document Pre-processing Utilities` assist in preparing content before the main conversion.
+The `markitdown` architecture is designed for extensibility and modularity, embodying a plugin architecture and strategy pattern. At its core, the Core Conversion Engine acts as a central facade, responsible for receiving conversion requests from either the CLI Interface or the Microservice Conversion Platform (MCP) Server. Upon receiving a request, the Core Conversion Engine leverages the Converter Framework to identify the appropriate Document Converters based on the input type. Each Document Converter then processes its specific format, transforming it into Markdown, adhering to the standardized interface defined by the Converter Framework. This design allows for easy addition of new document formats by simply implementing the DocumentConverter interface and registering it with the Core Conversion Engine, ensuring a highly adaptable and robust document processing utility.
 
 ### Core Conversion Engine
-The central orchestrator managing conversion workflows, converter registration, and selection.
+The central orchestrator of all conversion processes.
 
 
 **Related Classes/Methods**:
 
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`markitdown._markitdown`</a>
 
 
 ### Converter Framework
-Defines the standard interface (`DocumentConverter`) for all format-specific converters.
+Defines the abstract interface and common utilities for all document converters, including input stream management.
 
 
 **Related Classes/Methods**:
 
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py" target="_blank" rel="noopener noreferrer">`markitdown._base_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_stream_info.py" target="_blank" rel="noopener noreferrer">`markitdown._stream_info`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_uri_utils.py" target="_blank" rel="noopener noreferrer">`markitdown._uri_utils`</a>
 
 
-### Format-Specific Converters
-Modules specialized in converting particular document formats to Markdown.
-
-
-**Related Classes/Methods**:
-
-
-
-### Input/Output Stream Handlers
-Manages various input data streams, extracts metadata, and handles output.
+### Document Converters
+A modular collection of format-specific converters responsible for transforming various document types into Markdown.
 
 
 **Related Classes/Methods**:
 
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_image_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._image_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_docx_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._docx_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_pptx_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._pptx_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_xlsx_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._xlsx_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_html_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._html_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_youtube_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._youtube_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_bing_serp_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._bing_serp_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_pdf_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._pdf_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_ipynb_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._ipynb_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_outlook_msg_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._outlook_msg_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_audio_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._audio_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_epub_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._epub_converter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter`</a>
 
 
-### User Interfaces (CLI & MCP Server)
-Provides direct command-line interaction and a web service interface for conversion requests.
-
-
-**Related Classes/Methods**:
-
-
-
-### Plugin System
-Enables dynamic extension of conversion capabilities through external modules.
-
-
-**Related Classes/Methods**:
-
-
-
-### Document Pre-processing Utilities
-Offers specialized functions to prepare document content before main conversion.
+### CLI Interface
+Provides direct command-line access for users to initiate conversions.
 
 
 **Related Classes/Methods**:
 
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py" target="_blank" rel="noopener noreferrer">`markitdown.__main__`</a>
+
+
+### Microservice Conversion Platform (MCP) Server
+Exposes conversion capabilities as a web service for external system integration.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/src/markitdown_mcp/__main__.py" target="_blank" rel="noopener noreferrer">`markitdown_mcp.__main__`</a>
 
 
 
