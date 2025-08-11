@@ -1,4 +1,17 @@
 # Generated Diagrams for python projects
+
+<div align="center">
+  <img src="codeboarding_logo.png" alt="CodeBoarding Logo" width="200"/>
+  
+  **All diagrams in this repository are generated with [CodeBoarding](https://github.com/CodeBoarding/CodeBoarding) — our open-source tool for creating interactive visual documentation.**
+  
+  <a href="https://github.com/CodeBoarding/CodeBoarding">
+    <img alt="CodeBoarding Repository" src="https://img.shields.io/badge/CodeBoarding-Open%20Source-blue?logo=github">
+  </a>
+</div>
+
+---
+
 <a href="https://www.python.org/">
     <img alt="Build" src="https://img.shields.io/badge/python-3x-blue">
     
