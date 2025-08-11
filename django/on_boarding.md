@@ -1,109 +1,102 @@
 ```mermaid
 graph LR
-    Request_Response_Handling["Request/Response Handling"]
-    Data_Management_ORM_Forms_["Data Management (ORM & Forms)"]
-    Templating_Engine["Templating Engine"]
-    Framework_Configuration["Framework Configuration"]
-    Authentication_Admin["Authentication & Admin"]
-    Management_Commands["Management Commands"]
-    Request_Response_Handling -- "interacts with" --> Data_Management_ORM_Forms_
-    Request_Response_Handling -- "utilizes" --> Templating_Engine
-    Request_Response_Handling -- "integrates with" --> Authentication_Admin
-    Framework_Configuration -- "configures" --> Request_Response_Handling
-    Framework_Configuration -- "configures" --> Data_Management_ORM_Forms_
-    Framework_Configuration -- "configures" --> Templating_Engine
-    Framework_Configuration -- "configures" --> Authentication_Admin
-    Framework_Configuration -- "configures" --> Management_Commands
-    Data_Management_ORM_Forms_ -- "provides data models for" --> Authentication_Admin
-    Management_Commands -- "interacts with" --> Data_Management_ORM_Forms_
-    Management_Commands -- "initiates" --> Request_Response_Handling
-    click Request_Response_Handling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Request_Response_Handling.md" "Details"
-    click Data_Management_ORM_Forms_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Data_Management_ORM_Forms_.md" "Details"
-    click Templating_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Templating_Engine.md" "Details"
-    click Framework_Configuration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Framework_Configuration.md" "Details"
-    click Authentication_Admin href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Authentication_Admin.md" "Details"
-    click Management_Commands href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Management_Commands.md" "Details"
+    Web_Server_Interface["Web Server Interface"]
+    Request_Processing_Pipeline["Request Processing Pipeline"]
+    Application_Logic_Views_Forms_["Application Logic (Views & Forms)"]
+    Data_Layer_ORM_Database_["Data Layer (ORM & Database)"]
+    Presentation_Layer_Templates_["Presentation Layer (Templates)"]
+    Built_in_Services["Built-in Services"]
+    Web_Server_Interface -- "Forwards Request" --> Request_Processing_Pipeline
+    Request_Processing_Pipeline -- "Dispatches Processed Request" --> Application_Logic_Views_Forms_
+    Application_Logic_Views_Forms_ -- "Performs Data Operations" --> Data_Layer_ORM_Database_
+    Data_Layer_ORM_Database_ -- "Returns Data" --> Application_Logic_Views_Forms_
+    Application_Logic_Views_Forms_ -- "Passes Context Data" --> Presentation_Layer_Templates_
+    Presentation_Layer_Templates_ -- "Generates Rendered Content" --> Request_Processing_Pipeline
+    Request_Processing_Pipeline -- "Sends HTTP Response" --> Web_Server_Interface
+    Built_in_Services -- "Interacts with" --> Request_Processing_Pipeline
+    Request_Processing_Pipeline -- "Interacts with" --> Built_in_Services
+    Built_in_Services -- "Manages Data via" --> Data_Layer_ORM_Database_
+    Built_in_Services -- "Serves Assets" --> Web_Server_Interface
+    click Web_Server_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Web_Server_Interface.md" "Details"
+    click Request_Processing_Pipeline href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Request_Processing_Pipeline.md" "Details"
+    click Application_Logic_Views_Forms_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Application_Logic_Views_Forms_.md" "Details"
+    click Data_Layer_ORM_Database_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Data_Layer_ORM_Database_.md" "Details"
+    click Presentation_Layer_Templates_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Presentation_Layer_Templates_.md" "Details"
+    click Built_in_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/django/Built_in_Services.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It follows the Model-View-Template (MVT) architectural pattern, providing a robust set of tools for building complex, database-driven web applications. The core flow involves handling web requests through WSGI/ASGI handlers, processing them through a middleware stack, interacting with the ORM for data persistence, rendering dynamic content via the templating engine, and managing application state and configuration. Management commands provide a command-line interface for administrative tasks, integrating with various core components.
+The Django project architecture is structured around a clear request-response cycle, starting with the **Web Server Interface** which acts as the initial entry point for all HTTP requests. These requests are then forwarded to the **Request Processing Pipeline**, where they undergo middleware processing and URL routing. The pipeline dispatches processed requests to the **Application Logic (Views & Forms)**, which encapsulates the core business logic, handles user input, and prepares data. The **Application Logic** interacts with the **Data Layer (ORM & Database)** to perform data operations, abstracting database interactions through Django's ORM. Once data is retrieved or manipulated, the **Application Logic** passes context data to the **Presentation Layer (Templates)** for rendering dynamic content. The **Presentation Layer** generates the final rendered content, which is then returned to the **Request Processing Pipeline** to form the HTTP response. Finally, the **Request Processing Pipeline** sends the HTTP response back through the **Web Server Interface** to the client. Additionally, **Built-in Services** provide essential functionalities like authentication and session management, interacting with both the **Request Processing Pipeline** for request-specific operations and the **Data Layer (ORM & Database)** for data persistence. These services also directly serve static assets via the **Web Server Interface**. This modular design ensures a clear separation of concerns, facilitating maintainability and scalability.
 
-### Request/Response Handling [[Expand]](./Request_Response_Handling.md)
-Manages the web request lifecycle, including routing, middleware processing, and response generation. It serves as the primary entry point for web interactions.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/django/django//blob/django/core/handlers/wsgi.py#L113-L144" target="_blank" rel="noopener noreferrer">`django.core.handlers.wsgi.WSGIHandler`:113-144</a>
-- <a href="https://github.com/django/django//blob/django/core/handlers/asgi.py#L139-L380" target="_blank" rel="noopener noreferrer">`django.core.handlers.asgi.ASGIHandler`:139-380</a>
-- <a href="https://github.com/django/django//blob/django/http/request.py#L53-L488" target="_blank" rel="noopener noreferrer">`django.http.request.HttpRequest`:53-488</a>
-- <a href="https://github.com/django/django//blob/django/http/response.py#L366-L436" target="_blank" rel="noopener noreferrer">`django.http.response.HttpResponse`:366-436</a>
-- <a href="https://github.com/django/django//blob/django/contrib/sessions/middleware.py#L12-L77" target="_blank" rel="noopener noreferrer">`django.contrib.sessions.middleware.SessionMiddleware`:12-77</a>
-- <a href="https://github.com/django/django//blob/django/contrib/messages/middleware.py#L6-L26" target="_blank" rel="noopener noreferrer">`django.contrib.messages.middleware.MessageMiddleware`:6-26</a>
-- <a href="https://github.com/django/django//blob/django/contrib/sites/middleware.py#L6-L12" target="_blank" rel="noopener noreferrer">`django.contrib.sites.middleware.CurrentSiteMiddleware`:6-12</a>
-- <a href="https://github.com/django/django//blob/django/contrib/auth/middleware.py#L30-L41" target="_blank" rel="noopener noreferrer">`django.contrib.auth.middleware.AuthenticationMiddleware`:30-41</a>
-
-
-### Data Management (ORM & Forms) [[Expand]](./Data_Management_ORM_Forms_.md)
-Provides a Pythonic interface for database interaction (ORM) and facilitates the creation, validation, and processing of HTML forms, often tightly integrated with models.
+### Web Server Interface [[Expand]](./Web_Server_Interface.md)
+The external entry point for all HTTP requests, bridging between web servers (WSGI/ASGI) and the Django application.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/django/django//blob/django/db/models/base.py" target="_blank" rel="noopener noreferrer">`django.db.models.base.Model`</a>
-- <a href="https://github.com/django/django//blob/django/db/models/manager.py" target="_blank" rel="noopener noreferrer">`django.db.models.manager.Manager`</a>
-- <a href="https://github.com/django/django//blob/django/db/models/query.py#L279-L2071" target="_blank" rel="noopener noreferrer">`django.db.models.query.QuerySet`:279-2071</a>
-- <a href="https://github.com/django/django//blob/django/forms/forms.py#L432-L433" target="_blank" rel="noopener noreferrer">`django.forms.forms.Form`:432-433</a>
-- <a href="https://github.com/django/django//blob/django/forms/models.py#L585-L586" target="_blank" rel="noopener noreferrer">`django.forms.models.ModelForm`:585-586</a>
-- <a href="https://github.com/django/django//blob/django/db/migrations/migration.py#L9-L222" target="_blank" rel="noopener noreferrer">`django.db.migrations.migration.Migration`:9-222</a>
+- <a href="https://github.com/django/django/blob/main/django/core/wsgi.py#L5-L13" target="_blank" rel="noopener noreferrer">`django.core.wsgi`:5-13</a>
+- <a href="https://github.com/django/django/blob/main/django/core/asgi.py#L5-L13" target="_blank" rel="noopener noreferrer">`django.core.asgi`:5-13</a>
+- <a href="https://github.com/django/django/blob/main/django/core/servers/basehttp.py" target="_blank" rel="noopener noreferrer">`django.core.servers.basehttp`</a>
 
 
-### Templating Engine [[Expand]](./Templating_Engine.md)
-Enables dynamic content generation by combining data with predefined HTML structures, providing mechanisms for loading, compiling, and rendering templates.
+### Request Processing Pipeline [[Expand]](./Request_Processing_Pipeline.md)
+Manages the lifecycle of HTTP requests and responses within Django, including middleware application and URL routing.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/django/django//blob/django/template/engine.py" target="_blank" rel="noopener noreferrer">`django.template.engine.Engine`</a>
-- <a href="https://github.com/django/django//blob/django/template/base.py#L138-L288" target="_blank" rel="noopener noreferrer">`django.template.base.Template`:138-288</a>
-- <a href="https://github.com/django/django//blob/django/template/context.py#L141-L176" target="_blank" rel="noopener noreferrer">`django.template.context.Context`:141-176</a>
+- <a href="https://github.com/django/django/blob/main/django/http/request.py" target="_blank" rel="noopener noreferrer">`django.http.request`</a>
+- <a href="https://github.com/django/django/blob/main/django/http/response.py" target="_blank" rel="noopener noreferrer">`django.http.response`</a>
+- <a href="https://github.com/django/django/blob/main/django/core/handlers/base.py" target="_blank" rel="noopener noreferrer">`django.core.handlers.base`</a>
+- <a href="https://github.com/django/django/blob/main/django/middleware" target="_blank" rel="noopener noreferrer">`django.middleware`</a>
+- <a href="https://github.com/django/django/blob/main/django/urls" target="_blank" rel="noopener noreferrer">`django.urls`</a>
 
 
-### Framework Configuration [[Expand]](./Framework_Configuration.md)
-Manages project-wide settings, application registration, and the overall setup and initialization of the Django framework.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/django/django//blob/django/apps/registry.py" target="_blank" rel="noopener noreferrer">`django.apps.registry.Apps`</a>
-- <a href="https://github.com/django/django//blob/django/apps/config.py#L13-L274" target="_blank" rel="noopener noreferrer">`django.apps.config.AppConfig`:13-274</a>
-- <a href="https://github.com/django/django//blob/django/conf/__init__.py#L39-L148" target="_blank" rel="noopener noreferrer">`django.conf.__init__.LazySettings`:39-148</a>
-
-
-### Authentication & Admin [[Expand]](./Authentication_Admin.md)
-Handles user accounts, authentication, authorization, and provides a ready-to-use administrative interface for managing application data.
+### Application Logic (Views & Forms) [[Expand]](./Application_Logic_Views_Forms_.md)
+Contains the core business logic of the application, processing user input, interacting with the data layer, and preparing data for presentation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/django/django//blob/django/contrib/auth/models.py#L517-L526" target="_blank" rel="noopener noreferrer">`django.contrib.auth.models.User`:517-526</a>
-- <a href="https://github.com/django/django//blob/django/contrib/auth/backends.py#L54-L242" target="_blank" rel="noopener noreferrer">`django.contrib.auth.backends.ModelBackend`:54-242</a>
-- <a href="https://github.com/django/django//blob/django/contrib/admin/sites.py#L30-L606" target="_blank" rel="noopener noreferrer">`django.contrib.admin.sites.AdminSite`:30-606</a>
-- <a href="https://github.com/django/django//blob/django/contrib/admin/options.py#L635-L2341" target="_blank" rel="noopener noreferrer">`django.contrib.admin.options.ModelAdmin`:635-2341</a>
+- <a href="https://github.com/django/django/blob/main/django/views" target="_blank" rel="noopener noreferrer">`django.views`</a>
+- <a href="https://github.com/django/django/blob/main/django/shortcuts.py" target="_blank" rel="noopener noreferrer">`django.shortcuts`</a>
+- <a href="https://github.com/django/django/blob/main/django/forms" target="_blank" rel="noopener noreferrer">`django.forms`</a>
 
 
-### Management Commands [[Expand]](./Management_Commands.md)
-Provides a structured command-line interface for executing administrative tasks such as database migrations, static file collection, and running the development server.
+### Data Layer (ORM & Database) [[Expand]](./Data_Layer_ORM_Database_.md)
+Provides an object-relational mapping (ORM) for interacting with the database, abstracting SQL operations and managing data persistence.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/django/django//blob/django/core/management/base.py#L187-L619" target="_blank" rel="noopener noreferrer">`django.core.management.base.BaseCommand`:187-619</a>
-- <a href="https://github.com/django/django//blob/django/core/management/commands/migrate.py#L17-L509" target="_blank" rel="noopener noreferrer">`django.core.management.commands.migrate.Command`:17-509</a>
-- <a href="https://github.com/django/django//blob/django/core/management/commands/runserver.py#L27-L201" target="_blank" rel="noopener noreferrer">`django.core.management.commands.runserver.Command`:27-201</a>
+- <a href="https://github.com/django/django/blob/main/django/db/models" target="_blank" rel="noopener noreferrer">`django.db.models`</a>
+- <a href="https://github.com/django/django/blob/main/django/db/backends" target="_blank" rel="noopener noreferrer">`django.db.backends`</a>
+
+
+### Presentation Layer (Templates) [[Expand]](./Presentation_Layer_Templates_.md)
+Responsible for rendering dynamic content into final HTTP responses (e.g., HTML, XML) using Django's template engine.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/django/django/blob/main/django/template/backends/django.py" target="_blank" rel="noopener noreferrer">`django.template`</a>
+
+
+### Built-in Services [[Expand]](./Built_in_Services.md)
+Encompasses Django's "batteries-included" features like authentication, administration, static file serving, session management, caching, and internationalization.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/django/django/blob/main/django/contrib/auth" target="_blank" rel="noopener noreferrer">`django.contrib.auth`</a>
+- <a href="https://github.com/django/django/blob/main/django/contrib/admin" target="_blank" rel="noopener noreferrer">`django.contrib.admin`</a>
+- <a href="https://github.com/django/django/blob/main/django/contrib/staticfiles" target="_blank" rel="noopener noreferrer">`django.contrib.staticfiles`</a>
+- <a href="https://github.com/django/django/blob/main/django/contrib/sessions" target="_blank" rel="noopener noreferrer">`django.contrib.sessions`</a>
+- <a href="https://github.com/django/django/blob/main/django/core/cache" target="_blank" rel="noopener noreferrer">`django.core.cache`</a>
+- <a href="https://github.com/django/django/blob/main/django/utils/translation" target="_blank" rel="noopener noreferrer">`django.utils.translation`</a>
 
 
 
