@@ -1,44 +1,90 @@
 ```mermaid
 graph LR
-    User_Authentication_and_Authorization["User Authentication and Authorization"]
-    Data_Security_and_Integrity["Data Security and Integrity"]
-    Service_Communication_and_Integration["Service Communication and Integration"]
-    Content_Handling_and_Processing["Content Handling and Processing"]
-    Functional_Testing_and_Utilities["Functional Testing and Utilities"]
-    User_Authentication_and_Authorization -- "Authenticates and authorizes access to" --> Data_Security_and_Integrity
-    User_Authentication_and_Authorization -- "Communicates with" --> Service_Communication_and_Integration
-    User_Authentication_and_Authorization -- "Processes content for" --> Content_Handling_and_Processing
-    Data_Security_and_Integrity -- "Stores and protects data for" --> User_Authentication_and_Authorization
-    Service_Communication_and_Integration -- "Provides services to" --> User_Authentication_and_Authorization
-    Content_Handling_and_Processing -- "Processes content via" --> User_Authentication_and_Authorization
-    Functional_Testing_and_Utilities -- "Tests functionality of" --> Functional_Testing_and_Utilities
-    click User_Authentication_and_Authorization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/baxbench/User Authentication and Authorization.md" "Details"
-    click Data_Security_and_Integrity href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/baxbench/Data Security and Integrity.md" "Details"
-    click Service_Communication_and_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/baxbench/Service Communication and Integration.md" "Details"
-    click Content_Handling_and_Processing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/baxbench/Content Handling and Processing.md" "Details"
-    click Functional_Testing_and_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/baxbench/Functional Testing and Utilities.md" "Details"
+    Orchestration_Task_Management["Orchestration & Task Management"]
+    Scenario_Definition_Management["Scenario & Definition Management"]
+    LLM_Interaction_Code_Generation["LLM Interaction & Code Generation"]
+    Environment_Container_Management["Environment & Container Management"]
+    Testing_Evaluation_Engine["Testing & Evaluation Engine"]
+    Reporting_User_Interface["Reporting & User Interface"]
+    Orchestration_Task_Management -- "Initiates & Coordinates" --> LLM_Interaction_Code_Generation
+    Orchestration_Task_Management -- "Configures & Prepares" --> Environment_Container_Management
+    Orchestration_Task_Management -- "Orchestrates Phases" --> Testing_Evaluation_Engine
+    Scenario_Definition_Management -- "Provides Benchmark Details" --> Orchestration_Task_Management
+    Scenario_Definition_Management -- "Supplies Prompt Specs" --> LLM_Interaction_Code_Generation
+    Scenario_Definition_Management -- "Delivers Test Cases" --> Testing_Evaluation_Engine
+    LLM_Interaction_Code_Generation -- "Outputs Generated Code" --> Testing_Evaluation_Engine
+    Environment_Container_Management -- "Provides Isolated Environments" --> Testing_Evaluation_Engine
+    Testing_Evaluation_Engine -- "Sends Evaluation Results" --> Reporting_User_Interface
+    click Orchestration_Task_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/baxbench/Orchestration_Task_Management.md" "Details"
+    click LLM_Interaction_Code_Generation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/baxbench/LLM_Interaction_Code_Generation.md" "Details"
+    click Environment_Container_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/baxbench/Environment_Container_Management.md" "Details"
+    click Testing_Evaluation_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/baxbench/Testing_Evaluation_Engine.md" "Details"
 ```
 
-## Component Details
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
-The Baxbench project encompasses a suite of security scenarios designed to evaluate and demonstrate common web application vulnerabilities. It provides a platform for testing security measures and identifying potential weaknesses in various application functionalities. The core of the project is structured around individual scenarios, each representing a specific type of vulnerability or security concern. These scenarios cover a wide range of issues, including authentication flaws, data storage vulnerabilities, service interaction weaknesses, and content processing exploits. The project aims to provide a comprehensive and practical approach to web application security testing.
+## Details
 
-### User Authentication and Authorization
-This component is responsible for managing user identities, authentication processes, and authorization controls. It handles user registration, login, session management, and secure password storage. It ensures that only authorized users can access specific resources and functionalities, protecting against unauthorized access and identity-related attacks.
-- **Related Classes/Methods**: `src.scenarios.login`, `src.scenarios.user_creation`, `src.scenarios.secret_storage`
+The `baxbench` project operates as a robust benchmarking system for evaluating code generated by Large Language Models (LLMs). The `Orchestration & Task Management` component serves as the central control, initiating and coordinating the entire benchmarking workflow. It leverages `Scenario & Definition Management` to obtain benchmark details, including problem descriptions and test cases. For code generation, it interacts with the `LLM Interaction & Code Generation` component, which handles prompt construction and communication with external LLMs. The generated code is then passed to the `Testing & Evaluation Engine`. This engine, supported by the `Environment & Container Management` component for isolated execution environments, validates the code, runs functional and security tests, and utilizes exploit utilities. Finally, the `Reporting & User Interface` component processes the evaluation results from the `Testing & Evaluation Engine` and presents them in a user-friendly format. This architecture ensures a clear, modular, and efficient flow for comprehensive LLM code evaluation.
 
-### Data Security and Integrity
-This component focuses on protecting sensitive data from unauthorized access, modification, or deletion. It manages the storage and retrieval of user secrets, credit card information, and other confidential data. It implements security measures to prevent SQL injection, data breaches, and other data-related vulnerabilities, ensuring the integrity and confidentiality of stored information.
-- **Related Classes/Methods**: `src.scenarios.secret_storage`, `src.scenarios.credit_card_service`
+### Orchestration & Task Management [[Expand]](./Orchestration_Task_Management.md)
+The central control unit responsible for initiating the entire benchmarking process, managing the overall workflow, and orchestrating the execution of various tasks.
 
-### Service Communication and Integration
-This component handles interactions with external services and internal modules, ensuring secure communication and data exchange. It manages shopping cart operations, uptime monitoring, and other service-related functionalities. It implements security measures to prevent XSS attacks, SQL injection, and other vulnerabilities that can arise from service interactions, ensuring the reliability and security of integrated services.
-- **Related Classes/Methods**: `src.scenarios.shopping_cart_service`, `src.scenarios.uptime_service`
 
-### Content Handling and Processing
-This component is responsible for processing user-generated content, such as recipes, file uploads, and other data inputs. It implements security measures to prevent XSS injection, path traversal attacks, zip bomb attacks, and other vulnerabilities that can arise from content processing. It ensures that user-generated content is handled securely and does not pose a threat to the application or its users.
-- **Related Classes/Methods**: `src.scenarios.recipes`, `src.scenarios.shop_overview`, `src.scenarios.zip_to_txt`
+**Related Classes/Methods**:
 
-### Functional Testing and Utilities
-This component provides functionalities for specific tasks such as counting clicks and extracting frames from videos. It primarily focuses on functional testing and validation of these features, ensuring they operate as expected and meet the required specifications. It serves as a utility component for specific application functionalities.
-- **Related Classes/Methods**: `src.scenarios.click_count`, `src.scenarios.frame_extract`
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/main.py" target="_blank" rel="noopener noreferrer">`src/main.py`</a>
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/tasks.py" target="_blank" rel="noopener noreferrer">`src/tasks.py`</a>
+
+
+### Scenario & Definition Management
+Defines and manages the benchmark scenarios, including problem descriptions, API specifications, functional/security test cases, and Common Weakness Enumeration (CWE) definitions.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/scenarios/base.py" target="_blank" rel="noopener noreferrer">`src/scenarios/base.py`</a>
+
+
+### LLM Interaction & Code Generation [[Expand]](./LLM_Interaction_Code_Generation.md)
+Handles all communication with external Large Language Models (LLMs), including prompt construction, request sending, response parsing, and saving generated code.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/prompts.py" target="_blank" rel="noopener noreferrer">`src/prompts.py`</a>
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/tasks.py" target="_blank" rel="noopener noreferrer">`src/tasks.py`</a>
+
+
+### Environment & Container Management [[Expand]](./Environment_Container_Management.md)
+Manages various programming language and framework environments, providing isolated and controlled execution environments, typically leveraging Docker containers.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/env/base.py" target="_blank" rel="noopener noreferrer">`src/env/base.py`</a>
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/tasks.py" target="_blank" rel="noopener noreferrer">`src/tasks.py`</a>
+
+
+### Testing & Evaluation Engine [[Expand]](./Testing_Evaluation_Engine.md)
+The core component for validating generated code, executing functional and security tests within managed container environments, utilizing exploit utilities, and evaluating test outcomes to calculate metrics.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/tasks.py" target="_blank" rel="noopener noreferrer">`src/tasks.py`</a>
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/exploits.py" target="_blank" rel="noopener noreferrer">`src/exploits.py`</a>
+
+
+### Reporting & User Interface
+Responsible for formatting and presenting comprehensive evaluation results in a human-readable format, serving as the interface for displaying the final benchmark report.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/logic-star-ai/baxbench/blob/main/src/print.py" target="_blank" rel="noopener noreferrer">`src/print.py`</a>
+
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
