@@ -1,77 +1,108 @@
 ```mermaid
 graph LR
-    Core_Tensor_Operations["Core Tensor Operations"]
-    Neural_Network_Construction["Neural Network Construction"]
-    Automatic_Differentiation_Engine["Automatic Differentiation Engine"]
-    Optimization_Algorithms["Optimization Algorithms"]
-    Performance_Optimization["Performance Optimization"]
-    Distributed_Training_Infrastructure["Distributed Training Infrastructure"]
-    Model_Deployment_Optimization["Model Deployment & Optimization"]
-    Meta_Programming_Code_Generation["Meta-Programming & Code Generation"]
-    Functional_Programming_Transforms["Functional Programming Transforms"]
-    Neural_Network_Construction -- "relies on" --> Core_Tensor_Operations
-    Automatic_Differentiation_Engine -- "uses" --> Core_Tensor_Operations
-    Automatic_Differentiation_Engine -- "uses" --> Neural_Network_Construction
-    Optimization_Algorithms -- "optimizes" --> Neural_Network_Construction
-    Optimization_Algorithms -- "uses" --> Automatic_Differentiation_Engine
-    Performance_Optimization -- "optimizes" --> Core_Tensor_Operations
-    Performance_Optimization -- "optimizes" --> Neural_Network_Construction
-    Distributed_Training_Infrastructure -- "uses" --> Core_Tensor_Operations
-    Distributed_Training_Infrastructure -- "uses" --> Automatic_Differentiation_Engine
-    Distributed_Training_Infrastructure -- "uses" --> Neural_Network_Construction
-    Model_Deployment_Optimization -- "optimizes" --> Neural_Network_Construction
-    Model_Deployment_Optimization -- "optimizes" --> Core_Tensor_Operations
-    Meta_Programming_Code_Generation -- "generates code for" --> Core_Tensor_Operations
-    Meta_Programming_Code_Generation -- "generates code for" --> Neural_Network_Construction
-    Functional_Programming_Transforms -- "uses" --> Core_Tensor_Operations
-    Functional_Programming_Transforms -- "uses" --> Automatic_Differentiation_Engine
-    click Core_Tensor_Operations href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Core Tensor Operations.md" "Details"
-    click Neural_Network_Construction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Neural Network Construction.md" "Details"
-    click Automatic_Differentiation_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Automatic Differentiation Engine.md" "Details"
-    click Optimization_Algorithms href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Optimization Algorithms.md" "Details"
-    click Performance_Optimization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Performance Optimization.md" "Details"
-    click Distributed_Training_Infrastructure href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Distributed Training Infrastructure.md" "Details"
-    click Model_Deployment_Optimization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Model Deployment & Optimization.md" "Details"
-    click Meta_Programming_Code_Generation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Meta-Programming & Code Generation.md" "Details"
-    click Functional_Programming_Transforms href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Functional Programming Transforms.md" "Details"
+    Tensor_Operations_Core["Tensor Operations & Core"]
+    Automatic_Differentiation_Autograd_Engine_["Automatic Differentiation (Autograd Engine)"]
+    Neural_Network_Modules_torch_nn_["Neural Network Modules (torch.nn)"]
+    Optimizers_torch_optim_["Optimizers (torch.optim)"]
+    Data_Utilities_torch_utils_data_["Data Utilities (torch.utils.data)"]
+    JIT_Compiler_Scripting_TorchScript_["JIT Compiler & Scripting (TorchScript)"]
+    Hardware_Backends["Hardware Backends"]
+    Data_Utilities_torch_utils_data_ -- "provides data to" --> Tensor_Operations_Core
+    Tensor_Operations_Core -- "provides primitives for" --> Neural_Network_Modules_torch_nn_
+    Tensor_Operations_Core -- "leverages" --> Hardware_Backends
+    Neural_Network_Modules_torch_nn_ -- "performs operations on" --> Tensor_Operations_Core
+    Neural_Network_Modules_torch_nn_ -- "operations recorded by" --> Automatic_Differentiation_Autograd_Engine_
+    Neural_Network_Modules_torch_nn_ -- "exported to" --> JIT_Compiler_Scripting_TorchScript_
+    Automatic_Differentiation_Autograd_Engine_ -- "computes gradients for" --> Optimizers_torch_optim_
+    Optimizers_torch_optim_ -- "updates parameters of" --> Neural_Network_Modules_torch_nn_
+    Hardware_Backends -- "executes computations for" --> Tensor_Operations_Core
+    click Tensor_Operations_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Tensor_Operations_Core.md" "Details"
+    click Automatic_Differentiation_Autograd_Engine_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Automatic_Differentiation_Autograd_Engine_.md" "Details"
+    click Neural_Network_Modules_torch_nn_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Neural_Network_Modules_torch_nn_.md" "Details"
+    click Optimizers_torch_optim_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Optimizers_torch_optim_.md" "Details"
+    click Data_Utilities_torch_utils_data_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Data_Utilities_torch_utils_data_.md" "Details"
+    click JIT_Compiler_Scripting_TorchScript_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/JIT_Compiler_Scripting_TorchScript_.md" "Details"
+    click Hardware_Backends href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Hardware_Backends.md" "Details"
 ```
 
-## Component Details
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
-PyTorch is a comprehensive deep learning framework that provides a flexible and efficient platform for research and production. The framework revolves around tensor operations, automatic differentiation, and neural network construction, with additional features for optimization, compilation, distributed training, and model deployment. These components work together to enable users to define, train, and deploy complex deep learning models.
+## Details
 
-### Core Tensor Operations
-This component encompasses the fundamental data structure, `torch.Tensor`, and its associated operations. It manages memory allocation, data type conversions, and basic arithmetic and manipulation functions. It forms the bedrock upon which all other components are built, providing the essential building blocks for numerical computation in PyTorch.
-- **Related Classes/Methods**: `pytorch.torch._tensor`, `pytorch.torch.storage`
+PyTorch's architecture is fundamentally built around a dynamic computational graph, enabling an imperative and flexible approach to deep learning. At its core, the Tensor Operations & Core component provides the fundamental data structures and low-level mathematical operations, which are efficiently accelerated by various Hardware Backends. Data is prepared and loaded via Data Utilities before being processed by these tensors. Neural Network Modules leverage these core tensor operations to define model architectures, with every operation automatically tracked by the Automatic Differentiation (Autograd Engine). This engine is crucial for computing gradients, which are then used by Optimizers to update model parameters during training. For deployment, trained models from Neural Network Modules can be compiled and optimized into a static graph representation using the JIT Compiler & Scripting (TorchScript), facilitating efficient inference in production environments. This modular design emphasizes clear data flow and dynamic graph construction, making it highly suitable for research and rapid development.
 
-### Neural Network Construction
-This component provides a high-level interface for building neural networks through the `torch.nn` module. It offers pre-defined layers (linear, convolutional, recurrent), activation functions, and loss functions, enabling users to easily assemble complex network architectures. It relies on the Core Tensor Operations component for its underlying computations.
-- **Related Classes/Methods**: `pytorch.torch.nn.modules.module`, `pytorch.torch.nn.modules.linear`, `pytorch.torch.nn.modules.conv`, `pytorch.torch.nn.modules.batchnorm`, `pytorch.torch.nn.functional`
+### Tensor Operations & Core [[Expand]](./Tensor_Operations_Core.md)
+The foundational component defining the `Tensor` data structure and implementing low-level mathematical operations. This is the bedrock upon which the computational graph is built.
 
-### Automatic Differentiation Engine
-The `torch.autograd` component automatically computes gradients for tensor operations, enabling efficient training of neural networks. It constructs a dynamic computational graph that tracks operations performed on tensors, allowing for backpropagation to calculate gradients. It is essential for training neural networks and relies on both Core Tensor Operations and Neural Network Construction.
-- **Related Classes/Methods**: `pytorch.torch.autograd.function`, `pytorch.torch.autograd.graph`, `pytorch.torch.autograd.gradcheck`, `pytorch.torch.autograd.functional`
 
-### Optimization Algorithms
-This component, found in `torch.optim`, implements various optimization algorithms such as SGD, Adam, and RMSprop. These algorithms update the parameters of neural networks based on gradients computed by the Automatic Differentiation Engine, aiming to minimize the loss function. It is a crucial part of the training process and directly interacts with Neural Network Construction to update model parameters.
-- **Related Classes/Methods**: `pytorch.torch.optim.optimizer`, `pytorch.torch.optim.sgd`, `pytorch.torch.optim.adam`
+**Related Classes/Methods**:
 
-### Performance Optimization
-This component focuses on optimizing the performance of PyTorch models through Just-In-Time (JIT) compilation (`torch.jit`) and Ahead-Of-Time (AOT) compilation via TorchDynamo (`torch._dynamo`). It transforms Python code into more efficient representations, enabling optimizations like graph fusion and kernel specialization. It enhances the performance of both Core Tensor Operations and Neural Network Construction.
-- **Related Classes/Methods**: `pytorch.torch.jit._script`, `pytorch.torch.jit._trace`, `pytorch.torch.jit._fuser`, `pytorch.torch._dynamo`, `pytorch.torch._dynamo.convert_frame`
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/_dynamo/variables/torch.py" target="_blank" rel="noopener noreferrer">`torch.tensor`</a>
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/csrc/" target="_blank" rel="noopener noreferrer">`torch.csrc`</a>
 
-### Distributed Training Infrastructure
-The `torch.distributed` component enables training neural networks across multiple devices or machines, facilitating larger models and faster training times. It provides functionalities for data parallelism, model parallelism, and communication primitives for synchronizing gradients and data across processes. It leverages Core Tensor Operations, Automatic Differentiation Engine, and Neural Network Construction for distributed computations.
-- **Related Classes/Methods**: `pytorch.torch.distributed.distributed_c10d`, `pytorch.torch.nn.parallel.distributed`, `pytorch.torch.distributed.fsdp`
 
-### Model Deployment & Optimization
-This component focuses on optimizing and deploying PyTorch models. It includes tools for quantizing neural networks (`torch.ao`) to reduce their size and improve inference speed, as well as functionalities for exporting models to the ONNX format (`torch.onnx`) for interoperability with other frameworks and hardware platforms. It optimizes Neural Network Construction and Core Tensor Operations for deployment scenarios.
-- **Related Classes/Methods**: `pytorch.torch.ao.quantization`, `pytorch.torch.ao.nn.quantized`, `pytorch.torch.ao.nn.qat`, `pytorch.torch.onnx`, `pytorch.torch.onnx.utils`
+### Automatic Differentiation (Autograd Engine) [[Expand]](./Automatic_Differentiation_Autograd_Engine_.md)
+The core engine that records operations on tensors to build a dynamic computational graph and automatically computes gradients during the backward pass.
 
-### Meta-Programming & Code Generation
-The `torchgen` component automates the generation of PyTorch code from declarative specifications. It streamlines the creation of operator definitions, dispatch code, and documentation, reducing manual effort and ensuring consistency across the library. It primarily generates code for Core Tensor Operations and Neural Network Construction.
-- **Related Classes/Methods**: `pytorch.torchgen`, `pytorch.torchgen.gen`
 
-### Functional Programming Transforms
-Functorch (`pytorch.functorch`) provides composable function transforms for PyTorch, enabling features like vectorization, automatic differentiation, and stateless functions. It allows users to write more flexible and composable code for machine learning research, extending the capabilities of Core Tensor Operations and Automatic Differentiation Engine.
-- **Related Classes/Methods**: `pytorch.functorch`, `pytorch.torch._functorch`
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/autograd/function.py" target="_blank" rel="noopener noreferrer">`torch.autograd.function`</a>
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/autograd/__init__.py" target="_blank" rel="noopener noreferrer">`torch.autograd`</a>
+
+
+### Neural Network Modules (torch.nn) [[Expand]](./Neural_Network_Modules_torch_nn_.md)
+Provides high-level building blocks for neural networks, including layers, activation functions, and loss functions. These modules encapsulate operations and their parameters.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/nn/modules/module.py" target="_blank" rel="noopener noreferrer">`torch.nn.modules.module`</a>
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/nn/modules/linear.py" target="_blank" rel="noopener noreferrer">`torch.nn.modules.linear`</a>
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/nn/modules/conv.py" target="_blank" rel="noopener noreferrer">`torch.nn.modules.conv`</a>
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/nn/functional.py" target="_blank" rel="noopener noreferrer">`torch.nn.functional`</a>
+
+
+### Optimizers (torch.optim) [[Expand]](./Optimizers_torch_optim_.md)
+Implements various optimization algorithms (e.g., SGD, Adam) used to update the parameters of neural network models based on computed gradients.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/optim/__init__.py" target="_blank" rel="noopener noreferrer">`torch.optim`</a>
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/optim/sgd.py" target="_blank" rel="noopener noreferrer">`torch.optim.sgd`</a>
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/optim/adam.py" target="_blank" rel="noopener noreferrer">`torch.optim.adam`</a>
+
+
+### Data Utilities (torch.utils.data) [[Expand]](./Data_Utilities_torch_utils_data_.md)
+Provides tools and abstractions for efficient data loading, preprocessing, and batching, enabling seamless integration with training pipelines.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/utils/data/dataset.py" target="_blank" rel="noopener noreferrer">`torch.utils.data.dataset`</a>
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/utils/data/dataloader.py" target="_blank" rel="noopener noreferrer">`torch.utils.data.dataloader`</a>
+
+
+### JIT Compiler & Scripting (TorchScript) [[Expand]](./JIT_Compiler_Scripting_TorchScript_.md)
+Enables tracing and scripting of models to create a static graph representation, facilitating model optimization, serialization, and deployment in production environments.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/jit/__init__.py" target="_blank" rel="noopener noreferrer">`torch.jit`</a>
+
+
+### Hardware Backends [[Expand]](./Hardware_Backends.md)
+An abstraction layer that interfaces with different hardware accelerators (e.g., NVIDIA GPUs via CUDA, AMD GPUs via ROCm, Intel GPUs via XPU) to offload computations and achieve high performance.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/cuda/__init__.py" target="_blank" rel="noopener noreferrer">`torch.cuda`</a>
+- <a href="https://github.com/pytorch/pytorch/blob/main/torch/csrc/cuda/" target="_blank" rel="noopener noreferrer">`torch.csrc.cuda`</a>
+
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
