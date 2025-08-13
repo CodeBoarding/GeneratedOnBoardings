@@ -1,94 +1,72 @@
 ```mermaid
 graph LR
-    Tool_Management["Tool Management"]
+    Tool["Tool"]
     FunctionTool["FunctionTool"]
-    ComputerTool["ComputerTool"]
-    FunctionToolResult["FunctionToolResult"]
-    ToolRunFunction["ToolRunFunction"]
-    ToolRunComputerAction["ToolRunComputerAction"]
-    FunctionSchema["FunctionSchema"]
-    Tool_Management -- "manages" --> FunctionTool
-    Tool_Management -- "manages" --> ComputerTool
-    Tool_Management -- "processes results via" --> FunctionToolResult
-    FunctionTool -- "invokes" --> ToolRunFunction
-    FunctionTool -- "produces" --> FunctionToolResult
-    ComputerTool -- "invokes" --> ToolRunComputerAction
-    FunctionToolResult -- "is consumed by" --> Tool_Management
-    ToolRunFunction -- "executes logic of" --> FunctionTool
-    ToolRunComputerAction -- "executes logic of" --> ComputerTool
-    FunctionSchema -- "defines schema for" --> FunctionTool
-    FunctionSchema -- "defines schema for" --> ComputerTool
-    click Tool_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/openai-agents-python/Tool_Management.md" "Details"
+    function_tool["function_tool"]
+    FuncSchema["FuncSchema"]
+    function_schema["function_schema"]
+    Tool -- "is composed of" --> FunctionTool
+    FunctionTool -- "uses" --> FuncSchema
+    FunctionTool -- "is a type of" --> Tool
+    function_tool -- "calls" --> function_schema
+    function_tool -- "produces" --> FunctionTool
+    function_schema -- "produces" --> FuncSchema
+    FunctionTool -- "consumes" --> FuncSchema
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The feedback indicates that the "Tool Management" component lacks source code references, making it difficult to understand its responsibilities. The `getClassHierarchy` output for the `agents` package does not explicitly show a class named "Tool Management" or a similar overarching component. However, it does show `agents.items.ToolCallItem` and `agents.items.ToolCallOutputItem`, which suggests that tool calls and their outputs are managed within the `agents.items` module. Additionally, `agents.tool.ComputerTool` and `agents.tool.FunctionTool` are present, indicating that the `agents.tool` module defines the tools themselves.
+The `Tool Management` subsystem is designed for the robust definition, creation, and schema management of external functionalities. The `function_schema` component is foundational, responsible for generating `FuncSchema` objects by analyzing Python functions. These `FuncSchema` objects are then utilized by `FunctionTool` to formally define its input parameters, ensuring type safety and clarity. The `function_tool` helper streamlines the developer experience by orchestrating the creation of `FunctionTool` instances, internally calling `function_schema` to handle the schema generation. Finally, all concrete tool implementations, such as `FunctionTool`, are unified under the `Tool` abstraction, providing a consistent and extensible interface for the broader AI agent orchestration framework. This structure ensures that tools are well-defined, easily creatable, and uniformly accessible to agents.
 
-Given this, the "Tool Management" component is likely an abstract concept representing the coordination of these various tool-related classes and modules rather than a single, explicit class. The original analysis correctly identifies the related classes and their interactions. The feedback is valid in pointing out the lack of a direct source code reference for "Tool Management," but it's because this component is a conceptual grouping of functionalities rather than a concrete class.
-
-Therefore, the original analysis is largely correct in its conceptualization of "Tool Management" as an orchestrating component. No architectural changes are required, as the current analysis accurately reflects the distributed nature of tool management within the `agents` package. The existing component definitions and relationships are sufficient to describe the subsystem.
-
-### Tool Management [[Expand]](./Tool_Management.md)
-The overarching component responsible for orchestrating the lifecycle of tools within the multi-agent system. It manages the registration, discovery, and high-level execution flow of various tool types, ensuring agents can seamlessly leverage external capabilities. This component acts as the central hub for tool-related operations, conceptually encompassing the interactions between `agents.tool`, `agents.items`, and `agents._run_impl` modules.
+### Tool
+Serves as the abstract interface or union type for all supported tool implementations within the framework. It provides a unified way for agents to interact with diverse external functionalities.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- <a href="https://github.com/openai/openai-agents-python/blob/main/src/agents/tool.py#L61-L98" target="_blank" rel="noopener noreferrer">`src.agents.tool.FunctionTool`:61-98</a>
+
 
 ### FunctionTool
-Represents a generic callable Python function exposed as a tool. It encapsulates the function's metadata (name, description, parameters) and a reference to its execution logic, making it discoverable and invokable by agents. This component is fundamental for integrating custom Python logic as tools.
+A concrete implementation of a tool that wraps a standard Python function, encapsulating its name, description, parameter schema, and asynchronous invocation logic. It's the primary mechanism for exposing Python functions as agent tools.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/sandeshwar/openai-agents-python/blob/main/src/agents/tool.py#L45-L72" target="_blank" rel="noopener noreferrer">`agents.tool.FunctionTool` (45:72)</a>
+- <a href="https://github.com/openai/openai-agents-python/blob/main/src/agents/function_schema.py#L20-L74" target="_blank" rel="noopener noreferrer">`src.agents.function_schema.FuncSchema`:20-74</a>
+- <a href="https://github.com/openai/openai-agents-python/blob/main/src/agents/tool.py" target="_blank" rel="noopener noreferrer">`src.agents.tool.Tool`</a>
 
 
-### ComputerTool
-A specialized tool type designed for interacting with the underlying computer system or environment. This includes functionalities like file system operations, command execution, or other system-level interactions, providing agents with capabilities beyond pure function calls.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/sandeshwar/openai-agents-python/blob/main/src/agents/tool.py#L119-L129" target="_blank" rel="noopener noreferrer">`agents.tool.ComputerTool` (119:129)</a>
-
-
-### FunctionToolResult
-A standardized data structure used to encapsulate the outcome of a tool's execution. It holds the return value, output, or any error information, providing a consistent way for the system to process and interpret the results of tool invocations.
+### function_tool
+A utility function (often used as a decorator) that simplifies the creation of `FunctionTool` instances. It automates the process of extracting metadata and generating the necessary schema from a given Python function.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/sandeshwar/openai-agents-python/blob/main/src/agents/tool.py#L33-L41" target="_blank" rel="noopener noreferrer">`agents.tool.FunctionToolResult` (33:41)</a>
+- <a href="https://github.com/openai/openai-agents-python/blob/main/src/agents/function_schema.py#L188-L356" target="_blank" rel="noopener noreferrer">`src.agents.function_schema.function_schema`:188-356</a>
+- <a href="https://github.com/openai/openai-agents-python/blob/main/src/agents/tool.py#L61-L98" target="_blank" rel="noopener noreferrer">`src.agents.tool.FunctionTool`:61-98</a>
 
 
-### ToolRunFunction
-Responsible for the actual execution of the underlying Python function associated with a `FunctionTool`. It handles the invocation of the callable and captures its direct output or exceptions. This component isolates the execution details from the tool definition.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/sandeshwar/openai-agents-python/blob/main/src/agents/_run_impl.py#L103-L105" target="_blank" rel="noopener noreferrer">`agents._run_impl.ToolRunFunction` (103:105)</a>
-
-
-### ToolRunComputerAction
-Executes the specific system-level actions defined by a `ComputerTool`. This component contains the implementation details for interacting with the operating system or environment, ensuring secure and controlled execution of computer-related tasks.
+### FuncSchema
+A data structure (dataclass) that holds the extracted and validated schema information for a Python function, including its name, description, and a Pydantic model representation of its parameters. This schema is crucial for tool introspection and validation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/sandeshwar/openai-agents-python/blob/main/src/agents/_run_impl.py#L109-L111" target="_blank" rel="noopener noreferrer">`agents._run_impl.ToolRunComputerAction` (109:111)</a>
+- <a href="https://github.com/openai/openai-agents-python/blob/main/src/agents/function_schema.py#L188-L356" target="_blank" rel="noopener noreferrer">`src.agents.function_schema.function_schema`:188-356</a>
+- <a href="https://github.com/openai/openai-agents-python/blob/main/src/agents/tool.py#L61-L98" target="_blank" rel="noopener noreferrer">`src.agents.tool.FunctionTool`:61-98</a>
 
 
-### FunctionSchema
-Defines and validates the input and output schemas for tools, ensuring they conform to expected formats (e.g., OpenAI Chat Completions API format). This component is critical for maintaining data integrity and enabling proper communication between agents and tools.
+### function_schema
+A core utility function responsible for analyzing a Python function's signature, type hints, and docstrings to automatically generate a `FuncSchema` object. It leverages Pydantic for robust and standardized schema creation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/sandeshwar/openai-agents-python/blob/main/src/agents/function_schema.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.function_schema.FunctionSchema` (1:1)</a>
+- <a href="https://github.com/openai/openai-agents-python/blob/main/src/agents/function_schema.py#L20-L74" target="_blank" rel="noopener noreferrer">`src.agents.function_schema.FuncSchema`:20-74</a>
+- <a href="https://github.com/openai/openai-agents-python/blob/main/src/agents/tool.py#L329-L470" target="_blank" rel="noopener noreferrer">`src.agents.tool.function_tool`:329-470</a>
 
 
 
