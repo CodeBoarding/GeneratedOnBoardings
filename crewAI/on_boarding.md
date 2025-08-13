@@ -1,66 +1,109 @@
 ```mermaid
 graph LR
-    CrewOrchestrator["CrewOrchestrator"]
-    AgentManager["AgentManager"]
-    TaskManager["TaskManager"]
-    LLMInterface["LLMInterface"]
-    Tooling["Tooling"]
-    Memory["Memory"]
-    Knowledge["Knowledge"]
-    UserInterface["UserInterface"]
-    CrewOrchestrator -- "orchestrates" --> AgentManager
-    CrewOrchestrator -- "assigns" --> TaskManager
-    AgentManager -- "executes" --> TaskManager
-    AgentManager -- "interacts with" --> LLMInterface
-    AgentManager -- "uses" --> Tooling
-    AgentManager -- "utilizes" --> Memory
-    AgentManager -- "accesses" --> Knowledge
-    TaskManager -- "uses" --> LLMInterface
-    Tooling -- "manages" --> LLMInterface
-    Memory -- "stores" --> Knowledge
-    UserInterface -- "provides interface" --> CrewOrchestrator
-    click CrewOrchestrator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/CrewOrchestrator.md" "Details"
-    click AgentManager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/AgentManager.md" "Details"
-    click TaskManager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/TaskManager.md" "Details"
-    click LLMInterface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/LLMInterface.md" "Details"
-    click Tooling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/Tooling.md" "Details"
-    click Memory href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/Memory.md" "Details"
-    click Knowledge href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/Knowledge.md" "Details"
-    click UserInterface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/UserInterface.md" "Details"
+    CLI_Deployment["CLI & Deployment"]
+    Orchestration_Core["Orchestration Core"]
+    Agent_System["Agent System"]
+    Task_Execution_Layer["Task Execution Layer"]
+    LLM_Tool_Integration["LLM & Tool Integration"]
+    Memory_Knowledge_Base["Memory & Knowledge Base"]
+    Observability_Telemetry["Observability & Telemetry"]
+    CLI_Deployment -- "initiates execution within" --> Orchestration_Core
+    Orchestration_Core -- "orchestrates actions and assigns tasks to" --> Agent_System
+    Orchestration_Core -- "manages execution and state of tasks via" --> Task_Execution_Layer
+    Agent_System -- "interacts with for reasoning and tool execution" --> LLM_Tool_Integration
+    Agent_System -- "accesses and updates context from" --> Memory_Knowledge_Base
+    LLM_Tool_Integration -- "provides responses and tool execution results back to" --> Agent_System
+    Memory_Knowledge_Base -- "provides retrieved context and knowledge to" --> Agent_System
+    Orchestration_Core -- "emits events to" --> Observability_Telemetry
+    Agent_System -- "emits events to" --> Observability_Telemetry
+    Task_Execution_Layer -- "emits events to" --> Observability_Telemetry
+    LLM_Tool_Integration -- "emits events to" --> Observability_Telemetry
+    Memory_Knowledge_Base -- "emits events to" --> Observability_Telemetry
+    Observability_Telemetry -- "provides insights/logs to" --> CLI_Deployment
+    click CLI_Deployment href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/CLI_Deployment.md" "Details"
+    click Orchestration_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/Orchestration_Core.md" "Details"
+    click Agent_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/Agent_System.md" "Details"
+    click Task_Execution_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/Task_Execution_Layer.md" "Details"
+    click LLM_Tool_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/LLM_Tool_Integration.md" "Details"
+    click Memory_Knowledge_Base href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/Memory_Knowledge_Base.md" "Details"
+    click Observability_Telemetry href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/crewAI/Observability_Telemetry.md" "Details"
 ```
 
-## Component Details
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
-The CrewAI system orchestrates collaborative tasks among autonomous agents to achieve complex goals. The core flow involves defining a crew of specialized agents, assigning them individual tasks, and managing their interactions to produce a final result. This includes leveraging language models, tools, and memory to enable agents to reason, act, and learn throughout the process.
+## Details
 
-### CrewOrchestrator
-The CrewOrchestrator component manages the overall execution of a crew, including agent creation, task assignment, and result aggregation. It defines the workflow and ensures that agents collaborate effectively to achieve the desired outcome. It is the central point of control for the entire CrewAI system.
-- **Related Classes/Methods**: `crewai.crew.Crew`, `crewai.process`, `crewai.utilities.planning_handler.CrewPlanner`
+The `crewAI` architecture is designed as an intelligent AI Agent Orchestration Framework, centered around the **Orchestration Core** which manages the execution of multi-agent workflows. User interaction begins with the **CLI & Deployment** component, initiating a `Crew` or `Flow` that the Orchestration Core then manages. Within this orchestration, individual **Agent System** instances perform tasks, leveraging the **LLM & Tool Integration** layer for their reasoning and external interactions, and drawing upon the **Memory & Knowledge Base** for contextual awareness and information retrieval. The **Task Execution Layer** ensures efficient task management throughout the workflow. All critical activities across these components are monitored by the **Observability & Telemetry** system, providing comprehensive insights into the framework's operation. This modular design facilitates clear data and control flow, making it ideal for visual representation in a flow graph diagram.
 
-### AgentManager
-The AgentManager component is responsible for defining and managing individual agents within a crew. It handles agent initialization, tool assignment, task execution, and interaction with the language model. It provides the building blocks for creating intelligent and autonomous agents.
-- **Related Classes/Methods**: `crewai.agent.Agent`, `crewai.agents.agent_builder.base_agent.BaseAgent`, `crewai.agents.agent_adapters.openai_agents.openai_adapter.OpenAIAgentAdapter`, `crewai.agents.agent_adapters.langgraph.langgraph_adapter.LangGraphAgentAdapter`
+### CLI & Deployment [[Expand]](./CLI_Deployment.md)
+The user's primary interface for initiating, configuring, and deploying AI crews and flows.
 
-### TaskManager
-The TaskManager component defines and executes individual tasks assigned to agents. It manages task execution, input interpolation, guardrail processing, and output formatting. It ensures that tasks are completed efficiently and effectively.
-- **Related Classes/Methods**: `crewai.task.Task`, `crewai.tasks.llm_guardrail.LLMGuardrail`, `crewai.tasks.conditional_task.ConditionalTask`
 
-### LLMInterface
-The LLMInterface component provides an interface for interacting with language models. It handles prompt preparation, API calls, streaming responses, and tool call management. It abstracts away the complexities of interacting with different language models.
-- **Related Classes/Methods**: `crewai.llm.LLM`, `crewai.llms.base_llm.BaseLLM`, `crewai.llms.third_party.ai_suite.AISuiteLLM`, `crewai.utilities.llm_utils`
+**Related Classes/Methods**:
 
-### Tooling
-The Tooling component manages the tools available to agents. It handles tool registration, execution, input validation, and result formatting. It provides agents with the capabilities they need to interact with the external world.
-- **Related Classes/Methods**: `crewai.tools.base_tool.BaseTool`, `crewai.tools.structured_tool.CrewStructuredTool`, `crewai.tools.tool_usage.ToolUsage`, `crewai.tools.agent_tools.agent_tools.AgentTools`
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/cli/run_crew.py" target="_blank" rel="noopener noreferrer">`run_crew.py`</a>
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/cli/deploy/main.py" target="_blank" rel="noopener noreferrer">`main.py`</a>
 
-### Memory
-The Memory component provides memory capabilities for agents and crews, including short-term, long-term, and entity memories. It handles memory storage, retrieval, and contextualization. It allows agents to learn and adapt over time.
-- **Related Classes/Methods**: `crewai.memory.short_term.short_term_memory.ShortTermMemory`, `crewai.memory.long_term.long_term_memory.LongTermMemory`, `crewai.memory.entity.entity_memory.EntityMemory`, `crewai.memory.external.external_memory.ExternalMemory`, `crewai.memory.user.user_memory.UserMemory`, `crewai.memory.storage.rag_storage.RAGStorage`, `crewai.memory.contextual.contextual_memory.ContextualMemory`
 
-### Knowledge
-The Knowledge component manages the knowledge sources available to agents. It handles knowledge ingestion, storage, and retrieval. It provides agents with access to the information they need to complete their tasks.
-- **Related Classes/Methods**: `crewai.knowledge.knowledge.Knowledge`, `crewai.knowledge.source.base_knowledge_source.BaseKnowledgeSource`, `crewai.knowledge.storage.knowledge_storage.KnowledgeStorage`, `crewai.knowledge.embedder.fastembed.FastEmbed`
+### Orchestration Core [[Expand]](./Orchestration_Core.md)
+The central workflow engine responsible for defining, managing, and executing multi-agent crews and complex flows.
 
-### UserInterface
-The UserInterface component provides interfaces for interacting with the CrewAI system, including a command-line interface (CLI) and potentially other interfaces. It handles crew creation, execution, deployment, and other management tasks. It allows users to easily manage and interact with the CrewAI system.
-- **Related Classes/Methods**: `crewai.cli.cli.CLI`, `crewai.cli.create_crew.CreateCrew`, `crewai.cli.run_crew.RunCrew`, `crewai.cli.deploy.main.DeployCommand`, `crewai.cli.tools.main.ToolCommand`
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/crew.py" target="_blank" rel="noopener noreferrer">`crew.py`</a>
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/flow/flow.py" target="_blank" rel="noopener noreferrer">`flow.py`</a>
+
+
+### Agent System [[Expand]](./Agent_System.md)
+Encapsulates the intelligence, roles, and decision-making logic of individual AI agents within a crew.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/lite_agent.py" target="_blank" rel="noopener noreferrer">`agent.py`</a>
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/utilities/reasoning_handler.py" target="_blank" rel="noopener noreferrer">`reasoning_handler.py`</a>
+
+
+### Task Execution Layer [[Expand]](./Task_Execution_Layer.md)
+Manages the lifecycle, execution, and output handling of individual tasks assigned to agents.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/task.py" target="_blank" rel="noopener noreferrer">`task.py`</a>
+
+
+### LLM & Tool Integration [[Expand]](./LLM_Tool_Integration.md)
+Provides a unified interface for agents to interact with Large Language Models and external tools for reasoning and action.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/llm.py" target="_blank" rel="noopener noreferrer">`llm.py`</a>
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/tools/tool_usage.py" target="_blank" rel="noopener noreferrer">`tool_usage.py`</a>
+
+
+### Memory & Knowledge Base [[Expand]](./Memory_Knowledge_Base.md)
+Manages all forms of information storage and retrieval, including contextual memory and RAG-based knowledge access for agents and crews.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/memory/contextual/contextual_memory.py" target="_blank" rel="noopener noreferrer">`contextual_memory.py`</a>
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/knowledge/storage/knowledge_storage.py" target="_blank" rel="noopener noreferrer">`knowledge_storage.py`</a>
+
+
+### Observability & Telemetry [[Expand]](./Observability_Telemetry.md)
+A cross-cutting component for capturing and emitting detailed execution events for monitoring, debugging, and performance analysis.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/utilities/events/listeners/tracing/trace_listener.py" target="_blank" rel="noopener noreferrer">`trace_listener.py`</a>
+- <a href="https://github.com/crewAIInc/crewAI/blob/main/src/crewai/telemetry/telemetry.py" target="_blank" rel="noopener noreferrer">`telemetry.py`</a>
+
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
