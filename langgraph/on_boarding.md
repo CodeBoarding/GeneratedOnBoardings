@@ -1,52 +1,106 @@
 ```mermaid
 graph LR
-    Graph_Definition_and_Compilation["Graph Definition and Compilation"]
+    Graph_Definition_Compilation["Graph Definition & Compilation"]
     Pregel_Execution_Engine["Pregel Execution Engine"]
-    Channel_Management["Channel Management"]
-    Node_Tooling["Node Tooling"]
-    Checkpointing_and_Persistence["Checkpointing and Persistence"]
-    External_Interface_CLI_SDK_["External Interface (CLI & SDK)"]
-    Graph_Definition_and_Compilation -- "uses" --> Channel_Management
-    Pregel_Execution_Engine -- "executes" --> Graph_Definition_and_Compilation
-    Pregel_Execution_Engine -- "manages state via" --> Channel_Management
-    Pregel_Execution_Engine -- "persists state of" --> Checkpointing_and_Persistence
-    Node_Tooling -- "integrates" --> Graph_Definition_and_Compilation
-    External_Interface_CLI_SDK_ -- "uses" --> Graph_Definition_and_Compilation
-    External_Interface_CLI_SDK_ -- "deploys" --> Pregel_Execution_Engine
-    External_Interface_CLI_SDK_ -- "interacts with" --> Pregel_Execution_Engine
-    External_Interface_CLI_SDK_ -- "uses" --> Checkpointing_and_Persistence
-    click Graph_Definition_and_Compilation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Graph Definition and Compilation.md" "Details"
-    click Pregel_Execution_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Pregel Execution Engine.md" "Details"
-    click Channel_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Channel Management.md" "Details"
-    click Node_Tooling href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Node Tooling.md" "Details"
-    click Checkpointing_and_Persistence href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Checkpointing and Persistence.md" "Details"
-    click External_Interface_CLI_SDK_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/External Interface (CLI & SDK).md" "Details"
+    Channel_Management_System["Channel Management System"]
+    State_Persistence_Checkpointing["State Persistence & Checkpointing"]
+    Node_Execution_Tool_Integration["Node Execution & Tool Integration"]
+    Prebuilt_Agent_Components["Prebuilt Agent Components"]
+    LangGraph_SDK_Client["LangGraph SDK Client"]
+    Graph_Definition_Compilation -- "defines workflow structure for" --> Pregel_Execution_Engine
+    Pregel_Execution_Engine -- "reads/writes node data via" --> Channel_Management_System
+    Pregel_Execution_Engine -- "loads/saves execution checkpoints with" --> State_Persistence_Checkpointing
+    Channel_Management_System -- "persists/retrieves channel state via" --> State_Persistence_Checkpointing
+    Pregel_Execution_Engine -- "delegates node execution to" --> Node_Execution_Tool_Integration
+    Node_Execution_Tool_Integration -- "utilizes prebuilt agent logic from" --> Prebuilt_Agent_Components
+    LangGraph_SDK_Client -- "remotely invokes/manages workflows in" --> Pregel_Execution_Engine
+    LangGraph_SDK_Client -- "remotely accesses/manages checkpoints in" --> State_Persistence_Checkpointing
+    click Graph_Definition_Compilation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Graph_Definition_Compilation.md" "Details"
+    click Pregel_Execution_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Pregel_Execution_Engine.md" "Details"
+    click Channel_Management_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Channel_Management_System.md" "Details"
+    click State_Persistence_Checkpointing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/State_Persistence_Checkpointing.md" "Details"
+    click Node_Execution_Tool_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Node_Execution_Tool_Integration.md" "Details"
+    click Prebuilt_Agent_Components href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/Prebuilt_Agent_Components.md" "Details"
+    click LangGraph_SDK_Client href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langgraph/LangGraph_SDK_Client.md" "Details"
 ```
 
-## Component Details
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
-LangGraph is a framework for building robust and modular LLM-powered applications by representing them as graphs. It allows developers to define complex interaction flows between LLMs, tools, and other components, enabling the creation of sophisticated agents and workflows. The framework provides tools for defining graph structure, managing state, executing the graph, and persisting state for resuming execution.
+## Details
 
-### Graph Definition and Compilation
-This component focuses on defining the structure of the graph, including nodes, edges, and the overall flow of execution. It handles the compilation of the graph into a runnable form, optimizing it for performance and ensuring that all dependencies are properly resolved. It includes the core graph structures and compilation logic.
-- **Related Classes/Methods**: `langgraph.libs.langgraph.langgraph.graph.state.StateGraph`, `langgraph.libs.langgraph.langgraph.graph.state.CompiledStateGraph`, `langgraph.libs.langgraph.langgraph.graph.graph.Graph`, `langgraph.libs.langgraph.langgraph.graph.graph.CompiledGraph`
+The LangGraph architecture is centered around the **Pregel Execution Engine**, which orchestrates the execution of agentic workflows defined by the **Graph Definition & Compilation** component. Data flow within the graph is managed by the **Channel Management System**, acting as a central bus for state propagation between nodes. For long-running and fault-tolerant workflows, the **State Persistence & Checkpointing** component provides mechanisms to save and restore the graph's state, supporting various storage backends. Individual steps or agents within the workflow are handled by the **Node Execution & Tool Integration** component, which can leverage pre-built functionalities from the **Prebuilt Agent Components**. External applications interact with and manage these workflows through the **LangGraph SDK Client**, enabling remote invocation and state management. This modular design facilitates clear separation of concerns, making the system extensible and maintainable, and is well-suited for visual representation as a data flow diagram.
 
-### Pregel Execution Engine
-The Pregel Execution Engine is responsible for executing the compiled LangGraph. It manages the state of the graph, schedules the execution of nodes, and handles the flow of data between them. It uses a message-passing paradigm inspired by the Pregel distributed graph processing framework to enable efficient and scalable execution.
-- **Related Classes/Methods**: `langgraph.libs.langgraph.langgraph.pregel.loop.PregelLoop`, `langgraph.libs.langgraph.langgraph.pregel.loop.SyncPregelLoop`, `langgraph.libs.langgraph.langgraph.pregel.loop.AsyncPregelLoop`, `langgraph.libs.langgraph.langgraph.pregel.runner.PregelRunner`, `langgraph.libs.langgraph.langgraph.pregel.algo`, `langgraph.libs.langgraph.langgraph.pregel.Pregel`
+### Graph Definition & Compilation [[Expand]](./Graph_Definition_Compilation.md)
+Defines the structure of the agentic workflow, including nodes (agents/steps) and edges (transitions). It also handles the compilation of this definition into an executable graph.
 
-### Channel Management
-This component provides the mechanism for nodes in the graph to communicate and share data. Channels act as typed message queues, allowing nodes to exchange information and update the graph's state. Different channel types are available to support various communication patterns, such as last-value, any-value, and binary operator aggregation.
-- **Related Classes/Methods**: `langgraph.libs.langgraph.langgraph.channels.base.BaseChannel`, `langgraph.libs.langgraph.langgraph.channels.ephemeral_value.EphemeralValue`, `langgraph.libs.langgraph.langgraph.channels.dynamic_barrier_value.DynamicBarrierValue`, `langgraph.libs.langgraph.langgraph.channels.named_barrier_value.NamedBarrierValue`, `langgraph.libs.langgraph.langgraph.channels.last_value.LastValue`, `langgraph.libs.langgraph.langgraph.channels.binop.BinaryOperatorAggregate`, `langgraph.libs.langgraph.langgraph.channels.any_value.AnyValue`, `langgraph.libs.langgraph.langgraph.channels.topic.Topic`
 
-### Node Tooling
-This component defines the structure of a node, and provides tooling for creating nodes. It includes the prebuilt tool node, which allows for easy integration of external tools into the graph. It also includes the validation node, which allows for validating the output of tools.
-- **Related Classes/Methods**: `langgraph.libs.prebuilt.langgraph.prebuilt.tool_node.ToolNode`, `langgraph.libs.prebuilt.langgraph.prebuilt.tool_validator.ValidationNode`
+**Related Classes/Methods**:
 
-### Checkpointing and Persistence
-This component handles the persistence of the graph's state, allowing for resuming execution from a specific point in time. It provides mechanisms for saving and loading checkpoints, supporting various storage backends like memory, SQLite, and Postgres. It also includes serialization and encryption capabilities to ensure data integrity and security.
-- **Related Classes/Methods**: `langgraph.libs.checkpoint.langgraph.checkpoint.base.BaseCheckpointSaver`, `langgraph.libs.checkpoint.langgraph.checkpoint.memory.InMemorySaver`, `langgraph.libs.checkpoint.langgraph.checkpoint.serde.jsonplus.JsonPlusSerializer`, `langgraph.libs.checkpoint.langgraph.checkpoint.serde.encrypted.EncryptedSerializer`, `langgraph.libs.checkpoint.langgraph.store.base.BaseStore`, `langgraph.libs.checkpoint.langgraph.store.memory.InMemoryStore`, `langgraph.libs.checkpoint-sqlite.langgraph.checkpoint.sqlite.SqliteSaver`, `langgraph.libs.checkpoint-sqlite.langgraph.store.sqlite.base.SqliteStore`, `langgraph.libs.checkpoint-postgres.langgraph.checkpoint.postgres.PostgresSaver`, `langgraph.libs.checkpoint-postgres.langgraph.store.postgres.base.PostgresStore`
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/graph/state.py#L897-L1216" target="_blank" rel="noopener noreferrer">`langgraph.graph.state.CompiledStateGraph`:897-1216</a>
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/graph/state.py#L117-L894" target="_blank" rel="noopener noreferrer">`langgraph.graph.state.StateGraph`:117-894</a>
 
-### External Interface (CLI & SDK)
-This component provides the external interfaces for interacting with LangGraph, including a CLI for managing and deploying LangGraph applications and an SDK for programmatic access to LangGraph services. It enables users to create, build, deploy, and interact with LangGraph applications from the command line or through Python code.
-- **Related Classes/Methods**: `langgraph.libs.cli.langgraph_cli.cli`, `langgraph.libs.cli.langgraph_cli.config`, `langgraph.libs.cli.langgraph_cli.docker`, `langgraph.libs.cli.langgraph_cli.exec`, `langgraph.libs.sdk-py.langgraph_sdk.client`, `langgraph.libs.sdk-py.langgraph_sdk.client.LangGraphClient`, `langgraph.libs.sdk-py.langgraph_sdk.client.HttpClient`, `langgraph.libs.sdk-py.langgraph_sdk.client.RunsClient`, `langgraph.libs.sdk-py.langgraph_sdk.client.StoreClient`
+
+### Pregel Execution Engine [[Expand]](./Pregel_Execution_Engine.md)
+The core runtime orchestrator, responsible for executing the defined graph in a Pregel-like iterative fashion. It manages the flow of control and data between nodes, handling state updates and checkpointing.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/pregel/main.py" target="_blank" rel="noopener noreferrer">`langgraph.pregel.main.Pregel`</a>
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/pregel/main.py" target="_blank" rel="noopener noreferrer">`langgraph.pregel.main._loop`</a>
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/pregel/main.py" target="_blank" rel="noopener noreferrer">`langgraph.pregel.main._algo`</a>
+
+
+### Channel Management System [[Expand]](./Channel_Management_System.md)
+Acts as the central data bus for the graph, facilitating communication and state propagation between different nodes. It manages the read and write operations for various data channels.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/channels/base.py#L19-L105" target="_blank" rel="noopener noreferrer">`langgraph.channels.base.BaseChannel`:19-105</a>
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/pregel/main.py" target="_blank" rel="noopener noreferrer">`langgraph.pregel.main._read`</a>
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/pregel/main.py" target="_blank" rel="noopener noreferrer">`langgraph.pregel.main._write`</a>
+
+
+### State Persistence & Checkpointing [[Expand]](./State_Persistence_Checkpointing.md)
+Provides mechanisms for saving and loading the entire graph's state (checkpoints), enabling long-running, fault-tolerant, and stateful workflows. Supports various storage backends.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/checkpoint/langgraph/checkpoint/base/__init__.py" target="_blank" rel="noopener noreferrer">`langgraph.checkpoint.base.BaseCheckpointSaver`</a>
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/checkpoint/langgraph/checkpoint/memory/__init__.py" target="_blank" rel="noopener noreferrer">`langgraph.checkpoint.memory.MemorySaver`</a>
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py" target="_blank" rel="noopener noreferrer">`langgraph.checkpoint.sqlite.SqliteSaver`</a>
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/checkpoint-postgres/langgraph/checkpoint/postgres/__init__.py" target="_blank" rel="noopener noreferrer">`langgraph.checkpoint.postgres.PostgresSaver`</a>
+
+
+### Node Execution & Tool Integration [[Expand]](./Node_Execution_Tool_Integration.md)
+Encapsulates the logic for executing individual nodes within the graph, including the invocation of external tools or APIs as part of an agent's action.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/prebuilt/langgraph/prebuilt/tool_node.py#L239-L774" target="_blank" rel="noopener noreferrer">`langgraph.prebuilt.tool_node.ToolNode`:239-774</a>
+
+
+### Prebuilt Agent Components [[Expand]](./Prebuilt_Agent_Components.md)
+Offers high-level, reusable agent implementations that encapsulate common AI agent patterns (e.g., conversational agents), simplifying the creation of sophisticated agentic workflows.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/prebuilt/langgraph/prebuilt/chat_agent_executor.py" target="_blank" rel="noopener noreferrer">`langgraph.prebuilt.chat_agent_executor.ChatAgentExecutor`</a>
+
+
+### LangGraph SDK Client [[Expand]](./LangGraph_SDK_Client.md)
+Provides a programmatic interface for external applications to interact with and manage deployed LangGraph workflows, supporting remote invocation, state management, and monitoring.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/langchain-ai/langgraph/blob/main/libs/sdk-py/langgraph_sdk/client.py#L216-L233" target="_blank" rel="noopener noreferrer">`langgraph_sdk.client.LangGraphClient`:216-233</a>
+
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
