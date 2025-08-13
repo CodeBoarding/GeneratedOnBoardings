@@ -1,159 +1,111 @@
 ```mermaid
 graph LR
-    LangChain_Core_Runnables["LangChain Core & Runnables"]
-    Language_Model_Interfaces["Language Model Interfaces"]
-    Agentic_Systems["Agentic Systems"]
-    Chains_Workflows["Chains & Workflows"]
+    Input_Data_Preparation["Input & Data Preparation"]
+    Knowledge_Base_Retrieval["Knowledge Base & Retrieval"]
+    LLM_Core_Prompting["LLM Core & Prompting"]
+    Workflow_Agent_Orchestration["Workflow & Agent Orchestration"]
+    Tool_Output_Processing["Tool & Output Processing"]
     Memory_State_Management["Memory & State Management"]
-    Tooling_External_Interactions["Tooling & External Interactions"]
-    Data_Ingestion_Transformation["Data Ingestion & Transformation"]
-    Vector_Graph_Databases["Vector & Graph Databases"]
-    Observability_Evaluation["Observability & Evaluation"]
-    Development_CLI_Utilities["Development & CLI Utilities"]
-    LangChain_Core_Runnables -- "provides abstractions for" --> Language_Model_Interfaces
-    LangChain_Core_Runnables -- "provides abstractions for" --> Agentic_Systems
-    LangChain_Core_Runnables -- "provides abstractions for" --> Chains_Workflows
-    LangChain_Core_Runnables -- "provides abstractions for" --> Memory_State_Management
-    LangChain_Core_Runnables -- "provides abstractions for" --> Tooling_External_Interactions
-    LangChain_Core_Runnables -- "provides abstractions for" --> Data_Ingestion_Transformation
-    LangChain_Core_Runnables -- "provides abstractions for" --> Vector_Graph_Databases
-    LangChain_Core_Runnables -- "provides abstractions for" --> Observability_Evaluation
-    Agentic_Systems -- "utilizes" --> Language_Model_Interfaces
-    Agentic_Systems -- "utilizes" --> Tooling_External_Interactions
-    Agentic_Systems -- "utilizes" --> Memory_State_Management
-    Chains_Workflows -- "utilizes" --> Language_Model_Interfaces
-    Chains_Workflows -- "utilizes" --> Data_Ingestion_Transformation
-    Memory_State_Management -- "utilizes" --> Vector_Graph_Databases
-    Memory_State_Management -- "utilizes" --> Data_Ingestion_Transformation
-    Vector_Graph_Databases -- "utilizes" --> Language_Model_Interfaces
-    Vector_Graph_Databases -- "utilizes" --> Memory_State_Management
-    Observability_Evaluation -- "monitors" --> LangChain_Core_Runnables
-    Observability_Evaluation -- "monitors" --> Language_Model_Interfaces
-    Observability_Evaluation -- "monitors" --> Agentic_Systems
-    Observability_Evaluation -- "monitors" --> Chains_Workflows
-    Development_CLI_Utilities -- "supports" --> LangChain_Core_Runnables
-    Development_CLI_Utilities -- "supports" --> Language_Model_Interfaces
-    Development_CLI_Utilities -- "supports" --> Agentic_Systems
-    Development_CLI_Utilities -- "supports" --> Chains_Workflows
-    click LangChain_Core_Runnables href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/LangChain Core & Runnables.md" "Details"
-    click Language_Model_Interfaces href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Language Model Interfaces.md" "Details"
-    click Agentic_Systems href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Agentic Systems.md" "Details"
-    click Chains_Workflows href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Chains & Workflows.md" "Details"
-    click Memory_State_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Memory & State Management.md" "Details"
-    click Tooling_External_Interactions href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Tooling & External Interactions.md" "Details"
-    click Data_Ingestion_Transformation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Data Ingestion & Transformation.md" "Details"
-    click Vector_Graph_Databases href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Vector & Graph Databases.md" "Details"
-    click Observability_Evaluation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Observability & Evaluation.md" "Details"
-    click Development_CLI_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Development & CLI Utilities.md" "Details"
+    Evaluation["Evaluation"]
+    Input_Data_Preparation -- "sends processed documents to" --> Knowledge_Base_Retrieval
+    Knowledge_Base_Retrieval -- "provides context to" --> LLM_Core_Prompting
+    LLM_Core_Prompting -- "passes raw responses to" --> Tool_Output_Processing
+    Tool_Output_Processing -- "guides" --> Workflow_Agent_Orchestration
+    Workflow_Agent_Orchestration -- "initiates calls to" --> LLM_Core_Prompting
+    Workflow_Agent_Orchestration -- "invokes" --> Tool_Output_Processing
+    Workflow_Agent_Orchestration -- "accesses and updates" --> Memory_State_Management
+    Workflow_Agent_Orchestration -- "queries" --> Knowledge_Base_Retrieval
+    Memory_State_Management -- "utilizes" --> Knowledge_Base_Retrieval
+    Evaluation -- "assesses performance of" --> LLM_Core_Prompting
+    Evaluation -- "assesses performance of" --> Workflow_Agent_Orchestration
+    Evaluation -- "assesses performance of" --> Tool_Output_Processing
+    click Input_Data_Preparation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Input_Data_Preparation.md" "Details"
+    click Knowledge_Base_Retrieval href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Knowledge_Base_Retrieval.md" "Details"
+    click LLM_Core_Prompting href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/LLM_Core_Prompting.md" "Details"
+    click Tool_Output_Processing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Tool_Output_Processing.md" "Details"
+    click Memory_State_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/langchain/Memory_State_Management.md" "Details"
 ```
+
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
-## Component Details
+## Details
 
-The LangChain architecture is designed to facilitate the development of applications powered by large language models. At its core, `LangChain Core & Runnables` provides fundamental abstractions and a unified interface for composing components. Building upon this foundation, `Language Model Interfaces` enable interaction with various AI models, while `Agentic Systems` and `Chains & Workflows` orchestrate complex LLM-driven logic. `Memory & State Management` maintains conversational context, and `Tooling & External Interactions` extends capabilities to external services. `Data Ingestion & Transformation` prepares data for LLMs, which is then stored and retrieved by `Vector & Graph Databases`. `Observability & Evaluation` provides monitoring and performance analysis, and `Development & CLI Utilities` support the overall development lifecycle.
+The LangChain architecture is a modular framework for building sophisticated AI applications, emphasizing a pipeline-driven approach. It orchestrates a flow that begins with Input & Data Preparation, feeding into a Knowledge Base & Retrieval system for contextual information. This context, along with user prompts, is processed by the LLM Core & Prompting component, which interacts with various Large Language Models. The LLM's raw output is then handled by Tool & Output Processing for structuring and external interactions. The central Workflow & Agent Orchestration component dynamically manages the application's logic, composing chains and agents that leverage LLMs, tools, and Memory & State Management for persistent context. This design promotes extensibility, allowing developers to swap out different implementations of components (e.g., LLM providers, vector stores) without altering the overall application logic, while Evaluation provides continuous performance assessment.
 
-### LangChain Core & Runnables
-The foundational library providing core abstractions, data models (messages, documents, outputs), base classes for runnables, callbacks, exceptions, and essential utilities. It also includes the fundamental building blocks for composing and orchestrating LangChain components, enabling a unified interface for invoking, streaming, and batching operations.
-
-
-**Related Classes/Methods**:
-
-- `langchain_core.runnables.base` (full file reference)
-- `langchain_core.messages.base` (full file reference)
-- `langchain_core.documents.base` (full file reference)
-- `langchain_core.callbacks.base` (full file reference)
-
-
-### Language Model Interfaces
-Provides standardized interfaces and integrations for various Large Language Model (LLM), chat-optimized Large Language Model, and Embedding Model providers. This component abstracts the complexities of interacting with different AI models, allowing other LangChain components to use them interchangeably.
+### Input & Data Preparation [[Expand]](./Input_Data_Preparation.md)
+Manages initial user input and the ingestion, loading, and transformation of raw data into a usable format for the system.
 
 
 **Related Classes/Methods**:
 
-- `langchain.llms.base` (full file reference)
-- `langchain.chat_models.base` (full file reference)
-- `langchain.embeddings.base` (full file reference)
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/document_loaders/base.py" target="_blank" rel="noopener noreferrer">`langchain_core.document_loaders.base`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/text-splitters/langchain_text_splitters/character.py" target="_blank" rel="noopener noreferrer">`langchain_text_splitters.character`</a>
 
 
-### Agentic Systems
-Implements the core logic for intelligent agents, enabling them to reason, plan, and execute actions using a set of tools. This component orchestrates the interaction between LLMs, tools, and memory to achieve complex goals.
-
-
-**Related Classes/Methods**:
-
-- `langchain.agents.agent` (full file reference)
-
-
-### Chains & Workflows
-Provides a structured way to combine LLMs and other components into multi-step workflows. These chains can range from simple LLM calls to complex conversational retrieval systems, enabling the creation of sophisticated applications by linking various operations.
+### Knowledge Base & Retrieval [[Expand]](./Knowledge_Base_Retrieval.md)
+Responsible for converting data into embeddings, storing and managing them in vector stores, and efficiently retrieving relevant information to provide context.
 
 
 **Related Classes/Methods**:
 
-- `langchain.chains.base` (full file reference)
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain_v1/langchain/embeddings/base.py" target="_blank" rel="noopener noreferrer">`langchain.embeddings.base`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/partners/qdrant/langchain_qdrant/vectorstores.py" target="_blank" rel="noopener noreferrer">`langchain_qdrant.vectorstores`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/retrievers/multi_query.py" target="_blank" rel="noopener noreferrer">`langchain.retrievers.multi_query`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/indexing/api.py" target="_blank" rel="noopener noreferrer">`langchain_core.indexing.api`</a>
 
 
-### Memory & State Management
-Handles the persistence and retrieval of conversational history and other stateful information within LLM applications. This includes various chat message histories and general storage mechanisms, allowing applications to maintain context across interactions.
-
-
-**Related Classes/Methods**:
-
-- `langchain.memory.base` (full file reference)
-- `langchain.storage.in_memory` (full file reference)
-
-
-### Tooling & External Interactions
-A collection of pre-built tools that extend the capabilities of LLM agents, allowing them to interact with external services, perform calculations, or access information. This component also includes general utility functions that support various operations within the LangChain ecosystem.
+### LLM Core & Prompting [[Expand]](./LLM_Core_Prompting.md)
+Handles all interactions with Large Language Models, including model initialization, prompt construction, and generating responses. It abstracts away provider-specific details.
 
 
 **Related Classes/Methods**:
 
-- `langchain.tools.base` (full file reference)
-- `langchain.utilities.python` (full file reference)
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain_v1/langchain/chat_models/base.py" target="_blank" rel="noopener noreferrer">`langchain.chat_models.base`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/language_models/chat_models.py" target="_blank" rel="noopener noreferrer">`langchain_core.language_models.chat_models`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/prompts/chat.py" target="_blank" rel="noopener noreferrer">`langchain_core.prompts.chat`</a>
 
 
-### Data Ingestion & Transformation
-Encompasses modules for ingesting data from diverse sources (Document Loaders), transforming and processing documents (Document Transformers), and splitting large texts into smaller chunks (Text Splitters). This component is crucial for preparing unstructured data for use with LLMs.
-
-
-**Related Classes/Methods**:
-
-- `langchain.document_loaders.base` (full file reference)
-- `langchain.document_transformers.html2text` (full file reference)
-- `langchain_text_splitters.base` (full file reference)
-
-
-### Vector & Graph Databases
-Manages the storage and retrieval of document embeddings, enabling efficient similarity search and knowledge base functionalities. This component also includes integrations with various graph databases, allowing LLMs to interact with and query structured data.
+### Workflow & Agent Orchestration
+The central control unit that defines and executes complex multi-step workflows, including sequential chains, composable runnables, and intelligent agents capable of dynamic decision-making.
 
 
 **Related Classes/Methods**:
 
-- `langchain.vectorstores.base` (full file reference)
-- `langchain.graphs.networkx_graph` (full file reference)
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/chains/base.py" target="_blank" rel="noopener noreferrer">`langchain.chains.base`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/runnables/base.py" target="_blank" rel="noopener noreferrer">`langchain_core.runnables.base`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/agents/agent.py" target="_blank" rel="noopener noreferrer">`langchain.agents.agent`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/agents/agent_iterator.py" target="_blank" rel="noopener noreferrer">`langchain.agents.agent_iterator`</a>
 
 
-### Observability & Evaluation
-Provides mechanisms to monitor and interact with the execution flow of LangChain applications through callbacks and tracers. It also facilitates integration with LangSmith for debugging, testing, and monitoring, and offers a framework for evaluating the quality and performance of LLM outputs.
-
-
-**Related Classes/Methods**:
-
-- `langchain.callbacks.base` (full file reference)
-- `langchain_core.tracers.base` (full file reference)
-- `langchain.smith.evaluation.runner_utils` (full file reference)
-- `langchain.evaluation.schema` (full file reference)
-
-
-### Development & CLI Utilities
-Contains command-line interface (CLI) utilities for various LangChain-related tasks, such as generating migrations or serving applications. This component also includes modules and scripts specifically for generating API reference documentation and standardized test suites, supporting the development and quality assurance of the LangChain library.
+### Tool & Output Processing [[Expand]](./Tool_Output_Processing.md)
+Manages the definition and execution of external tools used by agents and chains, and processes raw LLM outputs into structured, actionable formats.
 
 
 **Related Classes/Methods**:
 
-- `langchain_cli.cli` (full file reference)
-- `langchain.libs.standard-tests.langchain_tests.base` (full file reference)
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/tools/base.py" target="_blank" rel="noopener noreferrer">`langchain_core.tools.base`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/output_parsers/json.py" target="_blank" rel="noopener noreferrer">`langchain_core.output_parsers.json`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/agents/output_parsers/openai_functions.py" target="_blank" rel="noopener noreferrer">`langchain.agents.output_parsers.openai_functions`</a>
+
+
+### Memory & State Management [[Expand]](./Memory_State_Management.md)
+Provides mechanisms for storing and retrieving conversational history and other relevant state information, enabling continuity across interactions.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/memory/chat_memory.py" target="_blank" rel="noopener noreferrer">`langchain.memory.chat_memory`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/memory/token_buffer.py" target="_blank" rel="noopener noreferrer">`langchain.memory.token_buffer`</a>
+
+
+### Evaluation
+Provides tools and frameworks for assessing the performance and quality of LLMs, chains, and agents against defined criteria or datasets.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/smith/evaluation/runner_utils.py" target="_blank" rel="noopener noreferrer">`langchain.smith.evaluation.runner_utils`</a>
+- <a href="https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/evaluation/schema.py" target="_blank" rel="noopener noreferrer">`langchain.evaluation.schema`</a>
 
 
 
