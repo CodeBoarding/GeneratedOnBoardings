@@ -10,7 +10,7 @@ graph LR
     click H3_Geometric_Shapes_GeoJSON_Conversion href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/h3-py/H3 Geometric Shapes & GeoJSON Conversion.md" "Details"
     click Internal_H3_Type_Conversion_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/h3-py/Internal H3 Type Conversion Layer.md" "Details"
 ```
-[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Component Details
 
