@@ -1,106 +1,99 @@
 ```mermaid
 graph LR
-    Angular_Build_Compile_System["Angular Build & Compile System"]
     Angular_Core_Runtime["Angular Core Runtime"]
-    Angular_Forms_Module["Angular Forms Module"]
-    Angular_Router_Module["Angular Router Module"]
-    Angular_HTTP_Client_Service_Worker_Module["Angular HTTP Client & Service Worker Module"]
-    External_Backend_Services["External Backend Services"]
-    Angular_Build_Compile_System -- "Configures & Compiles" --> Angular_Core_Runtime
-    Angular_Build_Compile_System -- "Processes & Optimizes" --> Angular_Forms_Module
-    Angular_Build_Compile_System -- "Processes & Optimizes" --> Angular_Router_Module
-    Angular_Core_Runtime -- "Manages & Updates" --> Angular_Forms_Module
-    Angular_Forms_Module -- "Submits Data To" --> Angular_Core_Runtime
-    Angular_Core_Runtime -- "Manages & Integrates" --> Angular_Router_Module
-    Angular_Router_Module -- "Directs View Rendering For" --> Angular_Core_Runtime
-    Angular_Core_Runtime -- "Initializes & Manages" --> Angular_HTTP_Client_Service_Worker_Module
-    Angular_HTTP_Client_Service_Worker_Module -- "Manages Requests To" --> External_Backend_Services
-    External_Backend_Services -- "Provides Data To" --> Angular_HTTP_Client_Service_Worker_Module
-    click Angular_Build_Compile_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Angular_Build_Compile_System.md" "Details"
+    Angular_Routing_Navigation["Angular Routing & Navigation"]
+    Angular_Forms_Management["Angular Forms Management"]
+    Angular_Common_HTTP_Utilities["Angular Common & HTTP Utilities"]
+    Angular_Feature_Extensions["Angular Feature Extensions"]
+    Angular_Development_Build_Ecosystem["Angular Development & Build Ecosystem"]
+    Angular_Development_Build_Ecosystem -- "compiles & bundles" --> Angular_Core_Runtime
+    Angular_Development_Build_Ecosystem -- "debugs & inspects" --> Angular_Core_Runtime
+    Angular_Core_Runtime -- "manages navigation state through" --> Angular_Routing_Navigation
+    Angular_Routing_Navigation -- "activates components in" --> Angular_Core_Runtime
+    Angular_Core_Runtime -- "binds data & validates input via" --> Angular_Forms_Management
+    Angular_Forms_Management -- "provides form state to" --> Angular_Core_Runtime
+    Angular_Core_Runtime -- "utilizes shared services from" --> Angular_Common_HTTP_Utilities
+    Angular_Common_HTTP_Utilities -- "makes network requests via" --> Angular_Core_Runtime
+    Angular_Core_Runtime -- "integrates optional features provided by" --> Angular_Feature_Extensions
+    Angular_Feature_Extensions -- "extends runtime behavior of" --> Angular_Core_Runtime
     click Angular_Core_Runtime href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Angular_Core_Runtime.md" "Details"
-    click Angular_Forms_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Angular_Forms_Module.md" "Details"
-    click Angular_Router_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Angular_Router_Module.md" "Details"
-    click Angular_HTTP_Client_Service_Worker_Module href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Angular_HTTP_Client_Service_Worker_Module.md" "Details"
-    click External_Backend_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/External_Backend_Services.md" "Details"
+    click Angular_Routing_Navigation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Angular_Routing_Navigation.md" "Details"
+    click Angular_Forms_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Angular_Forms_Management.md" "Details"
+    click Angular_Common_HTTP_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Angular_Common_HTTP_Utilities.md" "Details"
+    click Angular_Development_Build_Ecosystem href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Angular_Development_Build_Ecosystem.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The Angular architecture is structured around a core runtime that orchestrates various modules to build dynamic web applications. The Angular Build & Compile System acts as the initial entry point, transforming source code into an optimized runtime bundle. This bundle, primarily driven by the Angular Core Runtime, then manages the application's lifecycle, including dependency injection, change detection, and direct DOM manipulation. Specialized modules like the Angular Forms Module and Angular Router Module extend the core's capabilities. The Forms Module handles user input, submitting data back to the Core Runtime for processing. The Router Module manages in-application navigation, directing the Core Runtime on which views to render based on routes. For external data interactions, the Angular HTTP Client & Service Worker Module manages requests to External Backend Services and processes their responses, optionally leveraging service workers for caching and offline support. These interactions form the backbone of an Angular application, enabling a clear separation of concerns and a modular approach to development.
-
-### Angular Build & Compile System [[Expand]](./Angular_Build_Compile_System.md)
-Orchestrates the entire development workflow, from project creation and serving to compilation and deployment. It transforms Angular source code (templates, decorators) into optimized JavaScript (Ivy instructions) that the browser can execute. This includes processing internationalization assets.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/angular/angular/blob/main/packages/compiler-cli/src/main.ts" target="_blank" rel="noopener noreferrer">`packages/compiler-cli/src/main.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/compiler-cli/src/ngtsc/core/src/compiler.ts" target="_blank" rel="noopener noreferrer">`packages.compiler-cli.src.ngtsc.core.src.compiler.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/compiler/src/render3/view/compiler.ts" target="_blank" rel="noopener noreferrer">`packages/compiler/src/render3/view/compiler.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/localize/src/translate.ts" target="_blank" rel="noopener noreferrer">`packages/localize/src/translate.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/common/locales/generate-locales-tool/locale-file.ts" target="_blank" rel="noopener noreferrer">`packages/common/locales/generate-locales-tool/locale-file.ts`</a>
-
+The Angular ecosystem is structured around a robust core runtime that provides the fundamental execution environment for applications. This core interacts with specialized modules for routing, forms, and common utilities, enabling a modular and scalable development approach. The entire development lifecycle is supported by a comprehensive build and development ecosystem, which includes tools for compilation, debugging, and documentation generation. This layered architecture ensures clear separation of concerns, facilitating both development and maintenance of complex applications.
 
 ### Angular Core Runtime [[Expand]](./Angular_Core_Runtime.md)
-The foundational part of Angular that initializes the application, manages the root component, orchestrates the overall application lifecycle, handles dependency injection, detects changes in application data, and directly manipulates the DOM. It also includes the modern reactivity model (Signals) and integrates with Zone.js for asynchronous context. Animations and the Upgrade module also interact closely with this core.
+The foundational execution environment for Angular applications, encompassing Dependency Injection, Change Detection, and platform-specific layers for browser and server.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/platform/platform_ref.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/platform/platform_ref.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/di/r3_injector.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/di/r3_injector.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/application/application_ref.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/application/application_ref.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/instructions/change_detection.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/instructions/change_detection.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/instructions/element.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/instructions/element.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/instructions/property.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/instructions/property.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/instructions/listener.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/instructions/listener.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/reactivity/signal.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/reactivity/signal.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/reactivity/computed.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/reactivity/computed.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/zone.js/lib/zone-impl.ts" target="_blank" rel="noopener noreferrer">`packages/zone.js/lib/zone-impl.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/animations/browser/src/create_engine.ts" target="_blank" rel="noopener noreferrer">`packages/animations/browser/src/create_engine.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/animations/browser/src/render/timeline_animation_engine.ts" target="_blank" rel="noopener noreferrer">`packages/animations/browser/src/render/timeline_animation_engine.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/upgrade/static/src/upgrade_module.ts" target="_blank" rel="noopener noreferrer">`packages/upgrade/static/src/upgrade_module.ts`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/core/src/di/r3_injector.ts" target="_blank" rel="noopener noreferrer">`packages.core.src.di.r3_injector`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/view_ref.ts" target="_blank" rel="noopener noreferrer">`packages.core.src.render3.view_ref`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/platform-browser/src/browser" target="_blank" rel="noopener noreferrer">`packages.platform-browser.src.browser`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/platform-server/src/server.ts" target="_blank" rel="noopener noreferrer">`packages.platform-server.src.server`</a>
 
 
-### Angular Forms Module [[Expand]](./Angular_Forms_Module.md)
-Provides a comprehensive set of tools and APIs for building and managing user input forms, supporting both template-driven and reactive approaches. It interacts with the Core Runtime for data binding and change detection.
+### Angular Routing & Navigation [[Expand]](./Angular_Routing_Navigation.md)
+Manages navigation and state transitions within an Angular application, mapping URLs to components and handling route activation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/angular/angular/blob/main/packages/forms/src/form_builder.ts" target="_blank" rel="noopener noreferrer">`packages/forms/src/form_builder.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/forms/src/directives/ng_model.ts" target="_blank" rel="noopener noreferrer">`packages/forms/src/directives/ng_model.ts`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/router/src/router.ts" target="_blank" rel="noopener noreferrer">`packages.router.src.router`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/router/src/navigation_transition.ts" target="_blank" rel="noopener noreferrer">`packages.router.src.navigation_transition`</a>
 
 
-### Angular Router Module [[Expand]](./Angular_Router_Module.md)
-Enables navigation between different views (components) within a single-page application, managing URL synchronization, route activation, and lazy loading of feature modules. It directs the Core Runtime on which components to render.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/angular/angular/blob/main/packages/router/src/router.ts" target="_blank" rel="noopener noreferrer">`packages/router/src/router.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/router/src/recognize.ts" target="_blank" rel="noopener noreferrer">`packages/router/src/recognize.ts`</a>
-
-
-### Angular HTTP Client & Service Worker Module [[Expand]](./Angular_HTTP_Client_Service_Worker_Module.md)
-Provides a simplified API for making HTTP requests to backend services, supporting various request methods, interceptors, and error handling. It integrates with browser Service Workers for offline capabilities, asset caching, and push notifications for Progressive Web Apps (PWAs).
+### Angular Forms Management [[Expand]](./Angular_Forms_Management.md)
+Provides a robust framework for building reactive and template-driven forms, handling data binding, validation, and form state.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/angular/angular/blob/main/packages/common/http/src/client.ts" target="_blank" rel="noopener noreferrer">`packages/common/http/src/client.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/common/http/src/interceptor.ts" target="_blank" rel="noopener noreferrer">`packages/common/http/src/interceptor.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/service-worker/worker/src/driver.ts" target="_blank" rel="noopener noreferrer">`packages/service-worker/worker/src/driver.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/service-worker/worker/src/app-version.ts" target="_blank" rel="noopener noreferrer">`packages/service-worker/worker/src/app-version.ts`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/forms/src/form_builder.ts" target="_blank" rel="noopener noreferrer">`packages.forms.src.form_builder`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/forms/src/model/form_control.ts" target="_blank" rel="noopener noreferrer">`packages.forms.src.model.form_control`</a>
 
 
-### External Backend Services [[Expand]](./External_Backend_Services.md)
-Represents external data sources and APIs that the Angular application interacts with, typically via HTTP requests. This component is external to the Angular framework itself and therefore does not have internal source code references within the Angular project. It is crucial for most Angular applications.
+### Angular Common & HTTP Utilities [[Expand]](./Angular_Common_HTTP_Utilities.md)
+A collection of widely used utilities and services, including common pipes, directives, location services, and a powerful HTTP client.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- <a href="https://github.com/angular/angular/blob/main/packages/common/http/src/client.ts" target="_blank" rel="noopener noreferrer">`packages.common.http.src.client`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/common/src/pipes/async_pipe.ts" target="_blank" rel="noopener noreferrer">`packages.common.src.pipes.async_pipe`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/common/src/directives/ng_for_of.ts" target="_blank" rel="noopener noreferrer">`packages.common.src.directives.ng_for_of`</a>
+
+
+### Angular Feature Extensions
+Optional, pluggable modules extending Angular's core capabilities for specific needs like internationalization, animations, service workers, and custom elements.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/angular/angular/blob/main/packages/localize/tools/src/extract/index.ts" target="_blank" rel="noopener noreferrer">`packages.localize.tools.src.extract.index`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/animations/src/animation_builder.ts" target="_blank" rel="noopener noreferrer">`packages.animations.src.animation_builder`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/service-worker/src/update.ts" target="_blank" rel="noopener noreferrer">`packages.service_worker.src.update`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/elements/src/create-custom-element.ts" target="_blank" rel="noopener noreferrer">`packages.elements.src.create_custom_element`</a>
+
+
+### Angular Development & Build Ecosystem [[Expand]](./Angular_Development_Build_Ecosystem.md)
+Encompasses tools and processes supporting development, compilation, and debugging, including the CLI, compiler, documentation pipelines, and developer tools.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/angular/angular/blob/main/packages/compiler-cli/src/main.ts" target="_blank" rel="noopener noreferrer">`packages.compiler_cli.src.main`</a>
+- <a href="https://github.com/angular/angular/blob/main/adev/shared-docs/components/index.ts" target="_blank" rel="noopener noreferrer">`/home/ivan/StartUp/CodeBoarding/repos/angular/adev/shared-docs/components/index.ts`</a>
+- <a href="https://github.com/angular/angular/blob/main/devtools/projects/ng-devtools/src/lib/devtools-tabs/devtools-tabs.component.ts" target="_blank" rel="noopener noreferrer">`/home/ivan/StartUp/CodeBoarding/repos/angular/devtools/projects/ng-devtools/src/lib/devtools-tabs/devtools-tabs.component.ts`</a>
+
 
 
 
