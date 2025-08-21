@@ -1,148 +1,119 @@
 ```mermaid
 graph LR
-    Distributed_System_Orchestration["Distributed System Orchestration"]
-    Data_Management_Input_Pipeline["Data Management & Input Pipeline"]
-    Core_Model_Architecture["Core Model Architecture"]
-    Optimization_Performance_Engine["Optimization & Performance Engine"]
-    Checkpointing_Persistence["Checkpointing & Persistence"]
-    Training_Orchestration["Training Orchestration"]
-    Inference_Deployment["Inference & Deployment"]
-    Evaluation_Metrics["Evaluation & Metrics"]
-    Distributed_System_Orchestration -- "Configures" --> Data_Management_Input_Pipeline
-    Distributed_System_Orchestration -- "Initializes" --> Optimization_Performance_Engine
-    Data_Management_Input_Pipeline -- "Provides Data To" --> Core_Model_Architecture
-    Data_Management_Input_Pipeline -- "Supplies Data Iterators To" --> Training_Orchestration
-    Data_Management_Input_Pipeline -- "Provides Preprocessing For" --> Inference_Deployment
-    Data_Management_Input_Pipeline -- "Offers Data To" --> Evaluation_Metrics
-    Core_Model_Architecture -- "Generates Gradients For" --> Optimization_Performance_Engine
-    Core_Model_Architecture -- "Provides Model State For" --> Checkpointing_Persistence
-    Core_Model_Architecture -- "Provides Trained Model For" --> Inference_Deployment
-    Optimization_Performance_Engine -- "Processes Gradients From" --> Core_Model_Architecture
-    Optimization_Performance_Engine -- "Applies Optimizations To" --> Core_Model_Architecture
-    Optimization_Performance_Engine -- "Provides Optimizer State For" --> Checkpointing_Persistence
-    Optimization_Performance_Engine -- "Provides Optimized Components For" --> Inference_Deployment
-    Checkpointing_Persistence -- "Loads Weights Into" --> Core_Model_Architecture
-    Checkpointing_Persistence -- "Loads States Into" --> Optimization_Performance_Engine
-    Checkpointing_Persistence -- "Provides Checkpoints For" --> Inference_Deployment
-    Training_Orchestration -- "Relies On" --> Distributed_System_Orchestration
-    Training_Orchestration -- "Drives Passes Through" --> Core_Model_Architecture
-    Training_Orchestration -- "Triggers Updates In" --> Optimization_Performance_Engine
-    Training_Orchestration -- "Manages Checkpoints With" --> Checkpointing_Persistence
-    Training_Orchestration -- "Manages Evaluation With" --> Evaluation_Metrics
-    Inference_Deployment -- "Uses Model From" --> Core_Model_Architecture
-    Inference_Deployment -- "Utilizes Preprocessing From" --> Data_Management_Input_Pipeline
-    Inference_Deployment -- "Leverages Optimizations From" --> Optimization_Performance_Engine
-    Inference_Deployment -- "Loads Weights From" --> Checkpointing_Persistence
-    Inference_Deployment -- "Generates Outputs For" --> Evaluation_Metrics
-    Evaluation_Metrics -- "Consumes Data From" --> Data_Management_Input_Pipeline
-    Evaluation_Metrics -- "Evaluates Models From" --> Core_Model_Architecture
-    Evaluation_Metrics -- "Receives Outputs From" --> Training_Orchestration
-    Evaluation_Metrics -- "Receives Outputs From" --> Inference_Deployment
-    click Distributed_System_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Distributed_System_Orchestration.md" "Details"
-    click Data_Management_Input_Pipeline href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Data_Management_Input_Pipeline.md" "Details"
-    click Core_Model_Architecture href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Core_Model_Architecture.md" "Details"
-    click Optimization_Performance_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Optimization_Performance_Engine.md" "Details"
-    click Checkpointing_Persistence href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Checkpointing_Persistence.md" "Details"
-    click Training_Orchestration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Training_Orchestration.md" "Details"
-    click Inference_Deployment href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Inference_Deployment.md" "Details"
-    click Evaluation_Metrics href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Evaluation_Metrics.md" "Details"
+    Training_Orchestration_System_Control["Training Orchestration & System Control"]
+    Data_Pipeline["Data Pipeline"]
+    Model_Core["Model Core"]
+    Distributed_Parallelism_Engine["Distributed Parallelism Engine"]
+    Optimization_Mixed_Precision["Optimization & Mixed Precision"]
+    Inference_Engine["Inference Engine"]
+    Model_Persistence_Utilities["Model Persistence & Utilities"]
+    Training_Orchestration_System_Control -- "initializes and controls" --> Distributed_Parallelism_Engine
+    Training_Orchestration_System_Control -- "requests and consumes data from" --> Data_Pipeline
+    Training_Orchestration_System_Control -- "drives forward and backward passes of" --> Model_Core
+    Training_Orchestration_System_Control -- "sends gradients to" --> Optimization_Mixed_Precision
+    Training_Orchestration_System_Control -- "sends save/load commands to" --> Model_Persistence_Utilities
+    Data_Pipeline -- "provides data to" --> Training_Orchestration_System_Control
+    Data_Pipeline -- "supplies data to" --> Inference_Engine
+    Data_Pipeline -- "provides input to" --> Model_Core
+    Distributed_Parallelism_Engine -- "distributes and manages" --> Model_Core
+    Optimization_Mixed_Precision -- "updates parameters of" --> Model_Core
+    Inference_Engine -- "executes forward pass using" --> Model_Core
+    Model_Persistence_Utilities -- "provides models to" --> Inference_Engine
+    click Training_Orchestration_System_Control href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Training_Orchestration_System_Control.md" "Details"
+    click Model_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Model_Core.md" "Details"
+    click Distributed_Parallelism_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Distributed_Parallelism_Engine.md" "Details"
+    click Optimization_Mixed_Precision href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Optimization_Mixed_Precision.md" "Details"
+    click Inference_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Inference_Engine.md" "Details"
+    click Model_Persistence_Utilities href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/Megatron-LM/Model_Persistence_Utilities.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+The Megatron-LM architecture is structured around a set of highly specialized components designed for large-scale language model training and inference. The **Training Orchestration & System Control** component acts as the central coordinator, initializing the distributed environment and managing the entire training lifecycle. It interacts with the **Data Pipeline** to fetch and process data, which in turn provides input to the **Model Core** for forward and backward passes. The **Distributed Parallelism Engine** is fundamental, enabling efficient scaling by distributing and managing the **Model Core** across multiple devices using various parallelism techniques. During training, gradients from the **Model Core** are sent to the **Optimization & Mixed Precision** component, which handles parameter updates and performance enhancements like FP8 training and quantization. For deployment, the **Inference Engine** leverages the **Model Core** to execute forward passes, often receiving pre-processed data from the **Data Pipeline**. Finally, the **Model Persistence & Utilities** component ensures model checkpoints can be saved, loaded, and converted for various deployment scenarios, providing trained models to the **Inference Engine**. This modular design facilitates clear data flow and allows for independent development and optimization of each critical aspect of the large language model lifecycle.
 
-### Distributed System Orchestration [[Expand]](./Distributed_System_Orchestration.md)
-Manages the foundational setup for distributed training, including argument parsing, global variable initialization, and the orchestration of various parallelism strategies (Tensor, Pipeline, Data, Context, Expert Parallelism) across distributed ranks. This component is critical for scaling models across multiple GPUs.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/training/initialize.py" target="_blank" rel="noopener noreferrer">`megatron/training/initialize.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/training/arguments.py" target="_blank" rel="noopener noreferrer">`megatron/training/arguments.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/parallel_state.py" target="_blank" rel="noopener noreferrer">`megatron/core/parallel_state.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/tensor_parallel/" target="_blank" rel="noopener noreferrer">`megatron/core/tensor_parallel/`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/pipeline_parallel/" target="_blank" rel="noopener noreferrer">`megatron/core/pipeline_parallel/`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/distributed/" target="_blank" rel="noopener noreferrer">`megatron/core/distributed/`</a>
-
-
-### Data Management & Input Pipeline [[Expand]](./Data_Management_Input_Pipeline.md)
-Handles the entire data pipeline, from raw data ingestion, tokenization, and dataset creation to specialized processing for multimodal inputs (images, audio) and retrieval-augmented generation (Retro). It ensures efficient data delivery to the models.
+### Training Orchestration & System Control [[Expand]](./Training_Orchestration_System_Control.md)
+Manages the initial setup of the distributed environment, parses command-line arguments, configures global variables, and orchestrates the end-to-end training loop, including iteration over data, executing forward and backward passes, and handling evaluation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/training/tokenizer/tokenizer.py" target="_blank" rel="noopener noreferrer">`megatron/training/tokenizer/tokenizer.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/datasets/" target="_blank" rel="noopener noreferrer">`megatron/core/datasets/`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/datasets/retro/" target="_blank" rel="noopener noreferrer">`megatron/core/datasets/retro/`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/tools/retro/" target="_blank" rel="noopener noreferrer">`tools/retro/`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/training/initialize.py" target="_blank" rel="noopener noreferrer">`megatron.training.initialize`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/training/training.py" target="_blank" rel="noopener noreferrer">`megatron.training.training`</a>
 
 
-### Core Model Architecture [[Expand]](./Core_Model_Architecture.md)
-Provides the fundamental building blocks and high-level definitions for large language models. This includes core transformer layers (self-attention, MLPs, normalization), MoE layers, and specific model implementations like GPT, T5, BERT, and their multimodal extensions. It's the blueprint for constructing various LLMs.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/transformer/" target="_blank" rel="noopener noreferrer">`megatron/core/transformer/`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/models/" target="_blank" rel="noopener noreferrer">`megatron/core/models/`</a>
-
-
-### Optimization & Performance Engine [[Expand]](./Optimization_Performance_Engine.md)
-Manages the optimization process, including parameter updates, gradient accumulation, efficient gradient synchronization, and low-level performance optimizations. This includes highly optimized fused CUDA kernels, CUDA graph implementations, and FP8 utilities to maximize training and inference throughput on NVIDIA GPUs.
+### Data Pipeline
+Handles the loading, processing, tokenization, and preparation of diverse datasets (text, image, multimodal) for training and inference. This component includes specialized handling for various data formats and preprocessing steps, including querying for Retro-specific datasets.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/optimizer/" target="_blank" rel="noopener noreferrer">`megatron/core/optimizer/`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/fusions/" target="_blank" rel="noopener noreferrer">`megatron/core/fusions/`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/fp8_utils.py" target="_blank" rel="noopener noreferrer">`megatron/core/fp8_utils.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/transformer/cuda_graphs.py" target="_blank" rel="noopener noreferrer">`megatron/core/transformer/cuda_graphs.py`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/datasets/blended_megatron_dataset_builder.py" target="_blank" rel="noopener noreferrer">`megatron.core.datasets.blended_megatron_dataset_builder`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/tools/preprocess_data.py" target="_blank" rel="noopener noreferrer">`tools.preprocess_data`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/datasets/retro/db/build.py" target="_blank" rel="noopener noreferrer">`megatron.core.datasets.retro.db.build`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/examples/multimodal/dataloader_provider.py" target="_blank" rel="noopener noreferrer">`examples.multimodal.dataloader_provider`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/datasets/retro/query/query.py" target="_blank" rel="noopener noreferrer">`megatron.core.datasets.retro.query.query`</a>
 
 
-### Checkpointing & Persistence [[Expand]](./Checkpointing_Persistence.md)
-Provides robust mechanisms for saving and loading model and optimizer states. It supports distributed and sharded checkpoints, crucial for fault tolerance, resuming training, and transfer learning with very large models.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/training/checkpointing.py" target="_blank" rel="noopener noreferrer">`megatron/training/checkpointing.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/dist_checkpointing/" target="_blank" rel="noopener noreferrer">`megatron/core/dist_checkpointing/`</a>
-
-
-### Training Orchestration [[Expand]](./Training_Orchestration.md)
-Controls the overall training loop within the Megatron-LM framework. This includes managing iterations, data flow, forward/backward passes, optimization steps, and periodic evaluation and logging. It orchestrates the interaction between core components during training.
+### Model Core [[Expand]](./Model_Core.md)
+Contains the fundamental, reusable building blocks of large language models, including transformer layers, attention mechanisms, MLPs, and Mixture-of-Experts (MoE) layers. This forms the "Megatron Core" foundation, designed for extensibility to support models like Retro and Multimodal architectures.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/training/training.py" target="_blank" rel="noopener noreferrer">`megatron/training/training.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/tasks/finetune_utils.py" target="_blank" rel="noopener noreferrer">`tasks/finetune_utils.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/pretrain_retro.py" target="_blank" rel="noopener noreferrer">`pretrain_retro.py`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/transformer/transformer_block.py" target="_blank" rel="noopener noreferrer">`megatron.core.transformer.transformer_block`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/models/gpt/gpt_model.py" target="_blank" rel="noopener noreferrer">`megatron.core.models.gpt.gpt_model`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/models/multimodal/llava_model.py" target="_blank" rel="noopener noreferrer">`megatron.core.models.multimodal.llava_model`</a>
 
 
-### Inference & Deployment [[Expand]](./Inference_Deployment.md)
-Provides the necessary infrastructure for running inference on trained models, including efficient text generation, request scheduling, and dynamic batching. It also encompasses post-training optimizations like quantization, distillation, and conversion to specialized inference formats (e.g., TensorRT-LLM) for deployment.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/inference/" target="_blank" rel="noopener noreferrer">`megatron/core/inference/`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/inference/text_generation/api.py" target="_blank" rel="noopener noreferrer">`megatron/inference/text_generation/api.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/examples/post_training/modelopt/quantize.py" target="_blank" rel="noopener noreferrer">`examples/post_training/modelopt/quantize.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/export/trtllm/trtllm_helper.py" target="_blank" rel="noopener noreferrer">`megatron/core/export/trtllm/trtllm_helper.py`</a>
-
-
-### Evaluation & Metrics [[Expand]](./Evaluation_Metrics.md)
-Offers utilities and scripts for evaluating model performance on various benchmarks and computing relevant metrics to assess model quality. This component is used to validate the effectiveness of trained models.
+### Distributed Parallelism Engine [[Expand]](./Distributed_Parallelism_Engine.md)
+Implements and orchestrates various distributed training parallelism techniques: Tensor Parallelism (TP), Pipeline Parallelism (PP), Data Parallelism (DP), Context Parallelism (CP), and Expert Parallelism (EP). This is a central and defining feature of Megatron-LM, enabling large-scale model training.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/tasks/eval_utils.py" target="_blank" rel="noopener noreferrer">`tasks/eval_utils.py`</a>
-- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/examples/multimodal/evaluation/evaluate_vqav2.py" target="_blank" rel="noopener noreferrer">`examples/multimodal/evaluation/evaluate_vqav2.py`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/parallel_state.py" target="_blank" rel="noopener noreferrer">`megatron.core.parallel_state`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/pipeline_parallel/schedules.py" target="_blank" rel="noopener noreferrer">`megatron.core.pipeline_parallel.schedules`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/tensor_parallel/mappings.py" target="_blank" rel="noopener noreferrer">`megatron.core.tensor_parallel.mappings`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/distributed/distributed_data_parallel.py" target="_blank" rel="noopener noreferrer">`megatron.core.distributed.distributed_data_parallel`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/distributed/custom_fsdp/fully_sharded_data_parallel.py" target="_blank" rel="noopener noreferrer">`megatron.core.distributed.custom_fsdp.fully_sharded_data_parallel`</a>
+
+
+### Optimization & Mixed Precision [[Expand]](./Optimization_Mixed_Precision.md)
+Manages model parameter updates, gradient clipping, and implements various optimization algorithms. Includes functionalities for mixed-precision training (e.g., FP8) and post-training quantization to enhance performance and reduce memory footprint.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/optimizer/distrib_optimizer.py" target="_blank" rel="noopener noreferrer">`megatron.core.optimizer.distrib_optimizer`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/fp8_utils.py" target="_blank" rel="noopener noreferrer">`megatron.core.fp8_utils`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/quantization/quant_config.py" target="_blank" rel="noopener noreferrer">`megatron.core.quantization.quant_config`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/examples/post_training/modelopt/quantize.py" target="_blank" rel="noopener noreferrer">`megatron.post_training.modelopt.quantize`</a>
+
+
+### Inference Engine [[Expand]](./Inference_Engine.md)
+Provides the capabilities for running trained models in inference mode, supporting both static and dynamic batching for text generation and other tasks. It leverages optimized model representations for efficient deployment.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/inference/text_generation/api.py" target="_blank" rel="noopener noreferrer">`megatron.inference.text_generation.api`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/inference/engines/dynamic_engine.py" target="_blank" rel="noopener noreferrer">`megatron.core.inference.engines.dynamic_engine`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/inference/engines/static_engine.py" target="_blank" rel="noopener noreferrer">`megatron.core.inference.engines.static_engine`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/inference/text_generation_controllers/text_generation_controller.py" target="_blank" rel="noopener noreferrer">`megatron.core.inference.text_generation_controllers.text_generation_controller`</a>
+
+
+### Model Persistence & Utilities [[Expand]](./Model_Persistence_Utilities.md)
+Provides tools for saving and loading model checkpoints, converting model checkpoints between different formats (e.g., Megatron-LM to HuggingFace, or for TensorRT-LLM export), and other general-purpose utilities like validation.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/training/checkpointing.py" target="_blank" rel="noopener noreferrer">`megatron.training.checkpointing`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/tools/checkpoint/convert.py" target="_blank" rel="noopener noreferrer">`tools.checkpoint.convert`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/export/trtllm/trtllm_helper.py" target="_blank" rel="noopener noreferrer">`megatron.core.export.trtllm.trtllm_helper`</a>
+- <a href="https://github.com/NVIDIA/Megatron-LM/blob/main/megatron/core/utils.py#L164-L261" target="_blank" rel="noopener noreferrer">`megatron.core.utils.validator`:164-261</a>
 
 
 
