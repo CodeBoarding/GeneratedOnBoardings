@@ -1,79 +1,100 @@
 ```mermaid
 graph LR
-    User_Interface_CLI_API_["User Interface (CLI/API)"]
-    MarkItDown_Core_Engine["MarkItDown Core Engine"]
-    Document_Converters["Document Converters"]
-    Converter_Utilities["Converter Utilities"]
-    External_Integrations["External Integrations"]
-    Unclassified_External_Libraries_Dependencies_["Unclassified (External Libraries/Dependencies)"]
-    User_Interface_CLI_API_ -- "initiates conversion requests to" --> MarkItDown_Core_Engine
-    MarkItDown_Core_Engine -- "dispatches conversion tasks to" --> Document_Converters
-    Document_Converters -- "returns converted content to" --> MarkItDown_Core_Engine
-    Document_Converters -- "leverages" --> Converter_Utilities
-    Document_Converters -- "invokes" --> External_Integrations
-    External_Integrations -- "returns service results to" --> Document_Converters
-    MarkItDown_Core_Engine -- "returns final Markdown output to" --> User_Interface_CLI_API_
+    Entry_Points["Entry Points"]
+    MarkItDown_Core_Facade_Plugin_Manager_["MarkItDown Core (Facade & Plugin Manager)"]
+    Document_Conversion_Modules["Document Conversion Modules"]
+    Conversion_Utilities["Conversion Utilities"]
+    External_Service_Integrations["External Service Integrations"]
+    External_Dependencies["External Dependencies"]
+    Unclassified["Unclassified"]
+    Entry_Points -- "Invokes conversion process" --> MarkItDown_Core_Facade_Plugin_Manager_
+    MarkItDown_Core_Facade_Plugin_Manager_ -- "Dispatches conversion tasks; Registers converters" --> Document_Conversion_Modules
+    Document_Conversion_Modules -- "Utilizes helper functions for processing" --> Conversion_Utilities
+    Document_Conversion_Modules -- "Requests external data/processing" --> External_Service_Integrations
+    External_Service_Integrations -- "Communicates with external APIs" --> External_Dependencies
+    External_Dependencies -- "Returns data/results" --> External_Service_Integrations
+    Conversion_Utilities -- "Returns processed data" --> Document_Conversion_Modules
+    MarkItDown_Core_Facade_Plugin_Manager_ -- "Returns final result" --> Entry_Points
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The MarkItDown project is structured around a clear separation of concerns, facilitating robust document conversion. User interactions, whether via the Command Line Interface (CLI) or a potential API, are handled by the User Interface component. This component then delegates conversion tasks to the MarkItDown Core Engine, which acts as the central orchestrator. The Core Engine dynamically utilizes various Document Converters, each specialized for a particular input format. These converters, in turn, rely on a suite of Converter Utilities for common tasks and may interact with External Integrations for advanced functionalities like AI processing or metadata extraction.
+The `markitdown` project is designed with a clear separation of concerns, centered around a command-line interface that orchestrates document conversion. The `MarkItDown Core` acts as a central facade, managing various `Document Conversion Modules` and leveraging `Conversion Utilities` for data handling and external interactions. The data flow initiates with user input via the `Entry Points`, which then passes control to the `MarkItDown Core` for processing. The core dynamically selects and dispatches tasks to specialized `Document Conversion Modules`. These modules, in turn, utilize `Conversion Utilities` for common tasks, including interactions with `External Service Integrations` that abstract communication with `External Dependencies`. The final converted Markdown output is then routed back through the `MarkItDown Core` to the `Entry Points` for presentation.
 
-### User Interface (CLI/API)
-The primary entry point for users, encompassing both the command-line interface and the optional web API for conversion requests.
+### Entry Points
+The primary interfaces for user interaction, including the command-line interface.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py#L13-L200" target="_blank" rel="noopener noreferrer">`main`:13-200</a>
 - <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/cli.ts" target="_blank" rel="noopener noreferrer">`runConversion`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/mcp-server.ts" target="_blank" rel="noopener noreferrer">`startServer`</a>
 
 
-### MarkItDown Core Engine
-The central facade orchestrating the entire conversion process. It handles input/output management, discovers and registers converters, and dispatches conversion tasks to the appropriate Document Converters.
+### MarkItDown Core (Facade & Plugin Manager)
+The central orchestration engine and public API. It manages the discovery and registration of conversion plugins and dispatches conversion requests.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py" target="_blank" rel="noopener noreferrer">`MarkItDown`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/core/markitdown.ts" target="_blank" rel="noopener noreferrer">`MarkItDown:registerConverter`</a>
 - <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/core/markitdown.ts" target="_blank" rel="noopener noreferrer">`MarkItDown:convertBuffer`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/core/markitdown.ts" target="_blank" rel="noopener noreferrer">`MarkItDown:findConverter`</a>
 
 
-### Document Converters
-A modular collection of specialized plugins, each responsible for transforming a specific input document format (e.g., HTML, CSV, Plain Text) into Markdown. They leverage Converter Utilities and potentially interact with External Integrations as needed.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py#L42-L105" target="_blank" rel="noopener noreferrer">`DocumentConverter`:42-105</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/types/converter.ts" target="_blank" rel="noopener noreferrer">`DocumentConverter:accepts`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/types/converter.ts" target="_blank" rel="noopener noreferrer">`DocumentConverter:convert`</a>
-
-
-### Converter Utilities
-A set of shared helper modules providing common functionalities like stream information handling and URI parsing, used by Document Converters.
+### Document Conversion Modules
+A collection of specialized modules, each responsible for converting a specific document format (e.g., Plain Text, HTML, CSV) into Markdown, adhering to a common interface.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/types/stream-info.ts" target="_blank" rel="noopener noreferrer">`createStreamInfo`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_plain_text_converter.py#L33-L71" target="_blank" rel="noopener noreferrer">`PlainTextConverter`:33-71</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_html_converter.py#L20-L90" target="_blank" rel="noopener noreferrer">`HtmlConverter`:20-90</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_csv_converter.py#L15-L77" target="_blank" rel="noopener noreferrer">`CsvConverter`:15-77</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/converters/plain-text-converter.ts" target="_blank" rel="noopener noreferrer">`codeboarding-rewrite/src/converters/plain-text-converter.ts`</a>
+
+
+### Conversion Utilities
+Helper functions and modules providing common utilities for document pre-processing, stream information handling, and specialized transformations used by various converters.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/utils/uri-utils.ts" target="_blank" rel="noopener noreferrer">`readFromUri`</a>
 - <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/utils/uri-utils.ts" target="_blank" rel="noopener noreferrer">`parseDataUri`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/utils/uri-utils.ts" target="_blank" rel="noopener noreferrer">`createStreamInfoFromUri`</a>
 
 
-### External Integrations
-Components responsible for interfacing with external services such as Large Language Models (LLMs) for AI-generated content, Azure AI Document Intelligence for advanced parsing, ExifTool for metadata extraction, and various web services for fetching remote content.
+### External Service Integrations
+Components responsible for abstracting and managing interactions with various external services, such as fetching content from HTTP/HTTPS URLs.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
 
-### Unclassified (External Libraries/Dependencies)
-This component groups all external libraries and third-party dependencies that the project relies on but are not part of the core application logic.
+- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/utils/uri-utils.ts" target="_blank" rel="noopener noreferrer">`readFromUri`</a>
 
 
-**Related Classes/Methods**: _None_
+### External Dependencies
+Represents external services and APIs that `markitdown` integrates with but does not directly control. These are typically third-party libraries or external web services.
+
+
+**Related Classes/Methods**:
+
+
+
+### Unclassified
+This component encompasses foundational types, interfaces, and exception definitions that are utilized across various modules but do not represent a distinct functional component. It also serves as a temporary grouping for any other files that require further classification.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/types/converter.ts" target="_blank" rel="noopener noreferrer">`codeboarding-rewrite/src/types/converter.ts`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/types/stream-info.ts" target="_blank" rel="noopener noreferrer">`codeboarding-rewrite/src/types/stream-info.ts`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/codeboarding-rewrite/src/types/exceptions.ts" target="_blank" rel="noopener noreferrer">`codeboarding-rewrite/src/types/exceptions.ts`</a>
+
 
 
 
