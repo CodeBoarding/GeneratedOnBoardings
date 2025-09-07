@@ -1,18 +1,25 @@
 ```mermaid
 graph LR
+    Core_Conversion_Engine["Core Conversion Engine"]
     Document_Converters["Document Converters"]
-    MarkItDown_Orchestrator["MarkItDown Orchestrator"]
-    Converter_Utilities["Converter Utilities"]
-    External_Service_Adapters["External Service Adapters"]
     Plugin_Manager["Plugin Manager"]
-    Exception_Handling["Exception Handling"]
+    External_Service_Integrators["External Service Integrators"]
+    DOCX_Pre_processor["DOCX Pre-processor"]
+    RSS_Content_Parser["RSS Content Parser"]
+    Shared_Exception_Handler["Shared Exception Handler"]
+    DOCX_Math_Equation_Converter_Utility["DOCX Math Equation Converter Utility"]
     Unclassified["Unclassified"]
-    MarkItDown_Orchestrator -- "registers and invokes" --> Document_Converters
-    MarkItDown_Orchestrator -- "manages" --> Plugin_Manager
-    Document_Converters -- "utilize" --> Converter_Utilities
-    Document_Converters -- "delegate tasks to" --> External_Service_Adapters
-    Document_Converters -- "raise exceptions to" --> Exception_Handling
-    External_Service_Adapters -- "raise exceptions to" --> Exception_Handling
+    Core_Conversion_Engine -- "manages" --> Document_Converters
+    Core_Conversion_Engine -- "invokes" --> Document_Converters
+    Document_Converters -- "delegates tasks to" --> External_Service_Integrators
+    Document_Converters -- "utilizes" --> DOCX_Pre_processor
+    Document_Converters -- "uses" --> RSS_Content_Parser
+    Document_Converters -- "raises exceptions defined in" --> Shared_Exception_Handler
+    Plugin_Manager -- "enables extension of" --> Document_Converters
+    External_Service_Integrators -- "provides services to" --> Document_Converters
+    DOCX_Pre_processor -- "relies on" --> DOCX_Math_Equation_Converter_Utility
+    Shared_Exception_Handler -- "defines exceptions for" --> Document_Converters
+    click Core_Conversion_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Core_Conversion_Engine.md" "Details"
     click Document_Converters href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Document_Converters.md" "Details"
 ```
 
@@ -20,60 +27,55 @@ graph LR
 
 ## Details
 
-The MarkItDown subsystem provides a robust and extensible framework for converting diverse document formats into Markdown. At its core, the `MarkItDown Orchestrator` intelligently identifies document types and orchestrates the conversion process by selecting and invoking specialized `Document Converters`. These converters leverage `Converter Utilities` for common processing tasks and integrate with `External Service Adapters` to offload complex operations to external platforms like Azure Document Intelligence. The system's flexibility is further enhanced by a `Plugin Manager` mechanism, allowing for the dynamic addition of new conversion capabilities. A dedicated `Exception Handling` component ensures consistent and informative error reporting across the subsystem, making it resilient to various operational challenges.
+The system is designed around a Core Conversion Engine that orchestrates the conversion of various document types into a standardized Markdown format. It manages and invokes a set of Document Converters, each specialized for a particular input format. The system's extensibility is facilitated by a Plugin Manager, allowing for dynamic integration of new converters. Document Converters can delegate complex tasks to External Service Integrators for external API interactions and utilize specialized pre-processors like the DOCX Pre-processor (which in turn relies on the DOCX Math Equation Converter Utility) and the RSS Content Parser for specific content handling. A Shared Exception Handler ensures consistent error management across all components.
+
+### Core Conversion Engine [[Expand]](./Core_Conversion_Engine.md)
+The central orchestrator that manages and invokes the appropriate Document Converters based on the input document type. It provides a facade for simplified interaction with the conversion process.
+
+
+**Related Classes/Methods**: _None_
 
 ### Document Converters [[Expand]](./Document_Converters.md)
-This component represents the collection of specialized modules, each responsible for parsing a specific document format (e.g., DOCX, XLSX, EPUB, PDF, HTML, Images, YouTube, RSS, Outlook MSG, Azure Document Intelligence output) and converting its content into Markdown. They encapsulate the format-specific parsing and transformation logic.
+The core set of adapters, each responsible for converting a specific document format (e.g., HTML, PDF, DOCX, YouTube) into a standardized Markdown output. They encapsulate format-specific parsing and transformation logic.
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_docx_converter.py#L38-L90" target="_blank" rel="noopener noreferrer">`markitdown.converters._docx_converter.DocxConverter`:38-90</a>
-
-
-### MarkItDown Orchestrator
-Acts as the central facade for the conversion process. It is responsible for identifying the input document's format, selecting the appropriate `Document Converter`, and orchestrating the conversion workflow. It registers and manages the available converters.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py#L93-L776" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.MarkItDown`:93-776</a>
-
-
-### Converter Utilities
-Provides a set of shared utility functions and helper modules that are leveraged by various `Document Converters`. This includes common pre-processing steps, text manipulation, or other format-agnostic functionalities, promoting code reuse and consistency.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converter_utils/docx/pre_process.py#L118-L156" target="_blank" rel="noopener noreferrer">`markitdown.converter_utils.docx.pre_process.pre_process_docx`:118-156</a>
-
-
-### External Service Adapters
-This component group manages interactions with external services, such as Azure Document Intelligence or AI/LLM platforms. It provides a standardized interface for `Document Converters` to delegate complex or AI-driven tasks (e.g., OCR, image description generation) without needing to know the specifics of the external API.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_doc_intel_converter.py#L130-L254" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter`:130-254</a>
-
+**Related Classes/Methods**: _None_
 
 ### Plugin Manager
-Facilitates the dynamic extension of the `Document Converters` subsystem. It allows external plugins or custom converters to be registered and integrated into the `MarkItDown Orchestrator`, enabling new document formats or conversion logic to be added without modifying the core system.
+Manages the discovery, loading, and registration of external converter plugins, enabling the dynamic extension of Document Converters with support for new document types.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
+
+### External Service Integrators
+Components responsible for handling interactions with external APIs (e.g., Azure Document Intelligence, OpenAI's GPT-4o, YouTube Data API) to enrich or facilitate specific conversion tasks.
 
 
+**Related Classes/Methods**: _None_
 
-### Exception Handling
-This component is responsible for defining and managing custom exceptions (e.g., `MissingDependencyException`) that can be raised by `Document Converters` or other parts of the subsystem. It provides a consistent mechanism for communicating operational issues, missing requirements, or conversion failures.
+### DOCX Pre-processor
+A specialized component for initial processing of DOCX documents, including the conversion of OMML (Office Math Markup Language) equations to LaTeX format.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_exceptions.py#L19-L31" target="_blank" rel="noopener noreferrer">`markitdown._exceptions.MissingDependencyException`:19-31</a>
+### RSS Content Parser
+A utility specifically designed for parsing and converting HTML content embedded within RSS or Atom feeds into a format suitable for Markdown conversion.
 
+
+**Related Classes/Methods**: _None_
+
+### Shared Exception Handler
+Provides a consistent mechanism for defining, raising, and managing exceptions across the library, ensuring uniform error reporting from all converters and related components.
+
+
+**Related Classes/Methods**: _None_
+
+### DOCX Math Equation Converter Utility
+A utility used by the DOCX Pre-processor to convert OMML math equations found in DOCX documents into LaTeX format.
+
+
+**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
