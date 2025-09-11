@@ -7,33 +7,31 @@ graph LR
     Static_Analysis_Engine["Static Analysis Engine"]
     AI_Interpretation_Layer["AI Interpretation Layer"]
     Output_Generation_Engine["Output Generation Engine"]
+    Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
     API_Service -- "Initiates Job" --> Job_Database
     API_Service -- "Triggers Analysis" --> Orchestration_Engine
     Orchestration_Engine -- "Manages Job State" --> Job_Database
     Orchestration_Engine -- "Requests Code" --> Repository_Manager
     Repository_Manager -- "Provides Code" --> Orchestration_Engine
     Orchestration_Engine -- "Requests Static Analysis" --> Static_Analysis_Engine
-    Static_Analysis_Engine -- "Provides Analysis Results" --> Orchestration_Engine
-    Orchestration_Engine -- "Feeds Data" --> AI_Interpretation_Layer
-    AI_Interpretation_Layer -- "Returns Insights" --> Orchestration_Engine
+    Static_Analysis_Engine -- "Provides Richer Analysis Results" --> Orchestration_Engine
+    Orchestration_Engine -- "Feeds Rich Analysis Data" --> AI_Interpretation_Layer
+    AI_Interpretation_Layer -- "Returns Enhanced Architectural Insights" --> Orchestration_Engine
     AI_Interpretation_Layer -- "Queries Diff" --> Repository_Manager
-    Orchestration_Engine -- "Passes Final Insights" --> Output_Generation_Engine
+    Orchestration_Engine -- "Passes Enhanced Insights for Generation" --> Output_Generation_Engine
     Output_Generation_Engine -- "Delivers Documentation" --> API_Service
-    click API_Service href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/API_Service.md" "Details"
-    click Orchestration_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Orchestration_Engine.md" "Details"
-    click Repository_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Repository_Manager.md" "Details"
-    click Static_Analysis_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Static_Analysis_Engine.md" "Details"
-    click AI_Interpretation_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/AI_Interpretation_Layer.md" "Details"
-    click Output_Generation_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Output_Generation_Engine.md" "Details"
 ```
 
-[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The CodeBoarding system operates as a sophisticated pipeline for automated architectural documentation. It begins with the API Service receiving a request, which is then logged and managed by the Job Database. The Orchestration Engine serves as the central nervous system, coordinating the entire analysis process. It first directs the Repository Manager to fetch the target codebase. This code then undergoes structural examination by the Static Analysis Engine. The resulting raw data is intelligently processed by the AI Interpretation Layer, a suite of agents that abstract, detail, plan, validate, and analyze changes within the architecture. Finally, the refined architectural insights are passed to the Output Generation Engine to produce various documentation formats, completing the cycle by making the output accessible via the API Service. This design emphasizes a clear, sequential flow, distinct component responsibilities, and extensibility for future language and AI model integrations.
+The CodeBoarding system operates through a robust, multi-layered architecture designed for comprehensive code analysis and documentation generation. The API Service serves as the primary external interface, initiating jobs and managing user interactions. All job lifecycle and status information is persistently stored and managed by the Job Database. The Orchestration Engine acts as the central coordinator, driving the entire documentation pipeline. It interacts with the Repository Manager to retrieve source code and then dispatches requests to the Static Analysis Engine. The Static Analysis Engine performs deep, language-specific analysis, now providing richer and more detailed structural information. This enhanced data is then fed by the Orchestration Engine to the AI Interpretation Layer. This layer, comprising specialized AI agents, performs sophisticated interpretation, generating enhanced high-level architectural insights, and may query the Repository Manager for diff analysis. Finally, the Orchestration Engine passes these refined insights to the Output Generation Engine, which transforms them into various documentation formats with enhanced capabilities, including integration with GitHub Actions, before delivering the final output back through the API Service. This updated architecture reflects significant internal enhancements in analysis depth and output quality, particularly within the AI interpretation and static analysis components.
 
-### API Service [[Expand]](./API_Service.md)
+### API Service
 The external interface for CodeBoarding, handling user requests, job initiation, and status retrieval.
 
 
@@ -51,7 +49,7 @@ Persistent storage for managing the lifecycle, status, and results of all docume
 - `duckdb_crud`
 
 
-### Orchestration Engine [[Expand]](./Orchestration_Engine.md)
+### Orchestration Engine
 The central control unit that manages the entire documentation generation pipeline, coordinating all analysis and generation stages.
 
 
@@ -60,7 +58,7 @@ The central control unit that manages the entire documentation generation pipeli
 - `diagram_generator`
 
 
-### Repository Manager [[Expand]](./Repository_Manager.md)
+### Repository Manager
 Manages all interactions with source code repositories, including cloning, fetching, and extracting version differences.
 
 
@@ -70,18 +68,19 @@ Manages all interactions with source code repositories, including cloning, fetch
 - `git_diff`:27-76
 
 
-### Static Analysis Engine [[Expand]](./Static_Analysis_Engine.md)
-Performs deep, language-specific analysis of source code to extract structural information without semantic interpretation.
+### Static Analysis Engine
+Performs deep, language-specific analysis of source code to extract richer, more detailed, and comprehensive structural information without semantic interpretation.
 
 
 **Related Classes/Methods**:
 
 - `scanner`:13-66
 - `client`:10-214
+- `analysis_result`
 
 
-### AI Interpretation Layer [[Expand]](./AI_Interpretation_Layer.md)
-A collection of specialized AI agents that interpret static analysis data to generate high-level architectural insights, including abstraction, detailing, planning, validation, and diff analysis.
+### AI Interpretation Layer
+A collection of specialized AI agents that perform sophisticated interpretation of static analysis data, generating enhanced high-level architectural insights, including detailed abstractions, refined planning, robust validation, and comprehensive diff analysis, with structured outputs.
 
 
 **Related Classes/Methods**:
@@ -92,19 +91,47 @@ A collection of specialized AI agents that interpret static analysis data to gen
 - `planner_agent`
 - `validator_agent`
 - `diff_analyzer`
+- `agent`:20-136
+- `agent_responses`
+- `prompts`
 
 
-### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
-Transforms the final, validated architectural insights into various human-readable and diagram-friendly documentation formats.
+### Output Generation Engine
+Transforms the final, validated architectural insights into various human-readable and diagram-friendly documentation formats, with enhanced capabilities for specific output formats and external integrations like GitHub Actions.
 
 
 **Related Classes/Methods**:
 
-- `html`:36-50
-- `markdown`:19-33
-- `mdx`:53-67
+- `html`:37-51
+- `markdown`:20-34
+- `mdx`:54-68
 - `sphinx`
+- `github_action`
 
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 
 
