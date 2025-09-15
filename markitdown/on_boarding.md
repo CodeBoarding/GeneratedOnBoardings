@@ -1,77 +1,73 @@
 ```mermaid
 graph LR
-    CLI_Interface["CLI Interface"]
-    MarkItDown_Core["MarkItDown Core"]
-    Input_Stream_Analysis["Input & Stream Analysis"]
+    User_Interfaces["User Interfaces"]
+    Core_Conversion_Engine["Core Conversion Engine"]
     Document_Converters["Document Converters"]
-    External_AI_ML_Services["External AI/ML Services"]
+    External_AI_ML_Services_Client["External AI/ML Services Client"]
+    Document_Pre_processing_Utilities["Document Pre-processing Utilities"]
     Unclassified["Unclassified"]
-    CLI_Interface -- "initiates" --> MarkItDown_Core
-    MarkItDown_Core -- "orchestrates" --> Input_Stream_Analysis
-    MarkItDown_Core -- "dispatches to" --> Document_Converters
-    Document_Converters -- "interacts with" --> External_AI_ML_Services
-    Document_Converters -- "returns processed data to" --> MarkItDown_Core
-    MarkItDown_Core -- "provides output to" --> CLI_Interface
-    click CLI_Interface href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/CLI_Interface.md" "Details"
-    click MarkItDown_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/MarkItDown_Core.md" "Details"
-    click Input_Stream_Analysis href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Input_Stream_Analysis.md" "Details"
-    click Document_Converters href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Document_Converters.md" "Details"
-    click External_AI_ML_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/External_AI_ML_Services.md" "Details"
+    User_Interfaces -- "initiates conversion requests to" --> Core_Conversion_Engine
+    Core_Conversion_Engine -- "orchestrates and dispatches tasks to" --> Document_Converters
+    Document_Converters -- "returns converted content to" --> Core_Conversion_Engine
+    Document_Converters -- "utilize" --> Document_Pre_processing_Utilities
+    Document_Converters -- "requests processing from" --> External_AI_ML_Services_Client
+    External_AI_ML_Services_Client -- "returns processed data to" --> Document_Converters
+    Core_Conversion_Engine -- "returns final output to" --> User_Interfaces
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `markitdown` application is structured around a core orchestration engine, the `MarkItDown Core`, which is initiated by the `CLI Interface`. The `MarkItDown Core` is responsible for intelligently handling diverse input sources, including fetching web content via its integrated HTTP client functionality, and then leveraging the `Input & Stream Analysis` component to determine the appropriate processing strategy. It then dispatches the content to specialized `Document Converters`, which are designed to transform various formats into Markdown. Some of these converters extend their capabilities by interacting with `External AI/ML Services` for advanced content extraction and analysis. The processed Markdown output is ultimately returned through the `MarkItDown Core` back to the `CLI Interface` for presentation to the user.
+The MarkItDown system is designed as a modular document conversion platform, centered around a Core Conversion Engine that orchestrates the transformation of various document formats into Markdown. User Interfaces provide the entry points for conversion requests, which are then managed by the Core Conversion Engine. This engine dispatches tasks to specialized Document Converters, which handle specific input formats. These converters can leverage Document Pre-processing Utilities for complex format preparation and interact with External AI/ML Services Client for advanced content understanding. The processed and converted content flows back through the Core Conversion Engine before being returned to the User Interfaces. This architecture ensures clear separation of concerns, extensibility through pluggable converters, and efficient handling of diverse document conversion workflows.
 
-### CLI Interface [[Expand]](./CLI_Interface.md)
-The entry point for users, handling command-line arguments, orchestrating the main application flow, and presenting the final Markdown output.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py" target="_blank" rel="noopener noreferrer">`markitdown.__main__`</a>
-
-
-### MarkItDown Core [[Expand]](./MarkItDown_Core.md)
-The central processing unit and facade of the application. It manages conversion requests, handles diverse input sources (local files, URIs, streams), directly manages external HTTP/HTTPS requests for fetching web content using an internal `requests` session, orchestrates stream analysis, dispatches conversion tasks to appropriate converters, and manages converter registration (including plugins).
+### User Interfaces
+Provides the primary interaction points for users, including command-line execution and a microservice API for document conversion.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`markitdown._markitdown`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/__main__.py`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown-mcp/src/markitdown_mcp/__main__.py" target="_blank" rel="noopener noreferrer">`packages/markitdown-mcp/src/markitdown_mcp/__main__.py`</a>
 
 
-### Input & Stream Analysis [[Expand]](./Input_Stream_Analysis.md)
-Dedicated to analyzing incoming data streams to accurately determine file types, character encodings, and other crucial metadata required for appropriate converter selection.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_stream_info.py" target="_blank" rel="noopener noreferrer">`markitdown._stream_info`</a>
-
-
-### Document Converters [[Expand]](./Document_Converters.md)
-A comprehensive collection of specialized modules, each designed to parse and transform content from a specific input format (e.g., PDF, DOCX, HTML, YouTube, audio) into a standardized Markdown representation. This component encapsulates all format-specific conversion logic and includes clients for external AI/ML services.
+### Core Conversion Engine
+The central orchestrator of the MarkItDown system, responsible for managing the overall conversion process, dispatching tasks, and integrating plugin-provided converters.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_csv_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._csv_converter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_html_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._html_converter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_transcribe_audio.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._transcribe_audio`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_markitdown.py`</a>
 
 
-### External AI/ML Services [[Expand]](./External_AI_ML_Services.md)
-Represents the external cloud-based AI/ML APIs (e.g., Azure Document Intelligence, OpenAI) that `Document Converters` interact with for advanced document analysis, media processing, and content extraction.
+### Document Converters
+A collection of specialized modules, each designed to transform a specific input document format (e.g., PDF, DOCX, HTML, Images) into Markdown. This component includes both built-in and dynamically loaded plugin converters.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_transcribe_audio.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._transcribe_audio`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/converters/`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown-sample-plugin/src/markitdown_sample_plugin/_plugin.py" target="_blank" rel="noopener noreferrer">`packages/markitdown-sample-plugin/src/markitdown_sample_plugin/_plugin.py`</a>
+
+
+### External AI/ML Services Client
+Manages standardized interactions with external cloud-based AI and Machine Learning services (e.g., Azure Document Intelligence, OpenAI LLMs) for advanced document understanding and content generation.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/converters/_doc_intel_converter.py`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_image_converter.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/converters/_image_converter.py`</a>
+
+
+### Document Pre-processing Utilities
+Contains helper functions and modules for preparing complex document formats (e.g., DOCX) by performing tasks like OMMl to LaTeX conversion, ensuring data is suitable for subsequent conversion steps.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converter_utils/docx/pre_process.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/converter_utils/docx/pre_process.py`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converter_utils/docx/math/omml.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/converter_utils/docx/math/omml.py`</a>
 
 
 ### Unclassified
