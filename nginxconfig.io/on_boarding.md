@@ -1,93 +1,76 @@
 ```mermaid
 graph LR
     User_Interface_State_Management["User Interface & State Management"]
-    Internationalization_i18n_Manager["Internationalization (i18n) Manager"]
-    Configuration_Orchestrator["Configuration Orchestrator"]
-    Configuration_Section_Builders["Configuration Section Builders"]
-    Configuration_Text_Formatter["Configuration Text Formatter"]
-    Utility_Services["Utility Services"]
+    Internationalization_Service["Internationalization Service"]
+    Configuration_Generation_Core["Configuration Generation Core"]
+    Specific_Configuration_Modules["Specific Configuration Modules"]
+    Output_Presentation["Output & Presentation"]
     Unclassified["Unclassified"]
-    User_Interface_State_Management -- "Requests localized content" --> Internationalization_i18n_Manager
-    Internationalization_i18n_Manager -- "Provides localized content" --> User_Interface_State_Management
-    User_Interface_State_Management -- "Sends user-defined configuration parameters." --> Configuration_Orchestrator
-    User_Interface_State_Management -- "Triggers actions like copying generated configuration to clipboard." --> Utility_Services
-    Configuration_Orchestrator -- "Requests specific configuration blocks." --> Configuration_Section_Builders
-    Configuration_Section_Builders -- "Contributes generated configuration blocks." --> Configuration_Orchestrator
-    Configuration_Orchestrator -- "Provides structured configuration data for final formatting." --> Configuration_Text_Formatter
-    Configuration_Orchestrator -- "Utilizes object merging for configuration assembly." --> Utility_Services
-    Configuration_Text_Formatter -- "Outputs the final generated NGINX configuration text for display." --> User_Interface_State_Management
-    click User_Interface_State_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nginxconfig.io/User_Interface_State_Management.md" "Details"
-    click Internationalization_i18n_Manager href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nginxconfig.io/Internationalization_i18n_Manager.md" "Details"
-    click Configuration_Orchestrator href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/nginxconfig.io/Configuration_Orchestrator.md" "Details"
+    User_Interface_State_Management -- "requests language change" --> Internationalization_Service
+    User_Interface_State_Management -- "submits configuration parameters" --> Configuration_Generation_Core
+    Internationalization_Service -- "provides localized text" --> User_Interface_State_Management
+    Configuration_Generation_Core -- "utilizes specific configuration logic" --> Specific_Configuration_Modules
+    Configuration_Generation_Core -- "outputs generated configuration" --> Output_Presentation
+    Specific_Configuration_Modules -- "provides configuration snippets" --> Configuration_Generation_Core
+    Output_Presentation -- "notifies of copy event" --> User_Interface_State_Management
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `nginxconfig.io` project is structured around a clear separation of concerns, facilitating both user interaction and robust NGINX configuration generation. The `User Interface & State Management` component serves as the primary interaction point, capturing user inputs and displaying the final configuration. It relies on the `Internationalization (i18n) Manager` for multi-language support. User-defined parameters are then passed to the `Configuration Orchestrator`, which acts as the central processing unit. The orchestrator delegates the creation of specific NGINX configuration blocks to various `Configuration Section Builders`. Once all sections are generated, the `Configuration Text Formatter` assembles and formats the complete NGINX configuration. Throughout this process, `Utility Services` provide common functionalities like object merging and clipboard interactions. This architecture ensures a modular and maintainable system, where each component has a well-defined role in the overall data flow from user input to generated NGINX configuration.
+The `nginxconfig.io` project is structured around a clear separation of concerns, facilitating the generation of NGINX and Docker Compose configurations through a user-friendly web interface. The core data flow begins with user interactions on the `User Interface & State Management` component, which captures configuration preferences. These preferences are then processed by the `Internationalization Service` for localized content and passed to the `Configuration Generation Core`. This central component orchestrates the generation process by leveraging `Specific Configuration Modules` to produce the final NGINX or Docker Compose output. Finally, the `Output & Presentation` component handles the display and interaction with the generated configuration, including syntax highlighting and clipboard functionality.
 
-### User Interface & State Management [[Expand]](./User_Interface_State_Management.md)
-The primary interface for user interaction, capturing configuration parameters, managing application state, and displaying the generated NGINX configuration.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/mount.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/mount.js`</a>
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/templates/app.vue" target="_blank" rel="noopener noreferrer">`src/nginxconfig/templates/app.vue`</a>
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/templates/domain.vue" target="_blank" rel="noopener noreferrer">`src/nginxconfig/templates/domain.vue`</a>
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/templates/global.vue" target="_blank" rel="noopener noreferrer">`src/nginxconfig/templates/global.vue`</a>
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/templates/setup.vue" target="_blank" rel="noopener noreferrer">`src/nginxconfig/templates/setup.vue`</a>
-
-
-### Internationalization (i18n) Manager [[Expand]](./Internationalization_i18n_Manager.md)
-Responsible for loading, setting, and verifying language packs to provide multi-language support across the application's user interface.
+### User Interface & State Management
+The primary client-side component responsible for rendering the application's visual elements, capturing user input through interactive forms, and managing the overall configuration state based on user selections. It acts as the central orchestrator for user interactions.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/i18n/setup.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/i18n/setup.js`</a>
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/i18n/verify.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/i18n/verify.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/mount.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/mount.js`</a>
 
 
-### Configuration Orchestrator [[Expand]](./Configuration_Orchestrator.md)
-The central logic component that processes user inputs, orchestrates the generation of the complete NGINX configuration by coordinating with specific section builders, and prepares structured data for formatting.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/generators/index.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/index.js`</a>
-
-
-### Configuration Section Builders
-A collection of specialized modules, each encapsulating the logic for generating specific sections or features of the NGINX configuration (e.g., website, PHP, security, Let's Encrypt).
+### Internationalization Service
+Manages the application's multi-language capabilities. It handles the loading, setting, and verification of language packs to provide a localized user experience across the UI.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/generators/conf/website.conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/conf/website.conf.js`</a>
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/generators/conf/php_fastcgi.conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/conf/php_fastcgi.conf.js`</a>
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/generators/conf/security.conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/conf/security.conf.js`</a>
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/generators/conf/letsencrypt.conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/conf/letsencrypt.conf.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/i18n/setup.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/i18n/setup.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/i18n/verify.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/i18n/verify.js`</a>
 
 
-### Configuration Text Formatter
-Transforms the structured configuration data into a human-readable and correctly formatted NGINX configuration text, handling indentation and block structures for the final output.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/generators/to_conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/to_conf.js`</a>
-
-
-### Utility Services
-Provides general-purpose helper functions used across the application, such as deep merging objects for configuration assembly and clipboard interactions for user convenience.
+### Configuration Generation Core
+The central business logic component responsible for orchestrating the transformation of structured configuration parameters (from the UI) into valid NGINX or YAML configuration syntax. It delegates to specific configuration modules for detailed generation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/util/deep_merge.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/util/deep_merge.js`</a>
-- <a href="https://github.com/digitalocean/nginxconfig.io/blob/master/src/nginxconfig/util/prism_bundle.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/util/prism_bundle.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/generators/index.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/index.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/generators/to_conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/to_conf.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/generators/to_yaml.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/to_yaml.js`</a>
+
+
+### Specific Configuration Modules
+A collection of specialized modules that provide specific NGINX configuration snippets and logic for various features (e.g., website settings, general NGINX directives, PHP-FPM, security, SSL/LetsEncrypt) and Docker Compose YAML structures. These modules are consumed by the `Configuration Generation Core`.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/generators/conf/website.conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/conf/website.conf.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/generators/conf/general.conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/conf/general.conf.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/generators/conf/php_fastcgi.conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/conf/php_fastcgi.conf.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/generators/conf/security.conf.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/conf/security.conf.js`</a>
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/generators/yaml/dockerCompose.yaml.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/generators/yaml/dockerCompose.yaml.js`</a>
+
+
+### Output & Presentation
+This component is responsible for the final presentation of the generated NGINX or YAML configuration. It integrates syntax highlighting (via Prism.js) and provides functionalities like copying the configuration to the user's clipboard.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/digitalocean/nginxconfig.io/blob/mastersrc/nginxconfig/util/prism_bundle.js" target="_blank" rel="noopener noreferrer">`src/nginxconfig/util/prism_bundle.js`</a>
 
 
 ### Unclassified
