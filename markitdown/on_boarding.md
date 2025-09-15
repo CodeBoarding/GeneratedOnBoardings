@@ -1,27 +1,29 @@
 ```mermaid
 graph LR
-    User_API_Interfaces["User & API Interfaces"]
-    MarkItDown_Core_Engine["MarkItDown Core Engine"]
-    Document_Conversion_Modules["Document Conversion Modules"]
-    External_Document_Processors["External Document Processors"]
-    LLM_Integration_Layer["LLM Integration Layer"]
+    User_Interfaces["User Interfaces"]
+    Core_Conversion_System["Core Conversion System"]
+    Document_Converters["Document Converters"]
+    External_Service_Clients["External Service Clients"]
+    External_AI_ML_Services["External AI/ML Services"]
     Unclassified["Unclassified"]
-    User_API_Interfaces -- "initiates for conversion requests to" --> MarkItDown_Core_Engine
-    MarkItDown_Core_Engine -- "dispatches conversion tasks to" --> Document_Conversion_Modules
-    MarkItDown_Core_Engine -- "loads and registers converters provided by" --> Document_Conversion_Modules
-    Document_Conversion_Modules -- "requests specialized analysis from" --> External_Document_Processors
-    Document_Conversion_Modules -- "requests content enrichment from" --> LLM_Integration_Layer
-    MarkItDown_Core_Engine -- "returns converted Markdown output to" --> User_API_Interfaces
+    User_Interfaces -- "Initiates Conversion Request" --> Core_Conversion_System
+    Core_Conversion_System -- "Delegates Conversion Task" --> Document_Converters
+    Document_Converters -- "Requests External Processing" --> External_Service_Clients
+    External_Service_Clients -- "Communicates with API" --> External_AI_ML_Services
+    External_AI_ML_Services -- "Returns API Response" --> External_Service_Clients
+    External_Service_Clients -- "Receives Processing Result" --> Document_Converters
+    Document_Converters -- "Returns Converted Content" --> Core_Conversion_System
+    Core_Conversion_System -- "Delivers Converted Markdown" --> User_Interfaces
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The MarkItDown project is structured around a core conversion engine that processes various document types into Markdown. It provides both a command-line interface and an MCP (Multi-Capability Protocol) server for interaction. The system is designed with extensibility in mind, allowing for the integration of third-party plugins and leveraging external services like Azure Document Intelligence and LLMs for enhanced document processing. Data flows from user input or external URIs through the core engine, which dispatches tasks to specialized converters. These converters may interact with external processors or LLMs before returning the converted Markdown output.
+The `markitdown` project is structured around a pluggable document conversion pipeline. User interactions, whether via a Command-Line Interface (CLI) or a web-based API, are handled by the `User Interfaces` component, which initiates conversion requests. The `Core Conversion System` acts as the central orchestrator, dynamically selecting and invoking specialized `Document Converters` based on the input document type. These converters are responsible for transforming various formats into Markdown. For advanced processing, certain `Document Converters` interact with `External Service Clients`, which abstract communication with `External AI/ML Services` like Azure Document Intelligence and Large Language Models. The converted Markdown content is then returned through the system back to the `User Interfaces`.
 
-### User & API Interfaces
-Provides the primary entry points for users and external systems to interact with MarkItDown, handling command-line arguments and HTTP API requests.
+### User Interfaces
+Provides the primary interaction points for users, encompassing both a Command-Line Interface (CLI) for direct execution and a web-based API server (MCP Server) for programmatic access. It is responsible for receiving user input, initiating conversion requests, and handling the final presentation or delivery of the converted Markdown content.
 
 
 **Related Classes/Methods**:
@@ -30,45 +32,45 @@ Provides the primary entry points for users and external systems to interact wit
 - <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown-mcp/src/markitdown_mcp/__main__.py#L82-L123" target="_blank" rel="noopener noreferrer">`markitdown_mcp.__main__.main`:82-123</a>
 
 
-### MarkItDown Core Engine
-The central orchestrator of the MarkItDown system, managing the conversion pipeline, loading converters (including plugins), dispatching conversion tasks, and maintaining input stream context.
+### Core Conversion System
+The central orchestrator of the `markitdown` project. It manages the entire document conversion pipeline, including selecting the appropriate converter based on input type, analyzing input streams, and dynamically loading and registering both built-in and external plugin-based `Document Converters`.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/_markitdown.py#L93-L776" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.MarkItDown`:93-776</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/_stream_info.py#L5-L32" target="_blank" rel="noopener noreferrer">`markitdown._stream_info.StreamInfo`:5-32</a>
 
 
-### Document Conversion Modules
-A pluggable system of specialized modules, each responsible for converting a specific document type (e.g., Image, HTML, PPTX) into Markdown. This component also encompasses the Plugin Manager for extensibility.
+### Document Converters
+A collection of specialized, pluggable modules designed to convert various document and content formats (e.g., DOCX, images, web content, archives) into Markdown. Each converter encapsulates format-specific parsing logic and can leverage internal processing or interact with external services for advanced transformations.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown-sample-plugin/src/markitdown_sample_plugin/_plugin.py#L25-L31" target="_blank" rel="noopener noreferrer">`markitdown_sample_plugin._plugin.register_converters`:25-31</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters.DocumentIntelligenceConverter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_image_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters.ImageConverter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converter_utils/docx/pre_process.py#L118-L156" target="_blank" rel="noopener noreferrer">`markitdown.converter_utils.docx.pre_process.pre_process_docx`:118-156</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_youtube_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters.YouTubeConverter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_zip_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters.ZipConverter`</a>
 - <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown-sample-plugin/src/markitdown_sample_plugin/_plugin.py#L34-L71" target="_blank" rel="noopener noreferrer">`markitdown_sample_plugin._plugin.RtfConverter`:34-71</a>
 
 
-### External Document Processors
-Integrates with external services and utilities for advanced document analysis, metadata extraction, and specialized content transformations (e.g., Azure Document Intelligence for OCR, ExifTool for metadata, DOCX Math conversion).
+### External Service Clients
+This component provides a standardized interface for `Document Converters` to interact with external cloud-based AI/ML services. It abstracts away the complexities of API communication, authentication, and request/response handling for these services.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_doc_intel_converter.py#L130-L254" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter`:130-254</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_exiftool.py#L11-L52" target="_blank" rel="noopener noreferrer">`markitdown.converters._exiftool.exiftool_metadata`:11-52</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converter_utils/docx/math/omml.py#L170-L400" target="_blank" rel="noopener noreferrer">`markitdown.converter_utils.docx.math.omml.oMath2Latex`:170-400</a>
+- `azure.ai.documentintelligence.DocumentIntelligenceClient`
+- `openai.OpenAI`
 
 
-### LLM Integration Layer
-Provides an interface for enriching converted document content by interacting with Large Language Models, such as generating descriptions or summaries. This layer abstracts the underlying LLM framework.
+### External AI/ML Services
+Represents external cloud-based AI/ML services, such as Large Language Models (LLMs) for advanced natural language processing (e.g., generating descriptive text) and Azure Document Intelligence for comprehensive document analysis, optical character recognition (OCR), and data extraction.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_image_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._image_converter.ImageConverter._get_llm_description`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_image_converter.py#L16-L138" target="_blank" rel="noopener noreferrer">`markitdown.converters._image_converter.ImageConverter`:16-138</a>
 
 
 ### Unclassified
