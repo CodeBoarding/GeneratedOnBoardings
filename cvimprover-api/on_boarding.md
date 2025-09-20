@@ -1,122 +1,112 @@
 ```mermaid
 graph LR
-    API_Gateway["API Gateway"]
-    Authentication_User_Service["Authentication & User Service"]
-    Subscription_Payment_Service["Subscription & Payment Service"]
-    CV_Processing_AI_Service["CV Processing & AI Service"]
-    Asynchronous_Processing_Document_Generation["Asynchronous Processing & Document Generation"]
-    Data_Persistence_Caching["Data Persistence & Caching"]
-    External_Integrations["External Integrations"]
+    API_Gateway_Core_Services["API Gateway & Core Services"]
+    User_Authentication_Management["User & Authentication Management"]
+    CV_Processing_AI_Integration["CV Processing & AI Integration"]
+    Subscription_Payment_Gateway["Subscription & Payment Gateway"]
+    Asynchronous_Task_System["Asynchronous Task System"]
+    Data_Persistence_PostgreSQL_["Data Persistence (PostgreSQL)"]
     Unclassified["Unclassified"]
-    External_Client -- "Sends HTTP Requests" --> API_Gateway
-    API_Gateway -- "Delegates Auth/User Requests" --> Authentication_User_Service
-    API_Gateway -- "Handles Subscription/Payment Requests" --> Subscription_Payment_Service
-    API_Gateway -- "Manages CV Processing Requests" --> CV_Processing_AI_Service
-    API_Gateway -- "Enqueues Background Tasks" --> Asynchronous_Processing_Document_Generation
-    API_Gateway -- "Performs Data Operations and Caches Data" --> Data_Persistence_Caching
-    Authentication_User_Service -- "Manages User Data" --> Data_Persistence_Caching
-    Authentication_User_Service -- "Integrates Google OAuth" --> External_Integrations
-    Subscription_Payment_Service -- "Manages Subscription Data" --> Data_Persistence_Caching
-    Subscription_Payment_Service -- "Processes Payments (Stripe)" --> External_Integrations
-    CV_Processing_AI_Service -- "Submits Processing Tasks" --> Asynchronous_Processing_Document_Generation
-    CV_Processing_AI_Service -- "Integrates OpenAI" --> External_Integrations
-    CV_Processing_AI_Service -- "Manages CV Data" --> Data_Persistence_Caching
-    Asynchronous_Processing_Document_Generation -- "Executes AI Processing Logic" --> CV_Processing_AI_Service
-    Asynchronous_Processing_Document_Generation -- "Stores Task Results and Retrieves Document Data" --> Data_Persistence_Caching
-    click API_Gateway href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/cvimprover-api/API_Gateway.md" "Details"
-    click Asynchronous_Processing_Document_Generation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/cvimprover-api/Asynchronous_Processing_Document_Generation.md" "Details"
-    click Data_Persistence_Caching href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/cvimprover-api/Data_Persistence_Caching.md" "Details"
+    API_Gateway_Core_Services -- "Forwards authentication requests and user-related API calls" --> User_Authentication_Management
+    User_Authentication_Management -- "Responds to authentication requests and user-related API calls" --> API_Gateway_Core_Services
+    API_Gateway_Core_Services -- "Routes CV upload and management requests" --> CV_Processing_AI_Integration
+    CV_Processing_AI_Integration -- "Receives CV upload and management requests from" --> API_Gateway_Core_Services
+    API_Gateway_Core_Services -- "Manages subscription and payment requests" --> Subscription_Payment_Gateway
+    Subscription_Payment_Gateway -- "Notifies of payment events (e.g., webhooks)" --> API_Gateway_Core_Services
+    User_Authentication_Management -- "Stores and retrieves user profiles and authentication data" --> Data_Persistence_PostgreSQL_
+    Data_Persistence_PostgreSQL_ -- "Provides user profiles and authentication data to" --> User_Authentication_Management
+    CV_Processing_AI_Integration -- "Enqueues tasks for AI analysis and PDF generation" --> Asynchronous_Task_System
+    CV_Processing_AI_Integration -- "Stores and retrieves CV documents and processing metadata" --> Data_Persistence_PostgreSQL_
+    Data_Persistence_PostgreSQL_ -- "Provides CV documents and processing metadata to" --> CV_Processing_AI_Integration
+    Subscription_Payment_Gateway -- "Records subscription details and payment transactions" --> Data_Persistence_PostgreSQL_
+    Data_Persistence_PostgreSQL_ -- "Provides subscription details and payment transactions to" --> Subscription_Payment_Gateway
+    Asynchronous_Task_System -- "Executes AI analysis and PDF generation tasks, updating CV status" --> CV_Processing_AI_Integration
+    Asynchronous_Task_System -- "Stores task results and updates related data" --> Data_Persistence_PostgreSQL_
+    Data_Persistence_PostgreSQL_ -- "Provides task results and related data to" --> Asynchronous_Task_System
+    click API_Gateway_Core_Services href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/cvimprover-api/API_Gateway_Core_Services.md" "Details"
+    click User_Authentication_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/cvimprover-api/User_Authentication_Management.md" "Details"
+    click CV_Processing_AI_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/cvimprover-api/CV_Processing_AI_Integration.md" "Details"
+    click Subscription_Payment_Gateway href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/cvimprover-api/Subscription_Payment_Gateway.md" "Details"
+    click Asynchronous_Task_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/cvimprover-api/Asynchronous_Task_System.md" "Details"
+    click Data_Persistence_PostgreSQL_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/cvimprover-api/Data_Persistence_PostgreSQL_.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The CVImprover API operates as a robust Django REST Framework application, designed to assist users in optimizing their CVs. The External Client initiates all interactions by sending HTTP requests to the API Gateway, which acts as the central entry point, handling routing and initial request processing. The API Gateway then directs requests to specialized services: Authentication & User Service for managing user accounts and authentication (including JWT and Google OAuth), Subscription & Payment Service for handling subscription plans and secure payment processing via Stripe, and CV Processing & AI Service for the core CV enhancement logic. The CV Processing & AI Service leverages AI capabilities (specifically OpenAI) to analyze and improve CV content. Intensive tasks, such as AI processing and PDF generation, are offloaded to the Asynchronous Processing & Document Generation component, which utilizes Celery for background task management, ensuring the API remains responsive. All persistent data, including user profiles, subscription details, and CV-related information, is managed by the Data Persistence & Caching layer, which relies on PostgreSQL for storage and Redis for caching to optimize performance. Finally, the External Integrations component facilitates communication with third-party services like OpenAI for AI processing, Stripe for payment gateways, and Google for OAuth authentication, ensuring seamless external service interactions. This modular architecture promotes scalability, maintainability, and clear separation of concerns.
+The `cvimprover-api` project is structured around a set of interconnected components designed to handle CV processing, AI integration, user management, and subscriptions. The `API Gateway & Core Services` acts as the central entry point, routing all incoming requests to the appropriate internal services. User authentication and profile management are handled by the `User & Authentication Management` component, which securely interacts with the `Data Persistence (PostgreSQL)` layer for storing user data.
 
-### API Gateway [[Expand]](./API_Gateway.md)
-The central Django REST Framework application, handling all incoming HTTP requests, routing, and initial processing.
+For CV-related functionalities, the `CV Processing & AI Integration` component manages document uploads and triggers AI analysis. Long-running or resource-intensive tasks, such as AI processing and PDF generation, are offloaded to the `Asynchronous Task System`, which utilizes Celery and Redis to ensure efficient background execution. This system also interacts with `Data Persistence (PostgreSQL)` to store task results and update CV statuses.
+
+Subscription plans and payment processing are managed by the `Subscription & Payment Gateway`, which integrates with external payment providers and records transaction details in `Data Persistence (PostgreSQL)`. This component also provides asynchronous notifications to the `API Gateway & Core Services` regarding payment events. All structured data across these components is persistently stored and retrieved from the `Data Persistence (PostgreSQL)` database, forming the backbone of the application's data management.
+
+### API Gateway & Core Services [[Expand]](./API_Gateway_Core_Services.md)
+The entry point for all external requests, handling routing, initial authentication, and serving core API endpoints. It acts as the orchestrator for user-facing interactions.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/urls.py" target="_blank" rel="noopener noreferrer">`cvimprover.urls`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/urls.py" target="_blank" rel="noopener noreferrer">`core.urls`</a>
+- `cvimprover_api.urls`
 - <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views`</a>
 - <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/serializers.py" target="_blank" rel="noopener noreferrer">`core.serializers`</a>
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/models.py" target="_blank" rel="noopener noreferrer">`core.models`</a>
 
 
-### Authentication & User Service
-Manages user accounts, authentication (JWT, Google OAuth), authorization, and user profiles.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.CustomUserDetailsView`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.GoogleLogin`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/serializers.py" target="_blank" rel="noopener noreferrer">`core.serializers.CustomUserDetailsSerializer`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/models.py" target="_blank" rel="noopener noreferrer">`core.models.User`</a>
-
-
-### Subscription & Payment Service
-Oversees all subscription-related logic, from plan management to secure payment processing and webhook handling.
+### User & Authentication Management [[Expand]](./User_Authentication_Management.md)
+Manages user registration, login, authentication tokens, and user profiles, ensuring secure access to the application.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.CreateCheckoutSessionView`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.StripeWebhookView`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.PlanListView`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.CreateBillingPortalSessionView`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.VerifyCheckoutSessionView`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/serializers.py" target="_blank" rel="noopener noreferrer">`core.serializers.PlanSerializer`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/models.py" target="_blank" rel="noopener noreferrer">`core.models.Plan`</a>
+- `users.models`
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/serializers.py#L12-L117" target="_blank" rel="noopener noreferrer">`users.serializers`:12-117</a>
+- `users.views`
+- `users.urls`
 
 
-### CV Processing & AI Service
-The core business logic for CV enhancement, leveraging AI for content analysis and improvement suggestions.
+### CV Processing & AI Integration [[Expand]](./CV_Processing_AI_Integration.md)
+Handles the upload, storage, and processing of CV documents, including triggering AI analysis and content generation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/views.py" target="_blank" rel="noopener noreferrer">`cv.views.CVQuestionnaireViewSet`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/views.py" target="_blank" rel="noopener noreferrer">`cv.views.AIResponseViewSet`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/serializers.py" target="_blank" rel="noopener noreferrer">`cv.serializers.CVQuestionnaireSerializer`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/serializers.py" target="_blank" rel="noopener noreferrer">`cv.serializers.AIResponseSerializer`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/models.py" target="_blank" rel="noopener noreferrer">`cv.models.CVQuestionnaire`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/models.py" target="_blank" rel="noopener noreferrer">`cv.models.AIResponse`</a>
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/models.py" target="_blank" rel="noopener noreferrer">`cv.models`</a>
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/serializers.py" target="_blank" rel="noopener noreferrer">`cv.serializers`</a>
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/views.py" target="_blank" rel="noopener noreferrer">`cv.views`</a>
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/urls.py" target="_blank" rel="noopener noreferrer">`cv.urls`</a>
 
 
-### Asynchronous Processing & Document Generation [[Expand]](./Asynchronous_Processing_Document_Generation.md)
-Ensures API responsiveness by offloading computationally intensive tasks to background workers, managing task queues, and executing document generation processes.
+### Subscription & Payment Gateway [[Expand]](./Subscription_Payment_Gateway.md)
+Manages subscription plans, pricing, and integrates with external payment providers (e.g., Stripe) for secure transaction processing.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/celery.py" target="_blank" rel="noopener noreferrer">`cvimprover.celery`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/views.py" target="_blank" rel="noopener noreferrer">`cv.views.AIResponseViewSet.generate_pdf`</a>
+- `payments.models`
+- `payments.views`
+- `payments.urls`
 
 
-### Data Persistence & Caching [[Expand]](./Data_Persistence_Caching.md)
-The foundational layer for data storage and retrieval, ensuring data integrity and optimizing read performance using PostgreSQL and Redis.
+### Asynchronous Task System [[Expand]](./Asynchronous_Task_System.md)
+Provides infrastructure for offloading long-running tasks, utilizing Celery for task queuing and workers, and Redis as the message broker.
+
+
+**Related Classes/Methods**:
+
+- `cvimprover_api.celery`:1-10
+
+
+### Data Persistence (PostgreSQL) [[Expand]](./Data_Persistence_PostgreSQL_.md)
+The primary relational database for storing all structured application data, including user, CV, subscription, and payment information.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/models.py" target="_blank" rel="noopener noreferrer">`core.models`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/settings.py" target="_blank" rel="noopener noreferrer">`cvimprover.settings`</a>
-
-
-### External Integrations
-Manages interactions with external services for AI capabilities (OpenAI), payment processing (Stripe), and user authentication (Google OAuth).
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/views.py" target="_blank" rel="noopener noreferrer">`cv.views.AIResponseViewSet`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.CreateCheckoutSessionView`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.StripeWebhookView`</a>
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincore/views.py" target="_blank" rel="noopener noreferrer">`core.views.GoogleLogin`</a>
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/models.py" target="_blank" rel="noopener noreferrer">`cv.models`</a>
+- `payments.models`
+- `users.models`
 
 
 ### Unclassified
