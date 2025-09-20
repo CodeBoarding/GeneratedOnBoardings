@@ -1,70 +1,80 @@
 ```mermaid
 graph LR
-    Celery_Application_Instance["Celery Application Instance"]
-    Celery_Redis_Configuration["Celery & Redis Configuration"]
-    Asynchronous_Task_Definitions["Asynchronous Task Definitions"]
-    Redis_Message_Broker_Result_Backend["Redis Message Broker & Result Backend"]
+    Celery_Application_Core_["Celery Application (Core)"]
+    Redis_Message_Broker["Redis Message Broker"]
     Celery_Workers["Celery Workers"]
+    CV_Task_Definitions["CV Task Definitions"]
+    PDF_Task_Definitions["PDF Task Definitions"]
+    Django_Task_Producer["Django Task Producer"]
     Unclassified["Unclassified"]
-    Celery_Application_Instance -- "uses" --> Celery_Redis_Configuration
-    Celery_Redis_Configuration -- "defines settings for" --> Celery_Application_Instance
-    Celery_Application_Instance -- "discovers" --> Asynchronous_Task_Definitions
-    Celery_Application_Instance -- "enqueues tasks into" --> Redis_Message_Broker_Result_Backend
-    Celery_Redis_Configuration -- "defines connection for" --> Redis_Message_Broker_Result_Backend
-    Asynchronous_Task_Definitions -- "are executed by" --> Celery_Workers
-    Celery_Workers -- "consumes tasks from" --> Redis_Message_Broker_Result_Backend
-    Celery_Workers -- "stores results in" --> Redis_Message_Broker_Result_Backend
-    Celery_Workers -- "executes logic defined in" --> Asynchronous_Task_Definitions
+    Django_Task_Producer -- "dispatches tasks to" --> Celery_Application_Core_
+    Celery_Application_Core_ -- "configures" --> Redis_Message_Broker
+    Celery_Application_Core_ -- "registers tasks from" --> CV_Task_Definitions
+    Celery_Application_Core_ -- "registers tasks from" --> PDF_Task_Definitions
+    Redis_Message_Broker -- "queues tasks from" --> Django_Task_Producer
+    Celery_Workers -- "polls for tasks from" --> Redis_Message_Broker
+    Celery_Workers -- "executes tasks defined in" --> CV_Task_Definitions
+    Celery_Workers -- "executes tasks defined in" --> PDF_Task_Definitions
+    Redis_Message_Broker -- "provides tasks to" --> Celery_Workers
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The asynchronous processing subsystem of `cvimprover` is built around Celery and Redis, designed to manage and execute background tasks efficiently. The `Celery Application Instance`, configured by `Celery & Redis Configuration` in `cvimprover/settings.py`, acts as the central orchestrator. It uses Redis as a `Redis Message Broker & Result Backend` to queue tasks and store their results. `Celery Workers` continuously monitor Redis, retrieve `Asynchronous Task Definitions`, execute the encapsulated business logic, and then persist the results back into Redis. This decoupled architecture ensures that the main Django application remains responsive by delegating time-consuming operations to dedicated worker processes.
+The `cvimprover` project leverages Celery for asynchronous task processing, with the `Celery Application (Core)` (`cvimprover/celery.py`) serving as the central orchestrator. This core application is responsible for configuring Celery, loading settings from `cvimprover/settings.py` (which defines the `Redis Message Broker`), and automatically discovering tasks defined in modules like `cv/tasks.py` (`CV Task Definitions`) and `pdf/tasks.py` (`PDF Task Definitions`). The `Django Task Producer` (e.g., a Django view or model method, exemplified by `cv/views.py`) initiates these asynchronous tasks by sending them to the `Redis Message Broker`. `Celery Workers` continuously monitor the `Redis Message Broker` for new tasks, retrieve them, and execute the corresponding functions defined in the `CV Task Definitions` and `PDF Task Definitions` modules. This architecture ensures that long-running or resource-intensive operations are offloaded from the main Django application, improving responsiveness and scalability.
 
-### Celery Application Instance
-This is the core Celery application, initialized within the Django project. It's responsible for loading configurations, discovering available tasks, and acting as the central orchestrator for enqueuing tasks.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/celery.py" target="_blank" rel="noopener noreferrer">`cvimprover.celery.app`</a>
-
-
-### Celery & Redis Configuration
-This component encompasses the Django settings that define how Celery and Redis operate within the application. It specifies the Redis connection details (broker URL, result backend URL) and other Celery-specific settings.
+### Celery Application (Core)
+The central configuration and entry point for the Celery distributed task queue. It initializes Celery, loads settings, and registers all available tasks from various modules.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/settings.py" target="_blank" rel="noopener noreferrer">`cvimprover.settings`</a>
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/celery.py" target="_blank" rel="noopener noreferrer">`celery_app_instance`</a>
 
 
-### Asynchronous Task Definitions
-This component conceptually represents Python modules containing functions decorated as Celery tasks. These functions encapsulate the specific long-running business logic (e.g., CV processing, AI model interactions) that needs to be executed asynchronously. While a specific `cv.tasks` file was not found, the Celery setup implies the intention for such tasks.
-
-
-**Related Classes/Methods**:
-
-
-
-### Redis Message Broker & Result Backend
-Redis serves a dual role in this subsystem. It acts as the message broker, holding the queue of tasks waiting to be processed by workers, and as the result backend, storing the outcomes and metadata of completed tasks.
+### Redis Message Broker
+Serves as the high-performance message queue, facilitating communication between the Django application (task producer) and the Celery workers (task consumers). It stores tasks awaiting execution and results.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/settings.py" target="_blank" rel="noopener noreferrer">`cvimprover.settings`</a>
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/settings.py" target="_blank" rel="noopener noreferrer">`celery_broker_config`</a>
 
 
 ### Celery Workers
-These are separate, independent processes that continuously monitor the Redis Message Broker for new tasks. Upon receiving a task, a worker retrieves it, executes the corresponding Asynchronous Task Definition, and optionally stores the result.
+Independent processes that continuously monitor the Redis Message Broker for new tasks. Upon receiving a task, they retrieve it from the queue and execute the associated Python function.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/celery.py" target="_blank" rel="noopener noreferrer">`cvimprover.celery.app`</a>
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincvimprover/celery.py" target="_blank" rel="noopener noreferrer">`celery.app.base.Celery`</a>
+
+
+### CV Task Definitions
+A module dedicated to defining asynchronous tasks related to CV processing, such as AI-driven analysis, data extraction, and formatting. These tasks are decorated with `@app.task` to be recognized by Celery.
+
+
+**Related Classes/Methods**:
+
+
+
+### PDF Task Definitions
+A module defining asynchronous tasks for generating, manipulating, or merging PDF documents, often involving external libraries like WeasyPrint or PyPDF2.
+
+
+**Related Classes/Methods**:
+
+- `pdf.tasks`
+
+
+### Django Task Producer
+Represents the components within the main Django application that initiate asynchronous tasks by dispatching them to the Celery Application. This typically involves calling `.delay()` or `.apply_async()` on a registered Celery task.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CVImprover/cvimprover-api/blob/maincv/views.py" target="_blank" rel="noopener noreferrer">`any_django_view_or_model_method_calling_task.delay`</a>
 
 
 ### Unclassified
