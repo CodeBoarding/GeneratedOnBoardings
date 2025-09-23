@@ -1,70 +1,53 @@
 ```mermaid
 graph LR
-    User_Interfaces["User Interfaces"]
+    CLI_Interface["CLI Interface"]
     Core_Conversion_Engine["Core Conversion Engine"]
     Document_Converters["Document Converters"]
-    External_Service_Clients["External Service Clients"]
     Unclassified["Unclassified"]
-    User_Interfaces -- "initiates conversion requests to" --> Core_Conversion_Engine
-    Core_Conversion_Engine -- "orchestrates conversion by dispatching to" --> Document_Converters
-    Document_Converters -- "interacts with" --> External_Service_Clients
-    Document_Converters -- "returns processed content to" --> Core_Conversion_Engine
-    Core_Conversion_Engine -- "returns final output to" --> User_Interfaces
-    click User_Interfaces href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/User_Interfaces.md" "Details"
-    click Core_Conversion_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Core_Conversion_Engine.md" "Details"
-    click Document_Converters href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/Document_Converters.md" "Details"
-    click External_Service_Clients href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/markitdown/External_Service_Clients.md" "Details"
+    CLI_Interface -- "initiates" --> Core_Conversion_Engine
+    Core_Conversion_Engine -- "utilizes" --> Document_Converters
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `markitdown` project is structured around a core conversion engine that processes various document types into Markdown. User interaction occurs through command-line interfaces or a web API. The system leverages a plugin architecture for extensibility and integrates with external services for advanced processing like transcription and document intelligence. The data flow is primarily unidirectional, starting from user input, moving through the core engine and specialized converters, potentially interacting with external services, and finally returning processed Markdown to the user.
+The `markitdown` project is structured around a Core Conversion Engine (`markitdown._markitdown.MarkItDown`) that orchestrates the conversion of various document formats into Markdown. Users interact with the system primarily through a CLI Interface (`markitdown.__main__.main`), which parses input and delegates conversion tasks to the Core Conversion Engine. The engine, in turn, leverages a pluggable system of Document Converters, each specialized in handling a particular file type (e.g., PDF, DOCX, HTML, images, audio, YouTube links). These converters extend a `BaseConverter` (`markitdown._base_converter.BaseConverter`) and are registered with the Core Conversion Engine. Some specialized converters, like `DocumentIntelligenceConverter`, may internally interact with external AI/ML services to facilitate the conversion process.
 
-### User Interfaces [[Expand]](./User_Interfaces.md)
-Provides the entry points for users to interact with the `markitdown` system, either via command-line or a web API.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/__main__.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/__main__.py`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown-mcp/src/markitdown_mcp/__main__.py" target="_blank" rel="noopener noreferrer">`packages/markitdown-mcp/src/markitdown_mcp/__main__.py`</a>
-
-
-### Core Conversion Engine [[Expand]](./Core_Conversion_Engine.md)
-The central orchestrator, managing the conversion lifecycle, discovering and loading plugins, inferring input types, and dispatching conversion tasks. It acts as a facade for the conversion process.
+### CLI Interface
+Provides the command-line entry point for users to interact with the `markitdown` conversion service, handling argument parsing and initiating the conversion workflow.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.MarkItDown`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/_stream_info.py" target="_blank" rel="noopener noreferrer">`markitdown._stream_info.StreamInfo`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/__main__.py#L13-L200" target="_blank" rel="noopener noreferrer">`markitdown.__main__.main`:13-200</a>
 
 
-### Document Converters [[Expand]](./Document_Converters.md)
-A collection of specialized modules responsible for parsing various document formats, extracting content, pre-processing, and rendering to Markdown. This includes both built-in and plugin-provided converters.
+### Core Conversion Engine
+Manages the overall document conversion workflow, coordinating input parsing, content processing, and markdown rendering. It acts as the central control unit, registering and dispatching to appropriate converters.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/_markitdown.py#L93-L776" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.MarkItDown`:93-776</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/_markitdown.py#L196-L198" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.MarkItDown.convert`:196-198</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/_markitdown.py#L440-L467" target="_blank" rel="noopener noreferrer">`markitdown._markitdown.MarkItDown.register_converter`:440-467</a>
+
+
+### Document Converters
+Defines the extensible architecture for handling various input document formats (e.g., PDF, DOCX, PPTX, XLSX, Audio, YouTube). Specific converters implement the logic for each format.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/_base_converter.py" target="_blank" rel="noopener noreferrer">`markitdown._base_converter.BaseConverter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_html_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._html_converter.HtmlConverter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converter_utils/docx/pre_process.py" target="_blank" rel="noopener noreferrer">`markitdown.converter_utils.docx.pre_process.DocxPreProcessor`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_markdownify.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._markdownify.MarkdownifyConverter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown-sample-plugin/src/markitdown_sample_plugin/_plugin.py" target="_blank" rel="noopener noreferrer">`markitdown_sample_plugin._plugin.SamplePlugin`</a>
-
-
-### External Service Clients [[Expand]](./External_Service_Clients.md)
-Handles integration with external AI/ML and data services, abstracting API calls for transcription, document intelligence, video content, and LLM-based processing.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_transcribe_audio.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._transcribe_audio.AudioConverter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_youtube_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._youtube_converter.YouTubeConverter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_llm_caption.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._llm_caption.LLMCaptionConverter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_pdf_converter.py#L31-L77" target="_blank" rel="noopener noreferrer">`markitdown.converters._pdf_converter.PdfConverter`:31-77</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_docx_converter.py#L38-L90" target="_blank" rel="noopener noreferrer">`markitdown.converters._docx_converter.DocxConverter`:38-90</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_doc_intel_converter.py#L130-L254" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter`:130-254</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_html_converter.py#L20-L89" target="_blank" rel="noopener noreferrer">`markitdown.converters._html_converter.HtmlConverter`:20-89</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_image_converter.py#L16-L81" target="_blank" rel="noopener noreferrer">`markitdown.converters._image_converter.ImageConverter`:16-81</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_audio_converter.py#L23-L101" target="_blank" rel="noopener noreferrer">`markitdown.converters._audio_converter.AudioConverter`:23-101</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_youtube_converter.py#L37-L238" target="_blank" rel="noopener noreferrer">`markitdown.converters._youtube_converter.YouTubeConverter`:37-238</a>
 
 
 ### Unclassified
