@@ -1,104 +1,106 @@
 ```mermaid
 graph LR
-    Application_Lifecycle_Management["Application Lifecycle Management"]
-    R3Injector["R3Injector"]
-    ChangeDetection["ChangeDetection"]
-    Render3_Instructions["Render3 Instructions"]
-    Signals["Signals"]
-    Zone_js["Zone.js"]
-    Animation_Engine["Animation Engine"]
-    Templates["Templates"]
-    Application_Lifecycle_Management -- "uses" --> R3Injector
-    Application_Lifecycle_Management -- "triggers" --> ChangeDetection
-    Application_Lifecycle_Management -- "relies on" --> Zone_js
-    Templates -- "compiled into" --> Render3_Instructions
-    Templates -- "consumes" --> Signals
-    Templates -- "defines animations for" --> Animation_Engine
-    Signals -- "feeds into" --> ChangeDetection
-    Zone_js -- "notifies" --> ChangeDetection
-    ChangeDetection -- "uses" --> Render3_Instructions
-    Animation_Engine -- "interacts with" --> Render3_Instructions
+    Dependency_Injection_System["Dependency Injection System"]
+    View_Management["View Management"]
+    Change_Detection_Control["Change Detection Control"]
+    Platform_Bootstrapping["Platform Bootstrapping"]
+    Browser_Platform_Adapter["Browser Platform Adapter"]
+    Server_Platform_Adapter["Server Platform Adapter"]
+    Zone_js_Integration["Zone.js Integration"]
+    State_Transfer_for_SSR["State Transfer for SSR"]
+    Dependency_Injection_System -- "provides services for" --> Platform_Bootstrapping
+    Dependency_Injection_System -- "injects" --> State_Transfer_for_SSR
+    Dependency_Injection_System -- "supports" --> Change_Detection_Control
+    Dependency_Injection_System -- "supports" --> View_Management
+    Dependency_Injection_System -- "supports" --> Zone_js_Integration
+    View_Management -- "managed by" --> Change_Detection_Control
+    Change_Detection_Control -- "triggered by" --> Zone_js_Integration
+    Platform_Bootstrapping -- "initializes with" --> Browser_Platform_Adapter
+    Platform_Bootstrapping -- "initializes with" --> Server_Platform_Adapter
+    Server_Platform_Adapter -- "utilizes" --> State_Transfer_for_SSR
+    Zone_js_Integration -- "notifies" --> Change_Detection_Control
+    State_Transfer_for_SSR -- "consumed by" --> Server_Platform_Adapter
+    click Dependency_Injection_System href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Dependency_Injection_System.md" "Details"
+    click View_Management href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/View_Management.md" "Details"
+    click Platform_Bootstrapping href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Platform_Bootstrapping.md" "Details"
+    click Zone_js_Integration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/angular/Zone_js_Integration.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The Angular runtime core is structured around key components that manage application lifecycle, dependency injection, reactivity, and efficient UI rendering. The `Application Lifecycle Management` component orchestrates the bootstrapping process and overall application flow, relying on `R3Injector` for dependency resolution and `Zone.js` for consistent asynchronous execution contexts that trigger change detection. User interfaces, defined in `Templates`, are transformed into highly optimized `Render3 Instructions` by the Angular compiler, which are then utilized by `ChangeDetection` to efficiently update the DOM. `Signals` provide a modern, fine-grained reactivity primitive, feeding directly into `ChangeDetection` to ensure UI updates reflect the latest application state. The `Animation Engine` works in concert with `Render3 Instructions` to power declarative animations, with animation definitions embedded within `Templates`.
+The Angular core subsystem is a sophisticated framework designed for building dynamic web applications, emphasizing modularity, reactivity, and efficient UI updates. At its heart, the Dependency Injection System facilitates the structured provision and management of application-wide services and components, promoting a decoupled architecture. This system is crucial for initializing and configuring the application environment, particularly during Platform Bootstrapping, which adapts Angular to specific execution environments like browsers or servers. The framework's reactivity is largely driven by the Change Detection Control and its integration with Zone.js Integration. Zone.js intercepts asynchronous operations, notifying Angular to trigger change detection cycles, ensuring the UI remains synchronized with the application state. The View Management component provides a low-level interface for interacting with the rendered UI, allowing Angular to efficiently update the DOM based on detected changes. For Server-Side Rendering (SSR), the Server Platform Adapter works in conjunction with State Transfer for SSR to pre-render applications on the server and seamlessly transfer the application state to the client, optimizing initial load times and SEO.
 
-### Application Lifecycle Management
-Manages the Angular platform and the overall lifecycle of a running Angular application, serving as the entry point for bootstrapping and orchestrating the root component and change detection cycles.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/platform/platform_ref.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/platform/platform_ref.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/application/application_ref.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/application/application_ref.ts`</a>
-
-
-### R3Injector
-The core implementation of Angular's dependency injection system, responsible for resolving and providing instances of services and other dependencies throughout the application.
+### Dependency Injection System [[Expand]](./Dependency_Injection_System.md)
+Manages the creation, resolution, and lifecycle of injectable instances (services, components, directives).
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/di/r3_injector.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/di/r3_injector.ts`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/core/src/di/injector.ts" target="_blank" rel="noopener noreferrer">`angular.core.di.Injector`</a>
 
 
-### ChangeDetection
-The mechanism that detects changes in application data and efficiently updates the corresponding parts of the UI to reflect the new state.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/instructions/change_detection.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/instructions/change_detection.ts`</a>
-
-
-### Render3 Instructions
-Low-level, highly optimized instructions that directly manipulate the DOM, forming the core of Angular's rendering engine (Ivy). These instructions are generated by the Angular compiler from templates.
+### View Management [[Expand]](./View_Management.md)
+Represents an Angular view, offering an API to interact with its lifecycle and trigger change detection.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/instructions/element.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/instructions/element.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/instructions/property.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/instructions/property.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/instructions/listener.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/instructions/listener.ts`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/view_ref.ts" target="_blank" rel="noopener noreferrer">`angular.core.render3.ViewRef`</a>
 
 
-### Signals
-Angular's modern reactivity primitive, providing a fine-grained, push-based change detection mechanism for reactive programming and efficient UI updates.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/reactivity/signal.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/reactivity/signal.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/core/src/render3/reactivity/computed.ts" target="_blank" rel="noopener noreferrer">`packages/core/src/render3/reactivity/computed.ts`</a>
-
-
-### Zone.js
-A library that patches asynchronous browser APIs (like `setTimeout`, `XMLHttpRequest`, event listeners) to provide a consistent execution context, enabling Angular's automatic change detection.
+### Change Detection Control
+Provides a programmatic interface to control the change detection cycle for a component's view.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/angular/angular/blob/main/packages/zone.js/lib/zone-impl.ts" target="_blank" rel="noopener noreferrer">`packages/zone.js/lib/zone-impl.ts`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/core/src/change_detection/change_detector_ref.ts" target="_blank" rel="noopener noreferrer">`angular.core.change_detection.ChangeDetectorRef`</a>
 
 
-### Animation Engine
-The underlying system that powers Angular's declarative animation capabilities, allowing developers to define complex UI transitions and effects.
+### Platform Bootstrapping [[Expand]](./Platform_Bootstrapping.md)
+Acts as the primary entry point for initializing Angular applications and managing the platform-specific environment.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/angular/angular/blob/main/packages/animations/browser/src/create_engine.ts" target="_blank" rel="noopener noreferrer">`packages/animations/browser/src/create_engine.ts`</a>
-- <a href="https://github.com/angular/angular/blob/main/packages/animations/browser/src/render/timeline_animation_engine.ts" target="_blank" rel="noopener noreferrer">`packages/animations/browser/src/render/timeline_animation_engine.ts`</a>
+- <a href="https://github.com/angular/angular/blob/main/packages/core/src/platform/platform.ts" target="_blank" rel="noopener noreferrer">`angular.core.platform.Platform`</a>
 
 
-### Templates
-The declarative HTML-based structures and associated metadata (e.g., component decorators) defined by developers that describe the UI of Angular components. These are processed by the Angular compiler and transformed into `Render3 Instructions`.
+### Browser Platform Adapter
+Provides the browser-specific implementation of the Angular platform, handling DOM manipulation, event handling, and bootstrapping for browser environments.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+
+
+### Server Platform Adapter
+Provides the server-side rendering (SSR) implementation of the Angular platform, including DOM emulation and rendering to a string for server environments.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/angular/angular/blob/main/packages/platform-server/src/server.ts" target="_blank" rel="noopener noreferrer">`angular.platform_server.ServerModule`</a>
+
+
+### Zone.js Integration [[Expand]](./Zone_js_Integration.md)
+Integrates Zone.js with Angular, enabling automatic change detection by tracking asynchronous operations and notifying Angular when they complete.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/angular/angular/blob/main/packages/core/src/zone/ng_zone.ts" target="_blank" rel="noopener noreferrer">`angular.core.zone.NgZone`</a>
+
+
+### State Transfer for SSR
+Manages a key-value store for transferring application state from the server to the client during SSR, preventing redundant data fetching and improving perceived performance.
+
+
+**Related Classes/Methods**:
+
+
 
 
 

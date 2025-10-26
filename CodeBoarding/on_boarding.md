@@ -1,80 +1,137 @@
 ```mermaid
 graph LR
-    Orchestration_Workflow["Orchestration & Workflow"]
-    Static_Code_Analyzer["Static Code Analyzer"]
-    AI_Analysis_Engine["AI Analysis Engine"]
-    Analysis_Persistence["Analysis Persistence"]
-    Output_Generator["Output Generator"]
-    Orchestration_Workflow -- "invokes analysis on" --> Static_Code_Analyzer
-    Static_Code_Analyzer -- "returns raw graph data to" --> Orchestration_Workflow
-    Orchestration_Workflow -- "consults and saves analysis to" --> Analysis_Persistence
-    Analysis_Persistence -- "provides cached analysis to" --> Orchestration_Workflow
-    Orchestration_Workflow -- "invokes with graph data" --> AI_Analysis_Engine
-    AI_Analysis_Engine -- "returns high-level model to" --> Orchestration_Workflow
-    Orchestration_Workflow -- "sends model for rendering to" --> Output_Generator
-    click Orchestration_Workflow href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Orchestration_Workflow.md" "Details"
-    click Static_Code_Analyzer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/Static_Code_Analyzer.md" "Details"
-    click AI_Analysis_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/CodeBoarding/AI_Analysis_Engine.md" "Details"
+    API_Service["API Service"]
+    Job_Database["Job Database"]
+    Orchestration_Engine["Orchestration Engine"]
+    Repository_Manager["Repository Manager"]
+    Static_Analysis_Engine["Static Analysis Engine"]
+    AI_Interpretation_Layer["AI Interpretation Layer"]
+    Output_Generation_Engine["Output Generation Engine"]
+    Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
+    API_Service -- "Initiates Job" --> Job_Database
+    API_Service -- "Triggers Analysis" --> Orchestration_Engine
+    Orchestration_Engine -- "Manages Job State" --> Job_Database
+    Orchestration_Engine -- "Requests Code" --> Repository_Manager
+    Repository_Manager -- "Provides Code" --> Orchestration_Engine
+    Orchestration_Engine -- "Requests Static Analysis" --> Static_Analysis_Engine
+    Static_Analysis_Engine -- "Provides Richer Analysis Results" --> Orchestration_Engine
+    Orchestration_Engine -- "Feeds Rich Analysis Data" --> AI_Interpretation_Layer
+    AI_Interpretation_Layer -- "Returns Enhanced Architectural Insights" --> Orchestration_Engine
+    AI_Interpretation_Layer -- "Queries Diff" --> Repository_Manager
+    Orchestration_Engine -- "Passes Enhanced Insights for Generation" --> Output_Generation_Engine
+    Output_Generation_Engine -- "Delivers Documentation" --> API_Service
 ```
 
-[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+The CodeBoarding system operates through a robust, multi-layered architecture designed for comprehensive code analysis and documentation generation. The API Service serves as the primary external interface, initiating jobs and managing user interactions. All job lifecycle and status information is persistently stored and managed by the Job Database. The Orchestration Engine acts as the central coordinator, driving the entire documentation pipeline. It interacts with the Repository Manager to retrieve source code and then dispatches requests to the Static Analysis Engine. The Static Analysis Engine performs deep, language-specific analysis, now providing richer and more detailed structural information. This enhanced data is then fed by the Orchestration Engine to the AI Interpretation Layer. This layer, comprising specialized AI agents, performs sophisticated interpretation, generating enhanced high-level architectural insights, and may query the Repository Manager for diff analysis. Finally, the Orchestration Engine passes these refined insights to the Output Generation Engine, which transforms them into various documentation formats with enhanced capabilities, including integration with GitHub Actions, before delivering the final output back through the API Service. This updated architecture reflects significant internal enhancements in analysis depth and output quality, particularly within the AI interpretation and static analysis components.
 
-### Orchestration & Workflow [[Expand]](./Orchestration_Workflow.md)
-The central coordinator that manages the end-to-end analysis pipeline. It initiates static analysis, triggers the AI engine, coordinates with the persistence layer for caching and differential checks, and sends the final, validated results to the output generator.
-
-
-**Related Classes/Methods**:
-
-- `local_app.py`
-- `github_action.py`
-
-
-### Static Code Analyzer [[Expand]](./Static_Code_Analyzer.md)
-Responsible for the initial, non-AI parsing of the source code. It uses AST-based techniques to build foundational data structures like call graphs and structure graphs, transforming raw code into a structured format that the AI engine can interpret.
+### API Service
+The external interface for CodeBoarding, handling user requests, job initiation, and status retrieval.
 
 
 **Related Classes/Methods**:
 
-- `static_analyzer/pylint_analyze/call_graph_builder.py`
-- `static_analyzer/pylint_analyze/structure_graph_builder.py`
-- `static_analyzer/pylint_graph_transform.py`
+- `local_app`
 
 
-### AI Analysis Engine [[Expand]](./AI_Analysis_Engine.md)
-The cognitive core of the system. It is a multi-agent framework that interprets the data from the static analyzer. It uses a collection of specialized agents (e.g., Planner, Abstraction, Diff Analyzer) to collaboratively identify architectural patterns, understand component roles, and build a comprehensive model of the codebase.
-
-
-**Related Classes/Methods**:
-
-- `agents/agent.py`
-- `agents/planner_agent.py`
-- `agents/abstraction_agent.py`
-- `agents/diff_analyzer.py`
-
-
-### Analysis Persistence
-Handles the serialization and deserialization of the analysis model to a storable format (JSON). This enables the caching of results, which is critical for performance and for supporting efficient incremental analysis by providing a baseline for comparison.
+### Job Database
+Persistent storage for managing the lifecycle, status, and results of all documentation generation jobs.
 
 
 **Related Classes/Methods**:
 
-- `diagram_analysis/analysis_json.py`
+- `duckdb_crud`
 
 
-### Output Generator
-The final stage in the pipeline. It consumes the rich, structured analysis model produced by the AI Engine and renders it into various human-readable formats, such as Markdown, HTML, and Sphinx documentation. This decouples the core analysis logic from its presentation.
+### Orchestration Engine
+The central control unit that manages the entire documentation generation pipeline, coordinating all analysis and generation stages.
 
 
 **Related Classes/Methods**:
 
-- `output_generators/markdown.py`
-- `output_generators/html.py`
-- `output_generators/sphinx.py`
+- `diagram_generator`
 
+
+### Repository Manager
+Manages all interactions with source code repositories, including cloning, fetching, and extracting version differences.
+
+
+**Related Classes/Methods**:
+
+- `__init__`:21-32
+- `git_diff`:27-76
+
+
+### Static Analysis Engine
+Performs deep, language-specific analysis of source code to extract richer, more detailed, and comprehensive structural information without semantic interpretation.
+
+
+**Related Classes/Methods**:
+
+- `scanner`:13-66
+- `client`:10-214
+- `analysis_result`
+
+
+### AI Interpretation Layer
+A collection of specialized AI agents that perform sophisticated interpretation of static analysis data, generating enhanced high-level architectural insights, including detailed abstractions, refined planning, robust validation, and comprehensive diff analysis, with structured outputs.
+
+
+**Related Classes/Methods**:
+
+- `meta_agent`
+- `abstraction_agent`
+- `details_agent`
+- `planner_agent`
+- `validator_agent`
+- `diff_analyzer`
+- `agent`:20-136
+- `agent_responses`
+- `prompts`
+
+
+### Output Generation Engine
+Transforms the final, validated architectural insights into various human-readable and diagram-friendly documentation formats, with enhanced capabilities for specific output formats and external integrations like GitHub Actions.
+
+
+**Related Classes/Methods**:
+
+- `html`:37-51
+- `markdown`:20-34
+- `mdx`:54-68
+- `sphinx`
+- `github_action`
+
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 
 
