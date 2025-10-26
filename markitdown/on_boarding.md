@@ -1,37 +1,35 @@
 ```mermaid
 graph LR
-    CLI_Interface["CLI Interface"]
-    MarkItDown_Core_Engine["MarkItDown Core Engine"]
+    User_Interfaces_Entry_Points_["User Interfaces (Entry Points)"]
+    Core_Conversion_Orchestrator["Core Conversion Orchestrator"]
     Document_Converters["Document Converters"]
-    LLM_Azure_AI_Integration["LLM & Azure AI Integration"]
-    DOCX_Math_Processing_Utilities["DOCX Math Processing Utilities"]
-    MCP_Server_Microservice_Conversion_Platform_["MCP Server (Microservice Conversion Platform)"]
+    External_Service_Adapters["External Service Adapters"]
+    Conversion_Utilities["Conversion Utilities"]
     Unclassified["Unclassified"]
-    CLI_Interface -- "initiates conversion requests to" --> MarkItDown_Core_Engine
-    MarkItDown_Core_Engine -- "orchestrates the conversion process, dispatching tasks to" --> Document_Converters
-    MarkItDown_Core_Engine -- "enables and loads converters from" --> Document_Converters
-    Document_Converters -- "utilize" --> LLM_Azure_AI_Integration
-    Document_Converters -- "utilize" --> DOCX_Math_Processing_Utilities
-    MCP_Server_Microservice_Conversion_Platform_ -- "receives conversion requests and submits them to" --> MarkItDown_Core_Engine
+    User_Interfaces_Entry_Points_ -- "Initiates Conversion" --> Core_Conversion_Orchestrator
+    Core_Conversion_Orchestrator -- "Dispatches Conversion" --> Document_Converters
+    Document_Converters -- "Requests External Processing" --> External_Service_Adapters
+    Document_Converters -- "Applies Specialized Logic" --> Conversion_Utilities
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The MarkItDown project is structured around a core engine that facilitates the conversion of various document formats into Markdown. It offers both a command-line interface for direct user interaction and a microservice platform for distributed conversion tasks. The core engine dynamically registers and utilizes a suite of document converters, including specialized modules for handling different file types (e.g., PPTX, DOCX, PDF) and integrating with external services like LLMs and Azure Document Intelligence for enhanced content processing. A dedicated utility component handles complex pre-processing, such as converting mathematical equations in DOCX files. This modular design allows for extensibility through a plugin system, enabling the integration of third-party converters.
+The `markitdown` project is designed for converting various document formats into Markdown. The system's entry points, handled by the User Interfaces (Entry Points) component, allow users to initiate conversions either through a command-line interface or via an MCP server. These entry points interact with the Core Conversion Orchestrator, which is the central component responsible for managing the conversion process. The orchestrator identifies the input document type and dispatches the conversion task to the appropriate module within the Document Converters component. Each document converter is specialized for a specific format (e.g., PDF, DOCX, HTML, Image). For advanced parsing or content generation, Document Converters may interact with External Service Adapters, which abstract interactions with services like Azure Document Intelligence or Large Language Models. Additionally, Document Converters leverage Conversion Utilities for specialized tasks such as pre-processing DOCX files or converting mathematical expressions to LaTeX. This modular design ensures extensibility and maintainability, allowing for easy integration of new document formats or external services.
 
-### CLI Interface
-The primary command-line entry point for users to interact with MarkItDown, initiating document conversion processes.
+### User Interfaces (Entry Points)
+Provides the primary means for users or other applications to interact with the `markitdown` conversion capabilities. This includes both command-line interface (CLI) and a Micro-service Control Plane (MCP) server for HTTP/SSE interactions.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/__main__.py#L13-L200" target="_blank" rel="noopener noreferrer">`markitdown.__main__.main`:13-200</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown-mcp/src/markitdown_mcp/__main__.py#L82-L123" target="_blank" rel="noopener noreferrer">`markitdown_mcp.__main__.main`:82-123</a>
 
 
-### MarkItDown Core Engine
-The central orchestrator of the MarkItDown system, managing converter registration, plugin loading, and dispatching conversion tasks.
+### Core Conversion Orchestrator
+The central brain of `markitdown`, responsible for managing the conversion workflow, identifying document types, and dispatching tasks to appropriate converters. It also handles the registration and enablement of plugins.
 
 
 **Related Classes/Methods**:
@@ -40,43 +38,38 @@ The central orchestrator of the MarkItDown system, managing converter registrati
 
 
 ### Document Converters
-A collection of modules (both built-in and external plugins) designed to convert various document formats (e.g., PPTX, DOCX, PDF, HTML, Image) into Markdown.
+A modular collection of specialized components, each designed to transform a specific input document format (e.g., PDF, DOCX, Image, HTML) into a standardized Markdown output.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_pptx_converter.py#L34-L264" target="_blank" rel="noopener noreferrer">`markitdown.converters._pptx_converter.PptxConverter`:34-264</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_docx_converter.py#L31-L83" target="_blank" rel="noopener noreferrer">`markitdown.converters._docx_converter.DocxConverter`:31-83</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_pdf_converter.py#L31-L77" target="_blank" rel="noopener noreferrer">`markitdown.converters._pdf_converter.PdfConverter`:31-77</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown-sample-plugin/src/markitdown_sample_plugin/_plugin.py#L34-L71" target="_blank" rel="noopener noreferrer">`markitdown_sample_plugin._plugin.RtfConverter`:34-71</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_image_converter.py#L39-L85" target="_blank" rel="noopener noreferrer">`markitdown.converters._image_converter.ImageConverter.convert`:39-85</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_doc_intel_converter.py#L237-L254" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter.convert`:237-254</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_plain_text_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._plain_text_converter.PlainTextConverter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_html_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._html_converter.HtmlConverter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_pdf_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._pdf_converter.PdfConverter`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_docx_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._docx_converter.DocxConverter`</a>
 
 
-### LLM & Azure AI Integration
-Provides functionality to interact with Large Language Models for tasks such as generating descriptions or summaries, and leverages Azure Document Intelligence for advanced document analysis.
+### External Service Adapters
+Manages interactions with external APIs and services, such as Azure Document Intelligence for advanced document parsing, and Large Language Models (LLMs) for enhanced content processing. This component also handles HTTP requests.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_llm_caption.py#L7-L50" target="_blank" rel="noopener noreferrer">`markitdown.converters._llm_caption.llm_caption`:7-50</a>
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_doc_intel_converter.py#L130-L254" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter.DocumentIntelligenceConverter`:130-254</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_doc_intel_converter.py" target="_blank" rel="noopener noreferrer">`markitdown.converters._doc_intel_converter.DocumentIntelligenceClient`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`requests.Session`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converters/_image_converter.py" target="_blank" rel="noopener noreferrer">`openai.OpenAI`</a>
 
 
-### DOCX Math Processing Utilities
-Specialized utilities for pre-processing DOCX files, particularly for handling embedded mathematical equations by converting Office Math Markup Language (OMML) to LaTeX syntax.
+### Conversion Utilities
+Provides specialized helper functions and modules used by Document Converters for complex tasks, such as pre-processing DOCX content or converting mathematical markup.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converter_utils/docx/pre_process.py#L118-L156" target="_blank" rel="noopener noreferrer">`markitdown.converter_utils.docx.pre_process.pre_process_docx`:118-156</a>
-
-
-### MCP Server (Microservice Conversion Platform)
-A separate microservice providing an API endpoint for document conversion, enabling MarkItDown functionality in a distributed or serverless environment.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown-mcp/src/markitdown_mcp/__main__.py#L82-L123" target="_blank" rel="noopener noreferrer">`markitdown_mcp.__main__.main`:82-123</a>
+- <a href="https://github.com/microsoft/markitdown/blob/mainpackages/markitdown/src/markitdown/converter_utils/docx/math/omml.py#L170-L400" target="_blank" rel="noopener noreferrer">`markitdown.converter_utils.docx.math.omml.oMath2Latex`:170-400</a>
 
 
 ### Unclassified
