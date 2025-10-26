@@ -1,102 +1,99 @@
 ```mermaid
 graph LR
-    CLI_Application_Core_Dispatcher["CLI Application Core & Dispatcher"]
-    Command_Definition_Hierarchy["Command Definition & Hierarchy"]
-    Argument_Flag_Parsing_and_Validation["Argument & Flag Parsing and Validation"]
+    Command_Tree_Lifecycle_Manager["Command Tree & Lifecycle Manager"]
+    Flag_Configuration_Manager["Flag & Configuration Manager"]
+    Argument_Parser_Validator["Argument Parser & Validator"]
     Help_Usage_System["Help & Usage System"]
-    Documentation_Generation["Documentation Generation"]
-    Shell_Completion_System["Shell Completion System"]
+    Shell_Completion_Engine["Shell Completion Engine"]
+    Documentation_Generator["Documentation Generator"]
     Unclassified["Unclassified"]
-    CLI_Application_Core_Dispatcher -- "initializes and registers" --> Command_Definition_Hierarchy
-    Command_Definition_Hierarchy -- "provides schema for" --> Argument_Flag_Parsing_and_Validation
-    Argument_Flag_Parsing_and_Validation -- "returns results to" --> CLI_Application_Core_Dispatcher
-    Command_Definition_Hierarchy -- "queries" --> Help_Usage_System
-    Help_Usage_System -- "directs output to" --> CLI_Application_Core_Dispatcher
-    Command_Definition_Hierarchy -- "serves as source for" --> Documentation_Generation
-    Command_Definition_Hierarchy -- "provides definitions to" --> Shell_Completion_System
-    Shell_Completion_System -- "provides suggestions to" --> CLI_Application_Core_Dispatcher
+    Command_Tree_Lifecycle_Manager -- "Configures Flags For" --> Flag_Configuration_Manager
+    Command_Tree_Lifecycle_Manager -- "Processes Flag Input From" --> Flag_Configuration_Manager
+    Command_Tree_Lifecycle_Manager -- "Defines Argument Structure For" --> Argument_Parser_Validator
+    Command_Tree_Lifecycle_Manager -- "Receives Validated Arguments From" --> Argument_Parser_Validator
+    Command_Tree_Lifecycle_Manager -- "Provides Metadata To" --> Help_Usage_System
+    Command_Tree_Lifecycle_Manager -- "Provides Metadata To" --> Shell_Completion_Engine
+    Command_Tree_Lifecycle_Manager -- "Provides Metadata To" --> Documentation_Generator
+    Flag_Configuration_Manager -- "Provides Flag Details To" --> Help_Usage_System
+    Flag_Configuration_Manager -- "Provides Flag Details To" --> Shell_Completion_Engine
+    Flag_Configuration_Manager -- "Provides Flag Details To" --> Documentation_Generator
+    Help_Usage_System -- "Accesses Command Properties From" --> Command_Tree_Lifecycle_Manager
+    Help_Usage_System -- "Accesses Flag Properties From" --> Flag_Configuration_Manager
+    Shell_Completion_Engine -- "Queries Command Structure From" --> Command_Tree_Lifecycle_Manager
+    Shell_Completion_Engine -- "Queries Flag Definitions From" --> Flag_Configuration_Manager
+    Documentation_Generator -- "Retrieves Command Details From" --> Command_Tree_Lifecycle_Manager
+    Documentation_Generator -- "Retrieves Flag Details From" --> Flag_Configuration_Manager
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The Cobra project provides a robust framework for building command-line interfaces, centered around a flexible `Command` structure. The `CLI Application Core & Dispatcher` acts as the entry point, orchestrating the execution flow and managing global application settings. It relies heavily on the `Command Definition & Hierarchy` component to understand the available commands and their relationships. User input is processed by the `Argument & Flag Parsing and Validation` component, which ensures that commands receive valid parameters. For user assistance, the `Help & Usage System` dynamically generates help messages based on command definitions. Beyond runtime, the `Documentation Generation` component leverages the command structure to produce static documentation in various formats. Finally, the `Shell Completion System` integrates with popular shells to offer interactive command and flag suggestions, enhancing user experience. This modular design allows for clear separation of concerns, making the framework extensible and maintainable.
+The Cobra project is architected around a central `Command Tree & Lifecycle Manager` that orchestrates the entire command-line interface (CLI) application. This core component is responsible for defining the hierarchical structure of commands and subcommands, managing their lifecycle, and dispatching execution based on user input. It interacts closely with the `Flag & Configuration Manager` to handle command-line flags and integrate with configuration systems, and with the `Argument Parser & Validator` to process and validate positional arguments. The system also includes specialized components for user assistance and extensibility. The `Help & Usage System` provides dynamic help messages and usage instructions, drawing information from the command structure and flag definitions. For enhanced user experience, the `Shell Completion Engine` offers intelligent tab-completion across various shell environments. Finally, the `Documentation Generator` automates the creation of comprehensive documentation in multiple formats by traversing the command tree and extracting metadata. This modular design ensures clear separation of concerns, making the CLI framework robust, extensible, and easy to maintain.
 
-### CLI Application Core & Dispatcher
-The central orchestrator, handling application initialization, global settings, error reporting, and dispatching control to specific commands. It also provides core utility functions for I/O and string manipulation.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/spf13/cobra/blob/maincobra.go" target="_blank" rel="noopener noreferrer">`cobra.Execute`</a>
-- <a href="https://github.com/spf13/cobra/blob/maincommand.go" target="_blank" rel="noopener noreferrer">`cobra.Command.Execute`</a>
-
-
-### Command Definition & Hierarchy
-Defines the structure and properties of all commands and subcommands, managing their hierarchical relationships, descriptions, flags, and arguments. This component is crucial for building the command tree.
+### Command Tree & Lifecycle Manager
+The central orchestrator defining and managing the hierarchical structure of commands and subcommands, handling their registration, parsing of the command line, and dispatching execution.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/spf13/cobra/blob/maincommand.go" target="_blank" rel="noopener noreferrer">`cobra.Command`</a>
+- <a href="https://github.com/spf13/cobra/blob/maincobra.go" target="_blank" rel="noopener noreferrer">`cobra.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/maincommand.go" target="_blank" rel="noopener noreferrer">`command.go`</a>
 
 
-### Argument & Flag Parsing and Validation
-Responsible for parsing command-line arguments and flags, validating them against predefined rules, ensuring correct types, formats, and adherence to constraints.
+### Flag & Configuration Manager
+Responsible for defining, parsing, and managing command-line flags, supporting inheritance and integration with configuration systems.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/spf13/cobra/blob/mainargs.go" target="_blank" rel="noopener noreferrer">`cobra.NoArgs`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainargs.go" target="_blank" rel="noopener noreferrer">`cobra.OnlyValidArgs`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainargs.go" target="_blank" rel="noopener noreferrer">`cobra.MinimumNArgs`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainargs.go" target="_blank" rel="noopener noreferrer">`cobra.MaximumNArgs`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainargs.go" target="_blank" rel="noopener noreferrer">`cobra.ExactArgs`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainargs.go" target="_blank" rel="noopener noreferrer">`cobra.RangeArgs`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainargs.go" target="_blank" rel="noopener noreferrer">`cobra.MatchAll`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainflag_groups.go" target="_blank" rel="noopener noreferrer">`cobra.ValidateFlagGroups`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainflag_groups.go" target="_blank" rel="noopener noreferrer">`cobra.MarkFlagsRequiredTogether`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainflag_groups.go" target="_blank" rel="noopener noreferrer">`cobra.MarkFlagsOneRequired`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainflag_groups.go" target="_blank" rel="noopener noreferrer">`cobra.MarkFlagsMutuallyExclusive`</a>
+- <a href="https://github.com/spf13/cobra/blob/mainflag_groups.go" target="_blank" rel="noopener noreferrer">`flag_groups.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/maincommand.go" target="_blank" rel="noopener noreferrer">`command.go`</a>
+
+
+### Argument Parser & Validator
+Processes and validates positional arguments provided to commands, ensuring correct input formatting and adherence to rules.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/spf13/cobra/blob/mainargs.go" target="_blank" rel="noopener noreferrer">`args.go`</a>
 
 
 ### Help & Usage System
-Generates and displays runtime help messages, usage instructions, and version information to the user, leveraging command definitions for accurate assistance.
+Manages the generation and display of user-facing help information, including detailed messages and active help suggestions.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/spf13/cobra/blob/maincommand.go" target="_blank" rel="noopener noreferrer">`cobra.Command.Help`</a>
-- <a href="https://github.com/spf13/cobra/blob/maincommand.go" target="_blank" rel="noopener noreferrer">`cobra.Command.Usage`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainactive_help.go" target="_blank" rel="noopener noreferrer">`cobra.AppendActiveHelp`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainactive_help.go" target="_blank" rel="noopener noreferrer">`cobra.GetActiveHelpConfig`</a>
+- <a href="https://github.com/spf13/cobra/blob/mainactive_help.go" target="_blank" rel="noopener noreferrer">`active_help.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/maincommand.go" target="_blank" rel="noopener noreferrer">`command.go`</a>
 
 
-### Documentation Generation
-Creates static documentation files in various formats (Markdown, YAML, reStructuredText, Man Pages) based on the command definitions, used for project READMEs, online documentation, or manual pages.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/spf13/cobra/blob/maindoc/md_docs.go" target="_blank" rel="noopener noreferrer">`doc.GenMarkdown`</a>
-- <a href="https://github.com/spf13/cobra/blob/maindoc/yaml_docs.go" target="_blank" rel="noopener noreferrer">`doc.GenYaml`</a>
-- <a href="https://github.com/spf13/cobra/blob/maindoc/rest_docs.go" target="_blank" rel="noopener noreferrer">`doc.GenReST`</a>
-- <a href="https://github.com/spf13/cobra/blob/maindoc/man_docs.go" target="_blank" rel="noopener noreferrer">`doc.GenMan`</a>
-
-
-### Shell Completion System
-Implements the core logic for identifying completable elements and managing custom completion functions, then generates shell-specific completion scripts for various environments.
+### Shell Completion Engine
+Provides dynamic shell completion capabilities for various environments, generating scripts for tab-completion of commands, subcommands, and flags.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/spf13/cobra/blob/maincompletions.go" target="_blank" rel="noopener noreferrer">`cobra.RegisterFlagCompletionFunc`</a>
-- <a href="https://github.com/spf13/cobra/blob/maincompletions.go" target="_blank" rel="noopener noreferrer">`cobra.GetFlagCompletionFunc`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainbash_completions.go" target="_blank" rel="noopener noreferrer">`cobra.GenBashCompletion`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainfish_completions.go" target="_blank" rel="noopener noreferrer">`cobra.GenFishCompletion`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainzsh_completions.go" target="_blank" rel="noopener noreferrer">`cobra.GenZshCompletion`</a>
-- <a href="https://github.com/spf13/cobra/blob/mainpowershell_completions.go" target="_blank" rel="noopener noreferrer">`cobra.GenPowerShellCompletion`</a>
+- <a href="https://github.com/spf13/cobra/blob/maincompletions.go" target="_blank" rel="noopener noreferrer">`completions.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/mainbash_completions.go" target="_blank" rel="noopener noreferrer">`bash_completions.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/mainfish_completions.go" target="_blank" rel="noopener noreferrer">`fish_completions.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/mainzsh_completions.go" target="_blank" rel="noopener noreferrer">`zsh_completions.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/mainpowershell_completions.go" target="_blank" rel="noopener noreferrer">`powershell_completions.go`</a>
+
+
+### Documentation Generator
+Automatically generates comprehensive documentation for the CLI application in various formats by traversing the command tree and extracting metadata.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/spf13/cobra/blob/maindoc/md_docs.go" target="_blank" rel="noopener noreferrer">`doc/md_docs.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/maindoc/rest_docs.go" target="_blank" rel="noopener noreferrer">`doc/rest_docs.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/maindoc/yaml_docs.go" target="_blank" rel="noopener noreferrer">`doc/yaml_docs.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/maindoc/man_docs.go" target="_blank" rel="noopener noreferrer">`doc/man_docs.go`</a>
+- <a href="https://github.com/spf13/cobra/blob/maindoc/util.go" target="_blank" rel="noopener noreferrer">`doc/util.go`</a>
 
 
 ### Unclassified
