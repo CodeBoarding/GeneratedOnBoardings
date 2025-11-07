@@ -1,70 +1,68 @@
 ```mermaid
 graph LR
-    Core_Conversion_Engine["Core Conversion Engine"]
-    Format_Handlers["Format Handlers"]
-    Plugin_Manager["Plugin Manager"]
     CLI_Interface["CLI Interface"]
-    API_Interface["API Interface"]
+    Conversion_Engine["Conversion Engine"]
+    File_Parsers["File Parsers"]
+    Plugin_System["Plugin System"]
+    Utility_Functions["Utility Functions"]
     Unclassified["Unclassified"]
-    Core_Conversion_Engine -- "utilizes" --> Format_Handlers
-    Core_Conversion_Engine -- "can be extended with" --> Plugin_Manager
-    CLI_Interface -- "initiates conversion processes based on user input" --> Core_Conversion_Engine
-    API_Interface -- "provides programmatic access to conversion functionalities" --> Core_Conversion_Engine
+    CLI_Interface -- "initiates the conversion process by invoking methods in" --> Conversion_Engine
+    Conversion_Engine -- "relies on File Parsers to handle specific file format conversions" --> File_Parsers
+    Conversion_Engine -- "utilizes plugins for extended functionality, as managed by" --> Plugin_System
+    File_Parsers -- "use Utility Functions for tasks such as URI conversion and stream information management" --> Utility_Functions
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The `{project_name}` project is structured around a central `Core Conversion Engine` that orchestrates the conversion of various document formats into Markdown. This engine relies on `Format Handlers` to manage the specifics of each file type, ensuring a modular and extensible approach to document conversion. The `Plugin Manager` allows for dynamic extension of capabilities, supporting third-party plugins that can introduce new conversion logic or enhance existing ones. User interaction is facilitated through a `CLI Interface`, which provides a straightforward command-line tool for initiating conversions. Additionally, an `API Interface` offers programmatic access, enabling integration with other systems and automation of conversion tasks. This architecture supports both interactive and automated workflows, making it versatile for a wide range of use cases.
-
-### Core Conversion Engine
-Manages the overall conversion logic.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py" target="_blank" rel="noopener noreferrer">`markitdown._base_converter:DocumentConverter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py" target="_blank" rel="noopener noreferrer">`markitdown._base_converter:DocumentConverterResult`</a>
-
-
-### Format Handlers
-Specialized converters for each supported file format.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters" target="_blank" rel="noopener noreferrer">`markitdown.converters:ImageConverter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters" target="_blank" rel="noopener noreferrer">`markitdown.converters:PlainTextConverter`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters" target="_blank" rel="noopener noreferrer">`markitdown.converters:HtmlConverter`</a>
-
-
-### Plugin Manager
-Manages plugins for extending functionality.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`markitdown._markitdown:_load_plugins`</a>
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`markitdown._markitdown:enable_plugins`</a>
-
+The `markitdown` project is structured around a central Conversion Engine that orchestrates the conversion of various document types into markdown. The CLI Interface serves as the entry point, parsing user commands and directing them to the appropriate conversion processes. File Parsers provide specialized handling for different file formats, while the Plugin System offers extensibility through third-party integrations. Utility Functions support these components by managing URIs and stream information, ensuring smooth data flow throughout the system. This architecture facilitates clear component boundaries and interaction pathways, making it suitable for both documentation and visual diagram generation.
 
 ### CLI Interface
-Provides a command-line interface for user interaction.
+Manages user interactions and command parsing.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py" target="_blank" rel="noopener noreferrer">`markitdown.__main__:main`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py#L13-L200" target="_blank" rel="noopener noreferrer">`main`:13-200</a>
 
 
-### API Interface
-Offers an API for programmatic access.
+### Conversion Engine
+Core logic for converting various document types.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_markitdown.py" target="_blank" rel="noopener noreferrer">`markitdown._markitdown:MarkItDown`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py#L42-L105" target="_blank" rel="noopener noreferrer">`DocumentConverter`:42-105</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_base_converter.py#L5-L39" target="_blank" rel="noopener noreferrer">`DocumentConverterResult`:5-39</a>
+
+
+### File Parsers
+Specialized modules for parsing different file formats.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/converters/_image_converter.py#L16-L138" target="_blank" rel="noopener noreferrer">`ImageConverter`:16-138</a>
+
+
+### Plugin System
+Allows for extensibility and integration with additional converters.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/__main__.py#L13-L200" target="_blank" rel="noopener noreferrer">`main`:13-200</a>
+
+
+### Utility Functions
+Provides helper functions for URI and stream management.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_uri_utils.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_uri_utils.py`</a>
+- <a href="https://github.com/microsoft/markitdown/blob/main/packages/markitdown/src/markitdown/_stream_info.py" target="_blank" rel="noopener noreferrer">`packages/markitdown/src/markitdown/_stream_info.py`</a>
 
 
 ### Unclassified
