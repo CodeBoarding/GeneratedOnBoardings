@@ -8,6 +8,7 @@ graph LR
     Plugin_Extension_Manager["Plugin & Extension Manager"]
     Client_Side_Applications_External_["Client-Side Applications (External)"]
     Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
     Client_Side_Applications_External_ -- "Initiates API requests" --> API_Gateway_Core_Router
     API_Gateway_Core_Router -- "Routes authentication requests and validates tokens" --> Authentication_Authorization_Service
     API_Gateway_Core_Router -- "Routes requests for form definitions and submissions" --> Form_Submission_Management_Service
@@ -100,6 +101,12 @@ Represents external frontend applications (e.g., the Form.io portal, custom web 
 
 - <a href="https://github.com/formio/formio/blob/main/portal/src" target="_blank" rel="noopener noreferrer">`portal.src`</a>
 
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
