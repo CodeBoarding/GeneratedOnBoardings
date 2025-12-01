@@ -9,6 +9,7 @@ graph LR
     Client_Side_Applications_External_["Client-Side Applications (External)"]
     Unclassified["Unclassified"]
     Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
     Client_Side_Applications_External_ -- "Initiates API requests" --> API_Gateway_Core_Router
     API_Gateway_Core_Router -- "Routes authentication requests and validates tokens" --> Authentication_Authorization_Service
     API_Gateway_Core_Router -- "Routes requests for form definitions and submissions" --> Form_Submission_Management_Service
@@ -20,6 +21,12 @@ graph LR
     Plugin_Extension_Manager -- "Registers new routes and middleware for extended functionality" --> API_Gateway_Core_Router
     Plugin_Extension_Manager -- "Extends form and submission processing logic" --> Form_Submission_Management_Service
     Plugin_Extension_Manager -- "Adds custom actions to the event processing pipeline" --> Action_Event_Processing_Engine
+    click API_Gateway_Core_Router href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/formio/API_Gateway_Core_Router.md" "Details"
+    click Authentication_Authorization_Service href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/formio/Authentication_Authorization_Service.md" "Details"
+    click Form_Submission_Management_Service href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/formio/Form_Submission_Management_Service.md" "Details"
+    click Action_Event_Processing_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/formio/Action_Event_Processing_Engine.md" "Details"
+    click Data_Persistence_Layer href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/formio/Data_Persistence_Layer.md" "Details"
+    click Client_Side_Applications_External_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/formio/Client_Side_Applications_External_.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
@@ -28,7 +35,7 @@ graph LR
 
 The Form.io platform operates as a modular, API-driven system designed for dynamic form and data management. Client-side applications interact with the system through a central API Gateway & Core Router, which directs requests to specialized backend services. Authentication and authorization are handled by a dedicated service, ensuring secure access. Form definitions and submission data are managed by the Form & Submission Management Service, which leverages a Data Persistence Layer for storage. Critical business logic and automated tasks are executed by the Action & Event Processing Engine, triggered by events like form submissions. The system's extensibility is facilitated by a Plugin & Extension Manager, allowing for custom functionalities to be integrated across various components. This architecture promotes clear separation of concerns, scalability, and maintainability, making it suitable for complex, data-intensive applications requiring flexible form capabilities.
 
-### API Gateway & Core Router
+### API Gateway & Core Router [[Expand]](./API_Gateway_Core_Router.md)
 The central entry point for all client requests, handling API routing, global middleware, and orchestrating the flow to specific backend services.
 
 
@@ -38,7 +45,7 @@ The central entry point for all client requests, handling API routing, global mi
 - <a href="https://github.com/formio/formio/blob/main/src/middleware" target="_blank" rel="noopener noreferrer">`src.middleware`</a>
 
 
-### Authentication & Authorization Service
+### Authentication & Authorization Service [[Expand]](./Authentication_Authorization_Service.md)
 Manages user identity, authentication processes (login, registration, password reset), and role-based access control (RBAC), ensuring secure access to API resources.
 
 
@@ -50,7 +57,7 @@ Manages user identity, authentication processes (login, registration, password r
 - <a href="https://github.com/formio/formio/blob/main/src/actions/RoleAction.js" target="_blank" rel="noopener noreferrer">`src.actions.RoleAction`</a>
 
 
-### Form & Submission Management Service
+### Form & Submission Management Service [[Expand]](./Form_Submission_Management_Service.md)
 Dedicated to the lifecycle management of form schemas (creation, retrieval, update, deletion) and the intake, validation, transformation, and storage of data submitted through forms.
 
 
@@ -63,7 +70,7 @@ Dedicated to the lifecycle management of form schemas (creation, retrieval, upda
 - <a href="https://github.com/formio/formio/blob/main/src/actions/SaveSubmission.js" target="_blank" rel="noopener noreferrer">`src.actions.SaveSubmission`</a>
 
 
-### Action & Event Processing Engine
+### Action & Event Processing Engine [[Expand]](./Action_Event_Processing_Engine.md)
 Executes predefined or custom actions in response to system events, primarily form submissions, including sending emails, invoking webhooks, or custom server-side logic.
 
 
@@ -74,7 +81,7 @@ Executes predefined or custom actions in response to system events, primarily fo
 - <a href="https://github.com/formio/formio/blob/main/src/actions/WebhookAction.js" target="_blank" rel="noopener noreferrer">`src.actions.WebhookAction`</a>
 
 
-### Data Persistence Layer
+### Data Persistence Layer [[Expand]](./Data_Persistence_Layer.md)
 Defines data structures (schemas) for all persistent entities (Forms, Submissions, Users, Roles) and provides a standardized interface for interacting with the underlying MongoDB database, abstracting away database-specific operations.
 
 
@@ -93,7 +100,7 @@ Provides a mechanism for extending the core functionality of the Form.io platfor
 - <a href="https://github.com/formio/formio/blob/main/src/plugins" target="_blank" rel="noopener noreferrer">`src.plugins`</a>
 
 
-### Client-Side Applications (External)
+### Client-Side Applications (External) [[Expand]](./Client_Side_Applications_External_.md)
 Represents external frontend applications (e.g., the Form.io portal, custom web applications) that consume the backend API for user interaction and presentation.
 
 
@@ -101,6 +108,12 @@ Represents external frontend applications (e.g., the Form.io portal, custom web 
 
 - <a href="https://github.com/formio/formio/blob/main/portal/src" target="_blank" rel="noopener noreferrer">`portal.src`</a>
 
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
